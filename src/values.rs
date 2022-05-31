@@ -1,5 +1,4 @@
 use crate::units::*;
-use crate::constants;
 use crate::constants::*;
 use crate::errors::V3Error;
 
@@ -11,7 +10,6 @@ use std::ops::Div;
 use std::ops::DivAssign;
 use std::ops::Mul;
 use std::ops::MulAssign;
-use std::ops::Shr;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
@@ -77,177 +75,11 @@ impl FromStr for Value {
 
 impl PartialEq for Value {
     fn eq(&self, other:&Value) -> bool {
-        if self.unit_map != other.unit_map {
+        if !self.__equal(other) {
             return false;
         }
-        for i in 0..30_usize {
-            if self.exp[i] != other.exp[i] {
-                return false;
-            }
-            let region:usize = 1<<i;
-            if region & self.unit_map != 0 {
-                match region {
-                    LENGTH_MAP => {
-                        if self.v_length.unwrap() != other.v_length.unwrap() {
-                            return false;
-                        }
-                    }
-                    TIME_MAP => {
-                        if self.v_time.unwrap() != other.v_time.unwrap() {
-                            return false
-                        }
-                    }
-                    MASS_MAP => {
-                        if self.v_mass.unwrap() != other.v_mass.unwrap() {
-                            return false;
-                        }
-                    }
-                    ELECTRIC_CURRENT_MAP => {
-                        if self.v_electric_current.unwrap() != other.v_electric_current.unwrap() {
-                            return false;
-                        }
-                    }
-                    ELECTRIC_CHARGE_MAP => {
-                        if self.v_electric_charge.unwrap() != other.v_electric_charge.unwrap() {
-                            return false;
-                        }
-                    }
-                    ELECTRIC_POTENTIAL_MAP => {
-                        if self.v_electric_potential.unwrap() != other.v_electric_potential.unwrap() {
-                            return false;
-                        }
-                    }
-                    ELECTRIC_CONDUCTANCE_MAP => {
-                        if self.v_electric_conductance.unwrap() != other.v_electric_conductance.unwrap() {
-                            return false;
-                        }
-                    }
-                    CAPACITANCE_MAP => {
-                        if self.v_capacitance.unwrap() != other.v_capacitance.unwrap() {
-                            return false;
-                        }
-                    }
-                    RESISTANCE_MAP => {
-                        if self.v_resistance.unwrap() != other.v_resistance.unwrap() {
-                            return false;
-                        }
-                    }
-                    INDUCTANCE_MAP => {
-                        if self.v_inductance.unwrap() != other.v_inductance.unwrap() { 
-                            return false;
-                        }
-                    }
-                    MAGNETRIC_FLUX_MAP => {
-                        if self.v_magnetic_flux.unwrap() != other.v_magnetic_flux.unwrap() {
-                            return false;
-                        }
-                    }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
-                        if self.v_magnetic_flux_density.unwrap() != other.v_magnetic_flux_density.unwrap() {
-                            return false;
-                        }
-                    }
-                    TEMPERATURE_MAP => {
-                        if self.v_temperature.unwrap() != other.v_temperature.unwrap() {
-                            return false;
-                        }
-                    }
-                    SUBSTANCE_MAP => {
-                        if self.v_substance.unwrap() != other.v_substance.unwrap() {
-                            return false;
-                        }
-                    }
-                    LUMINOUS_INTENSITY_MAP => {
-                        if self.v_luminous_flux_intensity.unwrap() != other.v_luminous_flux_intensity.unwrap() {
-                            return false;
-                        }
-                    }
-                    LUMINOUS_FLUX_MAP => {
-                        if self.v_luminous_flux.unwrap() != other.v_luminous_flux.unwrap() {
-                            return false;
-                        }
-                    }
-                    ILLUMINANCE_MAP => {
-                        if self.v_illuminance.unwrap() != other.v_illuminance.unwrap() {
-                            return false;
-                        }
-                    }
-                    VOLUME_MAP => {
-                        if self.v_volume.unwrap() != other.v_volume.unwrap() {
-                            return false;
-                        }
-                    }
-                    PRESSURE_MAP => {
-                        if self.v_pressure.unwrap() != other.v_pressure.unwrap() {
-                            return false;
-                        }
-                    }
-                    ANGLE_MAP => {
-                        if self.v_angle.unwrap() != other.v_angle.unwrap() {
-                            return false;
-                        }
-                    }
-                    FREQUENCY_MAP => {
-                        if self.v_frequency.unwrap() != other.v_frequency.unwrap() {
-                            return false;
-                        }
-                    }
-                    FORCE_MAP => {
-                        if self.v_force.unwrap() != other.v_force.unwrap() {
-                            return false;
-                        }
-                    }
-                    ENERGY_MAP => {
-                        if self.v_energy.unwrap() != other.v_energy.unwrap() {
-                            return false;
-                        }
-                    }
-                    POWER_MAP => {
-                        if self.v_power.unwrap() != other.v_power.unwrap() {
-                            return false;
-                        }
-                    }
-                    RADIOACTIVITY_MAP => {
-                        if self.v_radioactivity.unwrap() != other.v_radioactivity.unwrap() {
-                            return false;
-                        }
-                    }
-                    ABSORBED_DOSE_MAP => {
-                        if self.v_ab_dose.unwrap() != other.v_ab_dose.unwrap() {
-                            return false;
-                        }
-                    }
-                    RADIOACTIVITY_EXPOSURE_MAP => {
-                        if self.v_radioactivity_exposure.unwrap() != other.v_radioactivity_exposure.unwrap() {
-                            return false;
-                        }
-                    }
-                    CATALYTIC_ACTIVITY_MAP => {
-                        if self.v_catalytic.unwrap() != other.v_catalytic.unwrap() {
-                            return false;
-                        }
-                    }
-                    SOUND_MAP => {
-                        if self.v_sound.unwrap() != other.v_sound.unwrap() {
-                            return false;
-                        }
-                    }
-                    INFORMATION_MAP => {
-                        if self.v_information.unwrap() != other.v_information.unwrap() {
-                            return false;
-                        }
-                    }
-                    _ => {
-                        // error
-                    }
-                }
-            }
-        }
-        if self.val != other.val {
-            false
-        } else {
-            true
-        }
+
+        self.val == other.val
     }
 }
 
@@ -443,14 +275,14 @@ impl PartialEq<f64> for Value {
 
 impl PartialOrd<f64> for Value {
     fn partial_cmp(&self, other:&f64) -> Option<std::cmp::Ordering> {
-        self.val.partial_cmp(&other)
+        self.val.partial_cmp(other)
     }
 }
 
 impl Add<f64> for Value {
     type Output = Value;
     fn add(self, rhs:f64) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val += rhs;
         n
     }
@@ -465,7 +297,7 @@ impl AddAssign<f64> for Value {
 impl Sub<f64> for Value {
     type Output = Value;
     fn sub(self, rhs:f64) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val -= rhs;
         n
     }
@@ -480,7 +312,7 @@ impl SubAssign<f64> for Value {
 impl Mul<f64> for Value {
     type Output = Value;
     fn mul(self, rhs:f64) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val *= rhs;
         n
     }
@@ -495,7 +327,7 @@ impl MulAssign<f64> for Value {
 impl Div<f64> for Value {
     type Output = Value;
     fn div(self, rhs: f64) -> Value { 
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val /= rhs;
         n
     }
@@ -688,7 +520,7 @@ impl Add<Value> for Value {
             }
         }
 
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val += cmp_val;
         n
     }
@@ -1059,7 +891,7 @@ impl Sub<Value> for Value {
             }
         }
 
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.val -= cmp_val;
         n
     }
@@ -1252,7 +1084,7 @@ impl SubAssign<Value> for Value {
 impl Mul<Value> for Value {
     type Output = Value;
     fn mul(self, other:Value) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.unit_map = 0;
 
         // special case to check if temperature is already the correct unit
@@ -1443,7 +1275,7 @@ impl Mul<Value> for Value {
                     POWER_MAP => {
                         if must_assign {
                             n.v_power = other.v_power;
-                        } else if must_assign {} else if self.v_power != other.v_power {
+                        } else if self.v_power != other.v_power {
                             cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
                         }
                     }
@@ -1513,7 +1345,7 @@ impl MulAssign<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
         for i in 0..30_usize {
-            self.exp[i] = self.exp[i] + other.exp[i];
+            self.exp[i] += other.exp[i];
             let region:usize = 1<<i;
 
             let in_other:bool = region & other.unit_map != 0;
@@ -1693,7 +1525,7 @@ impl MulAssign<Value> for Value {
                     POWER_MAP => {
                         if must_assign {
                             self.v_power = other.v_power;
-                        } else if must_assign {} else if self.v_power != other.v_power {
+                        } else if self.v_power != other.v_power {
                             cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
                         }
                     }
@@ -1752,7 +1584,7 @@ impl MulAssign<Value> for Value {
 impl Div<Value> for Value {
     type Output = Value;
     fn div(self, other:Value) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         n.unit_map = 0;
 
         // special case to check if temperature is already the correct unit
@@ -1943,7 +1775,7 @@ impl Div<Value> for Value {
                     POWER_MAP => {
                         if must_assign {
                             n.v_power = other.v_power;
-                        } else if must_assign {} else if self.v_power != other.v_power {
+                        } else if self.v_power != other.v_power {
                             cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
                         }
                     }
@@ -2013,7 +1845,7 @@ impl DivAssign<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
         for i in 0..30_usize {
-            self.exp[i] = self.exp[i] - other.exp[i];
+            self.exp[i] -= other.exp[i];
             let region:usize = 1<<i;
             let in_other:bool = region & other.unit_map != 0;
             let in_self:bool = self.unit_map & region != 0;
@@ -2192,7 +2024,7 @@ impl DivAssign<Value> for Value {
                     POWER_MAP => {
                         if must_assign {
                             self.v_power = other.v_power;
-                        } else if must_assign {} else if self.v_power != other.v_power {
+                        } else if self.v_power != other.v_power {
                             cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
                         }
                     }
@@ -2258,7 +2090,7 @@ impl DivAssign<Value> for Value {
 impl Value {
     pub fn new(val:f64, units:&str) -> Value {
         let mut ret:Value = Value {
-            val:val,
+            val,
             unit_map:0,
             exp:[0.0;30],
             v_ab_dose: None,
@@ -2298,7 +2130,7 @@ impl Value {
 
     fn _radians(val:f64) -> Value {
         let mut ret:Value = Value {
-            val:val,
+            val,
             unit_map:ANGLE_MAP,
             exp:[0.0;30],
             v_ab_dose: None,
@@ -2689,7 +2521,7 @@ impl Value {
     }
 
     pub fn sqrt(&self) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = *self;
         for i in 0..30_usize {
             n.exp[i] /= 2.0;
         }
@@ -2698,7 +2530,7 @@ impl Value {
     }
 
     pub fn cbrt(&self) -> Value {
-        let mut n:Value = self.clone();
+        let mut n:Value = *self;
         for i in 0..30_usize {
             n.exp[i] /= 3.0;
         }
@@ -2833,7 +2665,7 @@ impl Value {
         true
     }
 
-    pub fn const_earth_gravity() -> Value {
+    pub const fn const_earth_gravity() -> Value {
         let mut ret:Value = Value {
             val:VAL_EARTH_GRAV,
             unit_map:LENGTH_MAP | TIME_MAP,
@@ -2874,7 +2706,7 @@ impl Value {
         ret
     }
 
-    pub fn const_abs_zero() -> Value {
+    pub const fn const_abs_zero() -> Value {
         let mut ret:Value = Value {
             val:VAL_ABS_ZERO,
             unit_map:TEMPERATURE_MAP,
@@ -2911,6 +2743,209 @@ impl Value {
             v_magnetic_flux_density : None
         };
         ret.exp[TEMPERATURE_INDEX] = 1.0;
+        ret
+    }
+
+    pub const fn const_avagadros_number() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_AVOGADROS,
+            unit_map:SUBSTANCE_MAP,
+            exp:[0.0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: Some(UnitSubstance::Mole(Metric::None)),
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret
+    }
+
+    pub const fn const_faraday() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_FARADAY,
+            unit_map:SUBSTANCE_MAP | ELECTRIC_CHARGE_MAP,
+            exp:[0.0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: Some(UnitElectricCharge::Coulomb(Metric::None)),
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: Some(UnitSubstance::Mole(Metric::None)),
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[ELECTRIC_CHARGE_MAP] = 1.0;
+        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret
+    }
+
+    pub const fn const_atomic_mass() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_ATOMIC_MASS,
+            unit_map:MASS_MAP,
+            exp:[0.0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: Some(UnitMass::Gram(Metric::Kilo)),
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[MASS_INDEX] = 1.0;
+        ret
+    }
+
+    pub const fn const_molar_gas() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_MOLAR_GAS,
+            unit_map:SUBSTANCE_MAP | TEMPERATURE_MAP | ENERGY_MAP,
+            exp:[0.0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: Some(UnitEnergy::Joule(Metric::None)),
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: Some(UnitSubstance::Mole(Metric::None)),
+            v_temperature: Some(UnitTemperature::Kelvin),
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[ENERGY_INDEX] = 1.0;
+        ret.exp[TEMPERATURE_INDEX] = -1.0;
+        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret
+    }
+
+    pub const fn const_coulomb() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_COULOMBS,
+            unit_map:SUBSTANCE_MAP,
+            exp:[0.0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: Some(UnitSubstance::Mole(Metric::None)),
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[SUBSTANCE_INDEX] = -1.0;
         ret
     }
 
@@ -3420,7 +3455,7 @@ impl Value {
                 if m != Metric::None {
                     // error because we were expecting a unit
                 }
-                match self._get_metric(&unit.chars().nth(0).unwrap()) {
+                match self._get_metric(&unit.chars().next().unwrap()) {
                     Ok(new_m) => self._get_single_letter(&unit[1..], exp, new_m),
                     Err(b) => {
                         // Error
@@ -3432,8 +3467,8 @@ impl Value {
 
     fn _get_triple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
 
-        if unit.starts_with("da") {
-            self._get_single_letter(&unit[2..], exp, Metric::Deca);
+        if let Some(da) = unit.strip_prefix("da") {
+            self._get_single_letter(da, exp, Metric::Deca);
             return;
         }
 
@@ -3473,7 +3508,7 @@ impl Value {
                 if m != Metric::None {
                     // error because we were expecting a unit
                 }
-                match self._get_metric(&unit.chars().nth(0).unwrap()) {
+                match self._get_metric(&unit.chars().next().unwrap()) {
                     Ok(new_m) => self._get_double_letter(&unit[1..], exp, new_m),
                     Err(b) => {
                         // error
@@ -3485,8 +3520,8 @@ impl Value {
 
     fn _get_quadrouple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
 
-        if unit.starts_with("da") {
-            self._get_double_letter(&unit[2..], exp, Metric::Deca);
+        if let Some(da) = unit.strip_prefix("da") {
+            self._get_double_letter(da, exp, Metric::Deca);
             return;
         }
 
@@ -3505,7 +3540,7 @@ impl Value {
                 if m != Metric::None {
                     // error 
                 }
-                match self._get_metric(&unit.chars().nth(0).unwrap()) {
+                match self._get_metric(&unit.chars().next().unwrap()) {
                     Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m),
                     Err(b) => {
                         // Error
@@ -3517,15 +3552,15 @@ impl Value {
 
     fn _get_pentuple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
 
-        if unit.starts_with("da") {
-            self._get_triple_letter(&unit[2..], exp, Metric::Deca);
+        if let Some(da) = unit.strip_prefix("da") {
+            self._get_triple_letter(da, exp, Metric::Deca);
             return;
         }
 
         if m != Metric::None {
             // error 
         }
-        match self._get_metric(&unit.chars().nth(0).unwrap()) {
+        match self._get_metric(&unit.chars().next().unwrap()) {
             Ok(new_m) => self._get_quadrouple_letter(&unit[1..], exp, new_m),
             Err(b) => {
                 // Error 
@@ -3559,6 +3594,192 @@ impl Value {
             }
         }
     }
+
+    // check if we are equivalent units
+    fn __equivalent(&self, other:&Value) -> bool {
+        if self.unit_map != other.unit_map {
+            return false;
+        }
+
+        for i in 0..30_usize {
+            if self.exp[i] != other.exp[i] {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    // only fo checking if the types are the same
+    fn __equal(&self, other:&Value) -> bool {
+        if self.unit_map != other.unit_map {
+            return false;
+        }
+        for i in 0..30_usize {
+            if self.exp[i] != other.exp[i] {
+                return false;
+            }
+            let region:usize = 1<<i;
+            if region & self.unit_map != 0 {
+                match region {
+                    LENGTH_MAP => {
+                        if self.v_length.unwrap() != other.v_length.unwrap() {
+                            return false;
+                        }
+                    }
+                    TIME_MAP => {
+                        if self.v_time.unwrap() != other.v_time.unwrap() {
+                            return false
+                        }
+                    }
+                    MASS_MAP => {
+                        if self.v_mass.unwrap() != other.v_mass.unwrap() {
+                            return false;
+                        }
+                    }
+                    ELECTRIC_CURRENT_MAP => {
+                        if self.v_electric_current.unwrap() != other.v_electric_current.unwrap() {
+                            return false;
+                        }
+                    }
+                    ELECTRIC_CHARGE_MAP => {
+                        if self.v_electric_charge.unwrap() != other.v_electric_charge.unwrap() {
+                            return false;
+                        }
+                    }
+                    ELECTRIC_POTENTIAL_MAP => {
+                        if self.v_electric_potential.unwrap() != other.v_electric_potential.unwrap() {
+                            return false;
+                        }
+                    }
+                    ELECTRIC_CONDUCTANCE_MAP => {
+                        if self.v_electric_conductance.unwrap() != other.v_electric_conductance.unwrap() {
+                            return false;
+                        }
+                    }
+                    CAPACITANCE_MAP => {
+                        if self.v_capacitance.unwrap() != other.v_capacitance.unwrap() {
+                            return false;
+                        }
+                    }
+                    RESISTANCE_MAP => {
+                        if self.v_resistance.unwrap() != other.v_resistance.unwrap() {
+                            return false;
+                        }
+                    }
+                    INDUCTANCE_MAP => {
+                        if self.v_inductance.unwrap() != other.v_inductance.unwrap() { 
+                            return false;
+                        }
+                    }
+                    MAGNETRIC_FLUX_MAP => {
+                        if self.v_magnetic_flux.unwrap() != other.v_magnetic_flux.unwrap() {
+                            return false;
+                        }
+                    }
+                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                        if self.v_magnetic_flux_density.unwrap() != other.v_magnetic_flux_density.unwrap() {
+                            return false;
+                        }
+                    }
+                    TEMPERATURE_MAP => {
+                        if self.v_temperature.unwrap() != other.v_temperature.unwrap() {
+                            return false;
+                        }
+                    }
+                    SUBSTANCE_MAP => {
+                        if self.v_substance.unwrap() != other.v_substance.unwrap() {
+                            return false;
+                        }
+                    }
+                    LUMINOUS_INTENSITY_MAP => {
+                        if self.v_luminous_flux_intensity.unwrap() != other.v_luminous_flux_intensity.unwrap() {
+                            return false;
+                        }
+                    }
+                    LUMINOUS_FLUX_MAP => {
+                        if self.v_luminous_flux.unwrap() != other.v_luminous_flux.unwrap() {
+                            return false;
+                        }
+                    }
+                    ILLUMINANCE_MAP => {
+                        if self.v_illuminance.unwrap() != other.v_illuminance.unwrap() {
+                            return false;
+                        }
+                    }
+                    VOLUME_MAP => {
+                        if self.v_volume.unwrap() != other.v_volume.unwrap() {
+                            return false;
+                        }
+                    }
+                    PRESSURE_MAP => {
+                        if self.v_pressure.unwrap() != other.v_pressure.unwrap() {
+                            return false;
+                        }
+                    }
+                    ANGLE_MAP => {
+                        if self.v_angle.unwrap() != other.v_angle.unwrap() {
+                            return false;
+                        }
+                    }
+                    FREQUENCY_MAP => {
+                        if self.v_frequency.unwrap() != other.v_frequency.unwrap() {
+                            return false;
+                        }
+                    }
+                    FORCE_MAP => {
+                        if self.v_force.unwrap() != other.v_force.unwrap() {
+                            return false;
+                        }
+                    }
+                    ENERGY_MAP => {
+                        if self.v_energy.unwrap() != other.v_energy.unwrap() {
+                            return false;
+                        }
+                    }
+                    POWER_MAP => {
+                        if self.v_power.unwrap() != other.v_power.unwrap() {
+                            return false;
+                        }
+                    }
+                    RADIOACTIVITY_MAP => {
+                        if self.v_radioactivity.unwrap() != other.v_radioactivity.unwrap() {
+                            return false;
+                        }
+                    }
+                    ABSORBED_DOSE_MAP => {
+                        if self.v_ab_dose.unwrap() != other.v_ab_dose.unwrap() {
+                            return false;
+                        }
+                    }
+                    RADIOACTIVITY_EXPOSURE_MAP => {
+                        if self.v_radioactivity_exposure.unwrap() != other.v_radioactivity_exposure.unwrap() {
+                            return false;
+                        }
+                    }
+                    CATALYTIC_ACTIVITY_MAP => {
+                        if self.v_catalytic.unwrap() != other.v_catalytic.unwrap() {
+                            return false;
+                        }
+                    }
+                    SOUND_MAP => {
+                        if self.v_sound.unwrap() != other.v_sound.unwrap() {
+                            return false;
+                        }
+                    }
+                    INFORMATION_MAP => {
+                        if self.v_information.unwrap() != other.v_information.unwrap() {
+                            return false;
+                        }
+                    }
+                    _ => {
+                        // error
+                    }
+                }
+            }
+        }
+        true
+    }
 }
 
 #[cfg(test)]
@@ -3567,10 +3788,32 @@ mod tests {
     use crate::units::Metric;
     use crate::units::UnitMass;
     use crate::units::UnitSubstance;
-    use crate::constants::MASS_INDEX;
-    use crate::constants::SUBSTANCE_INDEX;
+    use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
     use crate::values::Value;
+
+    /* This value is used for exponent equivalency
+     * When a unit's or values's exponent needs to be compared to another 
+     * units exponent, this 'cut off' is where exp are deemed 'equal'. 
+     */ 
+    const CUTOFF:f64 = 0.0000001;
+    
+    macro_rules! assert_apx {
+        ($x:expr, $y:expr, $d:expr) => {
+            if $x.__equivalent(&$y) {
+                if f64::max($x.val, $y.val) - f64::min($x.val, $y.val) > %d {panic!();}
+            } else {
+                panic!();
+            }
+        };
+        ($x:expr, $y:expr) => {
+            if $x.__equal(&$y) {
+                if f64::max($x.val, $y.val) - f64::min($x.val, $y.val) > CUTOFF {panic!();}
+            } else {
+                panic!();
+            }
+        }
+    }
 
     #[test]
     fn value_create_1(){
@@ -3668,7 +3911,7 @@ mod tests {
 
         v3 /= v2;
         v3.reduce();
-        assert_eq!((v3-v1).val < 0.00001, true);
+        assert_apx!(v3, v1);
         assert_eq!(v3.is_mass(), true);
     }
 
@@ -3682,7 +3925,7 @@ mod tests {
         println!("{:?}", v3);
         v3.reduce();
         println!("{:?}", v3);
-        assert_eq!(v3, v2);
+        assert_apx!(v3, v2);
         assert_eq!(v3.is_acceleration(), true);
     }
 }
