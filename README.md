@@ -225,16 +225,38 @@ Units cannot be converted between disparate types, although there are some excep
 ## Constants
 There are also provided constants for easier usage. 
 ```
-Absolute Zero
-Avogadro's Number
+Absolute Zero - K
+```
+```
+Avogadro's Number - mol^-1
+```
+```
 Faraday Constant
+```
+```
 Atomic Mass Constant
-Molar Gas Constant
+```
+```
+Molar Gas Constant - J/(K*mol)
+```
+```
 Coulombs Constant
+```
+```
 The Speed of light
+```
+```
 Boltzmann Constant
-The gravity of Earth
+```
+```
+The gravity of Earth - m/s^2
+```
+```
 Electron Charge 
+```
+```
 Rydberg Constant
+```
+```
 Plank's Constant
 ```
