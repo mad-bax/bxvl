@@ -17,7 +17,7 @@ use std::ops::SubAssign;
 pub struct Value {
     val:f64,                    // The numerical value
     unit_map:usize,                 // Which units are selected
-    exp:[f64;30],                   // The exponent of those units 
+    exp:[i32;30],                   // The exponent of those units 
     v_ab_dose:Option<UnitAbsorbedDose>,          // The units
     v_angle:Option<UnitAngle>,
     v_capacitance:Option<UnitCapacitance>,
@@ -55,9 +55,9 @@ impl FromStr for Value {
     fn from_str(s:&str) -> Result<Value, V3Error> {
         if !s.contains(char::is_whitespace) {
             let val:Value = match s.parse::<f64>() {
-                Ok(t) => Value::new(t, ""),
+                Ok(t) => Value::new(t, "").unwrap(),
                 Err(_) => {
-                    return Err(V3Error::ParsingError("float conversion".to_string()));
+                    return Err(V3Error::ParsingError("float conversion"));
                 }
             };
             return Ok(val);
@@ -66,10 +66,10 @@ impl FromStr for Value {
         let v:f64 = match temp[0].parse::<f64>() {
             Ok(t) => t,
             Err(_) => {
-                    return Err(V3Error::ParsingError("float conversion".to_string()));
+                    return Err(V3Error::ParsingError("float conversion"));
             }
         };
-        Ok(Value::new(v, temp[1]))
+        Value::new(v, temp[1])
     }
 }
 
@@ -1102,7 +1102,7 @@ impl Mul<Value> for Value {
             let in_self:bool = self.unit_map & region != 0;
             let must_assign:bool = !in_self && in_other;
 
-            if n.exp[i] != 0.0 {
+            if n.exp[i] != 0 {
                 n.unit_map |= region;
             }
 
@@ -1352,7 +1352,7 @@ impl MulAssign<Value> for Value {
             let in_self:bool = self.unit_map & region != 0;
             let must_assign:bool = !in_self && in_other;
 
-            if self.exp[i] != 0.0 {
+            if self.exp[i] != 0 {
                 self.unit_map |= region;
             }
 
@@ -1602,7 +1602,7 @@ impl Div<Value> for Value {
             let in_self:bool = self.unit_map & region != 0;
             let must_assign:bool = !in_self && in_other;
 
-            if n.exp[i] != 0.0 {
+            if n.exp[i] != 0 {
                 n.unit_map |= region;
             }
 
@@ -1851,7 +1851,7 @@ impl DivAssign<Value> for Value {
             let in_self:bool = self.unit_map & region != 0;
             let must_assign:bool = !in_self && in_other;
 
-            if self.exp[i] != 0.0 {
+            if self.exp[i] != 0 {
                 self.unit_map |= region;
             }
 
@@ -2088,11 +2088,11 @@ impl DivAssign<Value> for Value {
 //}
 
 impl Value {
-    pub fn new(val:f64, units:&str) -> Value {
+    pub fn new(val:f64, units:&str) -> Result<Value, V3Error> {
         let mut ret:Value = Value {
             val,
             unit_map:0,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2125,14 +2125,14 @@ impl Value {
             v_magnetic_flux_density : None
         };
         ret._create_unit(units);
-        ret
+        Ok(ret)
     }
 
     fn _radians(val:f64) -> Value {
         let mut ret:Value = Value {
             val,
             unit_map:ANGLE_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: Some(UnitAngle::Radian(Metric::None)),
             v_capacitance: None,
@@ -2164,19 +2164,19 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[ANGLE_INDEX] = 1.0;
+        ret.exp[ANGLE_INDEX] = 1;
         ret
     }
 
     pub fn convert(&mut self, other:&Value) -> Result<(), V3Error> {
         if self.unit_map != other.unit_map {
-            return Err(V3Error::ValueConversionError("Inequivalent unit types".to_string()));
+            return Err(V3Error::ValueConversionError("Inequivalent unit types"));
         }
 
         // check against temperature 
         if self.unit_map & TEMPERATURE_MAP < self.unit_map {
             if self.v_temperature != other.v_temperature {
-                return Err(V3Error::ValueConversionError("Temperature unit mismatch".to_string()));
+                return Err(V3Error::ValueConversionError("Temperature unit mismatch"));
             }
         } else if self.unit_map == TEMPERATURE_MAP {
             self.val = self.v_temperature.unwrap().convert(&other.v_temperature.unwrap(), self.val);
@@ -2186,7 +2186,7 @@ impl Value {
 
         for i in 0..30_usize {
             if self.exp[i] != other.exp[i] {
-                return Err(V3Error::ValueConversionError("Mismatched value exponents".to_string()));
+                return Err(V3Error::ValueConversionError("Mismatched value exponents"));
             }
             let region:usize = 1<<i;
             if region & self.unit_map != 0 {
@@ -2282,7 +2282,7 @@ impl Value {
                         self.v_information.unwrap().convert(&other.v_information.unwrap())
                     }
                     _ => {
-                        return Err(V3Error::UnknownError("Value conversion".to_string()));
+                        return Err(V3Error::UnknownError("Value conversion"));
                     }
                 };
             }
@@ -2293,7 +2293,7 @@ impl Value {
     pub fn reduce(&mut self) {
         // converting to a force
         if self.unit_map == LENGTH_MAP | TIME_MAP | MASS_MAP {
-            if self.exp[LENGTH_INDEX]*-2.0 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] && self.exp[LENGTH_INDEX] == 1.0 {
+            if self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] && self.exp[LENGTH_INDEX] == 1 {
                 match self.v_length.unwrap() {
                     UnitLength::Meter(_) => {}
                     _ => {
@@ -2320,13 +2320,13 @@ impl Value {
                 self.v_time = None;
                 self.v_force = Some(UnitForce::Newton(Metric::None));
                 self.unit_map = FORCE_MAP;
-                self.exp[LENGTH_INDEX] = 0.0;
-                self.exp[TIME_INDEX] = 0.0;
-                self.exp[MASS_INDEX] = 0.0;
-                self.exp[FORCE_INDEX] = 1.0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[MASS_INDEX] = 0;
+                self.exp[FORCE_INDEX] = 1;
             }
         } else if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP { // converting force to mass
-            if self.exp[FORCE_INDEX]*2.0 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == -1.0*self.exp[FORCE_INDEX] && self.exp[FORCE_INDEX] == 1.0 {
+            if self.exp[FORCE_INDEX]*2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == -1*self.exp[FORCE_INDEX] && self.exp[FORCE_INDEX] == 1 {
                 match self.v_length.unwrap() {
                     UnitLength::Meter(_) => {}
                     _ => {
@@ -2353,13 +2353,13 @@ impl Value {
                 self.v_time = None;
                 self.v_force = None;
                 self.unit_map = MASS_MAP;
-                self.exp[LENGTH_INDEX] = 0.0;
-                self.exp[TIME_INDEX] = 0.0;
-                self.exp[MASS_INDEX] = 1.0;
-                self.exp[FORCE_INDEX] = 0.0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[MASS_INDEX] = 1;
+                self.exp[FORCE_INDEX] = 0;
             }
         } else if self.unit_map == FORCE_MAP | MASS_MAP { // converting force to acceleration
-            if self.exp[FORCE_INDEX] == 1.0 && self.exp[MASS_INDEX] == -1.0 {
+            if self.exp[FORCE_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
                 match self.v_force.unwrap() {
                     UnitForce::Newton(_) => {}
                     _ => {
@@ -2378,13 +2378,13 @@ impl Value {
                 self.v_time = Some(UnitTime::Second(Metric::None));
                 self.v_force = None;
                 self.unit_map = LENGTH_MAP | TIME_MAP;
-                self.exp[LENGTH_INDEX] = 1.0;
-                self.exp[TIME_INDEX] = -2.0;
-                self.exp[MASS_INDEX] = 0.0;
-                self.exp[FORCE_INDEX] = 0.0;
+                self.exp[LENGTH_INDEX] = 1;
+                self.exp[TIME_INDEX] = -2;
+                self.exp[MASS_INDEX] = 0;
+                self.exp[FORCE_INDEX] = 0;
             }
         } else if self.unit_map == FORCE_MAP | TIME_MAP {
-            if self.exp[LENGTH_INDEX]*-2.0 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] {
+            if self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] {
                 match self.v_time.unwrap() {
                     UnitTime::Second(_) => {}
                     _ => {
@@ -2404,13 +2404,13 @@ impl Value {
                 self.v_time = None;
                 self.v_force = None;
                 self.unit_map = LENGTH_MAP | MASS_MAP;
-                self.exp[LENGTH_INDEX] = 1.0;
-                self.exp[TIME_INDEX] = 0.0;
-                self.exp[MASS_INDEX] = 1.0;
-                self.exp[FORCE_INDEX] = 0.0;
+                self.exp[LENGTH_INDEX] = 1;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[MASS_INDEX] = 1;
+                self.exp[FORCE_INDEX] = 0;
             }
         } else if self.unit_map == FORCE_MAP | LENGTH_MAP {
-            if self.exp[LENGTH_INDEX] == -1.0 && self.exp[FORCE_INDEX] == 1.0 {
+            if self.exp[LENGTH_INDEX] == -1 && self.exp[FORCE_INDEX] == 1 {
                 match self.v_length.unwrap() {
                     UnitLength::Meter(_) => {}
                     _ => {
@@ -2430,13 +2430,13 @@ impl Value {
                 self.v_time = Some(UnitTime::Second(Metric::None));
                 self.v_force = None;
                 self.unit_map = TIME_MAP | MASS_MAP;
-                self.exp[LENGTH_INDEX] = 0.0;
-                self.exp[TIME_INDEX] = -2.0;
-                self.exp[MASS_INDEX] = 1.0;
-                self.exp[FORCE_INDEX] = 0.0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.exp[TIME_INDEX] = -2;
+                self.exp[MASS_INDEX] = 1;
+                self.exp[FORCE_INDEX] = 0;
             }
         } else if self.unit_map == FORCE_MAP | TIME_MAP | MASS_MAP {
-            if self.exp[TIME_INDEX] == -1.0 && self.exp[MASS_INDEX] == -1.0 && self.exp[FORCE_INDEX] == 1.0 {
+            if self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == -1 && self.exp[FORCE_INDEX] == 1 {
                 match self.v_force.unwrap() {
                     UnitForce::Newton(_) => {}
                     _ => {
@@ -2463,10 +2463,10 @@ impl Value {
                 self.v_time = None;
                 self.v_force = None;
                 self.unit_map = LENGTH_MAP;
-                self.exp[LENGTH_INDEX] = 1.0;
-                self.exp[TIME_INDEX] = 0.0;
-                self.exp[MASS_INDEX] = 0.0;
-                self.exp[FORCE_INDEX] = 0.0;
+                self.exp[LENGTH_INDEX] = 1;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[MASS_INDEX] = 0;
+                self.exp[FORCE_INDEX] = 0;
             }
         }
     }
@@ -2474,19 +2474,19 @@ impl Value {
     pub fn inv(&mut self) {
         self.val = 1.0/self.val;
         for i in 0..self.exp.len() {
-            self.exp[i] *= -1.0;
+            self.exp[i] *= -1;
         }
     }
 
     pub fn to_radians(&mut self) {
-        if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1.0 {
+        if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
             // panic
         }
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
     }
 
     pub fn to_degrees(&mut self) {
-        if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1.0 {
+        if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
             // panic
         }
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Degree);
@@ -2523,7 +2523,7 @@ impl Value {
     pub fn sqrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..30_usize {
-            n.exp[i] /= 2.0;
+            n.exp[i] /= 2;
         }
         n.val = n.val.sqrt();
         n
@@ -2532,7 +2532,7 @@ impl Value {
     pub fn cbrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..30_usize {
-            n.exp[i] /= 3.0;
+            n.exp[i] /= 3;
         }
         n.val = n.val.cbrt();
         n
@@ -2563,7 +2563,7 @@ impl Value {
     }
 
     pub fn atan2(&self, other:&Value) -> Value {
-        if other.unit_map != ANGLE_MAP && other.exp[ANGLE_INDEX] != 1.0 {
+        if other.unit_map != ANGLE_MAP && other.exp[ANGLE_INDEX] != 1 {
             // panic
         }
         let new_v:f64 = other.val * other.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
@@ -2574,7 +2574,7 @@ impl Value {
         if self.unit_map & LENGTH_MAP != self.unit_map {
             return false;
         }
-        if self.exp[LENGTH_INDEX] != 1.0 {
+        if self.exp[LENGTH_INDEX] != 1 {
             return false;
         }
         true
@@ -2584,7 +2584,7 @@ impl Value {
         if self.unit_map & LENGTH_MAP != self.unit_map {
             return false;
         }
-        if self.exp[LENGTH_INDEX] != 2.0 {
+        if self.exp[LENGTH_INDEX] != 2 {
             return false;
         }
         true
@@ -2592,11 +2592,11 @@ impl Value {
 
     pub fn is_volume(&self) -> bool {
         if self.unit_map & LENGTH_MAP == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 3.0 {
+            if self.exp[LENGTH_INDEX] == 3 {
                 return true;
             }
         } else if self.unit_map & VOLUME_MAP == self.unit_map {
-            if self.exp[VOLUME_INDEX] == 1.0 {
+            if self.exp[VOLUME_INDEX] == 1 {
                 return true;
             }
         }
@@ -2607,7 +2607,7 @@ impl Value {
         if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
             return false;
         }
-        if self.exp[LENGTH_INDEX] != 1.0 || self.exp[TIME_INDEX] != -1.0 {
+        if self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -1 {
             return false;
         }
         true
@@ -2617,7 +2617,7 @@ impl Value {
         if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
             return false;
         }
-        if self.exp[LENGTH_INDEX] != 1.0 || self.exp[TIME_INDEX] != -2.0 {
+        if self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -2 {
             return false;
         }
         true
@@ -2625,11 +2625,11 @@ impl Value {
 
     pub fn is_force(&self) -> bool {
         if self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 1.0 && self.exp[TIME_INDEX] == -2.0 && self.exp[MASS_INDEX] == 1.0 {
+            if self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -2 && self.exp[MASS_INDEX] == 1 {
                 return true;
             }
         } else if self.unit_map & FORCE_MAP == self.unit_map {
-            if self.exp[FORCE_INDEX] == 1.0 {
+            if self.exp[FORCE_INDEX] == 1 {
                 return true;
             }
         }
@@ -2638,7 +2638,7 @@ impl Value {
 
     pub fn is_momentum(&self) -> bool {
         if self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 1.0 && self.exp[TIME_INDEX] == -1.0 && self.exp[MASS_INDEX] == 1.0 {
+            if self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == 1 {
                 return true;
             }
         }
@@ -2649,7 +2649,7 @@ impl Value {
         if self.unit_map & TIME_MAP != self.unit_map {
             return false;
         }
-        if self.exp[TIME_INDEX] != 1.0 {
+        if self.exp[TIME_INDEX] != 1 {
             return false;
         }
         true
@@ -2659,7 +2659,7 @@ impl Value {
         if self.unit_map & MASS_MAP != self.unit_map {
             return false;
         }
-        if self.exp[MASS_INDEX] != 1.0 {
+        if self.exp[MASS_INDEX] != 1 {
             return false;
         }
         true
@@ -2669,7 +2669,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_EARTH_GRAV,
             unit_map:LENGTH_MAP | TIME_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2701,8 +2701,8 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[LENGTH_INDEX] = 1.0;
-        ret.exp[TIME_INDEX] = -2.0;
+        ret.exp[LENGTH_INDEX] = 1;
+        ret.exp[TIME_INDEX] = -2;
         ret
     }
 
@@ -2710,7 +2710,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_ABS_ZERO,
             unit_map:TEMPERATURE_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2742,7 +2742,7 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[TEMPERATURE_INDEX] = 1.0;
+        ret.exp[TEMPERATURE_INDEX] = 1;
         ret
     }
 
@@ -2750,7 +2750,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_AVOGADROS,
             unit_map:SUBSTANCE_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2782,7 +2782,7 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret.exp[SUBSTANCE_INDEX] = -1;
         ret
     }
 
@@ -2790,7 +2790,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_FARADAY,
             unit_map:SUBSTANCE_MAP | ELECTRIC_CHARGE_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2822,8 +2822,8 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[ELECTRIC_CHARGE_MAP] = 1.0;
-        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret.exp[ELECTRIC_CHARGE_MAP] = 1;
+        ret.exp[SUBSTANCE_INDEX] = -1;
         ret
     }
 
@@ -2831,7 +2831,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_ATOMIC_MASS,
             unit_map:MASS_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2863,7 +2863,7 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[MASS_INDEX] = 1.0;
+        ret.exp[MASS_INDEX] = 1;
         ret
     }
 
@@ -2871,7 +2871,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_MOLAR_GAS,
             unit_map:SUBSTANCE_MAP | TEMPERATURE_MAP | ENERGY_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2903,9 +2903,9 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[ENERGY_INDEX] = 1.0;
-        ret.exp[TEMPERATURE_INDEX] = -1.0;
-        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret.exp[ENERGY_INDEX] = 1;
+        ret.exp[TEMPERATURE_INDEX] = -1;
+        ret.exp[SUBSTANCE_INDEX] = -1;
         ret
     }
 
@@ -2913,7 +2913,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_COULOMBS,
             unit_map:SUBSTANCE_MAP,
-            exp:[0.0;30],
+            exp:[0;30],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -2945,35 +2945,37 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret.exp[SUBSTANCE_INDEX] = -1.0;
+        ret.exp[SUBSTANCE_INDEX] = -1;
         ret
     }
 
-    fn _create_unit(&mut self, units:&str) {
-        let tokens:(Vec<String>, Vec<String>) = self._get_tokens(units, false);
+    fn _create_unit(&mut self, units:&str) -> Result<(), V3Error>{
+        let tokens:(Vec<String>, Vec<String>) = self._get_tokens(units, false)?;
 
         // do the numors first
         for t in tokens.0 {
-            let mut expon:f64 = 1.0;
+            let mut expon:i32 = 1;
             let temp_split:Vec<&str> = t.split('^').collect();
             if temp_split.len() > 1 {
-                expon = temp_split[1].parse::<f64>().unwrap();
+                expon = temp_split[1].parse::<i32>().unwrap();
             }
-            self._parse_units(temp_split[0], expon);
+            self._parse_units(temp_split[0], expon)?;
         }
 
         // now the denoms
         for t in tokens.1 {
-            let mut expon:f64 = -1.0;
+            let mut expon:i32 = -1;
             let temp_split:Vec<&str> = t.split('^').collect();
             if temp_split.len() > 1 {
-                expon *= temp_split[1].parse::<f64>().unwrap();
+                expon *= temp_split[1].parse::<i32>().unwrap();
             }
-            self._parse_units(temp_split[0], expon);
+            self._parse_units(temp_split[0], expon)?;
         }
+
+        Ok(())
     }
 
-    fn _get_tokens(&self, block:&str, do_denom:bool) -> (Vec<String>, Vec<String>) {
+    fn _get_tokens(&self, block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), V3Error> {
         let mut numor:Vec<String> = Vec::new();
         let mut denom:Vec<String> = Vec::new();
     
@@ -2997,7 +2999,7 @@ impl Value {
                     left_count-=1;
                     if left_count == 0 {
                         end_index = index;
-                        let mut ret:(Vec<String>, Vec<String>) = self._get_tokens(&block[start_index..end_index], found_divisor);
+                        let mut ret:(Vec<String>, Vec<String>) = self._get_tokens(&block[start_index..end_index], found_divisor)?;
                         numor.append(&mut ret.0);
                         denom.append(&mut ret.1);
                     }
@@ -3042,218 +3044,218 @@ impl Value {
             }
         }
     
-        (numor, denom)
+        Ok((numor, denom))
     }
 
-    fn _parse_units(&mut self, unit:&str, exp:f64) {
+    fn _parse_units(&mut self, unit:&str, exp:i32) -> Result<(), V3Error> {
         let l:usize = unit.chars().count();
         if l == 0 {
-            return;
+            return Ok(());
         }
 
         // first match it against known unique strings
         match unit {
             "mph" => {
-                if exp != 1.0 || exp != -1.0 {
-                    // error
+                if exp != 1 || exp != -1 {
+                    return Err(V3Error::ParsingError("MPH exponent"));
                 }
                 self.v_length = Some(UnitLength::Mile);
                 self.exp[LENGTH_INDEX] = exp;
                 self.v_time = Some(UnitTime::Hour);
-                self.exp[TIME_INDEX] = -1.0*exp;
+                self.exp[TIME_INDEX] = -1*exp;
                 self.unit_map = LENGTH_MAP | TIME_MAP;
-                return
+                return Ok(());
             }
             "kph" => {
-                if exp != 1.0 || exp != -1.0 {
+                if exp != 1 || exp != -1 {
                     // error
                 }
                 self.v_length = Some(UnitLength::Meter(Metric::Kilo));
                 self.exp[LENGTH_INDEX] = exp;
                 self.v_time = Some(UnitTime::Hour);
-                self.exp[TIME_INDEX] = -1.0*exp;
+                self.exp[TIME_INDEX] = -1*exp;
                 self.unit_map |= LENGTH_MAP | TIME_MAP;
-                return
+                return Ok(());
             }
             "mmHg" => {
                 self.v_pressure = Some(UnitPressure::Hgmm);
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
-                return
+                return Ok(());
             }
             "inHg" => {
                 self.v_pressure = Some(UnitPressure::Hgin);
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
-                return
+                return Ok(());
             }
             "byte" | "bytes" => {
                 self.v_information = Some(UnitInformation::Byte(Metric::None));
                 self.exp[INFORMATION_INDEX] = exp;
                 self.unit_map |= INFORMATION_MAP;
-                return
+                return Ok(());
             }
             "bit" | "bits" => {
                 self.v_information = Some(UnitInformation::Bit(Metric::None));
                 self.exp[INFORMATION_INDEX] = exp;
                 self.unit_map |= INFORMATION_MAP;
-                return
+                return Ok(());
             }
             "radian" | "radians" => {
                 self.v_angle = Some(UnitAngle::Radian(Metric::None));
                 self.exp[ANGLE_INDEX] = exp;
                 self.unit_map |= ANGLE_MAP;
-                return
+                return Ok(());
             }
             "angstrom" | "angstroms" => {
                 self.v_length = Some(UnitLength::Angstrom);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "inch" | "in" => {
                 self.v_length = Some(UnitLength::Inch);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "foot" | "feet" | "ft" => {
                 self.v_length = Some(UnitLength::Foot);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "yard" | "yards" | "yd" | "yds" => {
                 self.v_length = Some(UnitLength::Yard);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "mile" | "miles" => {
                 self.v_length = Some(UnitLength::Mile);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "atm" | "ATM" => {
                 self.v_pressure = Some(UnitPressure::Atm);
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
-                return
+                return Ok(());
             }
             "psi" | "PSI" => {
                 self.v_pressure = Some(UnitPressure::Psi);
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
-                return
+                return Ok(());
             }
             "f" | "°f" | "°F" => {
                 self.v_temperature = Some(UnitTemperature::Fahrenheit);
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
-                return
+                return Ok(());
             }
             "c" | "°c" | "°C" => {
                 self.v_temperature = Some(UnitTemperature::Celsius);
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
-                return
+                return Ok(());
             }
             "footpound" | "footpounds" | "ftlb" | "ftlbs" => {
                 self.v_energy = Some(UnitEnergy::FootPound);
                 self.exp[ENERGY_INDEX] = exp;
                 self.unit_map |= ENERGY_MAP;
-                return
+                return Ok(());
             }
             "poundforce" | "poundsforce" | "lbfr" | "lbsfr" => {
                 self.v_force = Some(UnitForce::PoundForce);
                 self.exp[FORCE_INDEX] = exp;
                 self.unit_map |= FORCE_MAP;
-                return
+                return Ok(());
             }
             "ounce" | "ounces" | "oz" => {
                 self.v_mass = Some(UnitMass::Ounce);
                 self.exp[MASS_INDEX] = exp;
                 self.unit_map |= MASS_MAP;
-                return
+                return Ok(());
             }
             "grain" | "grains" | "gr" => {
                 self.v_mass = Some(UnitMass::Grain);
                 self.exp[MASS_INDEX] = exp;
                 self.unit_map |= MASS_MAP;
-                return
+                return Ok(());
             }
             "pound" | "lbs" | "lb" => {
                 self.v_mass = Some(UnitMass::Pound);
                 self.exp[MASS_INDEX] = exp;
                 self.unit_map |= MASS_MAP;
-                return
+                return Ok(());
             }
             "moa" | "MOA" => {
                 self.v_angle = Some(UnitAngle::Moa);
                 self.exp[ANGLE_INDEX] = exp;
                 self.unit_map |= ANGLE_MAP;
-                return
+                return Ok(());
             }
             "rads" | "Rads" => {
                 self.v_ab_dose = Some(UnitAbsorbedDose::Rad);
                 self.exp[ABSORBED_DOSE_INDEX] = exp;
                 self.unit_map |= ABSORBED_DOSE_MAP;
-                return
+                return Ok(());
             }
             "rem" | "Rem" => {
                 self.v_radioactivity_exposure = Some(UnitRadioactivityExposure::Rem);
                 self.exp[RADIOACTIVITY_EXPOSURE_INDEX] = exp;
                 self.unit_map |= RADIOACTIVITY_EXPOSURE_MAP;
-                return
+                return Ok(());
             }
             "mil" | "MIL" | "mils" => {
                 self.v_angle = Some(UnitAngle::Radian(Metric::Milli));
                 self.exp[ANGLE_INDEX] = exp;
                 self.unit_map |= ANGLE_MAP;
-                return
+                return Ok(());
             }
             "degrees" | "degree" | "°" => {
                 self.v_angle = Some(UnitAngle::Degree);
                 self.exp[ANGLE_INDEX] = exp;
                 self.unit_map |= ANGLE_MAP;
-                return
+                return Ok(());
             }
             "lightyear" | "lightyears" | "lyr" => {
                 self.v_length = Some(UnitLength::LightYear);
                 self.exp[ANGLE_INDEX] = exp;
                 self.unit_map |= LENGTH_INDEX;
-                return
+                return Ok(());
             }
             "farad" | "farads" => {
                 self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
                 self.exp[CAPACITANCE_INDEX] = exp;
                 self.unit_map |= CAPACITANCE_MAP;
-                return
+                return Ok(());
             }
             "micron" | "microns" => {
                 self.v_length = Some(UnitLength::Meter(Metric::Micro));
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-                return
+                return Ok(());
             }
             "min" | "minute" | "minutes" => {
                 self.v_time = Some(UnitTime::Minute);
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
-                return
+                return Ok(());
             }
             "h" | "hour" | "hours" => {
                 self.v_time = Some(UnitTime::Hour);
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
-                return
+                return Ok(());
             }
             "d" | "day" | "days" => {
                 self.v_time = Some(UnitTime::Day);
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
-                return
+                return Ok(());
             }
             _ => {
                 // do nothing
@@ -3261,21 +3263,22 @@ impl Value {
         }
 
         if l == 1 {
-            self._get_single_letter(unit, exp, Metric::None);
+            self._get_single_letter(unit, exp, Metric::None)?;
         } else if l == 2 {
-            self._get_double_letter(unit, exp, Metric::None);
+            self._get_double_letter(unit, exp, Metric::None)?;
         } else if l == 3 {
-            self._get_triple_letter(unit, exp, Metric::None);
+            self._get_triple_letter(unit, exp, Metric::None)?;
         } else if l == 4 {
-            self._get_quadrouple_letter(unit, exp, Metric::None);
+            self._get_quadrouple_letter(unit, exp, Metric::None)?;
         } else if l == 5 {
-            self._get_pentuple_letter(unit, exp, Metric::None);
+            self._get_pentuple_letter(unit, exp, Metric::None)?;
         } else {
             // error
         }
+        Ok(())
     }
 
-    fn _get_single_letter(&mut self, unit:&str, exp:f64, m:Metric) {
+    fn _get_single_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error>{
         match unit {
             "m" => {
                 self.v_length = Some(UnitLength::Meter(m));
@@ -3379,12 +3382,13 @@ impl Value {
                 self.unit_map |= VOLUME_MAP;
             }
             _ => {
-                // Error
+                return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
             }
         }
+        Ok(())
     }
 
-    fn _get_double_letter(&mut self, unit:&str, exp:f64, m:Metric) {
+    fn _get_double_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
         match unit {
             "Hz" => {
                 self.v_frequency = Some(UnitFrequency::Hertz(m));
@@ -3453,23 +3457,23 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    // error because we were expecting a unit
+                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
                 }
                 match self._get_metric(&unit.chars().next().unwrap()) {
-                    Ok(new_m) => self._get_single_letter(&unit[1..], exp, new_m),
-                    Err(b) => {
-                        // Error
+                    Ok(new_m) => self._get_single_letter(&unit[1..], exp, new_m)?,
+                    Err(e) => {
+                        return Err(e);
                     }
                 }
             }
         }
+        Ok(())
     }
 
-    fn _get_triple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
+    fn _get_triple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            self._get_single_letter(da, exp, Metric::Deca);
-            return;
+            return self._get_single_letter(da, exp, Metric::Deca);
         }
 
         match unit {
@@ -3506,23 +3510,23 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    // error because we were expecting a unit
+                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
                 }
                 match self._get_metric(&unit.chars().next().unwrap()) {
-                    Ok(new_m) => self._get_double_letter(&unit[1..], exp, new_m),
-                    Err(b) => {
-                        // error
+                    Ok(new_m) => self._get_double_letter(&unit[1..], exp, new_m)?,
+                    Err(e) => {
+                        return Err(e);
                     }
                 }
             }
         }
+        Ok(())
     }
 
-    fn _get_quadrouple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
+    fn _get_quadrouple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            self._get_double_letter(da, exp, Metric::Deca);
-            return;
+            return self._get_double_letter(da, exp, Metric::Deca);
         }
 
         match unit {
@@ -3538,37 +3542,37 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    // error 
+                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
                 }
                 match self._get_metric(&unit.chars().next().unwrap()) {
-                    Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m),
-                    Err(b) => {
-                        // Error
+                    Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m)?,
+                    Err(e) => {
+                        return Err(e);
                     }
                 }
             }
         }
+        Ok(())
     }
 
-    fn _get_pentuple_letter(&mut self, unit:&str, exp:f64, m:Metric) {
+    fn _get_pentuple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            self._get_triple_letter(da, exp, Metric::Deca);
-            return;
+            return self._get_triple_letter(da, exp, Metric::Deca);
         }
 
         if m != Metric::None {
-            // error 
+            return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
         }
         match self._get_metric(&unit.chars().next().unwrap()) {
             Ok(new_m) => self._get_quadrouple_letter(&unit[1..], exp, new_m),
-            Err(b) => {
-                // Error 
+            Err(e) => {
+                return Err(e);
             }
         }
     }
 
-    fn _get_metric(&mut self, unit:&char) -> Result<Metric, bool> {
+    fn _get_metric(&mut self, unit:&char) -> Result<Metric, V3Error> {
         match unit {
             'Y' => Ok(Metric::Yotta),
             'Z' => Ok(Metric::Zetta),
@@ -3590,7 +3594,7 @@ impl Value {
             'z' => Ok(Metric::Zepto),
             'y' => Ok(Metric::Yocto),
             _ => {
-                Err(false)
+                Err(V3Error::UnsupportedMetric(format!("Unsupported metric: {}", unit)))
             }
         }
     }
@@ -3817,27 +3821,27 @@ mod tests {
 
     #[test]
     fn value_create_1(){
-        let v:Value = Value::new(4.5, "kg/mol");
+        let v:Value = Value::new(4.5, "kg/mol").unwrap();
         assert_eq!(v.unit_map, MASS_MAP | SUBSTANCE_MAP);
         assert_eq!(v.val, 4.5);
         assert_eq!(v.v_mass, Some(UnitMass::Gram(Metric::Kilo)));
         assert_eq!(v.v_substance, Some(UnitSubstance::Mole(Metric::None)));
-        assert_eq!(v.exp[MASS_INDEX], 1.0);
-        assert_eq!(v.exp[SUBSTANCE_INDEX], -1.0);
+        assert_eq!(v.exp[MASS_INDEX], 1);
+        assert_eq!(v.exp[SUBSTANCE_INDEX], -1);
     }
 
     #[test]
     fn value_1(){
-        let result:Value = Value::new(3.4, &"kg");
+        let result:Value = Value::new(3.4, &"kg").unwrap();
         assert_eq!(result.unit_map, MASS_MAP);
         assert_eq!(result.val, 3.4);
     }
 
     #[test]
     fn value_2(){
-        let mut e1:Value = Value::new(5.0, "bytes");
-        let e2:Value = Value::new(1.0, "Gb");
-        let expected:Value = Value::new(0.000000004656613, "Gb");
+        let mut e1:Value = Value::new(5.0, "bytes").unwrap();
+        let e2:Value = Value::new(1.0, "Gb").unwrap();
+        let expected:Value = Value::new(0.000000004656613, "Gb").unwrap();
         let _ = e1.convert(&e2).unwrap();
 
         if f64::max(e1.val, expected.val) - f64::min(e1.val, expected.val) > 0.000001 {
@@ -3847,8 +3851,8 @@ mod tests {
 
     #[test]
     fn value_3(){
-        let v1:Value = Value::new(3.4, "kg");
-        let v2:Value = Value::new(3.4, "kg");
+        let v1:Value = Value::new(3.4, "kg").unwrap();
+        let v2:Value = Value::new(3.4, "kg").unwrap();
         let result:Value = v1/v2;
         assert_eq!(result.unit_map, 0);
         assert_eq!(result.val, 1.0);
@@ -3856,8 +3860,8 @@ mod tests {
 
     #[test]
     fn value_4(){
-        let v1:Value = Value::new(1.0, "kg^-1");
-        let v2:Value = Value::new(2.0, "kg");
+        let v1:Value = Value::new(1.0, "kg^-1").unwrap();
+        let v2:Value = Value::new(2.0, "kg").unwrap();
         let result:Value = v1*v2;
         assert_eq!(result.unit_map, 0);
         assert_eq!(result.val, 2.0);
@@ -3865,37 +3869,37 @@ mod tests {
 
     #[test]
     fn value_5(){
-        let mut v1:Value = Value::new(1.0, "kg");
+        let mut v1:Value = Value::new(1.0, "kg").unwrap();
         v1+=1.0_f64;
         assert_eq!(v1.val, 2.0);
     }
 
     #[test]
     fn value_6(){
-        let mut v1:Value = Value::new(5.0, "g");
+        let mut v1:Value = Value::new(5.0, "g").unwrap();
         v1-=3.5;
         assert_eq!(v1.val, 1.5);
     }
 
     #[test]
     fn value_7(){
-        let mut v1:Value = Value::new(7.0, "g");
+        let mut v1:Value = Value::new(7.0, "g").unwrap();
         v1*=3.0;
         assert_eq!(v1.val, 21.0);
     }
 
     #[test]
     fn value_8(){
-        let mut v1:Value = Value::new(8.0, "m");
+        let mut v1:Value = Value::new(8.0, "m").unwrap();
         v1/=2.0;
         assert_eq!(v1.val, 4.0);
     }
 
     #[test]
     fn value_reduction_1(){
-        let mut v1:Value = Value::new(247.0, "g");
+        let mut v1:Value = Value::new(247.0, "g").unwrap();
         let v2:Value = Value::const_earth_gravity();
-        let ret:Value = Value::new(2.42224255, "N");
+        let ret:Value = Value::new(2.42224255, "N").unwrap();
 
         v1 *= v2;
         v1.reduce();
@@ -3905,9 +3909,9 @@ mod tests {
 
     #[test]
     fn value_reduction_2(){
-        let v1:Value = Value::new(0.247, "kg");
+        let v1:Value = Value::new(0.247, "kg").unwrap();
         let v2:Value = Value::const_earth_gravity();
-        let mut v3:Value = Value::new(2.42224255, "N");
+        let mut v3:Value = Value::new(2.42224255, "N").unwrap();
 
         v3 /= v2;
         v3.reduce();
@@ -3917,9 +3921,9 @@ mod tests {
 
         #[test]
     fn value_reduction_3(){
-        let v1:Value = Value::new(247000.0, "mg");
+        let v1:Value = Value::new(247000.0, "mg").unwrap();
         let v2:Value = Value::const_earth_gravity();
-        let mut v3:Value = Value::new(2.42224255, "N");
+        let mut v3:Value = Value::new(2.42224255, "N").unwrap();
 
         v3 /= v1;
         println!("{:?}", v3);
