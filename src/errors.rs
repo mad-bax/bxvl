@@ -3,11 +3,11 @@ use std::fmt;
 #[derive(Debug)]
 pub enum V3Error {
     UnitConversionError,
-    ValueConversionError(String),
+    ValueConversionError(&'static str),
     UnsupportedUnit(String),
     UnsupportedMetric(String),
-    ParsingError(String),
-    UnknownError(String)
+    ParsingError(&'static str),
+    UnknownError(&'static str)
 }
 
 impl fmt::Display for V3Error {
@@ -17,7 +17,7 @@ impl fmt::Display for V3Error {
                 f,
                 "Unit Conversion Error"
             ),
-            V3Error::ValueConversionError(ref s) => write!(
+            V3Error::ValueConversionError(s) => write!(
                 f,
                 "Value Conversion Error: {}",
                 s
@@ -32,12 +32,12 @@ impl fmt::Display for V3Error {
                 "Unsupported metric: {}",
                 s
             ),
-            V3Error::ParsingError(ref s) => write!(
+            V3Error::ParsingError(s) => write!(
                 f,
                 "Parsing error: {}",
                 s
             ),
-            V3Error::UnknownError(ref s) => write!(
+            V3Error::UnknownError(s) => write!(
                 f,
                 "Unknown Error: {}",
                 s

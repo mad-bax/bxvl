@@ -7,13 +7,13 @@ use v3::units::UnitLength;
 use v3::units::Metric;
 
 fn criterion_benchmark(c:&mut Criterion) {
-    let va1:Value = black_box(Value::new(1.2, "s"));
-    let va2:Value = black_box(Value::new(10.9, "m/s"));
-    let mut va3_1:Value = black_box(Value::new(10.9, "m/s"));
-    let mut va3_2:Value = black_box(Value::new(10.9, "m/s"));
-    let mut va3_3:Value = black_box(Value::new(10.9, "ft/s"));
-    let va4:Value = black_box(Value::new(3.4, "m/s"));
-    let va5:Value = black_box(Value::new(3.4, "m"));
+    let va1:Value = black_box(Value::new(1.2, "s").unwrap());
+    let va2:Value = black_box(Value::new(10.9, "m/s").unwrap());
+    let mut va3_1:Value = black_box(Value::new(10.9, "m/s").unwrap());
+    let mut va3_2:Value = black_box(Value::new(10.9, "m/s").unwrap());
+    let mut va3_3:Value = black_box(Value::new(10.9, "ft/s").unwrap());
+    let va4:Value = black_box(Value::new(3.4, "m/s").unwrap());
+    let va5:Value = black_box(Value::new(3.4, "m").unwrap());
     let u1 = black_box(UnitLength::Meter(Metric::Kilo));
     let u2 = black_box(UnitLength::Mile);
     let u3 = black_box(UnitLength::Meter(Metric::Milli));

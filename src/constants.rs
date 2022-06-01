@@ -5,11 +5,8 @@
  * Details :>
  */
 
-/* This value is used for exponent equivalency
- * When a unit's or values's exponent needs to be compared to another 
- * units exponent, this 'cut off' is where exp are deemed 'equal'. 
- */ 
-pub const CUTOFF:f64 = 0.0000001;
+ use crate::values::Value;
+ use crate::units::*;
 
 /* These constants are for converting between likewise units. 
  * They all convert to the official SI unit in question. 
@@ -53,10 +50,10 @@ pub const VAL_ABS_ZERO:f64          = 0.0;
 pub const VAL_AVOGADROS:f64         = 602214129000000000000000.0;
 
 // Faraday's Constant
-pub const VAL_FARADAY:f64           = 96485.3365;
+pub const VAL_FARADAY:f64           = 96485.3321233100184;
 
 // Atomic Mass Constant
-pub const VAL_ATOMIC_MASS:f64       = 0.000000000000000000000000001660538;
+pub const VAL_ATOMIC_MASS:f64       = 0.00000000000000000000000000166053906660;
 
 // R for the Ideal Gas Law
 pub const VAL_MOLAR_GAS:f64         = 8.3144621;

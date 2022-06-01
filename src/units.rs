@@ -8,6 +8,8 @@
 //pub mod unit_worker;
 //mod unit_parsing;
 
+use std::fmt::Display;
+
 use crate::constants;
 
 /* Metric scales */
@@ -103,13 +105,13 @@ pub enum UnitLength {
     Angstrom
 }
 
-impl UnitLength {
-    pub fn to_string(&self) -> String {
+impl Display for UnitLength {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Meter(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("m");
+                ret.push('m');
             }
             Self::Inch => ret.push_str("in"),
             Self::Foot => ret.push_str("ft"),
@@ -118,11 +120,13 @@ impl UnitLength {
             Self::AstronomicalUnit => ret.push_str("AU"),
             Self::Parsec => ret.push_str("pc"),
             Self::LightYear => ret.push_str("lyr"),
-            Self::Angstrom => ret.push_str("Å")
+            Self::Angstrom => ret.push('Å')
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitLength {
     fn scale(&self) -> f64 {
         match self {
             Self::Meter(m) => m.scale(),
@@ -157,21 +161,23 @@ pub enum UnitTime {
     Day
 }
 
-impl UnitTime {
-    pub fn to_string(&self) -> String {
+impl Display for UnitTime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Second(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("s");
+                ret.push('s');
             }
             Self::Minute => ret.push_str("min"),
             Self::Hour => ret.push_str("hr"),
             Self::Day => ret.push_str("day")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitTime {
     fn scale(&self) -> f64 {
         match self {
             Self::Second(m) => m.scale(),
@@ -201,21 +207,23 @@ pub enum UnitMass {
     Pound,
 }
 
-impl UnitMass {
-    pub fn to_string(&self) -> String {
+impl Display for UnitMass {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Gram(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("g");
+                ret.push('g');
             }
             Self::Grain => ret.push_str("gr"),
             Self::Ounce => ret.push_str("oz"),
             Self::Pound => ret.push_str("lb")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitMass {
     fn scale(&self) -> f64 {
         match self {
             Self::Gram(m) => m.scale(),
@@ -242,16 +250,18 @@ pub enum UnitElectricCurrent {
     Ampere(Metric)
 }
 
-impl UnitElectricCurrent {
-    pub fn to_string(&self) -> String {
+impl Display for UnitElectricCurrent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Ampere(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("A");
-        ret
+        ret.push('A');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitElectricCurrent {
     fn scale(&self) -> f64 {
         match self {
             Self::Ampere(m) => m.scale(),
@@ -268,16 +278,18 @@ pub enum UnitElectricCharge {
     Coulomb(Metric)
 }
 
-impl UnitElectricCharge {
-    pub fn to_string(&self) -> String {
+impl Display for UnitElectricCharge {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Coulomb(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("C");
-        ret
+        ret.push('C');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitElectricCharge {
     fn scale(&self) -> f64 {
         match self {
             Self::Coulomb(m) => m.scale(),
@@ -294,16 +306,18 @@ pub enum UnitElectricPotential {
     Volt(Metric)
 }
 
-impl UnitElectricPotential {
-    pub fn to_string(&self) -> String {
+impl Display for UnitElectricPotential {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Volt(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("V");
-        ret
+        ret.push('V');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitElectricPotential {
     fn scale(&self) -> f64 {
         match self {
             Self::Volt(m) => m.scale(),
@@ -320,16 +334,18 @@ pub enum UnitElectricConductance {
     Siemens(Metric)
 }
 
-impl UnitElectricConductance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitElectricConductance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Siemens(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("S");
-        ret
+        ret.push('S');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitElectricConductance {
     fn scale(&self) -> f64 {
         match self {
             Self::Siemens(m) => m.scale(),
@@ -346,16 +362,18 @@ pub enum UnitCapacitance {
     Farad(Metric)
 }
 
-impl UnitCapacitance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitCapacitance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Farad(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("F");
-        ret
+        ret.push('F');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitCapacitance {
     fn scale(&self) -> f64 {
         match self {
             Self::Farad(m) => m.scale(),
@@ -372,16 +390,18 @@ pub enum UnitResistance {
     Ohm(Metric)
 }
 
-impl UnitResistance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitResistance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Ohm(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("Ω");
-        ret
+        ret.push('Ω');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitResistance {
     fn scale(&self) -> f64 {
         match self {
             Self::Ohm(m) => m.scale(),
@@ -398,16 +418,18 @@ pub enum UnitInductance {
     Henry(Metric)
 }
 
-impl UnitInductance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitInductance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Henry(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("H");
-        ret
+        ret.push('H');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitInductance {
     fn scale(&self) -> f64 {
         match self {
             Self::Henry(m) => m.scale(),
@@ -424,16 +446,18 @@ pub enum UnitMagneticFlux {
     Weber(Metric)
 }
 
-impl UnitMagneticFlux {
-    pub fn to_string(&self) -> String {
+impl Display for UnitMagneticFlux {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Weber(m) => ret.push_str(m.as_str())
         }
         ret.push_str("Wb");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitMagneticFlux {
     fn scale(&self) -> f64 {
         match self {
             Self::Weber(m) => m.scale(),
@@ -450,16 +474,18 @@ pub enum UnitMagneticFluxDensity {
     Tesla(Metric)
 }
 
-impl UnitMagneticFluxDensity {
-    pub fn to_string(&self) -> String {
+impl Display for UnitMagneticFluxDensity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Tesla(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("T");
-        ret
+        ret.push('T');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitMagneticFluxDensity {
     fn scale(&self) -> f64 {
         match self {
             Self::Tesla(m) => m.scale(),
@@ -478,17 +504,19 @@ pub enum UnitTemperature {
     Kelvin
 }
 
-impl UnitTemperature {
-    pub fn to_string(&self) -> String {
+impl Display for UnitTemperature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Celsius => ret.push_str("°c"),
-            Self::Kelvin => ret.push_str("K"),
+            Self::Kelvin => ret.push('K'),
             Self::Fahrenheit => ret.push_str("°f")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitTemperature {
     pub fn convert(&self, other:&UnitTemperature, val:f64) -> f64 {
         if self == other {
             return val;
@@ -525,16 +553,18 @@ pub enum UnitSubstance {
     Mole(Metric)
 }
 
-impl UnitSubstance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitSubstance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Mole(m) => ret.push_str(m.as_str())
         }
         ret.push_str("mol");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitSubstance {
     fn scale(&self) -> f64 {
         match self {
             Self::Mole(m) => m.scale(),
@@ -551,16 +581,18 @@ pub enum UnitLuminousIntensity {
     Candela(Metric)
 }
 
-impl UnitLuminousIntensity {
-    pub fn to_string(&self) -> String {
+impl Display for UnitLuminousIntensity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Candela(m) => ret.push_str(m.as_str())
         }
         ret.push_str("cd");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitLuminousIntensity {
     fn scale(&self) -> f64 {
         match self {
             Self::Candela(m) => m.scale(),
@@ -577,16 +609,18 @@ pub enum UnitLuminousFlux {
     Lumen(Metric)
 }
 
-impl UnitLuminousFlux {
-    pub fn to_string(&self) -> String {
+impl Display for UnitLuminousFlux {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Lumen(m) => ret.push_str(m.as_str())
         }
         ret.push_str("lm");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitLuminousFlux {
     fn scale(&self) -> f64 {
         match self {
             Self::Lumen(m) => m.scale(),
@@ -603,16 +637,18 @@ pub enum UnitIlluminance {
     Lux(Metric)
 }
 
-impl UnitIlluminance {
-    pub fn to_string(&self) -> String {
+impl Display for UnitIlluminance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Lux(m) => ret.push_str(m.as_str())
         }
         ret.push_str("lx");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitIlluminance {
     fn scale(&self) -> f64 {
         match self {
             Self::Lux(m) => m.scale(),
@@ -629,16 +665,18 @@ pub enum UnitVolume {
     Liter(Metric)
 }
 
-impl UnitVolume {
-    pub fn to_string(&self) -> String {
+impl Display for UnitVolume {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Liter(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("l");
-        ret
+        ret.push('l');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitVolume {
     fn scale(&self) -> f64 {
         match self {
             Self::Liter(m) => m.scale(),
@@ -661,8 +699,8 @@ pub enum UnitPressure {
     Psi
 }
 
-impl UnitPressure {
-    pub fn to_string(&self) -> String {
+impl Display for UnitPressure {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Pascal(m) => {
@@ -679,9 +717,11 @@ impl UnitPressure {
             Self::Atm => ret.push_str("atm"),
             Self::Psi => ret.push_str("psi")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitPressure {
     fn scale(&self) -> f64 {
         match self {
             Self::Pascal(m) => m.scale(),
@@ -714,8 +754,8 @@ pub enum UnitAngle {
     Moa
 }
 
-impl UnitAngle {
-    pub fn to_string(&self) -> String {
+impl Display for UnitAngle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Radian(Metric::Milli) => ret.push_str("mil"),
@@ -723,12 +763,14 @@ impl UnitAngle {
                 ret.push_str(m.as_str());
                 ret.push_str("rad")
             }
-            Self::Degree => ret.push_str("°"),
+            Self::Degree => ret.push('°'),
             Self::Moa => ret.push_str("moa")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitAngle {
     fn scale(&self) -> f64 {
         match self {
             Self::Radian(m) => m.scale(),
@@ -754,16 +796,18 @@ pub enum UnitFrequency {
     Hertz(Metric)
 }
 
-impl UnitFrequency {
-    pub fn to_string(&self) -> String {
+impl Display for UnitFrequency {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Hertz(m) => ret.push_str(m.as_str())
         }
         ret.push_str("Hz");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitFrequency {
     fn scale(&self) -> f64 {
         match self {
             Self::Hertz(m) => m.scale(),
@@ -781,19 +825,21 @@ pub enum UnitForce {
     PoundForce
 }
 
-impl UnitForce {
-    pub fn to_string(&self) -> String {
+impl Display for UnitForce {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Newton(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("N");
+                ret.push('N');
             }
             Self::PoundForce => ret.push_str("lbfr")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitForce {
     fn scale(&self) -> f64 {
         match self {
             Self::Newton(m) => m.scale(),
@@ -821,13 +867,13 @@ pub enum UnitEnergy {
     ElectronVolt
 }
 
-impl UnitEnergy {
-    pub fn to_string(&self) -> String {
+impl Display for UnitEnergy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Joule(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("J");
+                ret.push('J');
             }
             Self::GramCalorie(Metric::Kilo) => ret.push_str("Cal"),
             Self::GramCalorie(m) => {
@@ -837,9 +883,11 @@ impl UnitEnergy {
             Self::FootPound => ret.push_str("ftlb"),
             Self::ElectronVolt => ret.push_str("eV")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitEnergy {
     fn scale(&self) -> f64 {
         match self {
             Self::Joule(m) => m.scale(),
@@ -867,16 +915,18 @@ pub enum UnitPower {
     Watt(Metric)
 }
 
-impl UnitPower {
-    pub fn to_string(&self) -> String {
+impl Display for UnitPower {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Watt(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("W");
-        ret
+        ret.push('W');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitPower {
     fn scale(&self) -> f64 {
         match self {
             Self::Watt(m) => m.scale(),
@@ -894,8 +944,8 @@ pub enum UnitRadioactivity {
     Curie
 }
 
-impl UnitRadioactivity {
-    pub fn to_string(&self) -> String {
+impl Display for UnitRadioactivity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Becquerel(m) => {
@@ -904,9 +954,11 @@ impl UnitRadioactivity {
             }
             Self::Curie => ret.push_str("Ci")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitRadioactivity {
     fn scale(&self) -> f64 {
         match self {
             Self::Becquerel(m) => m.scale(),
@@ -933,20 +985,22 @@ pub enum UnitAbsorbedDose {
     Rad
 }
 
-impl UnitAbsorbedDose {
-    pub fn to_string(&self) -> String {
+impl Display for UnitAbsorbedDose {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Gray(m) => {
                 ret.push_str(m.as_str());
                 ret.push_str("Gy");
             }
-            Self::Roentgen => ret.push_str("R"),
+            Self::Roentgen => ret.push('R'),
             Self::Rad => ret.push_str("rads")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitAbsorbedDose {
     fn scale(&self) -> f64 {
         match self {
             Self::Gray(m) => m.scale(),
@@ -973,8 +1027,8 @@ pub enum UnitRadioactivityExposure {
     Rem
 }
 
-impl UnitRadioactivityExposure {
-    pub fn to_string(&self) -> String {
+impl Display for UnitRadioactivityExposure {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Sievert(m) => {
@@ -983,9 +1037,11 @@ impl UnitRadioactivityExposure {
             }
             Self::Rem => ret.push_str("rem")
         }
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitRadioactivityExposure {
     fn scale(&self) -> f64 {
         match self {
             Self::Sievert(m) => m.scale(),
@@ -1010,16 +1066,18 @@ pub enum UnitCatalyticActivity {
     Katal(Metric)
 }
 
-impl UnitCatalyticActivity {
-    pub fn to_string(&self) -> String {
+impl Display for UnitCatalyticActivity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Katal(m) => ret.push_str(m.as_str())
         }
         ret.push_str("kat");
-        ret
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitCatalyticActivity {
     fn scale(&self) -> f64 {
         match self {
             Self::Katal(m) => m.scale(),
@@ -1036,16 +1094,18 @@ pub enum UnitSound {
     Bel(Metric)
 }
 
-impl UnitSound {
-    pub fn to_string(&self) -> String {
+impl Display for UnitSound {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut ret:String = String::new();
         match self {
             Self::Bel(m) => ret.push_str(m.as_str())
         }
-        ret.push_str("B");
-        ret
+        ret.push('B');
+        write!(f, "{}", ret)
     }
+}
 
+impl UnitSound {
     fn scale(&self) -> f64 {
         match self {
             Self::Bel(m) => m.scale(),
@@ -1063,7 +1123,25 @@ pub enum UnitInformation {
     Byte(Metric)
 }
 
+impl Display for UnitInformation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut ret:String = String::new();
+        match self {
+            Self::Bit(m) => {
+                ret.push_str(m.as_str());
+                ret.push_str("bits");
+            }
+            Self::Byte(m) => {
+                ret.push_str(m.as_str());
+                ret.push('b');
+            }
+        }
+        write!(f, "{}", ret)
+    }
+}
+
 impl UnitInformation {
+    /*
     pub fn to_string(&self) -> String {
         let mut ret:String = String::new();
         match self {
@@ -1073,11 +1151,12 @@ impl UnitInformation {
             }
             Self::Byte(m) => {
                 ret.push_str(m.as_str());
-                ret.push_str("b");
+                ret.push('b');
             }
         }
         ret
     }
+    */
 
     fn scale(&self) -> f64 {
         match self {
