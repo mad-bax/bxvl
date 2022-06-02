@@ -2,6 +2,8 @@ use crate::units::*;
 use crate::constants::*;
 use crate::errors::V3Error;
 
+use std::ops::Shr;
+use std::ops::ShrAssign;
 use std::str::FromStr;
 
 use std::ops::Add;
@@ -90,7 +92,7 @@ impl PartialOrd for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP {
             if self.v_temperature != other.v_temperature {
                 // Error cannot convert as part of larger unit
             }
@@ -339,6 +341,763 @@ impl DivAssign<f64> for Value {
     }
 }
 
+impl Shr<Value> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:Value) -> Self::Output {
+        if self.__equivalent(&other) {
+            let mut ret:Value = self.clone();
+            ret.convert(&other)?;
+            return Ok(ret);
+        }
+        Err(V3Error::ValueConversionError("Incompatable types"))
+    }
+}
+
+impl Shr<&str> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:&str) -> Self::Output {
+        let n:Value = Value::new(1.0, other)?;
+        self >> n
+    }
+}
+
+impl Shr<String> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:String) -> Self::Output {
+        let n:Value = Value::new(1.0, other.as_str())?;
+        self >> n
+    }
+}
+
+impl Shr<UnitLength> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitLength) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & LENGTH_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_length.unwrap().convert(&other);
+        n.v_length = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitAbsorbedDose> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitAbsorbedDose) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ABSORBED_DOSE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_ab_dose.unwrap().convert(&other);
+        n.v_ab_dose = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitAngle> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitAngle) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ANGLE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_angle.unwrap().convert(&other);
+        n.v_angle = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitCapacitance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitCapacitance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & CAPACITANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_capacitance.unwrap().convert(&other);
+        n.v_capacitance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitCatalyticActivity> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitCatalyticActivity) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_catalytic.unwrap().convert(&other);
+        n.v_catalytic = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitElectricCharge> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitElectricCharge) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_electric_charge.unwrap().convert(&other);
+        n.v_electric_charge = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitElectricConductance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitElectricConductance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_electric_conductance.unwrap().convert(&other);
+        n.v_electric_conductance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitElectricCurrent> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitElectricCurrent) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_electric_current.unwrap().convert(&other);
+        n.v_electric_current = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitElectricPotential> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitElectricPotential) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_electric_potential.unwrap().convert(&other);
+        n.v_electric_potential = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitEnergy> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitEnergy) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ENERGY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_energy.unwrap().convert(&other);
+        n.v_energy = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitForce> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitForce) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & FORCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_force.unwrap().convert(&other);
+        n.v_force = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitFrequency> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitFrequency) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & FREQUENCY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_frequency.unwrap().convert(&other);
+        n.v_frequency = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitIlluminance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitIlluminance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & ILLUMINANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_illuminance.unwrap().convert(&other);
+        n.v_illuminance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitInductance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitInductance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & INDUCTANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_inductance.unwrap().convert(&other);
+        n.v_inductance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitInformation> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitInformation) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & INFORMATION_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_information.unwrap().convert(&other);
+        n.v_information = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitLuminousFlux> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitLuminousFlux) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_luminous_flux.unwrap().convert(&other);
+        n.v_luminous_flux = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitLuminousIntensity> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitLuminousIntensity) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_luminous_flux_intensity.unwrap().convert(&other);
+        n.v_luminous_flux_intensity = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitMagneticFlux> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitMagneticFlux) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_magnetic_flux.unwrap().convert(&other);
+        n.v_magnetic_flux = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitMagneticFluxDensity> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitMagneticFluxDensity) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_magnetic_flux_density.unwrap().convert(&other);
+        n.v_magnetic_flux_density = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitMass> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitMass) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & MASS_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_mass.unwrap().convert(&other);
+        n.v_mass = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitPower> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitPower) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & POWER_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_power.unwrap().convert(&other);
+        n.v_power = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitPressure> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitPressure) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & PRESSURE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_pressure.unwrap().convert(&other);
+        n.v_pressure = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitRadioactivity> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitRadioactivity) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & RADIOACTIVITY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_radioactivity.unwrap().convert(&other);
+        n.v_radioactivity = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitRadioactivityExposure> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitRadioactivityExposure) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_radioactivity_exposure.unwrap().convert(&other);
+        n.v_radioactivity_exposure = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitResistance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitResistance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & RESISTANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_resistance.unwrap().convert(&other);
+        n.v_resistance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitSound> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitSound) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & SOUND_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_sound.unwrap().convert(&other);
+        n.v_sound = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitSubstance> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitSubstance) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & SUBSTANCE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_substance.unwrap().convert(&other);
+        n.v_substance = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitTemperature> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitTemperature) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & TEMPERATURE_MAP != TEMPERATURE_MAP {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val = n.v_temperature.unwrap().convert(&other, n.val);
+        n.v_temperature = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitTime> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitTime) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & TIME_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_time.unwrap().convert(&other);
+        n.v_time = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitVolume> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitVolume) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & VOLUME_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_volume.unwrap().convert(&other);
+        n.v_volume = Some(other);
+        Ok(n)
+    }
+}
+
+impl ShrAssign<Value> for Value {
+    fn shr_assign(&mut self, other:Value) {
+        if self.__equivalent(&other) {
+            match self.convert(&other) {
+                Ok(_) => {},
+                Err(_) => panic!("Incompatable value types")
+            }
+        } else {
+            panic!("Incompatable value types");
+        }
+    }
+}
+
+impl ShrAssign<&str> for Value {
+    fn shr_assign(&mut self, other:&str) {
+        let n:Value = match Value::new(1.0, other) {
+            Ok(t) => t,
+            Err(_) => panic!("Incompatable value types")
+        };
+        *self >>= n;
+    }
+}
+
+impl ShrAssign<String> for Value {
+    fn shr_assign(&mut self, other:String) {
+        let n:Value = match Value::new(1.0, other.as_str()) {
+            Ok(t) => t,
+            Err(_) => panic!("Incompatable value types")
+        };
+        *self >>= n;
+    }
+}
+
+impl ShrAssign<UnitLength> for Value {
+    fn shr_assign(&mut self, other:UnitLength) {
+        if self.unit_map & LENGTH_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_length.unwrap().convert(&other);
+        self.v_length = Some(other);
+    }
+}
+
+impl ShrAssign<UnitAbsorbedDose> for Value {
+    fn shr_assign(&mut self, other:UnitAbsorbedDose) {
+        if self.unit_map & ABSORBED_DOSE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_ab_dose.unwrap().convert(&other);
+        self.v_ab_dose = Some(other);
+    }
+}
+
+impl ShrAssign<UnitAngle> for Value {
+    fn shr_assign(&mut self, other:UnitAngle) {
+        if self.unit_map & ANGLE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_angle.unwrap().convert(&other);
+        self.v_angle = Some(other);
+    }
+}
+
+impl ShrAssign<UnitCapacitance> for Value {
+    fn shr_assign(&mut self, other:UnitCapacitance) {
+        if self.unit_map & CAPACITANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_capacitance.unwrap().convert(&other);
+        self.v_capacitance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitCatalyticActivity> for Value {
+    fn shr_assign(&mut self, other:UnitCatalyticActivity) {
+        if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_catalytic.unwrap().convert(&other);
+        self.v_catalytic = Some(other);
+    }
+}
+
+impl ShrAssign<UnitElectricCharge> for Value {
+    fn shr_assign(&mut self, other:UnitElectricCharge) {
+        if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_electric_charge.unwrap().convert(&other);
+        self.v_electric_charge = Some(other);
+    }
+}
+
+impl ShrAssign<UnitElectricConductance> for Value {
+    fn shr_assign(&mut self, other:UnitElectricConductance) {
+        if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_electric_conductance.unwrap().convert(&other);
+        self.v_electric_conductance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitElectricCurrent> for Value {
+    fn shr_assign(&mut self, other:UnitElectricCurrent) {
+        if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_electric_current.unwrap().convert(&other);
+        self.v_electric_current = Some(other);
+    }
+}
+
+impl ShrAssign<UnitElectricPotential> for Value {
+    fn shr_assign(&mut self, other:UnitElectricPotential) {
+        if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_electric_potential.unwrap().convert(&other);
+        self.v_electric_potential = Some(other);
+    }
+}
+
+impl ShrAssign<UnitEnergy> for Value {
+    fn shr_assign(&mut self, other:UnitEnergy) {
+        if self.unit_map & ENERGY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_energy.unwrap().convert(&other);
+        self.v_energy = Some(other);
+    }
+}
+
+impl ShrAssign<UnitForce> for Value {
+    fn shr_assign(&mut self, other:UnitForce) {
+        if self.unit_map & FORCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_force.unwrap().convert(&other);
+        self.v_force = Some(other);
+    }
+}
+
+impl ShrAssign<UnitFrequency> for Value {
+    fn shr_assign(&mut self, other:UnitFrequency) {
+        if self.unit_map & FREQUENCY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_frequency.unwrap().convert(&other);
+        self.v_frequency = Some(other);
+    }
+}
+
+impl ShrAssign<UnitIlluminance> for Value {
+    fn shr_assign(&mut self, other:UnitIlluminance) {
+        if self.unit_map & ILLUMINANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_illuminance.unwrap().convert(&other);
+        self.v_illuminance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitInductance> for Value {
+    fn shr_assign(&mut self, other:UnitInductance) {
+        if self.unit_map & INDUCTANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_inductance.unwrap().convert(&other);
+        self.v_inductance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitInformation> for Value {
+    fn shr_assign(&mut self, other:UnitInformation) {
+        if self.unit_map & INFORMATION_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_information.unwrap().convert(&other);
+        self.v_information = Some(other);
+    }
+}
+
+impl ShrAssign<UnitLuminousFlux> for Value {
+    fn shr_assign(&mut self, other:UnitLuminousFlux) {
+        if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_luminous_flux.unwrap().convert(&other);
+        self.v_luminous_flux = Some(other);
+    }
+}
+
+impl ShrAssign<UnitLuminousIntensity> for Value {
+    fn shr_assign(&mut self, other:UnitLuminousIntensity) {
+        if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_luminous_flux_intensity.unwrap().convert(&other);
+        self.v_luminous_flux_intensity = Some(other);
+    }
+}
+
+impl ShrAssign<UnitMagneticFlux> for Value {
+    fn shr_assign(&mut self, other:UnitMagneticFlux) {
+        if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_magnetic_flux.unwrap().convert(&other);
+        self.v_magnetic_flux = Some(other);
+    }
+}
+
+impl ShrAssign<UnitMagneticFluxDensity> for Value {
+    fn shr_assign(&mut self, other:UnitMagneticFluxDensity) {
+        if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_magnetic_flux_density.unwrap().convert(&other);
+        self.v_magnetic_flux_density = Some(other);
+    }
+}
+
+impl ShrAssign<UnitMass> for Value {
+    fn shr_assign(&mut self, other:UnitMass) {
+        if self.unit_map & MASS_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_mass.unwrap().convert(&other);
+        self.v_mass = Some(other);
+    }
+}
+
+impl ShrAssign<UnitPower> for Value {
+    fn shr_assign(&mut self, other:UnitPower) {
+        if self.unit_map & POWER_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_power.unwrap().convert(&other);
+        self.v_power = Some(other);
+    }
+}
+
+impl ShrAssign<UnitPressure> for Value {
+    fn shr_assign(&mut self, other:UnitPressure) {
+        if self.unit_map & PRESSURE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_pressure.unwrap().convert(&other);
+        self.v_pressure = Some(other);
+    }
+}
+
+impl ShrAssign<UnitRadioactivity> for Value {
+    fn shr_assign(&mut self, other:UnitRadioactivity) {
+        if self.unit_map & RADIOACTIVITY_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_radioactivity.unwrap().convert(&other);
+        self.v_radioactivity = Some(other);
+    }
+}
+
+impl ShrAssign<UnitRadioactivityExposure> for Value {
+    fn shr_assign(&mut self, other:UnitRadioactivityExposure) {
+        if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_radioactivity_exposure.unwrap().convert(&other);
+        self.v_radioactivity_exposure = Some(other);
+    }
+}
+
+impl ShrAssign<UnitResistance> for Value {
+    fn shr_assign(&mut self, other:UnitResistance) {
+        if self.unit_map & RESISTANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_resistance.unwrap().convert(&other);
+        self.v_resistance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitSound> for Value {
+    fn shr_assign(&mut self, other:UnitSound) {
+        if self.unit_map & SOUND_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_sound.unwrap().convert(&other);
+        self.v_sound = Some(other);
+    }
+}
+
+impl ShrAssign<UnitSubstance> for Value {
+    fn shr_assign(&mut self, other:UnitSubstance) {
+        if self.unit_map & SUBSTANCE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_substance.unwrap().convert(&other);
+        self.v_substance = Some(other);
+    }
+}
+
+impl ShrAssign<UnitTemperature> for Value {
+    fn shr_assign(&mut self, other:UnitTemperature) {
+        if self.unit_map & TEMPERATURE_MAP != TEMPERATURE_MAP {
+            panic!("Incompatable value types");
+        }
+        if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
+            panic!("Incompatable value types");
+        }
+        self.val = self.v_temperature.unwrap().convert(&other, self.val);
+        self.v_temperature = Some(other);
+    }
+}
+
+impl ShrAssign<UnitTime> for Value {
+    fn shr_assign(&mut self, other:UnitTime) {
+        if self.unit_map & TIME_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_time.unwrap().convert(&other);
+        self.v_time = Some(other);
+    }
+}
+
+impl ShrAssign<UnitVolume> for Value {
+    fn shr_assign(&mut self, other:UnitVolume) {
+        if self.unit_map & VOLUME_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_volume.unwrap().convert(&other);
+        self.v_volume = Some(other);
+    }
+}
+
 impl Add<Value> for Value {
     type Output = Value;
     fn add(self, other:Value) -> Value {
@@ -347,7 +1106,7 @@ impl Add<Value> for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP {
             if self.v_temperature != other.v_temperature {
                 // Error cannot convert as part of larger unit
             }
@@ -2124,7 +2883,7 @@ impl Value {
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
-        ret._create_unit(units);
+        ret._create_unit(units)?;
         Ok(ret)
     }
 
@@ -3113,7 +3872,7 @@ impl Value {
                 self.unit_map |= LENGTH_MAP;
                 return Ok(());
             }
-            "inch" | "in" => {
+            "inches" | "inch" | "in" => {
                 self.v_length = Some(UnitLength::Inch);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
@@ -3185,7 +3944,7 @@ impl Value {
                 self.unit_map |= MASS_MAP;
                 return Ok(());
             }
-            "pound" | "lbs" | "lb" => {
+            "pounds" | "lbs" | "lb" => {
                 self.v_mass = Some(UnitMass::Pound);
                 self.exp[MASS_INDEX] = exp;
                 self.unit_map |= MASS_MAP;
@@ -3257,6 +4016,12 @@ impl Value {
                 self.unit_map |= TIME_MAP;
                 return Ok(());
             }
+            "eV" => {
+                self.v_energy = Some(UnitEnergy::ElectronVolt);
+                self.exp[ENERGY_INDEX] = exp;
+                self.unit_map |= ENERGY_MAP;
+                return Ok(());
+            }
             _ => {
                 // do nothing
             }
@@ -3273,7 +4038,7 @@ impl Value {
         } else if l == 5 {
             self._get_pentuple_letter(unit, exp, Metric::None)?;
         } else {
-            // error
+            return Err(V3Error::UnsupportedUnit(format!("Unit {} exceeds parsing bounds", unit)));
         }
         Ok(())
     }
@@ -3434,11 +4199,6 @@ impl Value {
                 self.v_length = Some(UnitLength::AstronomicalUnit);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
-            }
-            "eV" => {
-                self.v_energy = Some(UnitEnergy::ElectronVolt);
-                self.exp[ENERGY_INDEX] = exp;
-                self.unit_map |= ENERGY_MAP;
             }
             "pc" => {
                 self.v_length = Some(UnitLength::Parsec);
@@ -3614,7 +4374,7 @@ impl Value {
         true
     }
 
-    // only fo checking if the types are the same
+    // only if checking if the types are the same
     fn __equal(&self, other:&Value) -> bool {
         if self.unit_map != other.unit_map {
             return false;
