@@ -41,162 +41,184 @@ let n:f64 = r.sin();
 The project supports all official SI units as listed by the National Institute of Standards and Technology (NIST) and many units listed by the General Conference on Weights and Measures (CGPM). *Some* American Imperial Units are also included. 
 
 Metric units, unless otherwise specified, will support full Yocto-Yotta metric ranges. 
+```
+Yotta => Y
+Zetta => Z
+Exa   => E
+Peta  => P
+Tera  => T
+Giga  => G
+Mega  => M
+Kilo  => k
+Hecto => h
+Deca  => da
+Deci  => c
+Milli => m
+Micro => u/μ
+Nano  => n
+Pico  => p
+Femto => f
+Atto  => a
+Zepto => z
+Yocto => y
+```
 
 Lengths
 ```
-Meter
-Inch
-Foot
-Yard
-Mile
-Astronomical Unit
-Parsec
-Light Year
-Ångström
+Meter => m (kph; for kilometers per hour)
+Inch  => in, inch, inches
+Foot  => ft, feet
+Yard  => yd, yds
+Mile  => mile, miles (mph; for miles per hour)
+Astronomical Unit => AU
+Parsec => pc
+Light Year => lightyear, lightyears, lyr
+Ångström => angstrom, angstroms, Å
 ```
 Time
 ```
-Second
-Minute
-Hour
-Day
+Second => s
+Minute => min, minute, minutes 
+Hour   => h, hour, hours
+Day    => d, day, days
 ```
 Mass
 ```
-Gram
-Grain
-Ounce
-Pound
+Gram  => g
+Grain => gr, grain, grains
+Ounce => oz, ounce, ounces
+Pound => lb, lbs, pounds
 ```
 Electric Current
 ```
-Ampere
+Ampere => A
 ```
 Electric Charge
 ```
-Coulomb
+Coulomb => C
 ```
 Electric Potential
 ```
-Volt
+Volt => V
 ```
 Electric Conductance
 ```
-Siemens
+Siemens => S
 ```
 Capacitance
 ```
-Farad
+Farad => F, farad, farads
 ```
 Resistance
 ```
-Ohm
+Ohm => Ω, O
 ```
 Inductance
 ```
-Henry
+Henry => H
 ```
 Magnetic Flux
 ```
-Weber
+Weber => Wb
 ```
 Magnetic Flux Density
 ```
-Tesla
+Tesla => T
 ```
 Temperature
 ```
-Celsius
-Fahrenheit
-Kelvin
+Celsius    => c, °c, °C
+Fahrenheit => f, °f, °F
+Kelvin     => K
 ```
 Substance
 ```
-Mole
+Mole => mol
 ```
 Luminous Intensity
 ```
-Candela
+Candela => cd
 ```
 Luminous Flux
 ```
-Lumen
+Lumen => lm
 ```
 Illuminance
 ```
-Lux
+Lux => lx
 ```
 Volume
 ```
-Liter
+Liter => l
 ```
 Pressure
 ```
-Pascal
-Bar
-Torr
-Hgmm
-Hgin
-Atm
-Psi
+Pascal => Pa
+Bar    => bar
+Torr   => torr
+mmHg   => mmHg
+inHg   => inHg
+Atm    => ATM, atm
+Psi    => PSI, psi
 ```
 Angle
 ```
-Degree
-Radian
-Minute of Angle
-Milliradian
+Degree          => °, degree, degrees
+Radian          => rad, radian, radians
+milliradian     => mil, mils, MIL
+Minute of Angle => moa, MOA
 ```
 Frequency
 ```
-Hertz
+Hertz => Hz
 ```
 Force
 ```
-Newton
-Pound Force
+Newton => N
+Pound Force => lbfr, lbsfr, poundforce, poundsforce
 ```
 Energy
 ```
-Joule
-Calorie
-Kilocalorie
-Foot Pound
-Electron Volt
+Joule         => J
+Calorie       => cal (Cal; for kilocalorie)
+Foot Pound    => ftlb, ftlbs, footpound, footpounds
+Electron Volt => eV
 ```
 Power
 ```
-Watt
+Watt => W
 ```
 Radioactivity
 ```
-Becquerel
-Curie
+Becquerel => Bq
+Curie     => Ci
 ```
 Absorbed Dosage of Radiation
 ```
-Gray
-Röntgen
-Rad
+Gray    => Gy
+Röntgen => R
+Rad     => rads, Rads
 ```
 Radioactivity Exposure
 ```
-Sievert
-Rem
+Sievert => Sv
+Rem     => rem, Rem
 ```
 Catalytic Activity
 ```
-Katal
+Katal => kat
 ```
 Sound
 ```
-Bel
+Bel => B
 ```
-Information
+Information (Kilo through Yotta metric support. Base 2, metric scaling applied, i.e. Gib not Gb)
 ```
-Bit -> Partial metric support
-Byte -> Partial metric support
+Bit -> bits
+Byte -> b, byte, bytes
 ```
+
+Note that some units like ```eV``` could be parsed as ```Exa-Volts``` or ```Electron Volts```, the library will default to the 'least complex' unit that matches. So ```Electron Volts``` will be the parsed result. To get ```Exa-Volts```, the user must specify ```Volts``` with some other metric extension and then convert to ```Exa```. 
 
 ## Conversions
 All within their given measurement type will be able to be converted to eachother. Values with multiple types, in most cases, can be converted to their compatable types. 
