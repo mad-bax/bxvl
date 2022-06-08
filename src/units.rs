@@ -12,6 +12,12 @@ use std::fmt::Display;
 
 use crate::constants;
 
+trait Convert<T1> {
+    fn convert(&self, other:&T1) -> f64 {
+        1.0
+    }
+}
+
 /* Metric scales */
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
 pub enum Metric {
@@ -534,7 +540,7 @@ impl UnitTemperature {
                 match other {
                     Self::Celsius => (val-32.0)/1.8,
                     Self::Fahrenheit => val,
-                    Self::Kelvin => f64::max(((val-32.0)*1.8)+273.15, 0.0)
+                    Self::Kelvin => f64::max(((val-32.0)/1.8)+273.15, 0.0)
                 }
             }
             Self::Kelvin => {
@@ -682,9 +688,17 @@ impl UnitVolume {
             Self::Liter(m) => m.scale(),
         }
     }
+}
 
-    pub fn convert(&self, other:&UnitVolume) -> f64 {
+impl Convert<UnitVolume> for UnitVolume {
+    fn convert(&self, other:&UnitVolume) -> f64 {
         self.scale() / other.scale()
+    }
+}
+
+impl Convert<UnitLength> for UnitVolume {
+    fn convert(&self, other:&UnitLength) -> f64 {
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 
@@ -1017,7 +1031,7 @@ impl UnitAbsorbedDose {
     }
 
     pub fn convert(&self, other:&UnitAbsorbedDose) -> f64 {
-        (self.scale() / other.scale()) * (self.base() * other.base())
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 

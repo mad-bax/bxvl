@@ -42,6 +42,7 @@ pub const PR_PSI_TO_P:f64           = 6894.757;
 pub const PR_TORR_TO_P:f64          = 101325.0/760.0;
 pub const RADIO_C_TO_BQ:f64         = 37000000000.0;
 pub const RADEX_REM_TO_SV:f64       = 0.01;
+pub const METER3_TO_LITER:f64       = 1000.0;
 
 // The definition for absolute zero
 pub const VAL_ABS_ZERO:f64          = 0.0;

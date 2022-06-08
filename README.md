@@ -218,7 +218,7 @@ Bit -> bits
 Byte -> b, byte, bytes
 ```
 
-Note that some units like ```eV``` could be parsed as ```Exa-Volts``` or ```Electron Volts```, the library will default to the 'least complex' unit that matches. So ```Electron Volts``` will be the parsed result. To get ```Exa-Volts```, the user must specify ```Volts``` with some other metric extension and then convert to ```Exa```. 
+Note that some unit strings like ```eV``` could be indended to be ```Exa-Volts``` or ```Electron Volts```. The library is case sensitive and will default to the 'least complex' unit that matches. So ```Electron Volts``` will be the parsed result. To get ```Exa-Volts```, the user must properly specify ```EV``` or simply ```V``` for volts and then convert to the ```Exa``` metric scale. 
 
 ## Conversions
 All within their given measurement type will be able to be converted to eachother. Values with multiple types, in most cases, can be converted to their compatable types. 

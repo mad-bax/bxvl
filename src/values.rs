@@ -17,7 +17,7 @@ use std::ops::SubAssign;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
-    val:f64,                    // The numerical value
+    pub val:f64,                    // The numerical value
     unit_map:usize,                 // Which units are selected
     exp:[i32;30],                   // The exponent of those units 
     v_ab_dose:Option<UnitAbsorbedDose>,          // The units
@@ -346,7 +346,7 @@ impl Shr<Value> for Value {
     fn shr(self, other:Value) -> Self::Output {
         if self.__equivalent(&other) {
             let mut ret:Value = self.clone();
-            ret.convert(&other)?;
+            ret._convert(&other)?;
             return Ok(ret);
         }
         Err(V3Error::ValueConversionError("Incompatable types"))
@@ -765,7 +765,7 @@ impl Shr<UnitVolume> for Value {
 impl ShrAssign<Value> for Value {
     fn shr_assign(&mut self, other:Value) {
         if self.__equivalent(&other) {
-            match self.convert(&other) {
+            match self._convert(&other) {
                 Ok(_) => {},
                 Err(_) => panic!("Incompatable value types")
             }
@@ -2927,7 +2927,12 @@ impl Value {
         ret
     }
 
-    pub fn convert(&mut self, other:&Value) -> Result<(), V3Error> {
+    pub fn convert(&mut self, other:&str) -> Result<(), V3Error> {
+        let temp:Value = Value::new(0.0, other)?;
+        self._convert(&temp)
+    }
+
+    fn _convert(&mut self, other:&Value) -> Result<(), V3Error> {
         if self.unit_map != other.unit_map {
             return Err(V3Error::ValueConversionError("Inequivalent unit types"));
         }
@@ -3980,10 +3985,10 @@ impl Value {
                 self.unit_map |= ANGLE_MAP;
                 return Ok(());
             }
-            "lightyear" | "lightyears" | "lyr" => {
+            "lyr" | "lightyear" | "lightyears" => {
                 self.v_length = Some(UnitLength::LightYear);
-                self.exp[ANGLE_INDEX] = exp;
-                self.unit_map |= LENGTH_INDEX;
+                self.exp[LENGTH_INDEX] = exp;
+                self.unit_map |= LENGTH_MAP;
                 return Ok(());
             }
             "farad" | "farads" => {
@@ -4361,6 +4366,19 @@ impl Value {
 
     // check if we are equivalent units
     fn __equivalent(&self, other:&Value) -> bool {
+
+        if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
+            if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {
+                return true;
+            } 
+            return false;
+        } else if self.unit_map == LENGTH_MAP && other.unit_map == VOLUME_MAP {
+            if self.exp[LENGTH_INDEX] == 3 && other.exp[VOLUME_INDEX] == 1 {
+                return true;
+            }
+            return false;
+        }
+
         if self.unit_map != other.unit_map {
             return false;
         }
@@ -4602,7 +4620,7 @@ mod tests {
         let mut e1:Value = Value::new(5.0, "bytes").unwrap();
         let e2:Value = Value::new(1.0, "Gb").unwrap();
         let expected:Value = Value::new(0.000000004656613, "Gb").unwrap();
-        let _ = e1.convert(&e2).unwrap();
+        let _ = e1._convert(&e2).unwrap();
 
         if f64::max(e1.val, expected.val) - f64::min(e1.val, expected.val) > 0.000001 {
             panic!();
