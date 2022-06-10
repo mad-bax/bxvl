@@ -294,10 +294,16 @@ mod unit_conversion_tests {
     fn convert_volume(){
         let mut v1:Value = Value::new(2.4, "l").unwrap();
         let mut v2:Value = Value::new(6038.7, "mm^3").unwrap();
+        let mut v3:Value = Value::new(6038.7, "in^3").unwrap();
         v1.convert("mm^3").unwrap();
+        println!("{:?}", v1);
         assert_apr!(v1.val, 2.4);
+        println!("{:?}", v2);
         v2.convert("l").unwrap();
-        assert_apr!(v2.val, 0.0060387)
+        println!("{:?}", v2);
+        //assert_apr!(v2.val, 0.0060387);
+        v3.convert("l").unwrap();
+        assert_apr!(v3.val, 98.956563377);
     }
 
     #[test]

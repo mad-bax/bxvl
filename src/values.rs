@@ -2,6 +2,8 @@ use crate::units::*;
 use crate::constants::*;
 use crate::errors::V3Error;
 
+use std::fmt::Display;
+use std::io::Error;
 use std::ops::Shr;
 use std::ops::ShrAssign;
 use std::str::FromStr;
@@ -14,6 +16,13 @@ use std::ops::Mul;
 use std::ops::MulAssign;
 use std::ops::Sub;
 use std::ops::SubAssign;
+
+#[macro_export]
+macro_rules! value {
+    ($v:expr, $u:expr) => {
+        Value::new($v as f64, &$u.to_string()).unwrap()
+    };
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
@@ -2933,6 +2942,33 @@ impl Value {
     }
 
     fn _convert(&mut self, other:&Value) -> Result<(), V3Error> {
+
+        if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
+            if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {
+                self.val *= self.v_volume.unwrap().convert_meter(&other.v_length.unwrap());
+                self.exp[LENGTH_INDEX] = 3;
+                self.exp[VOLUME_INDEX] = 0;
+                self.unit_map = LENGTH_MAP;
+                self.v_volume = None;
+                self.v_length = other.v_length;
+                return Ok(());
+            } 
+            return Err(V3Error::ValueConversionError("Error converting volume to cubic"));
+        } else if self.unit_map == LENGTH_MAP && other.unit_map == VOLUME_MAP {
+            if self.exp[LENGTH_INDEX] == 3 && other.exp[VOLUME_INDEX] == 1 {
+                self.val *= f64::powf(self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None)), 3.0);
+                println!("{}", self.val);
+                self.val *= self.v_length.unwrap().convert_liter(&other.v_volume.unwrap());
+                self.exp[LENGTH_INDEX] = 0;
+                self.exp[VOLUME_INDEX] = 1;
+                self.unit_map = VOLUME_MAP;
+                self.v_volume = other.v_volume;
+                self.v_length = None;
+                return Ok(());
+            }
+            return Err(V3Error::ValueConversionError("Error converting cubic to volume"));
+        }
+
         if self.unit_map != other.unit_map {
             return Err(V3Error::ValueConversionError("Inequivalent unit types"));
         }
@@ -2954,7 +2990,7 @@ impl Value {
             }
             let region:usize = 1<<i;
             if region & self.unit_map != 0 {
-                self.val *= match region {
+                self.val *= f64::powi(match region {
                     LENGTH_MAP => {
                         self.v_length.unwrap().convert(&other.v_length.unwrap())
                     }
@@ -3048,7 +3084,7 @@ impl Value {
                     _ => {
                         return Err(V3Error::UnknownError("Value conversion"));
                     }
-                };
+                }, self.exp[i]);
             }
         }
         Ok(())
@@ -4570,6 +4606,7 @@ mod tests {
     use crate::units::Metric;
     use crate::units::UnitMass;
     use crate::units::UnitSubstance;
+    use crate::units::UnitLength;
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
     use crate::values::Value;
@@ -4709,5 +4746,14 @@ mod tests {
         println!("{:?}", v3);
         assert_apx!(v3, v2);
         assert_eq!(v3.is_acceleration(), true);
+    }
+
+    #[test]
+    fn value_9(){
+        let v1:Value = value!(5, "ft/s^2");
+        let v2:Value = value!(1.524, "m/s^2");
+        let v3:Value = value!(0.0004233333, "m/min^2");
+        assert_eq!((v1 >> "m/s^2").unwrap(), v2);
+        assert_eq!((v1 >> "m/min^2").unwrap(), v3);
     }
 }
