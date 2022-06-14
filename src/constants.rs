@@ -32,7 +32,7 @@ pub const AB_RAD_TO_GY:f64          = 0.01;
 pub const AB_ROE_TO_GY:f64          = 1.0/114.025;
 pub const EN_CAL_TO_J:f64           = 4.184;
 pub const EN_FTLB_TO_J:f64          = 1.355818;
-pub const EN_EV_TO_J:f64            = 0.0000000000000000001602176634;
+pub const EN_EV_TO_J:f64            = 1.602176634e-19;
 pub const FC_LBF_TO_N:f64           = 4.4482216152605;
 pub const PR_ATM_TO_P:f64           = 101325.0;
 pub const PR_BAR_TO_P:f64           = 100000.0;
@@ -48,13 +48,13 @@ pub const METER3_TO_LITER:f64       = 1000.0;
 pub const VAL_ABS_ZERO:f64          = 0.0;
 
 // Avogadro's Number
-pub const VAL_AVOGADROS:f64         = 602214129000000000000000.0;
+pub const VAL_AVOGADROS:f64         = 6.02214076e23;
 
 // Faraday's Constant
 pub const VAL_FARADAY:f64           = 96485.3321233100184;
 
 // Atomic Mass Constant
-pub const VAL_ATOMIC_MASS:f64       = 0.00000000000000000000000000166053906660;
+pub const VAL_ATOMIC_MASS:f64       = 1.66053906660e-27;
 
 // R for the Ideal Gas Law
 pub const VAL_MOLAR_GAS:f64         = 8.3144621;
@@ -66,25 +66,27 @@ pub const VAL_COULOMBS:f64          = 8.987551;
 pub const VAL_LIGHT_SPEED:f64       = 299792458.0;
 
 // The boltzmann constant
-pub const VAL_BOLTZMANN:f64         = 0.000000000000000000000013806488;
+pub const VAL_BOLTZMANN:f64         = 1.380649e-23;
 
 // Newtonian Constant of Gravitation
-pub const VAL_BIG_G:f64             = 6.67384;
+pub const VAL_NEWTONIAN_GRAVITATION:f64 = 6.67384;
 
 // The average gravity of earth
 pub const VAL_EARTH_GRAV:f64        = 9.80665;
 
 // The charge of an electron
-pub const VAL_ELECTRON_CHARGE:f64   = 0.0000000000000000001602176;
+pub const VAL_ELECTRON_CHARGE:f64   = 1.602176634e-19;
 
 // The Rydberg constant
 pub const VAL_RYDBERG:f64           = 10973731.568539;
 
 // Plank's constant
-pub const VAL_PLANKS:f64 = 0.000000000000000000000000000000000662607004;
+pub const VAL_PLANKS:f64            = 6.62607015e-34;
 
 // The heat capacity of liquid water
 pub const VAL_WATER_HEAT_CAP:f64    = 4.18;
+
+pub const VAL_VACUUM_ELECTIRC_PERMITTIVITY:f64 = 8.8541878128e-12;
 
 /* These are the unit indexes into the Value unit array. 
  * These allow Values to keep track of what units are present

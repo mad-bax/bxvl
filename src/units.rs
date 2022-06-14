@@ -13,9 +13,7 @@ use std::fmt::Display;
 use crate::constants;
 
 trait Convert<T1> {
-    fn convert(&self, other:&T1) -> f64 {
-        1.0
-    }
+    fn convert(&self, other:&T1) -> f64;
 }
 
 /* Metric scales */
@@ -156,6 +154,10 @@ impl UnitLength {
 
     pub fn convert(&self, other:&UnitLength) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn convert_liter(&self, other:&UnitVolume) -> f64 {
+        constants::METER3_TO_LITER / other.convert(&UnitVolume::Liter(Metric::None))
     }
 }
 
@@ -688,17 +690,13 @@ impl UnitVolume {
             Self::Liter(m) => m.scale(),
         }
     }
-}
 
-impl Convert<UnitVolume> for UnitVolume {
-    fn convert(&self, other:&UnitVolume) -> f64 {
+    pub fn convert(&self, other:&UnitVolume) -> f64 {
         self.scale() / other.scale()
     }
-}
 
-impl Convert<UnitLength> for UnitVolume {
-    fn convert(&self, other:&UnitLength) -> f64 {
-        (self.scale() / other.scale()) * (self.base() / other.base())
+    pub fn convert_meter(&self, other:&UnitLength) -> f64 {
+        self.scale() * (constants::METER3_TO_LITER * other.convert(&UnitLength::Meter(Metric::None)))
     }
 }
 

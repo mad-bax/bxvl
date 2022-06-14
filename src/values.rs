@@ -2990,96 +2990,155 @@ impl Value {
             }
             let region:usize = 1<<i;
             if region & self.unit_map != 0 {
+                let tmp:f64;
                 self.val *= f64::powi(match region {
                     LENGTH_MAP => {
-                        self.v_length.unwrap().convert(&other.v_length.unwrap())
+                        tmp = self.v_length.unwrap().convert(&other.v_length.unwrap());
+                        self.v_length = other.v_length;
+                        tmp
                     }
                     TIME_MAP => {
-                        self.v_time.unwrap().convert(&other.v_time.unwrap())
+                        tmp = self.v_time.unwrap().convert(&other.v_time.unwrap());
+                        self.v_time = other.v_time;
+                        tmp
                     }
                     MASS_MAP => {
-                        self.v_mass.unwrap().convert(&other.v_mass.unwrap())
+                        tmp = self.v_mass.unwrap().convert(&other.v_mass.unwrap());
+                        self.v_mass = other.v_mass;
+                        tmp
                     }
                     ELECTRIC_CURRENT_MAP => {
-                        self.v_electric_current.unwrap().convert(&other.v_electric_current.unwrap())
+                        tmp = self.v_electric_current.unwrap().convert(&other.v_electric_current.unwrap());
+                        self.v_electric_current = other.v_electric_current;
+                        tmp
                     }
                     ELECTRIC_CHARGE_MAP => {
-                        self.v_electric_charge.unwrap().convert(&other.v_electric_charge.unwrap())
+                        tmp = self.v_electric_charge.unwrap().convert(&other.v_electric_charge.unwrap());
+                        self.v_electric_charge = other.v_electric_charge;
+                        tmp
                     }
                     ELECTRIC_POTENTIAL_MAP => {
-                        self.v_electric_potential.unwrap().convert(&other.v_electric_potential.unwrap())
+                        tmp = self.v_electric_potential.unwrap().convert(&other.v_electric_potential.unwrap());
+                        self.v_electric_potential = other.v_electric_potential;
+                        tmp
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
-                        self.v_electric_conductance.unwrap().convert(&other.v_electric_conductance.unwrap())
+                        tmp = self.v_electric_conductance.unwrap().convert(&other.v_electric_conductance.unwrap());
+                        self.v_electric_conductance = other.v_electric_conductance;
+                        tmp
                     }
                     CAPACITANCE_MAP => {
-                        self.v_capacitance.unwrap().convert(&other.v_capacitance.unwrap())
+                        tmp = self.v_capacitance.unwrap().convert(&other.v_capacitance.unwrap());
+                        self.v_capacitance = other.v_capacitance;
+                        tmp
                     }
                     RESISTANCE_MAP => {
-                        self.v_resistance.unwrap().convert(&other.v_resistance.unwrap())
+                        tmp = self.v_resistance.unwrap().convert(&other.v_resistance.unwrap());
+                        self.v_resistance = other.v_resistance;
+                        tmp
                     }
                     INDUCTANCE_MAP => {
-                        self.v_inductance.unwrap().convert(&other.v_inductance.unwrap())
+                        tmp = self.v_inductance.unwrap().convert(&other.v_inductance.unwrap());
+                        self.v_inductance = other.v_inductance;
+                        tmp
                     }
                     MAGNETRIC_FLUX_MAP => {
-                        self.v_magnetic_flux.unwrap().convert(&other.v_magnetic_flux.unwrap())
+                        tmp = self.v_magnetic_flux.unwrap().convert(&other.v_magnetic_flux.unwrap());
+                        self.v_magnetic_flux = other.v_magnetic_flux;
+                        tmp
                     }
                     MAGNETRIC_FLUX_DENSITY_MAP => {
-                        self.v_magnetic_flux_density.unwrap().convert(&other.v_magnetic_flux_density.unwrap())
+                        tmp = self.v_magnetic_flux_density.unwrap().convert(&other.v_magnetic_flux_density.unwrap());
+                        self.v_magnetic_flux_density = other.v_magnetic_flux_density;
+                        tmp
                     }
                     TEMPERATURE_MAP => {
                         1.0 // This should not convert at the moment
                     }
                     SUBSTANCE_MAP => {
-                        self.v_substance.unwrap().convert(&other.v_substance.unwrap())
+                        tmp = self.v_substance.unwrap().convert(&other.v_substance.unwrap());
+                        self.v_substance = other.v_substance;
+                        tmp
                     }
                     LUMINOUS_INTENSITY_MAP => {
-                        self.v_luminous_flux_intensity.unwrap().convert(&other.v_luminous_flux_intensity.unwrap())
+                        tmp = self.v_luminous_flux_intensity.unwrap().convert(&other.v_luminous_flux_intensity.unwrap());
+                        self.v_luminous_flux_intensity = other.v_luminous_flux_intensity;
+                        tmp
                     }
                     LUMINOUS_FLUX_MAP => {
-                        self.v_luminous_flux.unwrap().convert(&other.v_luminous_flux.unwrap())
+                        tmp = self.v_luminous_flux.unwrap().convert(&other.v_luminous_flux.unwrap());
+                        self.v_luminous_flux = other.v_luminous_flux;
+                        tmp
                     }
                     ILLUMINANCE_MAP => {
-                        self.v_illuminance.unwrap().convert(&other.v_illuminance.unwrap())
+                        tmp = self.v_illuminance.unwrap().convert(&other.v_illuminance.unwrap());
+                        self.v_illuminance = other.v_illuminance;
+                        tmp
                     }
                     VOLUME_MAP => {
-                        self.v_volume.unwrap().convert(&other.v_volume.unwrap())
+                        tmp = self.v_volume.unwrap().convert(&other.v_volume.unwrap());
+                        self.v_volume = other.v_volume;
+                        tmp
                     }
                     PRESSURE_MAP => {
-                        self.v_pressure.unwrap().convert(&other.v_pressure.unwrap())
+                        tmp = self.v_pressure.unwrap().convert(&other.v_pressure.unwrap());
+                        self.v_pressure = other.v_pressure;
+                        tmp
                     }
                     ANGLE_MAP => {
-                        self.v_angle.unwrap().convert(&other.v_angle.unwrap())
+                        tmp = self.v_angle.unwrap().convert(&other.v_angle.unwrap());
+                        self.v_angle = other.v_angle;
+                        tmp
                     }
                     FREQUENCY_MAP => {
-                        self.v_frequency.unwrap().convert(&other.v_frequency.unwrap())
+                        tmp = self.v_frequency.unwrap().convert(&other.v_frequency.unwrap());
+                        self.v_frequency = other.v_frequency;
+                        tmp
                     }
                     FORCE_MAP => {
-                        self.v_force.unwrap().convert(&other.v_force.unwrap())
+                        tmp = self.v_force.unwrap().convert(&other.v_force.unwrap());
+                        self.v_force = other.v_force;
+                        tmp
                     }
                     ENERGY_MAP => {
-                        self.v_energy.unwrap().convert(&other.v_energy.unwrap())
+                        tmp = self.v_energy.unwrap().convert(&other.v_energy.unwrap());
+                        self.v_energy = other.v_energy;
+                        tmp
                     }
                     POWER_MAP => {
-                        self.v_power.unwrap().convert(&other.v_power.unwrap())
+                        tmp = self.v_power.unwrap().convert(&other.v_power.unwrap());
+                        self.v_power = other.v_power;
+                        tmp
                     }
                     RADIOACTIVITY_MAP => {
-                        self.v_radioactivity.unwrap().convert(&other.v_radioactivity.unwrap())
+                        tmp = self.v_radioactivity.unwrap().convert(&other.v_radioactivity.unwrap());
+                        self.v_radioactivity = other.v_radioactivity;
+                        tmp
                     }
                     ABSORBED_DOSE_MAP => {
-                        self.v_ab_dose.unwrap().convert(&other.v_ab_dose.unwrap())
+                        tmp = self.v_ab_dose.unwrap().convert(&other.v_ab_dose.unwrap());
+                        self.v_ab_dose = other.v_ab_dose;
+                        tmp
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
-                        self.v_radioactivity_exposure.unwrap().convert(&other.v_radioactivity_exposure.unwrap())
+                        tmp = self.v_radioactivity_exposure.unwrap().convert(&other.v_radioactivity_exposure.unwrap());
+                        self.v_radioactivity_exposure = other.v_radioactivity_exposure;
+                        tmp
                     }
                     CATALYTIC_ACTIVITY_MAP => {
-                        self.v_catalytic.unwrap().convert(&other.v_catalytic.unwrap())
+                        tmp = self.v_catalytic.unwrap().convert(&other.v_catalytic.unwrap());
+                        self.v_catalytic = other.v_catalytic;
+                        tmp
                     }
                     SOUND_MAP => {
-                        self.v_sound.unwrap().convert(&other.v_sound.unwrap())
+                        tmp = self.v_sound.unwrap().convert(&other.v_sound.unwrap());
+                        self.v_sound = other.v_sound;
+                        tmp
                     }
                     INFORMATION_MAP => {
-                        self.v_information.unwrap().convert(&other.v_information.unwrap())
+                        tmp = self.v_information.unwrap().convert(&other.v_information.unwrap());
+                        self.v_information = other.v_information;
+                        tmp
                     }
                     _ => {
                         return Err(V3Error::UnknownError("Value conversion"));
@@ -3746,6 +3805,130 @@ impl Value {
             v_magnetic_flux_density : None
         };
         ret.exp[SUBSTANCE_INDEX] = -1;
+        ret
+    }
+
+    pub const fn const_speed_of_light() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_LIGHT_SPEED,
+            unit_map:TIME_MAP | LENGTH_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[LENGTH_INDEX] = 1;
+        ret.exp[TIME_INDEX] = -2;
+        ret
+    }
+
+    pub const fn const_boltzmann() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_BOLTZMANN,
+            unit_map:ENERGY_MAP | TEMPERATURE_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: Some(UnitEnergy::Joule(Metric::None)),
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: Some(UnitTemperature::Kelvin),
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[ENERGY_INDEX] = 1;
+        ret.exp[TEMPERATURE_INDEX] = -1;
+        ret
+    }
+
+    pub const fn const_newtonian_gravitation() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_NEWTONIAN_GRAVITATION,
+            unit_map:LENGTH_MAP | MASS_MAP | TIME_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: Some(UnitMass::Gram(Metric::Kilo)),
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[LENGTH_INDEX] = 3;
+        ret.exp[TIME_INDEX] = -2;
+        ret.exp[MASS_INDEX] = -1;
         ret
     }
 
@@ -4752,7 +4935,7 @@ mod tests {
     fn value_9(){
         let v1:Value = value!(5, "ft/s^2");
         let v2:Value = value!(1.524, "m/s^2");
-        let v3:Value = value!(0.0004233333, "m/min^2");
+        let v3:Value = value!(0.00042333333333333334, "m/min^2");
         assert_eq!((v1 >> "m/s^2").unwrap(), v2);
         assert_eq!((v1 >> "m/min^2").unwrap(), v3);
     }
