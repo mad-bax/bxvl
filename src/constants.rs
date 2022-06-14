@@ -5,9 +5,6 @@
  * Details :>
  */
 
- use crate::values::Value;
- use crate::units::*;
-
 /* These constants are for converting between likewise units. 
  * They all convert to the official SI unit in question. 
  * All unit relations are based off of SI standard units.
@@ -69,7 +66,7 @@ pub const VAL_LIGHT_SPEED:f64       = 299792458.0;
 pub const VAL_BOLTZMANN:f64         = 1.380649e-23;
 
 // Newtonian Constant of Gravitation
-pub const VAL_NEWTONIAN_GRAVITATION:f64 = 6.67384;
+pub const VAL_NEWTONIAN_GRAVITATION:f64 = 6.673015e-11;
 
 // The average gravity of earth
 pub const VAL_EARTH_GRAV:f64        = 9.80665;
@@ -82,9 +79,6 @@ pub const VAL_RYDBERG:f64           = 10973731.568539;
 
 // Plank's constant
 pub const VAL_PLANKS:f64            = 6.62607015e-34;
-
-// The heat capacity of liquid water
-pub const VAL_WATER_HEAT_CAP:f64    = 4.18;
 
 pub const VAL_VACUUM_ELECTIRC_PERMITTIVITY:f64 = 8.8541878128e-12;
 

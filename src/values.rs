@@ -3932,6 +3932,46 @@ impl Value {
         ret
     }
 
+    pub const fn const_electron_charge() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_ELECTRON_CHARGE,
+            unit_map: ELECTRIC_CHARGE_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: Some(UnitElectricCharge::Coulomb(Metric::None)),
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: Some(UnitMass::Gram(Metric::Kilo)),
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
+        ret
+    }
+
     fn _create_unit(&mut self, units:&str) -> Result<(), V3Error>{
         let tokens:(Vec<String>, Vec<String>) = self._get_tokens(units, false)?;
 
