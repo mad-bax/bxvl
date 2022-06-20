@@ -2982,13 +2982,6 @@ impl DivAssign<Value> for Value {
     }
 }
 
-//impl Shr<Value> for Value {
-//    type Output = Value;
-//    fn shr(self, other:Value) -> Value {
-        
-//    }
-//}
-
 impl Value {
     pub fn new(val:f64, units:&str) -> Result<Value, V3Error> {
         let mut ret:Value = Value {
@@ -3091,7 +3084,6 @@ impl Value {
         } else if self.unit_map == LENGTH_MAP && other.unit_map == VOLUME_MAP {
             if self.exp[LENGTH_INDEX] == 3 && other.exp[VOLUME_INDEX] == 1 {
                 self.val *= f64::powf(self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None)), 3.0);
-                println!("{}", self.val);
                 self.val *= self.v_length.unwrap().convert_liter(&other.v_volume.unwrap());
                 self.exp[LENGTH_INDEX] = 0;
                 self.exp[VOLUME_INDEX] = 1;
@@ -3101,6 +3093,14 @@ impl Value {
                 return Ok(());
             }
             return Err(V3Error::ValueConversionError("Error converting cubic to volume"));
+        } else if self.unit_map == 0 && other.unit_map == ANGLE_MAP {
+            if other.v_angle.unwrap() == UnitAngle::Radian(Metric::None) {
+                self.exp[ANGLE_INDEX] = 1;
+                self.unit_map = ANGLE_MAP;
+                self.v_angle = Some(UnitAngle::Radian(Metric::None));
+                return Ok(());
+            }
+            return Err(V3Error::ValueConversionError("Error converting unitless to radians"))
         }
 
         if self.unit_map != other.unit_map {
@@ -3658,6 +3658,81 @@ impl Value {
         true
     }
 
+    pub fn is_frequency(&self) -> bool {
+        if self.unit_map == FREQUENCY_MAP && self.exp[FREQUENCY_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == TIME_MAP && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_pressure(&self) -> bool {
+        if self.unit_map == PRESSURE_MAP && self.exp[PRESSURE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP &&
+                  self.exp[MASS_INDEX] == 1 &&
+                  self.exp[LENGTH_INDEX] == -1 &&
+                  self.exp[TIME_INDEX] == -2 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_energy(&self) -> bool {
+        if self.unit_map == ENERGY_MAP && self.exp[ENERGY_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == LENGTH_MAP | FORCE_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[FORCE_INDEX] == 1{
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == POWER_MAP | TIME_MAP && self.exp[POWER_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -2 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_power(&self) -> bool {
+        if self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_electric_charge(&self) -> bool {
+        if self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_electric_potential(&self) -> bool {
+        if self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
     pub const fn const_earth_gravity() -> Value {
         let mut ret:Value = Value {
             val:VAL_EARTH_GRAV,
@@ -3979,7 +4054,7 @@ impl Value {
             v_magnetic_flux_density : None
         };
         ret.exp[LENGTH_INDEX] = 1;
-        ret.exp[TIME_INDEX] = -2;
+        ret.exp[TIME_INDEX] = -1;
         ret
     }
 
@@ -4085,10 +4160,10 @@ impl Value {
             v_illuminance: None,
             v_inductance: None,
             v_information: None,
-            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_length: None,
             v_luminous_flux: None,
             v_luminous_flux_intensity: None,
-            v_mass: Some(UnitMass::Gram(Metric::Kilo)),
+            v_mass: None,
             v_power: None,
             v_pressure: None,
             v_radioactivity: None,
@@ -4097,13 +4172,135 @@ impl Value {
             v_sound: None,
             v_substance: None,
             v_temperature: None,
-            v_time: Some(UnitTime::Second(Metric::None)),
+            v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
             v_magnetic_flux_density : None
         };
         ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
         ret
+    }
+
+    pub const fn const_rydberg() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_RYDBERG,
+            unit_map: LENGTH_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[LENGTH_INDEX] = -1;
+        ret       
+    }
+
+    pub const fn const_plank() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_PLANKS,
+            unit_map: ENERGY_MAP | FREQUENCY_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: Some(UnitEnergy::Joule(Metric::None)),
+            v_force: None,
+            v_frequency: Some(UnitFrequency::Hertz(Metric::None)),
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[ENERGY_INDEX] = 1;
+        ret.exp[FREQUENCY_INDEX] = -1;
+        ret       
+    }
+
+    pub const fn const_vacuum_permitivity() -> Value {
+        let mut ret:Value = Value {
+            val:VAL_VACUUM_ELECTIRC_PERMITTIVITY,
+            unit_map: LENGTH_MAP | CAPACITANCE_MAP,
+            exp:[0;30],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: Some(UnitCapacitance::Farad(Metric::None)),
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: Some(UnitLength::Meter(Metric::None)),
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None
+        };
+        ret.exp[CAPACITANCE_INDEX] = 1;
+        ret.exp[LENGTH_INDEX] = -1;
+        ret       
     }
 
     fn _create_unit(&mut self, units:&str) -> Result<(), V3Error>{

@@ -7,6 +7,7 @@ pub enum V3Error {
     UnsupportedUnit(String),
     UnsupportedMetric(String),
     ParsingError(&'static str),
+    UnitReductionError(&'static str),
     UnknownError(&'static str)
 }
 
@@ -35,6 +36,11 @@ impl fmt::Display for V3Error {
             V3Error::ParsingError(s) => write!(
                 f,
                 "Parsing error: {}",
+                s
+            ),
+            V3Error::UnitReductionError(s) => write!(
+                f, 
+                "Unit Reduction error: {}",
                 s
             ),
             V3Error::UnknownError(s) => write!(

@@ -10,6 +10,7 @@ When used in equations, it will automatically be updated wither within itself or
   - [Table of Contents](#table-of-contents)
   - [Example](#example)
   - [Unit Support](#unit-support)
+  - [Method Support](#method-support)
   - [Conversions](#conversions)
   - [Constants](#constants)
 
@@ -24,7 +25,7 @@ And to use it:
 let s:Value = Value::new(5.6, "m/s").unwrap();
 let d:Value = t * s;
 ```
-d will contain the value: `6.72 m`
+d will be ```Result<Value>``` containing: `6.72 m`
 
 You can also conduct other operations:
 ```rust
@@ -54,7 +55,7 @@ Hecto => h
 Deca  => da
 Deci  => c
 Milli => m
-Micro => u/μ
+Micro => u, μ
 Nano  => n
 Pico  => p
 Femto => f
@@ -65,15 +66,15 @@ Yocto => y
 
 Lengths
 ```
-Meter => m (kph; for kilometers per hour)
-Inch  => in, inch, inches
-Foot  => ft, feet
-Yard  => yd, yds
-Mile  => mile, miles (mph; for miles per hour)
+Meter             => m (kph; for kilometers per hour)
+Inch              => in, inch, inches
+Foot              => ft, feet
+Yard              => yd, yds
+Mile              => mile, miles (mph; for miles per hour)
 Astronomical Unit => AU
-Parsec => pc
-Light Year => lightyear, lightyears, lyr
-Ångström => angstrom, angstroms, Å
+Parsec            => pc
+Light Year        => lightyear, lightyears, lyr
+Ångström          => angstrom, angstroms, Å
 ```
 Time
 ```
@@ -174,7 +175,7 @@ Hertz => Hz
 ```
 Force
 ```
-Newton => N
+Newton      => N
 Pound Force => lbfr, lbsfr, poundforce, poundsforce
 ```
 Energy
@@ -214,11 +215,20 @@ Bel => B
 ```
 Information (Kilo through Yotta metric support. Base 2, metric scaling applied, i.e. Gib not Gb)
 ```
-Bit -> bits
-Byte -> b, byte, bytes
+Bit  => bits
+Byte => b, byte, bytes
 ```
 
-Note that some unit strings like ```eV``` could be indended to be ```Exa-Volts``` or ```Electron Volts```. The library is case sensitive and will default to the 'least complex' unit that matches. So ```Electron Volts``` will be the parsed result. To get ```Exa-Volts```, the user must properly specify ```EV``` or simply ```V``` for volts and then convert to the ```Exa``` metric scale. 
+Note that some unit strings like ```eV``` could be indended to be ```Exa-Volts``` or ```Electron Volts```. The library is case sensitive and will default to the 'least complex' unit that matches. So ```Electron Volts``` will be the parsed result. To get ```Exa-Volts```, the user must properly specify ```EV``` or simply ```V``` for volts and then convert to the ```Exa``` metric scaler. 
+
+## Method Support
+Values provide similar functionality to many functions that are available to other units such as i32, u64, f32, f64 etc. 
+```rust
+let m:Value = Value::new(f64::NAN, "feet").unwrap();
+if m.is_nan() {
+  panic!("Cannot have NAN value!");
+}
+```
 
 ## Conversions
 All within their given measurement type will be able to be converted to eachother. Values with multiple types, in most cases, can be converted to their compatable types. 
@@ -227,6 +237,13 @@ Example converting feet into meters:
 ```rust
 let mut m:Value = Value::new(3.2, "feet").unwrap();
 m.convert("m");
+```
+You can use other Values for conversion:
+```rust
+let m:Value = Value::new(1.2, "yards").unwrap();
+let n:Value = Value::new(1.0, "m").unwrap();
+
+let k = (m >> n).unwrap();
 ```
 There is also direct syntax for this feature:
 ```rust
@@ -237,8 +254,8 @@ If you require better runtime efficiency at the cost of specifying each unit typ
 ```rust
 use v2::units::unit_types::{UnitLength, UnitTime};
 let mut s:Value = Value::new(5.3, "mph").unwrap();
-s >>= (Metric::Kilo, UnitLength::Meter);
-s >>= UnitTime::Second;
+s >>= UnitLength::Meter(Metric::Kilo);
+s >>= UnitTime::Second(Metric::None);
 ```
 Temperature cannot be converted to another unit if it has other units (like mass) within the value. 
 
@@ -247,38 +264,44 @@ Units cannot be converted between disparate types, although there are some excep
 ## Constants
 There are also provided constants for easier usage. 
 ```
-Absolute Zero - K
+Absolute Zero         - K
 ```
 ```
-Avogadro's Number - mol^-1
+Avogadro's Number     - mol^-1
 ```
 ```
-Faraday Constant
+Faraday Constant      - C/mol
 ```
 ```
-Atomic Mass Constant
+Atomic Mass Constant  - kg
 ```
 ```
-Molar Gas Constant - J/(K*mol)
+Molar Gas Constant    - J/(K*mol)
 ```
 ```
-Coulombs Constant
+Coulombs Constant     - 1/mol
 ```
 ```
-The Speed of light
+The Speed of light    - m/s
 ```
 ```
-Boltzmann Constant
+Boltzmann Constant    - J/K
 ```
 ```
-The gravity of Earth - m/s^2
+The gravity of Earth  - m/s^2
 ```
 ```
-Electron Charge 
+Newtonian Gravitation - m^3/(kg*s^2)
 ```
 ```
-Rydberg Constant
+Electron Charge       - C
 ```
 ```
-Plank's Constant
+Rydberg Constant      - 1/m
+```
+```
+Plank's Constant      - J/Hz
+```
+```
+Vacuum Permitivity    - F/m
 ```
