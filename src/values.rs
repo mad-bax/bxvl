@@ -3596,6 +3596,15 @@ impl Value {
         false
     }
 
+    pub fn is_density(&self) -> bool {
+        if self.unit_map == MASS_MAP | VOLUME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
+            return true;
+        }
+        false
+    }
+
     pub fn is_velocity(&self) -> bool {
         if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
             return false;
@@ -3728,6 +3737,52 @@ impl Value {
         } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
             return true;
         } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_capacitance(&self) -> bool {
+        if self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == -1 && self.exp[LENGTH_INDEX] == -2 && self.exp[TIME_INDEX] == 4 && self.exp[ELECTRIC_CURRENT_INDEX] == 2 {
+            return true;
+        }
+        return false;
+    }
+
+    pub fn is_resistance(&self) -> bool {
+        if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 && self.exp[ELECTRIC_CURRENT_INDEX] == -2 {
+            return true;
+        }
+        return false;
+    }
+
+    pub fn is_conductance(&self) -> bool {
+        if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == -1 && self.exp[LENGTH_INDEX] == -2 && self.exp[TIME_INDEX] == 3 && self.exp[ELECTRIC_CURRENT_INDEX] == 2 {
+            return true;
+        }
+        return false;
+    }
+
+    pub fn is_magnetic_flux(&self) -> bool {
+        if self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 {
             return true;
         }
         false
