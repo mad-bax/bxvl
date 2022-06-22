@@ -43,7 +43,7 @@ pub enum Metric {
 }
 
 impl Metric {
-    fn scale(&self) -> f64 {
+    pub fn scale(&self) -> f64 {
         match self {
             Metric::Yotta => 1000000000000000000000000.0,
             Metric::Zetta => 1000000000000000000000.0,
@@ -159,6 +159,13 @@ impl UnitLength {
     pub fn convert_liter(&self, other:&UnitVolume) -> f64 {
         constants::METER3_TO_LITER / other.convert(&UnitVolume::Liter(Metric::None))
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Meter(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -204,6 +211,13 @@ impl UnitTime {
 
     pub fn convert(&self, other:&UnitTime) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Second(m) => m.clone(),
+            _ => Metric::None
+        }
     }
 }
 
@@ -251,6 +265,13 @@ impl UnitMass {
     pub fn convert(&self, other:&UnitMass) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Gram(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -278,6 +299,12 @@ impl UnitElectricCurrent {
 
     pub fn convert(&self, other:&UnitElectricCurrent) -> f64 {
         self.scale() / other.scale()
+    }
+
+        pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Ampere(m) => m.clone()
+        }
     }
 }
 
@@ -307,6 +334,12 @@ impl UnitElectricCharge {
     pub fn convert(&self, other:&UnitElectricCharge) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Coulomb(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -334,6 +367,12 @@ impl UnitElectricPotential {
 
     pub fn convert(&self, other:&UnitElectricPotential) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Volt(m) => m.clone()
+        }
     }
 }
 
@@ -363,6 +402,12 @@ impl UnitElectricConductance {
     pub fn convert(&self, other:&UnitElectricConductance) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Siemens(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -390,6 +435,12 @@ impl UnitCapacitance {
 
     pub fn convert(&self, other:&UnitCapacitance) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Farad(m) => m.clone()
+        }
     }
 }
 
@@ -419,6 +470,12 @@ impl UnitResistance {
     pub fn convert(&self, other:&UnitResistance) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Ohm(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -446,6 +503,12 @@ impl UnitInductance {
 
     pub fn convert(&self, other:&UnitInductance) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Henry(m) => m.clone()
+        }
     }
 }
 
@@ -475,6 +538,12 @@ impl UnitMagneticFlux {
     pub fn convert(&self, other:&UnitMagneticFlux) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Weber(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -502,6 +571,12 @@ impl UnitMagneticFluxDensity {
 
     pub fn convert(&self, other:&UnitMagneticFluxDensity) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Tesla(m) => m.clone()
+        }
     }
 }
 
@@ -554,6 +629,10 @@ impl UnitTemperature {
             }
         }
     }
+
+    pub fn get_metric(&self) -> Metric {
+        Metric::None
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -581,6 +660,12 @@ impl UnitSubstance {
 
     pub fn convert(&self, other:&UnitSubstance) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Mole(m) => m.clone()
+        }
     }
 }
 
@@ -610,6 +695,12 @@ impl UnitLuminousIntensity {
     pub fn convert(&self, other:&UnitLuminousIntensity) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Candela(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -638,6 +729,12 @@ impl UnitLuminousFlux {
     pub fn convert(&self, other:&UnitLuminousFlux) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Lumen(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -665,6 +762,12 @@ impl UnitIlluminance {
 
     pub fn convert(&self, other:&UnitIlluminance) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Lux(m) => m.clone()
+        }
     }
 }
 
@@ -697,6 +800,12 @@ impl UnitVolume {
 
     pub fn convert_meter(&self, other:&UnitLength) -> f64 {
         self.scale() * (constants::METER3_TO_LITER * other.convert(&UnitLength::Meter(Metric::None)))
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Liter(m) => m.clone()
+        }
     }
 }
 
@@ -757,6 +866,14 @@ impl UnitPressure {
     pub fn convert(&self, other:&UnitPressure) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Pascal(m) => m.clone(),
+            Self::Bar(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -801,6 +918,13 @@ impl UnitAngle {
     pub fn convert(&self, other:&UnitAngle) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Radian(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -828,6 +952,12 @@ impl UnitFrequency {
 
     pub fn convert(&self, other:&UnitFrequency) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Hertz(m) => m.clone()
+        }
     }
 }
 
@@ -868,6 +998,13 @@ impl UnitForce {
 
     pub fn convert(&self, other:&UnitForce) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Newton(m) => m.clone(),
+            _ => Metric::None
+        }
     }
 }
 
@@ -920,6 +1057,14 @@ impl UnitEnergy {
     pub fn convert(&self, other:&UnitEnergy) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Joule(m) => m.clone(),
+            Self::GramCalorie(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -947,6 +1092,12 @@ impl UnitPower {
 
     pub fn convert(&self, other:&UnitPower) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Watt(m) => m.clone()
+        }
     }
 }
 
@@ -987,6 +1138,13 @@ impl UnitRadioactivity {
 
     pub fn convert(&self, other:&UnitRadioactivity) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Becquerel(m) => m.clone(),
+            _ => Metric::None
+        }
     }
 }
 
@@ -1031,6 +1189,13 @@ impl UnitAbsorbedDose {
     pub fn convert(&self, other:&UnitAbsorbedDose) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Gray(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -1071,6 +1236,13 @@ impl UnitRadioactivityExposure {
     pub fn convert(&self, other:&UnitRadioactivityExposure) -> f64 {
         (self.scale() / self.scale()) * (self.base() / other.base())
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Sievert(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -1098,6 +1270,12 @@ impl UnitCatalyticActivity {
 
     pub fn convert(&self, other:&UnitCatalyticActivity) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Katal(m) => m.clone()
+        }
     }
 }
 
@@ -1127,6 +1305,12 @@ impl UnitSound {
     pub fn convert(&self, other:&UnitSound) -> f64 {
         self.scale() / other.scale()
     }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Bel(m) => m.clone()
+        }
+    }
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
@@ -1153,23 +1337,6 @@ impl Display for UnitInformation {
 }
 
 impl UnitInformation {
-    /*
-    pub fn to_string(&self) -> String {
-        let mut ret:String = String::new();
-        match self {
-            Self::Bit(m) => {
-                ret.push_str(m.as_str());
-                ret.push_str("bits");
-            }
-            Self::Byte(m) => {
-                ret.push_str(m.as_str());
-                ret.push('b');
-            }
-        }
-        ret
-    }
-    */
-
     fn scale(&self) -> f64 {
         match self {
             UnitInformation::Bit(m) | UnitInformation::Byte(m) => {
@@ -1197,6 +1364,13 @@ impl UnitInformation {
 
     pub fn convert(&self, other:&UnitInformation) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Bit(m) => m.clone(),
+            Self::Byte(m) => m.clone()
+        }
     }
 }
 

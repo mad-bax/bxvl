@@ -3283,6 +3283,98 @@ impl Value {
         Ok(())
     }
 
+    fn induct_force(&mut self) -> bool {
+        if !self.is_force() {
+            return false;
+        } else if self.unit_map == FORCE_MAP {
+            return false;
+        }
+
+        *self >>= UnitMass::Gram(Metric::Kilo);
+        *self >>= UnitLength::Meter(Metric::None);
+        *self >>= UnitTime::Second(Metric::None);
+
+        self.unit_map = FORCE_MAP;
+        self.exp[MASS_INDEX] = 0;
+        self.exp[LENGTH_INDEX] = 0;
+        self.exp[TIME_INDEX] = 0;
+        self.v_time = None;
+        self.v_length = None;
+        self.v_mass = None;
+        self.v_force = Some(UnitForce::Newton(Metric::None));
+
+        true
+    }
+
+    fn induct_frequency(&mut self) -> bool {
+        if !self.is_frequency() {
+            return false;
+        } else if self.unit_map == FREQUENCY_MAP {
+            return false;
+        }
+
+        let m:Metric = self.v_time.unwrap().get_metric();
+
+        *self >>= UnitTime::Second(m);
+        self.unit_map = FREQUENCY_MAP;
+        self.exp[TIME_INDEX] = 0;
+        self.exp[FREQUENCY_INDEX] = 1;
+        self.v_time = None;
+        self.v_frequency = Some(UnitFrequency::Hertz(m));
+
+        true
+    }
+
+    fn induct_pressure(&mut self) -> bool {
+        if !self.is_pressure() {
+            return false;
+        } else if self.unit_map == PRESSURE_MAP {
+            return false;
+        }
+
+        if self.v_force != None {
+            *self >>= UnitForce::Newton(Metric::None);
+            *self >>= UnitLength::Meter(Metric::None);
+            self.exp[FORCE_INDEX] = 0;
+            self.exp[LENGTH_INDEX] = 0;
+            self.v_force = None;
+            self.v_length = None;
+        } else {
+            *self >>= UnitMass::Gram(Metric::None);
+            *self >>= UnitLength::Meter(Metric::None);
+            *self >>= UnitTime::Second(Metric::None);
+            self.exp[MASS_INDEX] = 0;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[TIME_INDEX] = 0;
+            self.v_time = None;
+            self.v_length = None;
+            self.v_mass = None;
+        }
+        self.v_pressure = Some(UnitPressure::Pascal(Metric::None));
+        self.unit_map = PRESSURE_MAP;
+        self.exp[PRESSURE_INDEX] = 1;
+
+        true
+    }
+
+    fn induct_energy(&mut self) -> bool {
+        if !self.is_energy() {
+            return false;
+        } else if self.unit_map == ENERGY_MAP {
+            return false;
+        }
+
+        if self.v_force != None {
+            *self >>= UnitLength
+        } else if self.v_power != None {
+
+        } else {
+
+        }
+
+        true
+    }
+
     pub fn reduce(&mut self) {
         // converting to a force
         if self.unit_map == LENGTH_MAP | TIME_MAP | MASS_MAP {
@@ -3596,6 +3688,13 @@ impl Value {
         false
     }
 
+    pub fn is_temperature(&self) -> bool {
+        if self.unit_map == TEMPERATURE_MAP && self.exp[TEMPERATURE_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
     pub fn is_density(&self) -> bool {
         if self.unit_map == MASS_MAP | VOLUME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1 {
             return true;
@@ -3658,13 +3757,10 @@ impl Value {
     }
 
     pub fn is_mass(&self) -> bool {
-        if self.unit_map & MASS_MAP != self.unit_map {
-            return false;
+        if self.unit_map == MASS_MAP && self.exp[MASS_INDEX] == 1 {
+            return true
         }
-        if self.exp[MASS_INDEX] != 1 {
-            return false;
-        }
-        true
+        false
     }
 
     pub fn is_frequency(&self) -> bool {
@@ -3736,8 +3832,6 @@ impl Value {
             return true;
         } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
             return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-            return true;
         }
         false
     }
@@ -3748,8 +3842,6 @@ impl Value {
         } else if self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
             return true;
         } else if self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == -1 && self.exp[LENGTH_INDEX] == -2 && self.exp[TIME_INDEX] == 4 && self.exp[ELECTRIC_CURRENT_INDEX] == 2 {
             return true;
         }
         return false;
@@ -3762,8 +3854,6 @@ impl Value {
             return true;
         } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
             return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 && self.exp[ELECTRIC_CURRENT_INDEX] == -2 {
-            return true;
         }
         return false;
     }
@@ -3775,14 +3865,210 @@ impl Value {
             return true;
         } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
             return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[MASS_INDEX] == -1 && self.exp[LENGTH_INDEX] == -2 && self.exp[TIME_INDEX] == 3 && self.exp[ELECTRIC_CURRENT_INDEX] == 2 {
-            return true;
         }
         return false;
     }
 
     pub fn is_magnetic_flux(&self) -> bool {
         if self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_magnetic_flux_density(&self) -> bool {
+        if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
+            return true;
+        } else if self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
+            return true;
+        } else if self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_inductance(&self) -> bool {
+        if self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_luminous_flux(&self) -> bool {
+        if self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_illuminance(&self) -> bool {
+        if self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_radioactivity(&self) -> bool {
+        if self.unit_map == RADIOACTIVITY_MAP && self.exp[RADIOACTIVITY_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_absorbed_dose(&self) -> bool {
+        if self.unit_map == ABSORBED_DOSE_MAP && self.exp[ABSORBED_DOSE_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_equivalent_dose(&self) -> bool {
+        if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_catalytic_activity(&self) -> bool {
+        if self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_angle(&self) -> bool {
+        if self.unit_map == ANGLE_MAP && self.exp[ANGLE_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_electric_current(&self) -> bool {
+        if self.unit_map == ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_information(&self) -> bool {
+        if self.unit_map == INFORMATION_MAP && self.exp[INFORMATION_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_luminous_intensity(&self) -> bool {
+        if self.unit_map == LUMINOUS_INTENSITY_MAP && self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_sound(&self) -> bool {
+        if self.unit_map == SOUND_MAP && self.exp[SOUND_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_substance(&self) -> bool {
+        if self.unit_map == SUBSTANCE_MAP && self.exp[SUBSTANCE_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_jerk(&self) -> bool {
+        if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -3 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_snap(&self) -> bool {
+        if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -4 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_angular_velocity(&self) -> bool {
+        if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_angular_acceleration(&self) -> bool {
+        if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -2 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_frequency_drift(&self) -> bool {
+        if self.unit_map == FREQUENCY_MAP | TIME_MAP && self.exp[FREQUENCY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_flow(&self) -> bool {
+        if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_yank(&self) -> bool {
+        if self.unit_map == FORCE_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_angular_momentum(&self) -> bool {
+        if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_torque(&self) -> bool {
+        if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1 {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_energy_density(&self) -> bool {
+        if self.unit_map == ENERGY_MAP | LENGTH_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
             return true;
         }
         false
