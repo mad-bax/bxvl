@@ -928,6 +928,50 @@ impl UnitAngle {
 }
 
 #[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+pub enum UnitSolidAngle {
+    Steradian(Metric)
+}
+
+impl Display for UnitSolidAngle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut ret:String = String::new();
+        match self {
+            Self::Steradian(m) => {
+                ret.push_str(m.as_str());
+                ret.push_str("sr")
+            }
+        }
+        write!(f, "{}", ret)
+    }
+}
+
+impl UnitSolidAngle {
+    fn scale(&self) -> f64 {
+        match self {
+            Self::Steradian(m) => m.scale(),
+            _ => 1.0
+        }
+    }
+
+    fn base(&self) -> f64 {
+        match self {
+            Self::Steradian(_) => 1.0
+        }
+    }
+
+    pub fn convert(&self, other:&UnitSolidAngle) -> f64 {
+        (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    pub fn get_metric(&self) -> Metric {
+        match self {
+            Self::Steradian(m) => m.clone(),
+            _ => Metric::None
+        }
+    }
+}
+
+#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
 pub enum UnitFrequency {
     Hertz(Metric)
 }

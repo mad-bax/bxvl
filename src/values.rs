@@ -23,11 +23,131 @@ macro_rules! value {
     };
 }
 
+enum MeasureType {
+    None,
+    Length,
+    Area,
+    Volume,
+    Temperature,
+    Density,
+    Velocity,
+    Acceleration,
+    Force,
+    Momentum,
+    Time,
+    Mass,
+    Frequency,
+    Pressure,
+    Energy,
+    Power,
+    ElectricCharge,
+    ElectricPotential,
+    ElectricCurrent,
+    Capacitance,
+    Resistance,
+    Conductance,
+    MagneticFlux,
+    MagneticFluxDensity,
+    Inductance,
+    LuminousFlux,
+    Illuminance,
+    Radioactivity,
+    AbsorbedDose,
+    EquivalentDose,
+    CatalyticActivity,
+    Angle,
+    Information,
+    LuminousIntensity,
+    Sound,
+    Substance,
+    Jerk,
+    Snap,
+    AngularVelocity,
+    AngularAcceleration,
+    AngularMomentum,
+    FrequencyDrift,
+    Flow,
+    Yank,
+    Torque,
+    EnergyDensity
+
+    // Future supported types
+    /*
+     * TemperatureGradient (K/m)
+     * ThermalExpansionCoefficient (1/K)
+     * ThermalResistance K/W
+     * ThermalConductivity W/(m*K)
+     * SpecificHeatCapacity J/(K*kg)
+     * HeatCapacity J/K
+     * 
+     * LuminousEfficacy lm/W | s^3*cd / (m^2*kg)
+     * Luminance cd/m^2 
+     * LuminousExposure lx*s | s*cd/(m^2)
+     * LuminousEnergy lm*s | s*cd
+     * 
+     * MagneticSusceptibility m/H | s^2*A^2 / (m*kg)
+     * MagnetomotiveForce A*rad
+     * MagneticRigidity T*m
+     * MagneticMoment Wb*m | m^3*kg/(s^2*A)
+     * MagneticVectorPotential Wb/m | m*kg/(s^2*A)
+     * MagneticReluctance 1/H | s^2*A^2/(m^2*kg)
+     * ElectronMobility m^2/(V*s)
+     * MagneticDipoleMoment J/T
+     * LinearChargeDensity C/m
+     * Resistivity O/m
+     * Exposure (X and gamma rays) C/kg
+     * Magnetization A/m
+     * ElectricField V/m
+     * MagneticPermeability H/m
+     * Permittivity F/m
+     * ElectricalConductivity S/m
+     * ElectricCurrentDensity A/m^2
+     * ElectricChargeDensity C/m^3
+     * ElectriDisplacementField C/m^2
+     * 
+     * Avogadro 1/mol
+     * CatalyticEfficiency m^3/(mol*s)
+     * MolarMass kg/mol
+     * Molarity mol/kg
+     * MolarConductivity S*m^2/mol
+     * MolarEnergy J/mol
+     * MolarHeatCapacity J/(K*mol)
+     * MolarVolume m^3/mol
+     * SpectralIntensity W/(sr*m)
+     * RadiantIntensity W/sr
+     * SpecificAngularMomentum N*m*s/kg
+     * MomentOfInertia kg*m^2
+     * RadiantExposure J/m^2
+     * Compressibility 1/Pa | m*s^2/kg
+     * EnergyFluxDensity J/(m^2*s)
+     * SpectralIrradiance W/m^3
+     * FuelEfficiency m/m^3 -> 1/m^2 | m/ml
+     * AbsorbedDoseRate Gy/s
+     * SpectralPower W/m
+     * SpectralRadiance W/(sr*m^3)
+     * Radiance W/(sr*m^3)
+     * MassFlowRate kg/s
+     * LinearMassDensity kg/m
+     * DynamicViscosity Pa*s | N*s/m^2
+     * ThermalDiffusivity m^2/s
+     * Irradiance W/m^2
+     * SurfaceTension N/m | J/m^2
+     * SpecificEnergy J/kg
+     * Action J*s
+     * SpecificVolume m^3/kg
+     * AreaDensity kg/m^2
+     * SpacialFrequency 1/m
+     * VolumetricFlow m^3/s
+     * 
+     */
+}
+
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub val:f64,                    // The numerical value
     unit_map:usize,                 // Which units are selected
-    exp:[i32;30],                   // The exponent of those units 
+    exp:[i32;31],                   // The exponent of those units 
+    mt:MeasureType,
     v_ab_dose:Option<UnitAbsorbedDose>,          // The units
     v_angle:Option<UnitAngle>,
     v_capacitance:Option<UnitCapacitance>,
@@ -57,7 +177,8 @@ pub struct Value {
     v_time:Option<UnitTime>,
     v_volume:Option<UnitVolume>,
     v_magnetic_flux:Option<UnitMagneticFlux>,
-    v_magnetic_flux_density:Option<UnitMagneticFluxDensity>
+    v_magnetic_flux_density:Option<UnitMagneticFluxDensity>,
+    v_solid_angle:Option<UnitSolidAngle>
 }
 
 impl Display for Value {
@@ -65,7 +186,7 @@ impl Display for Value {
         let mut nums:Vec<String> = vec![];
         let mut denoms:Vec<String> = vec![];
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             let region:usize = 1<<i;
             if self.unit_map & region == 0 {
                 continue;
@@ -161,6 +282,9 @@ impl Display for Value {
                 INFORMATION_MAP => {
                     self.v_information.unwrap().to_string()
                 }
+                SOLID_ANGLE_MAP => {
+                    self.v_solid_angle.unwrap().to_string()
+                }
                 _ => {
                     String::from("")
                 }
@@ -243,7 +367,7 @@ impl PartialOrd for Value {
 
         let mut cmp_val:f64 = other.val;
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 return None;
             }
@@ -399,6 +523,11 @@ impl PartialOrd for Value {
                     INFORMATION_MAP => {
                         if self.v_information != other.v_information {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
+                        }
+                    }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
                         }
                     }
                     _ => {
@@ -1257,7 +1386,7 @@ impl Add<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
             }
@@ -1415,6 +1544,11 @@ impl Add<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }                    
                     _ => {
                         // error
                     }
@@ -1443,7 +1577,7 @@ impl AddAssign<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
             }
@@ -1599,6 +1733,11 @@ impl AddAssign<Value> for Value {
                     INFORMATION_MAP => {
                         if self.v_information != other.v_information {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
+                        }
+                    }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
                         }
                     }
                     _ => {
@@ -1628,7 +1767,7 @@ impl Sub<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
             }
@@ -1784,6 +1923,11 @@ impl Sub<Value> for Value {
                     INFORMATION_MAP => {
                         if self.v_information != other.v_information {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
+                        }
+                    }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
                         }
                     }
                     _ => {
@@ -1814,7 +1958,7 @@ impl SubAssign<Value> for Value {
 
         let mut cmp_val:f64 = other.val;
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
             }
@@ -1972,6 +2116,11 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }
                     _ => {
                         // error
                     }
@@ -1997,7 +2146,7 @@ impl Mul<Value> for Value {
         }
 
         let mut cmp_val:f64 = other.val;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             n.exp[i] = self.exp[i] + other.exp[i];
             let region:usize = 1<<i;
             let in_other:bool = region & other.unit_map != 0;
@@ -2223,6 +2372,13 @@ impl Mul<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if must_assign {
+                            n.v_solid_angle = other.v_solid_angle;
+                        } else if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }
                     _ => {
                         // error
                     }
@@ -2246,7 +2402,7 @@ impl MulAssign<Value> for Value {
         self.unit_map = 0;
 
         let mut cmp_val:f64 = other.val;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             self.exp[i] += other.exp[i];
             let region:usize = 1<<i;
 
@@ -2473,6 +2629,13 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if must_assign {
+                            self.v_solid_angle = other.v_solid_angle;
+                        } else if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }
                     _ => {
                         // error
                     }
@@ -2497,7 +2660,7 @@ impl Div<Value> for Value {
         }
 
         let mut cmp_val:f64 = other.val;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             n.exp[i] = self.exp[i] - other.exp[i];
             let region:usize = 1<<i;
             let in_other:bool = region & other.unit_map != 0;
@@ -2723,6 +2886,13 @@ impl Div<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if must_assign {
+                            n.v_solid_angle = other.v_solid_angle;
+                        } else if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }
                     _ => {
                         // error
                     }
@@ -2746,7 +2916,7 @@ impl DivAssign<Value> for Value {
         self.unit_map = 0;
 
         let mut cmp_val:f64 = other.val;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             self.exp[i] -= other.exp[i];
             let region:usize = 1<<i;
             let in_other:bool = region & other.unit_map != 0;
@@ -2972,6 +3142,13 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
                         }
                     }
+                    SOLID_ANGLE_MAP => {
+                        if must_assign {
+                            self.v_solid_angle = other.v_solid_angle;
+                        } else if self.v_solid_angle != other.v_solid_angle {
+                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                        }
+                    }
                     _ => {
                         // error
                     }
@@ -2987,7 +3164,8 @@ impl Value {
         let mut ret:Value = Value {
             val,
             unit_map:0,
-            exp:[0;30],
+            exp:[0;31],
+            mt: None,
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -3017,9 +3195,327 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret._create_unit(units)?;
+
+        if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 1 {
+            ret.mt = MeasureType::Length;
+        } else if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 2 {
+            ret.mt = MeasureType::Area;
+        } else if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 3 {
+            ret.mt = MeasureType::Volume;
+        } else if ret.unit_map == VOLUME_MAP && ret.exp[VOLUME_INDEX] == 1 {
+            ret.mt = MeasureType::Volume;
+        } else if ret.unit_map == TIME_MAP && ret.exp[TIME_INDEX] == 1 {
+            ret.mt = MeasureType::Time;
+        } else if ret.unit_map == MASS_MAP && ret.exp[MASS_INDEX] == 1 {
+            ret.mt = MeasureType::Mass;
+        } else if ret.unit_map == TEMPERATURE_MAP && ret.exp[TEMPERATURE_INDEX] == 1 {
+            ret.mt = MeasureType::Temperature;
+        } else if ret.unit_map == (MASS_MAP | VOLUME_MAP) && ret.exp[MASS_INDEX] == 1 && ret.exp[VOLUME_INDEX] == -1 {
+            ret.mt = MeasureType::Density;
+        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP) && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -3 {
+            ret.mt = MeasureType::Density;
+        } else if ret.unit_map == (LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] != 1 && ret.exp[TIME_INDEX] != -1 {
+            ret.mt = MeasureType::Velocity;
+        } else if ret.unit_type == (LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -2 {
+            ret.mt = MeasureType::Acceleration;
+        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -2 && ret.exp[MASS_INDEX] == 1 {
+            ret.mt = MeasureType::Force;
+        } else if ret.unit_map == FORCE_MAP && ret.exp[FORCE_INDEX] == 1 {
+            ret.mt = MeasureType::Force;
+        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -1 && ret.exp[MASS_INDEX] == 1 {
+            ret.mt = MeasureType::Momentum;
+        } else if ret.unit_map == FREQUENCY_MAP && ret.exp[FREQUENCY_INDEX] == 1 {
+            ret.mt = MeasureType::Frequency;
+        } else if ret.unit_map == TIME_MAP && ret.exp[TIME_INDEX] == -1 {
+            ret.mt = MeasureType::Frequency;
+        } else if ret.unit_map == PRESSURE_MAP && ret.exp[PRESSURE_INDEX] == 1 {
+            ret.mt = MeasureType::Pressure;
+        } else if ret.unit_map == FORCE_MAP | LENGTH_MAP && ret.exp[FORCE_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -2 {
+            ret.mt = MeasureType::Pressure;
+        } else if ret.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -1 && ret.exp[TIME_INDEX] == -2 {
+            ret.mt = MeasureType::Pressure;
+        } else if ret.unit_map == ENERGY_MAP && ret.exp[ENERGY_INDEX] == 1 {
+            ret.mt = MeasureType::Energy;
+        } else if ret.unit_map == LENGTH_MAP | FORCE_MAP && ret.exp[LENGTH_INDEX] == 1 && ret.exp[FORCE_INDEX] == 1{
+            ret.mt = MeasureType::Energy;
+        } else if ret.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CHARGE_MAP && ret.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && ret.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+            ret.mt = MeasureType::Energy;
+        } else if ret.unit_map == POWER_MAP | TIME_MAP && ret.exp[POWER_INDEX] == 1 && ret.exp[TIME_INDEX] == 1 {
+            ret.mt = MeasureType::Energy;
+        } else if ret.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == 2 && ret.exp[TIME_INDEX] == -2 {
+            ret.mt = MeasureType::Energy;
+        } if self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            return true;
+        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 {
+            return true;
+        }
+    
+        pub fn is_electric_charge(&self) -> bool {
+            if self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_electric_potential(&self) -> bool {
+            if self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_capacitance(&self) -> bool {
+            if self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1 {
+                return true;
+            }
+            return false;
+        }
+    
+        pub fn is_resistance(&self) -> bool {
+            if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            }
+            return false;
+        }
+    
+        pub fn is_conductance(&self) -> bool {
+            if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+                return true;
+            }
+            return false;
+        }
+    
+        pub fn is_magnetic_flux(&self) -> bool {
+            if self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 {
+                return true;
+            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_magnetic_flux_density(&self) -> bool {
+            if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
+                return true;
+            } else if self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
+                return true;
+            } else if self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_inductance(&self) -> bool {
+            if self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_luminous_flux(&self) -> bool {
+            if self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_illuminance(&self) -> bool {
+            if self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_radioactivity(&self) -> bool {
+            if self.unit_map == RADIOACTIVITY_MAP && self.exp[RADIOACTIVITY_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_absorbed_dose(&self) -> bool {
+            if self.unit_map == ABSORBED_DOSE_MAP && self.exp[ABSORBED_DOSE_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_equivalent_dose(&self) -> bool {
+            if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
+                return true;
+            } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_catalytic_activity(&self) -> bool {
+            if self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_angle(&self) -> bool {
+            if self.unit_map == ANGLE_MAP && self.exp[ANGLE_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_electric_current(&self) -> bool {
+            if self.unit_map == ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_information(&self) -> bool {
+            if self.unit_map == INFORMATION_MAP && self.exp[INFORMATION_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_luminous_intensity(&self) -> bool {
+            if self.unit_map == LUMINOUS_INTENSITY_MAP && self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_sound(&self) -> bool {
+            if self.unit_map == SOUND_MAP && self.exp[SOUND_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_substance(&self) -> bool {
+            if self.unit_map == SUBSTANCE_MAP && self.exp[SUBSTANCE_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_jerk(&self) -> bool {
+            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -3 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_snap(&self) -> bool {
+            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -4 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_angular_velocity(&self) -> bool {
+            if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_angular_acceleration(&self) -> bool {
+            if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -2 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_frequency_drift(&self) -> bool {
+            if self.unit_map == FREQUENCY_MAP | TIME_MAP && self.exp[FREQUENCY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_flow(&self) -> bool {
+            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            } else if self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_yank(&self) -> bool {
+            if self.unit_map == FORCE_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_angular_momentum(&self) -> bool {
+            if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_torque(&self) -> bool {
+            if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
+                return true;
+            } else if self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1 {
+                return true;
+            }
+            false
+        }
+    
+        pub fn is_energy_density(&self) -> bool {
+            if self.unit_map == ENERGY_MAP | LENGTH_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
+                return true;
+            }
+
         Ok(ret)
     }
 
@@ -3027,7 +3523,7 @@ impl Value {
         let mut ret:Value = Value {
             val,
             unit_map:ANGLE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: Some(UnitAngle::Radian(Metric::None)),
             v_capacitance: None,
@@ -3057,7 +3553,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ANGLE_INDEX] = 1;
         ret
@@ -3118,7 +3615,7 @@ impl Value {
             return Ok(());
         }
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 return Err(V3Error::ValueConversionError("Mismatched value exponents"));
             }
@@ -3272,6 +3769,11 @@ impl Value {
                     INFORMATION_MAP => {
                         tmp = self.v_information.unwrap().convert(&other.v_information.unwrap());
                         self.v_information = other.v_information;
+                        tmp
+                    }
+                    SOLID_ANGLE_MAP => {
+                        tmp = self.v_solid_angle.unwrap().convert(&other.v_solid_angle.unwrap());
+                        self.v_solid_angle = other.v_solid_angle;
                         tmp
                     }
                     _ => {
@@ -3607,7 +4109,7 @@ impl Value {
 
     pub fn sqrt(&self) -> Value {
         let mut n:Value = *self;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             n.exp[i] /= 2;
         }
         n.val = n.val.sqrt();
@@ -3616,7 +4118,7 @@ impl Value {
 
     pub fn cbrt(&self) -> Value {
         let mut n:Value = *self;
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             n.exp[i] /= 3;
         }
         n.val = n.val.cbrt();
@@ -4078,7 +4580,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_EARTH_GRAV,
             unit_map:LENGTH_MAP | TIME_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4108,7 +4610,8 @@ impl Value {
             v_time: Some(UnitTime::Second(Metric::None)),
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[LENGTH_INDEX] = 1;
         ret.exp[TIME_INDEX] = -2;
@@ -4119,7 +4622,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_ABS_ZERO,
             unit_map:TEMPERATURE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4149,7 +4652,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None,
         };
         ret.exp[TEMPERATURE_INDEX] = 1;
         ret
@@ -4159,7 +4663,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_AVOGADROS,
             unit_map:SUBSTANCE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4189,7 +4693,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[SUBSTANCE_INDEX] = -1;
         ret
@@ -4199,7 +4704,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_FARADAY,
             unit_map:SUBSTANCE_MAP | ELECTRIC_CHARGE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4229,7 +4734,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ELECTRIC_CHARGE_MAP] = 1;
         ret.exp[SUBSTANCE_INDEX] = -1;
@@ -4240,7 +4746,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_ATOMIC_MASS,
             unit_map:MASS_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4270,7 +4776,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[MASS_INDEX] = 1;
         ret
@@ -4280,7 +4787,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_MOLAR_GAS,
             unit_map:SUBSTANCE_MAP | TEMPERATURE_MAP | ENERGY_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4310,7 +4817,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ENERGY_INDEX] = 1;
         ret.exp[TEMPERATURE_INDEX] = -1;
@@ -4322,7 +4830,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_COULOMBS,
             unit_map:SUBSTANCE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4352,7 +4860,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[SUBSTANCE_INDEX] = -1;
         ret
@@ -4362,7 +4871,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_LIGHT_SPEED,
             unit_map:TIME_MAP | LENGTH_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4392,7 +4901,8 @@ impl Value {
             v_time: Some(UnitTime::Second(Metric::None)),
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[LENGTH_INDEX] = 1;
         ret.exp[TIME_INDEX] = -1;
@@ -4403,7 +4913,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_BOLTZMANN,
             unit_map:ENERGY_MAP | TEMPERATURE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4433,7 +4943,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ENERGY_INDEX] = 1;
         ret.exp[TEMPERATURE_INDEX] = -1;
@@ -4444,7 +4955,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_NEWTONIAN_GRAVITATION,
             unit_map:LENGTH_MAP | MASS_MAP | TIME_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4474,7 +4985,8 @@ impl Value {
             v_time: Some(UnitTime::Second(Metric::None)),
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[LENGTH_INDEX] = 3;
         ret.exp[TIME_INDEX] = -2;
@@ -4486,7 +4998,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_ELECTRON_CHARGE,
             unit_map: ELECTRIC_CHARGE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4516,7 +5028,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
         ret
@@ -4526,7 +5039,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_RYDBERG,
             unit_map: LENGTH_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4556,7 +5069,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[LENGTH_INDEX] = -1;
         ret       
@@ -4566,7 +5080,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_PLANKS,
             unit_map: ENERGY_MAP | FREQUENCY_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -4596,7 +5110,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[ENERGY_INDEX] = 1;
         ret.exp[FREQUENCY_INDEX] = -1;
@@ -4607,7 +5122,7 @@ impl Value {
         let mut ret:Value = Value {
             val:VAL_VACUUM_ELECTIRC_PERMITTIVITY,
             unit_map: LENGTH_MAP | CAPACITANCE_MAP,
-            exp:[0;30],
+            exp:[0;31],
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: Some(UnitCapacitance::Farad(Metric::None)),
@@ -4637,7 +5152,8 @@ impl Value {
             v_time: None,
             v_volume: None,
             v_magnetic_flux : None,
-            v_magnetic_flux_density : None
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
         };
         ret.exp[CAPACITANCE_INDEX] = 1;
         ret.exp[LENGTH_INDEX] = -1;
@@ -5151,6 +5667,9 @@ impl Value {
                 self.exp[ABSORBED_DOSE_INDEX] = exp;
                 self.unit_map |= ABSORBED_DOSE_MAP;
             }
+            "sr" => {
+                self.v_solid_angle = Some(UnitSolidAngle::Ster)
+            }
             _ => {
                 if m != Metric::None {
                     return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
@@ -5314,7 +5833,7 @@ impl Value {
             return false;
         }
 
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 return false;
             }
@@ -5328,7 +5847,7 @@ impl Value {
         if self.unit_map != other.unit_map {
             return false;
         }
-        for i in 0..30_usize {
+        for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 return false;
             }
@@ -5482,6 +6001,11 @@ impl Value {
                     }
                     INFORMATION_MAP => {
                         if self.v_information.unwrap() != other.v_information.unwrap() {
+                            return false;
+                        }
+                    }
+                    SOLID_ANGLE_MAP => {
+                        if self.v_solid_angle.unwrap() != other.v_solid_angle.unwrap() {
                             return false;
                         }
                     }

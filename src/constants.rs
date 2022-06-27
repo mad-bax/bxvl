@@ -116,6 +116,7 @@ pub const RADIOACTIVITY_EXPOSURE_INDEX:usize  = 26;
 pub const CATALYTIC_ACTIVITY_INDEX:usize      = 27;
 pub const SOUND_INDEX:usize                   = 28;
 pub const INFORMATION_INDEX:usize             = 29;
+pub const SOLID_ANGLE_INDEX:usize             = 30;
 
 /* Similar to the indexes, these bit maps are for the 
  * Value bit_map field which allows quick determination 
@@ -151,3 +152,4 @@ pub const RADIOACTIVITY_EXPOSURE_MAP:usize  = 1<<RADIOACTIVITY_EXPOSURE_INDEX;
 pub const CATALYTIC_ACTIVITY_MAP:usize      = 1<<CATALYTIC_ACTIVITY_INDEX;
 pub const SOUND_MAP:usize                   = 1<<SOUND_INDEX;
 pub const INFORMATION_MAP:usize             = 1<<INFORMATION_INDEX;
+pub const SOLID_ANGLE_MAP:usize             = 1<<SOLID_ANGLE_INDEX;
