@@ -23,131 +23,11 @@ macro_rules! value {
     };
 }
 
-enum MeasureType {
-    None,
-    Length,
-    Area,
-    Volume,
-    Temperature,
-    Density,
-    Velocity,
-    Acceleration,
-    Force,
-    Momentum,
-    Time,
-    Mass,
-    Frequency,
-    Pressure,
-    Energy,
-    Power,
-    ElectricCharge,
-    ElectricPotential,
-    ElectricCurrent,
-    Capacitance,
-    Resistance,
-    Conductance,
-    MagneticFlux,
-    MagneticFluxDensity,
-    Inductance,
-    LuminousFlux,
-    Illuminance,
-    Radioactivity,
-    AbsorbedDose,
-    EquivalentDose,
-    CatalyticActivity,
-    Angle,
-    Information,
-    LuminousIntensity,
-    Sound,
-    Substance,
-    Jerk,
-    Snap,
-    AngularVelocity,
-    AngularAcceleration,
-    AngularMomentum,
-    FrequencyDrift,
-    Flow,
-    Yank,
-    Torque,
-    EnergyDensity
-
-    // Future supported types
-    /*
-     * TemperatureGradient (K/m)
-     * ThermalExpansionCoefficient (1/K)
-     * ThermalResistance K/W
-     * ThermalConductivity W/(m*K)
-     * SpecificHeatCapacity J/(K*kg)
-     * HeatCapacity J/K
-     * 
-     * LuminousEfficacy lm/W | s^3*cd / (m^2*kg)
-     * Luminance cd/m^2 
-     * LuminousExposure lx*s | s*cd/(m^2)
-     * LuminousEnergy lm*s | s*cd
-     * 
-     * MagneticSusceptibility m/H | s^2*A^2 / (m*kg)
-     * MagnetomotiveForce A*rad
-     * MagneticRigidity T*m
-     * MagneticMoment Wb*m | m^3*kg/(s^2*A)
-     * MagneticVectorPotential Wb/m | m*kg/(s^2*A)
-     * MagneticReluctance 1/H | s^2*A^2/(m^2*kg)
-     * ElectronMobility m^2/(V*s)
-     * MagneticDipoleMoment J/T
-     * LinearChargeDensity C/m
-     * Resistivity O/m
-     * Exposure (X and gamma rays) C/kg
-     * Magnetization A/m
-     * ElectricField V/m
-     * MagneticPermeability H/m
-     * Permittivity F/m
-     * ElectricalConductivity S/m
-     * ElectricCurrentDensity A/m^2
-     * ElectricChargeDensity C/m^3
-     * ElectriDisplacementField C/m^2
-     * 
-     * Avogadro 1/mol
-     * CatalyticEfficiency m^3/(mol*s)
-     * MolarMass kg/mol
-     * Molarity mol/kg
-     * MolarConductivity S*m^2/mol
-     * MolarEnergy J/mol
-     * MolarHeatCapacity J/(K*mol)
-     * MolarVolume m^3/mol
-     * SpectralIntensity W/(sr*m)
-     * RadiantIntensity W/sr
-     * SpecificAngularMomentum N*m*s/kg
-     * MomentOfInertia kg*m^2
-     * RadiantExposure J/m^2
-     * Compressibility 1/Pa | m*s^2/kg
-     * EnergyFluxDensity J/(m^2*s)
-     * SpectralIrradiance W/m^3
-     * FuelEfficiency m/m^3 -> 1/m^2 | m/ml
-     * AbsorbedDoseRate Gy/s
-     * SpectralPower W/m
-     * SpectralRadiance W/(sr*m^3)
-     * Radiance W/(sr*m^3)
-     * MassFlowRate kg/s
-     * LinearMassDensity kg/m
-     * DynamicViscosity Pa*s | N*s/m^2
-     * ThermalDiffusivity m^2/s
-     * Irradiance W/m^2
-     * SurfaceTension N/m | J/m^2
-     * SpecificEnergy J/kg
-     * Action J*s
-     * SpecificVolume m^3/kg
-     * AreaDensity kg/m^2
-     * SpacialFrequency 1/m
-     * VolumetricFlow m^3/s
-     * 
-     */
-}
-
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub val:f64,                    // The numerical value
     unit_map:usize,                 // Which units are selected
     exp:[i32;31],                   // The exponent of those units 
-    mt:MeasureType,
     v_ab_dose:Option<UnitAbsorbedDose>,          // The units
     v_angle:Option<UnitAngle>,
     v_capacitance:Option<UnitCapacitance>,
@@ -648,7 +528,7 @@ impl Shr<UnitLength> for Value {
         if self.unit_map & LENGTH_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_length.unwrap().convert(&other);
+        n.val *= n.v_length.unwrap().convert(&other).powi(self.exp[LENGTH_INDEX]);
         n.v_length = Some(other);
         Ok(n)
     }
@@ -661,7 +541,7 @@ impl Shr<UnitAbsorbedDose> for Value {
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_ab_dose.unwrap().convert(&other);
+        n.val *= n.v_ab_dose.unwrap().convert(&other).powi(self.exp[ABSORBED_DOSE_INDEX]);
         n.v_ab_dose = Some(other);
         Ok(n)
     }
@@ -674,8 +554,21 @@ impl Shr<UnitAngle> for Value {
         if self.unit_map & ANGLE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_angle.unwrap().convert(&other);
+        n.val *= n.v_angle.unwrap().convert(&other).powi(self.exp[ANGLE_INDEX]);
         n.v_angle = Some(other);
+        Ok(n)
+    }
+}
+
+impl Shr<UnitSolidAngle> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other:UnitSolidAngle) -> Self::Output {
+        let mut n:Value = self.clone();
+        if self.unit_map & SOLID_ANGLE_MAP == 0 {
+            return Err(V3Error::ValueConversionError("Incompatable types"));
+        }
+        n.val *= n.v_solid_angle.unwrap().convert(&other).powi(self.exp[SOLID_ANGLE_INDEX]);
+        n.v_solid_angle = Some(other);
         Ok(n)
     }
 }
@@ -687,7 +580,7 @@ impl Shr<UnitCapacitance> for Value {
         if self.unit_map & CAPACITANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_capacitance.unwrap().convert(&other);
+        n.val *= n.v_capacitance.unwrap().convert(&other).powi(self.exp[CAPACITANCE_INDEX]);
         n.v_capacitance = Some(other);
         Ok(n)
     }
@@ -700,7 +593,7 @@ impl Shr<UnitCatalyticActivity> for Value {
         if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_catalytic.unwrap().convert(&other);
+        n.val *= n.v_catalytic.unwrap().convert(&other).powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
         n.v_catalytic = Some(other);
         Ok(n)
     }
@@ -713,7 +606,7 @@ impl Shr<UnitElectricCharge> for Value {
         if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_electric_charge.unwrap().convert(&other);
+        n.val *= n.v_electric_charge.unwrap().convert(&other).powi(self.exp[ELECTRIC_CHARGE_INDEX]);
         n.v_electric_charge = Some(other);
         Ok(n)
     }
@@ -726,7 +619,7 @@ impl Shr<UnitElectricConductance> for Value {
         if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_electric_conductance.unwrap().convert(&other);
+        n.val *= n.v_electric_conductance.unwrap().convert(&other).powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
         n.v_electric_conductance = Some(other);
         Ok(n)
     }
@@ -739,7 +632,7 @@ impl Shr<UnitElectricCurrent> for Value {
         if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_electric_current.unwrap().convert(&other);
+        n.val *= n.v_electric_current.unwrap().convert(&other).powi(self.exp[ELECTRIC_CURRENT_INDEX]);
         n.v_electric_current = Some(other);
         Ok(n)
     }
@@ -752,7 +645,7 @@ impl Shr<UnitElectricPotential> for Value {
         if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_electric_potential.unwrap().convert(&other);
+        n.val *= n.v_electric_potential.unwrap().convert(&other).powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
         n.v_electric_potential = Some(other);
         Ok(n)
     }
@@ -765,7 +658,7 @@ impl Shr<UnitEnergy> for Value {
         if self.unit_map & ENERGY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_energy.unwrap().convert(&other);
+        n.val *= n.v_energy.unwrap().convert(&other).powi(self.exp[ENERGY_INDEX]);
         n.v_energy = Some(other);
         Ok(n)
     }
@@ -778,7 +671,7 @@ impl Shr<UnitForce> for Value {
         if self.unit_map & FORCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_force.unwrap().convert(&other);
+        n.val *= n.v_force.unwrap().convert(&other).powi(self.exp[FORCE_INDEX]);
         n.v_force = Some(other);
         Ok(n)
     }
@@ -791,7 +684,7 @@ impl Shr<UnitFrequency> for Value {
         if self.unit_map & FREQUENCY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_frequency.unwrap().convert(&other);
+        n.val *= n.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
         n.v_frequency = Some(other);
         Ok(n)
     }
@@ -804,7 +697,7 @@ impl Shr<UnitIlluminance> for Value {
         if self.unit_map & ILLUMINANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_illuminance.unwrap().convert(&other);
+        n.val *= n.v_illuminance.unwrap().convert(&other).powi(self.exp[ILLUMINANCE_INDEX]);
         n.v_illuminance = Some(other);
         Ok(n)
     }
@@ -817,7 +710,7 @@ impl Shr<UnitInductance> for Value {
         if self.unit_map & INDUCTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_inductance.unwrap().convert(&other);
+        n.val *= n.v_inductance.unwrap().convert(&other).powi(self.exp[INDUCTANCE_INDEX]);
         n.v_inductance = Some(other);
         Ok(n)
     }
@@ -830,7 +723,7 @@ impl Shr<UnitInformation> for Value {
         if self.unit_map & INFORMATION_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_information.unwrap().convert(&other);
+        n.val *= n.v_information.unwrap().convert(&other).powi(self.exp[INFORMATION_INDEX]);
         n.v_information = Some(other);
         Ok(n)
     }
@@ -843,7 +736,7 @@ impl Shr<UnitLuminousFlux> for Value {
         if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_luminous_flux.unwrap().convert(&other);
+        n.val *= n.v_luminous_flux.unwrap().convert(&other).powi(self.exp[LUMINOUS_FLUX_INDEX]);
         n.v_luminous_flux = Some(other);
         Ok(n)
     }
@@ -856,7 +749,7 @@ impl Shr<UnitLuminousIntensity> for Value {
         if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_luminous_flux_intensity.unwrap().convert(&other);
+        n.val *= n.v_luminous_flux_intensity.unwrap().convert(&other).powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
         n.v_luminous_flux_intensity = Some(other);
         Ok(n)
     }
@@ -869,7 +762,7 @@ impl Shr<UnitMagneticFlux> for Value {
         if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_magnetic_flux.unwrap().convert(&other);
+        n.val *= n.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_INDEX]);
         n.v_magnetic_flux = Some(other);
         Ok(n)
     }
@@ -882,7 +775,7 @@ impl Shr<UnitMagneticFluxDensity> for Value {
         if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_magnetic_flux_density.unwrap().convert(&other);
+        n.val *= n.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_DENSITY_INDEX]);
         n.v_magnetic_flux_density = Some(other);
         Ok(n)
     }
@@ -895,7 +788,7 @@ impl Shr<UnitMass> for Value {
         if self.unit_map & MASS_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_mass.unwrap().convert(&other);
+        n.val *= n.v_mass.unwrap().convert(&other).powi(self.exp[MASS_INDEX]);
         n.v_mass = Some(other);
         Ok(n)
     }
@@ -908,7 +801,7 @@ impl Shr<UnitPower> for Value {
         if self.unit_map & POWER_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_power.unwrap().convert(&other);
+        n.val *= n.v_power.unwrap().convert(&other).powi(self.exp[POWER_INDEX]);
         n.v_power = Some(other);
         Ok(n)
     }
@@ -921,7 +814,7 @@ impl Shr<UnitPressure> for Value {
         if self.unit_map & PRESSURE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_pressure.unwrap().convert(&other);
+        n.val *= n.v_pressure.unwrap().convert(&other).powi(self.exp[PRESSURE_INDEX]);
         n.v_pressure = Some(other);
         Ok(n)
     }
@@ -934,7 +827,7 @@ impl Shr<UnitRadioactivity> for Value {
         if self.unit_map & RADIOACTIVITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_radioactivity.unwrap().convert(&other);
+        n.val *= n.v_radioactivity.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_INDEX]);
         n.v_radioactivity = Some(other);
         Ok(n)
     }
@@ -947,7 +840,7 @@ impl Shr<UnitRadioactivityExposure> for Value {
         if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_radioactivity_exposure.unwrap().convert(&other);
+        n.val *= n.v_radioactivity_exposure.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
         n.v_radioactivity_exposure = Some(other);
         Ok(n)
     }
@@ -960,7 +853,7 @@ impl Shr<UnitResistance> for Value {
         if self.unit_map & RESISTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_resistance.unwrap().convert(&other);
+        n.val *= n.v_resistance.unwrap().convert(&other).powi(self.exp[RESISTANCE_INDEX]);
         n.v_resistance = Some(other);
         Ok(n)
     }
@@ -973,7 +866,7 @@ impl Shr<UnitSound> for Value {
         if self.unit_map & SOUND_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_sound.unwrap().convert(&other);
+        n.val *= n.v_sound.unwrap().convert(&other).powi(self.exp[SOUND_INDEX]);
         n.v_sound = Some(other);
         Ok(n)
     }
@@ -986,7 +879,7 @@ impl Shr<UnitSubstance> for Value {
         if self.unit_map & SUBSTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_substance.unwrap().convert(&other);
+        n.val *= n.v_substance.unwrap().convert(&other).powi(self.exp[SUBSTANCE_INDEX]);
         n.v_substance = Some(other);
         Ok(n)
     }
@@ -1002,7 +895,7 @@ impl Shr<UnitTemperature> for Value {
         if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val = n.v_temperature.unwrap().convert(&other, n.val);
+        n.val = n.v_temperature.unwrap().convert(&other, n.val).powi(self.exp[TEMPERATURE_INDEX]);
         n.v_temperature = Some(other);
         Ok(n)
     }
@@ -1015,7 +908,7 @@ impl Shr<UnitTime> for Value {
         if self.unit_map & TIME_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_time.unwrap().convert(&other);
+        n.val *= n.v_time.unwrap().convert(&other).powi(self.exp[TIME_INDEX]);
         n.v_time = Some(other);
         Ok(n)
     }
@@ -1028,7 +921,7 @@ impl Shr<UnitVolume> for Value {
         if self.unit_map & VOLUME_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
-        n.val *= n.v_volume.unwrap().convert(&other);
+        n.val *= n.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         n.v_volume = Some(other);
         Ok(n)
     }
@@ -1072,7 +965,7 @@ impl ShrAssign<UnitLength> for Value {
         if self.unit_map & LENGTH_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_length.unwrap().convert(&other);
+        self.val *= self.v_length.unwrap().convert(&other).powi(self.exp[LENGTH_INDEX]);
         self.v_length = Some(other);
     }
 }
@@ -1082,7 +975,7 @@ impl ShrAssign<UnitAbsorbedDose> for Value {
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_ab_dose.unwrap().convert(&other);
+        self.val *= self.v_ab_dose.unwrap().convert(&other).powi(self.exp[ABSORBED_DOSE_INDEX]);
         self.v_ab_dose = Some(other);
     }
 }
@@ -1092,8 +985,18 @@ impl ShrAssign<UnitAngle> for Value {
         if self.unit_map & ANGLE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_angle.unwrap().convert(&other);
+        self.val *= self.v_angle.unwrap().convert(&other).powi(self.exp[ANGLE_INDEX]);
         self.v_angle = Some(other);
+    }
+}
+
+impl ShrAssign<UnitSolidAngle> for Value {
+    fn shr_assign(&mut self, other:UnitSolidAngle) {
+        if self.unit_map & SOLID_ANGLE_MAP == 0 {
+            panic!("Incompatable value types");
+        }
+        self.val *= self.v_solid_angle.unwrap().convert(&other).powi(self.exp[SOLID_ANGLE_INDEX]);
+        self.v_solid_angle = Some(other);
     }
 }
 
@@ -1102,7 +1005,7 @@ impl ShrAssign<UnitCapacitance> for Value {
         if self.unit_map & CAPACITANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_capacitance.unwrap().convert(&other);
+        self.val *= self.v_capacitance.unwrap().convert(&other).powi(self.exp[CAPACITANCE_INDEX]);
         self.v_capacitance = Some(other);
     }
 }
@@ -1112,7 +1015,7 @@ impl ShrAssign<UnitCatalyticActivity> for Value {
         if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_catalytic.unwrap().convert(&other);
+        self.val *= self.v_catalytic.unwrap().convert(&other).powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
         self.v_catalytic = Some(other);
     }
 }
@@ -1122,7 +1025,7 @@ impl ShrAssign<UnitElectricCharge> for Value {
         if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_electric_charge.unwrap().convert(&other);
+        self.val *= self.v_electric_charge.unwrap().convert(&other).powi(self.exp[ELECTRIC_CHARGE_INDEX]);
         self.v_electric_charge = Some(other);
     }
 }
@@ -1132,7 +1035,7 @@ impl ShrAssign<UnitElectricConductance> for Value {
         if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_electric_conductance.unwrap().convert(&other);
+        self.val *= self.v_electric_conductance.unwrap().convert(&other).powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
         self.v_electric_conductance = Some(other);
     }
 }
@@ -1142,7 +1045,7 @@ impl ShrAssign<UnitElectricCurrent> for Value {
         if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_electric_current.unwrap().convert(&other);
+        self.val *= self.v_electric_current.unwrap().convert(&other).powi(self.exp[ELECTRIC_CURRENT_INDEX]);
         self.v_electric_current = Some(other);
     }
 }
@@ -1152,7 +1055,7 @@ impl ShrAssign<UnitElectricPotential> for Value {
         if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_electric_potential.unwrap().convert(&other);
+        self.val *= self.v_electric_potential.unwrap().convert(&other).powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
         self.v_electric_potential = Some(other);
     }
 }
@@ -1162,7 +1065,7 @@ impl ShrAssign<UnitEnergy> for Value {
         if self.unit_map & ENERGY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_energy.unwrap().convert(&other);
+        self.val *= self.v_energy.unwrap().convert(&other).powi(self.exp[ENERGY_INDEX]);
         self.v_energy = Some(other);
     }
 }
@@ -1172,7 +1075,7 @@ impl ShrAssign<UnitForce> for Value {
         if self.unit_map & FORCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_force.unwrap().convert(&other);
+        self.val *= self.v_force.unwrap().convert(&other).powi(self.exp[FORCE_INDEX]);
         self.v_force = Some(other);
     }
 }
@@ -1182,7 +1085,7 @@ impl ShrAssign<UnitFrequency> for Value {
         if self.unit_map & FREQUENCY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_frequency.unwrap().convert(&other);
+        self.val *= self.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
         self.v_frequency = Some(other);
     }
 }
@@ -1192,7 +1095,7 @@ impl ShrAssign<UnitIlluminance> for Value {
         if self.unit_map & ILLUMINANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_illuminance.unwrap().convert(&other);
+        self.val *= self.v_illuminance.unwrap().convert(&other).powi(self.exp[ILLUMINANCE_INDEX]);
         self.v_illuminance = Some(other);
     }
 }
@@ -1202,7 +1105,7 @@ impl ShrAssign<UnitInductance> for Value {
         if self.unit_map & INDUCTANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_inductance.unwrap().convert(&other);
+        self.val *= self.v_inductance.unwrap().convert(&other).powi(self.exp[INDUCTANCE_INDEX]);
         self.v_inductance = Some(other);
     }
 }
@@ -1212,7 +1115,7 @@ impl ShrAssign<UnitInformation> for Value {
         if self.unit_map & INFORMATION_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_information.unwrap().convert(&other);
+        self.val *= self.v_information.unwrap().convert(&other).powi(self.exp[INFORMATION_INDEX]);
         self.v_information = Some(other);
     }
 }
@@ -1222,7 +1125,7 @@ impl ShrAssign<UnitLuminousFlux> for Value {
         if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_luminous_flux.unwrap().convert(&other);
+        self.val *= self.v_luminous_flux.unwrap().convert(&other).powi(self.exp[LUMINOUS_FLUX_INDEX]);
         self.v_luminous_flux = Some(other);
     }
 }
@@ -1232,7 +1135,7 @@ impl ShrAssign<UnitLuminousIntensity> for Value {
         if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_luminous_flux_intensity.unwrap().convert(&other);
+        self.val *= self.v_luminous_flux_intensity.unwrap().convert(&other).powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
         self.v_luminous_flux_intensity = Some(other);
     }
 }
@@ -1242,7 +1145,7 @@ impl ShrAssign<UnitMagneticFlux> for Value {
         if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_magnetic_flux.unwrap().convert(&other);
+        self.val *= self.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_INDEX]);
         self.v_magnetic_flux = Some(other);
     }
 }
@@ -1252,7 +1155,7 @@ impl ShrAssign<UnitMagneticFluxDensity> for Value {
         if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_magnetic_flux_density.unwrap().convert(&other);
+        self.val *= self.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_DENSITY_INDEX]);
         self.v_magnetic_flux_density = Some(other);
     }
 }
@@ -1262,7 +1165,7 @@ impl ShrAssign<UnitMass> for Value {
         if self.unit_map & MASS_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_mass.unwrap().convert(&other);
+        self.val *= self.v_mass.unwrap().convert(&other).powi(self.exp[MASS_INDEX]);
         self.v_mass = Some(other);
     }
 }
@@ -1272,7 +1175,7 @@ impl ShrAssign<UnitPower> for Value {
         if self.unit_map & POWER_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_power.unwrap().convert(&other);
+        self.val *= self.v_power.unwrap().convert(&other).powi(self.exp[POWER_INDEX]);
         self.v_power = Some(other);
     }
 }
@@ -1282,7 +1185,7 @@ impl ShrAssign<UnitPressure> for Value {
         if self.unit_map & PRESSURE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_pressure.unwrap().convert(&other);
+        self.val *= self.v_pressure.unwrap().convert(&other).powi(self.exp[PRESSURE_INDEX]);
         self.v_pressure = Some(other);
     }
 }
@@ -1292,7 +1195,7 @@ impl ShrAssign<UnitRadioactivity> for Value {
         if self.unit_map & RADIOACTIVITY_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_radioactivity.unwrap().convert(&other);
+        self.val *= self.v_radioactivity.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_INDEX]);
         self.v_radioactivity = Some(other);
     }
 }
@@ -1302,7 +1205,7 @@ impl ShrAssign<UnitRadioactivityExposure> for Value {
         if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_radioactivity_exposure.unwrap().convert(&other);
+        self.val *= self.v_radioactivity_exposure.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
         self.v_radioactivity_exposure = Some(other);
     }
 }
@@ -1312,7 +1215,7 @@ impl ShrAssign<UnitResistance> for Value {
         if self.unit_map & RESISTANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_resistance.unwrap().convert(&other);
+        self.val *= self.v_resistance.unwrap().convert(&other).powi(self.exp[RESISTANCE_INDEX]);
         self.v_resistance = Some(other);
     }
 }
@@ -1322,7 +1225,7 @@ impl ShrAssign<UnitSound> for Value {
         if self.unit_map & SOUND_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_sound.unwrap().convert(&other);
+        self.val *= self.v_sound.unwrap().convert(&other).powi(self.exp[SOUND_INDEX]);
         self.v_sound = Some(other);
     }
 }
@@ -1332,7 +1235,7 @@ impl ShrAssign<UnitSubstance> for Value {
         if self.unit_map & SUBSTANCE_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_substance.unwrap().convert(&other);
+        self.val *= self.v_substance.unwrap().convert(&other).powi(self.exp[SUBSTANCE_INDEX]);
         self.v_substance = Some(other);
     }
 }
@@ -1345,7 +1248,7 @@ impl ShrAssign<UnitTemperature> for Value {
         if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
             panic!("Incompatable value types");
         }
-        self.val = self.v_temperature.unwrap().convert(&other, self.val);
+        self.val = self.v_temperature.unwrap().convert(&other, self.val).powi(self.exp[TEMPERATURE_INDEX]);
         self.v_temperature = Some(other);
     }
 }
@@ -1355,7 +1258,7 @@ impl ShrAssign<UnitTime> for Value {
         if self.unit_map & TIME_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_time.unwrap().convert(&other);
+        self.val *= self.v_time.unwrap().convert(&other).powi(self.exp[TIME_INDEX]);
         self.v_time = Some(other);
     }
 }
@@ -1365,7 +1268,7 @@ impl ShrAssign<UnitVolume> for Value {
         if self.unit_map & VOLUME_MAP == 0 {
             panic!("Incompatable value types");
         }
-        self.val *= self.v_volume.unwrap().convert(&other);
+        self.val *= self.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         self.v_volume = Some(other);
     }
 }
@@ -2386,6 +2289,9 @@ impl Mul<Value> for Value {
             }
         }
         n.val *= cmp_val;
+
+        n.new_unit_check();
+
         n
     }
 }
@@ -2643,6 +2549,7 @@ impl MulAssign<Value> for Value {
             }
         }
         self.val *= cmp_val;
+        self.new_unit_check();
     }
 }
 
@@ -2900,6 +2807,7 @@ impl Div<Value> for Value {
             }
         }
         n.val /= cmp_val;
+        n.new_unit_check();
         n
     }
 }
@@ -3156,6 +3064,7 @@ impl DivAssign<Value> for Value {
             }
         }
         self.val /= cmp_val;
+        self.new_unit_check();
     }
 }
 
@@ -3165,7 +3074,6 @@ impl Value {
             val,
             unit_map:0,
             exp:[0;31],
-            mt: None,
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -3199,322 +3107,6 @@ impl Value {
             v_solid_angle : None
         };
         ret._create_unit(units)?;
-
-        if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 1 {
-            ret.mt = MeasureType::Length;
-        } else if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 2 {
-            ret.mt = MeasureType::Area;
-        } else if ret.unit_map == LENGTH_MAP && ret.exp[LENGTH_INDEX] == 3 {
-            ret.mt = MeasureType::Volume;
-        } else if ret.unit_map == VOLUME_MAP && ret.exp[VOLUME_INDEX] == 1 {
-            ret.mt = MeasureType::Volume;
-        } else if ret.unit_map == TIME_MAP && ret.exp[TIME_INDEX] == 1 {
-            ret.mt = MeasureType::Time;
-        } else if ret.unit_map == MASS_MAP && ret.exp[MASS_INDEX] == 1 {
-            ret.mt = MeasureType::Mass;
-        } else if ret.unit_map == TEMPERATURE_MAP && ret.exp[TEMPERATURE_INDEX] == 1 {
-            ret.mt = MeasureType::Temperature;
-        } else if ret.unit_map == (MASS_MAP | VOLUME_MAP) && ret.exp[MASS_INDEX] == 1 && ret.exp[VOLUME_INDEX] == -1 {
-            ret.mt = MeasureType::Density;
-        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP) && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -3 {
-            ret.mt = MeasureType::Density;
-        } else if ret.unit_map == (LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] != 1 && ret.exp[TIME_INDEX] != -1 {
-            ret.mt = MeasureType::Velocity;
-        } else if ret.unit_type == (LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -2 {
-            ret.mt = MeasureType::Acceleration;
-        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -2 && ret.exp[MASS_INDEX] == 1 {
-            ret.mt = MeasureType::Force;
-        } else if ret.unit_map == FORCE_MAP && ret.exp[FORCE_INDEX] == 1 {
-            ret.mt = MeasureType::Force;
-        } else if ret.unit_map == (MASS_MAP | LENGTH_MAP | TIME_MAP) && ret.exp[LENGTH_INDEX] == 1 && ret.exp[TIME_INDEX] == -1 && ret.exp[MASS_INDEX] == 1 {
-            ret.mt = MeasureType::Momentum;
-        } else if ret.unit_map == FREQUENCY_MAP && ret.exp[FREQUENCY_INDEX] == 1 {
-            ret.mt = MeasureType::Frequency;
-        } else if ret.unit_map == TIME_MAP && ret.exp[TIME_INDEX] == -1 {
-            ret.mt = MeasureType::Frequency;
-        } else if ret.unit_map == PRESSURE_MAP && ret.exp[PRESSURE_INDEX] == 1 {
-            ret.mt = MeasureType::Pressure;
-        } else if ret.unit_map == FORCE_MAP | LENGTH_MAP && ret.exp[FORCE_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -2 {
-            ret.mt = MeasureType::Pressure;
-        } else if ret.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == -1 && ret.exp[TIME_INDEX] == -2 {
-            ret.mt = MeasureType::Pressure;
-        } else if ret.unit_map == ENERGY_MAP && ret.exp[ENERGY_INDEX] == 1 {
-            ret.mt = MeasureType::Energy;
-        } else if ret.unit_map == LENGTH_MAP | FORCE_MAP && ret.exp[LENGTH_INDEX] == 1 && ret.exp[FORCE_INDEX] == 1{
-            ret.mt = MeasureType::Energy;
-        } else if ret.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CHARGE_MAP && ret.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && ret.exp[ELECTRIC_CHARGE_INDEX] == 1 {
-            ret.mt = MeasureType::Energy;
-        } else if ret.unit_map == POWER_MAP | TIME_MAP && ret.exp[POWER_INDEX] == 1 && ret.exp[TIME_INDEX] == 1 {
-            ret.mt = MeasureType::Energy;
-        } else if ret.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && ret.exp[MASS_INDEX] == 1 && ret.exp[LENGTH_INDEX] == 2 && ret.exp[TIME_INDEX] == -2 {
-            ret.mt = MeasureType::Energy;
-        } if self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 {
-            return true;
-        }
-    
-        pub fn is_electric_charge(&self) -> bool {
-            if self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_electric_potential(&self) -> bool {
-            if self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_capacitance(&self) -> bool {
-            if self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1 {
-                return true;
-            }
-            return false;
-        }
-    
-        pub fn is_resistance(&self) -> bool {
-            if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            }
-            return false;
-        }
-    
-        pub fn is_conductance(&self) -> bool {
-            if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-                return true;
-            }
-            return false;
-        }
-    
-        pub fn is_magnetic_flux(&self) -> bool {
-            if self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 {
-                return true;
-            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_magnetic_flux_density(&self) -> bool {
-            if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
-                return true;
-            } else if self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
-                return true;
-            } else if self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_inductance(&self) -> bool {
-            if self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_luminous_flux(&self) -> bool {
-            if self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_illuminance(&self) -> bool {
-            if self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_radioactivity(&self) -> bool {
-            if self.unit_map == RADIOACTIVITY_MAP && self.exp[RADIOACTIVITY_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_absorbed_dose(&self) -> bool {
-            if self.unit_map == ABSORBED_DOSE_MAP && self.exp[ABSORBED_DOSE_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_equivalent_dose(&self) -> bool {
-            if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
-                return true;
-            } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_catalytic_activity(&self) -> bool {
-            if self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_angle(&self) -> bool {
-            if self.unit_map == ANGLE_MAP && self.exp[ANGLE_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_electric_current(&self) -> bool {
-            if self.unit_map == ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_information(&self) -> bool {
-            if self.unit_map == INFORMATION_MAP && self.exp[INFORMATION_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_luminous_intensity(&self) -> bool {
-            if self.unit_map == LUMINOUS_INTENSITY_MAP && self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_sound(&self) -> bool {
-            if self.unit_map == SOUND_MAP && self.exp[SOUND_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_substance(&self) -> bool {
-            if self.unit_map == SUBSTANCE_MAP && self.exp[SUBSTANCE_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_jerk(&self) -> bool {
-            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -3 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_snap(&self) -> bool {
-            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -4 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_angular_velocity(&self) -> bool {
-            if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_angular_acceleration(&self) -> bool {
-            if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -2 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_frequency_drift(&self) -> bool {
-            if self.unit_map == FREQUENCY_MAP | TIME_MAP && self.exp[FREQUENCY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_flow(&self) -> bool {
-            if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            } else if self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_yank(&self) -> bool {
-            if self.unit_map == FORCE_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_angular_momentum(&self) -> bool {
-            if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_torque(&self) -> bool {
-            if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
-                return true;
-            } else if self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1 {
-                return true;
-            }
-            false
-        }
-    
-        pub fn is_energy_density(&self) -> bool {
-            if self.unit_map == ENERGY_MAP | LENGTH_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
-                return true;
-            }
 
         Ok(ret)
     }
@@ -3598,6 +3190,26 @@ impl Value {
                 return Ok(());
             }
             return Err(V3Error::ValueConversionError("Error converting unitless to radians"))
+        } else if self.unit_map == FREQUENCY_MAP && other.unit_map == TIME_MAP {
+            if self.exp[FREQUENCY_INDEX] == 1 && other.exp[TIME_INDEX] == -1 {
+                self.exp[FREQUENCY_INDEX] = 0;
+                self.exp[TIME_INDEX] = -1;
+                self.unit_map = TIME_MAP;
+                self.val *= self.v_frequency.unwrap().convert_time(&other.v_time.unwrap());
+                self.v_frequency = None;
+                self.v_time = other.v_time;
+                return Ok(());
+            }
+        } else if self.unit_map == TIME_MAP && other.unit_map == FREQUENCY_MAP {
+            if self.exp[TIME_INDEX] == -1 && other.exp[FREQUENCY_INDEX] == 1 {
+                self.exp[FREQUENCY_INDEX] = 1;
+                self.exp[TIME_INDEX] = 0;
+                self.unit_map = FREQUENCY_MAP;
+                self.val *= self.v_time.unwrap().convert_freq(&other.v_frequency.unwrap());
+                self.v_frequency = other.v_frequency;
+                self.v_time = None;
+                return Ok(());
+            }
         }
 
         if self.unit_map != other.unit_map {
@@ -3783,98 +3395,6 @@ impl Value {
             }
         }
         Ok(())
-    }
-
-    fn induct_force(&mut self) -> bool {
-        if !self.is_force() {
-            return false;
-        } else if self.unit_map == FORCE_MAP {
-            return false;
-        }
-
-        *self >>= UnitMass::Gram(Metric::Kilo);
-        *self >>= UnitLength::Meter(Metric::None);
-        *self >>= UnitTime::Second(Metric::None);
-
-        self.unit_map = FORCE_MAP;
-        self.exp[MASS_INDEX] = 0;
-        self.exp[LENGTH_INDEX] = 0;
-        self.exp[TIME_INDEX] = 0;
-        self.v_time = None;
-        self.v_length = None;
-        self.v_mass = None;
-        self.v_force = Some(UnitForce::Newton(Metric::None));
-
-        true
-    }
-
-    fn induct_frequency(&mut self) -> bool {
-        if !self.is_frequency() {
-            return false;
-        } else if self.unit_map == FREQUENCY_MAP {
-            return false;
-        }
-
-        let m:Metric = self.v_time.unwrap().get_metric();
-
-        *self >>= UnitTime::Second(m);
-        self.unit_map = FREQUENCY_MAP;
-        self.exp[TIME_INDEX] = 0;
-        self.exp[FREQUENCY_INDEX] = 1;
-        self.v_time = None;
-        self.v_frequency = Some(UnitFrequency::Hertz(m));
-
-        true
-    }
-
-    fn induct_pressure(&mut self) -> bool {
-        if !self.is_pressure() {
-            return false;
-        } else if self.unit_map == PRESSURE_MAP {
-            return false;
-        }
-
-        if self.v_force != None {
-            *self >>= UnitForce::Newton(Metric::None);
-            *self >>= UnitLength::Meter(Metric::None);
-            self.exp[FORCE_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 0;
-            self.v_force = None;
-            self.v_length = None;
-        } else {
-            *self >>= UnitMass::Gram(Metric::None);
-            *self >>= UnitLength::Meter(Metric::None);
-            *self >>= UnitTime::Second(Metric::None);
-            self.exp[MASS_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 0;
-            self.exp[TIME_INDEX] = 0;
-            self.v_time = None;
-            self.v_length = None;
-            self.v_mass = None;
-        }
-        self.v_pressure = Some(UnitPressure::Pascal(Metric::None));
-        self.unit_map = PRESSURE_MAP;
-        self.exp[PRESSURE_INDEX] = 1;
-
-        true
-    }
-
-    fn induct_energy(&mut self) -> bool {
-        if !self.is_energy() {
-            return false;
-        } else if self.unit_map == ENERGY_MAP {
-            return false;
-        }
-
-        if self.v_force != None {
-            *self >>= UnitLength
-        } else if self.v_power != None {
-
-        } else {
-
-        }
-
-        true
     }
 
     pub fn reduce(&mut self) {
@@ -4152,9 +3672,314 @@ impl Value {
     pub fn atan2(&self, other:&Value) -> Value {
         if other.unit_map != ANGLE_MAP && other.exp[ANGLE_INDEX] != 1 {
             // panic
+            panic!("atan2 requires an Value angle");
         }
         let new_v:f64 = other.val * other.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
         Value::_radians(self.val.atan2(new_v))
+    }
+
+    fn new_unit_check(&mut self) {
+        if self.is_force() && self.unit_map != FORCE_MAP {
+            (*self >>= UnitMass::Gram(Metric::Kilo));
+            (*self >>= UnitLength::Meter(Metric::None));
+            (*self >>= UnitTime::Second(Metric::None));
+            self.exp[MASS_INDEX] = 0;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[TIME_INDEX] = 0;
+            self.unit_map = FORCE_MAP;
+            self.exp[FORCE_INDEX] = 1;
+            self.v_force = Some(UnitForce::Newton(Metric::None));
+            self.v_length = None;
+            self.v_mass = None;
+            self.v_time = None;
+        } else if self.is_pressure() && self.unit_map != PRESSURE_MAP {
+            (*self >>= UnitForce::Newton(Metric::None));
+            (*self >>= UnitLength::Meter(Metric::None));
+            self.exp[FORCE_INDEX] = 0;
+            self.exp[LENGTH_INDEX] = 0;
+            self.unit_map = PRESSURE_MAP;
+            self.exp[PRESSURE_INDEX] = 1;
+            self.v_pressure = Some(UnitPressure::Pascal(Metric::None));
+            self.v_force = None;
+            self.v_length = None;
+        } else if self.is_energy() && self.unit_map != ENERGY_MAP {
+            if self.unit_map & LENGTH_MAP == LENGTH_MAP {
+                (*self >>= UnitForce::Newton(Metric::None));
+                (*self >>= UnitLength::Meter(Metric::None));
+                self.exp[FORCE_INDEX] = 0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.v_force = None;
+                self.v_length = None;
+            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_electric_charge = None;
+            } else if self.unit_map & POWER_MAP == POWER_MAP {
+                (*self >>= UnitPower::Watt(Metric::None));
+                (*self >>= UnitTime::Second(Metric::None));
+                self.exp[POWER_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.v_power = None;
+                self.v_time = None;
+            } else {
+                panic!("Unit translation: assumption Energy");
+            }
+            self.unit_map = ENERGY_MAP;
+            self.exp[ENERGY_INDEX] = 1;
+            self.v_energy = Some(UnitEnergy::Joule(Metric::None));
+        } else if self.is_power() && self.unit_map != POWER_MAP {
+            if self.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (*self >>= UnitEnergy::Joule(Metric::None));
+                (*self >>= UnitTime::Second(Metric::None));
+                self.exp[ENERGY_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.v_energy = None;
+                self.v_time = None;
+            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_electric_current = None;
+            } else {
+                panic!("Unit translation: assumption Power");
+            }
+            self.unit_map = POWER_MAP;
+            self.exp[POWER_INDEX] = 1;
+            self.v_power = Some(UnitPower::Watt(Metric::None));
+        } else if self.is_electric_charge() && self.unit_map != ELECTRIC_CHARGE_MAP {
+            if self.unit_map & TIME_MAP == TIME_MAP {
+                (*self >>= UnitTime::Second(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[TIME_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_time = None;
+                self.v_electric_current = None;
+            } else if self.unit_map & CAPACITANCE_MAP == CAPACITANCE_MAP {
+                (*self >>= UnitCapacitance::Farad(Metric::None));
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                self.exp[CAPACITANCE_INDEX] = 0;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.v_capacitance = None;
+                self.v_electric_potential = None;
+            } else {
+                panic!("Unit translation: assumption Electric Charge");
+            }
+            self.unit_map = ELECTRIC_CHARGE_MAP;
+            self.exp[ELECTRIC_CHARGE_INDEX] = 1;
+            self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+        } else if self.is_electric_potential() && self.unit_map != ELECTRIC_POTENTIAL_MAP {
+            if self.unit_map & POWER_MAP == POWER_MAP {
+                (*self >>= UnitPower::Watt(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[POWER_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_power = None;
+                self.v_electric_current = None;
+            } else if self.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (*self >>= UnitEnergy::Joule(Metric::None));
+                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
+                self.exp[ENERGY_INDEX] = 0;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                self.v_energy = None;
+                self.v_electric_charge = None;
+            } else {
+                panic!("Unit translation: assumption Electric Potential");
+            }
+            self.unit_map = ELECTRIC_POTENTIAL_MAP;
+            self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+            self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+        } else if self.is_capacitance() && self.unit_map != CAPACITANCE_MAP {
+            if self.unit_map & ELECTRIC_CHARGE_MAP == ELECTRIC_CHARGE_MAP {
+                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_electric_charge = None;
+            } else if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                (*self >>= UnitTime::Second(Metric::None));
+                (*self >>= UnitResistance::Ohm(Metric::None));
+                self.exp[TIME_INDEX] = 0;
+                self.exp[RESISTANCE_INDEX] = 0;
+                self.v_time = None;
+                self.v_resistance = None;
+            } else {
+                panic!("Unit translation: assumption Capacitance")
+            }
+
+            self.unit_map = CAPACITANCE_MAP;
+            self.exp[CAPACITANCE_INDEX] = 1;
+            self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+        } else if self.is_resistance() && self.unit_map != RESISTANCE_MAP {
+            if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == ELECTRIC_CONDUCTANCE_MAP {
+                (*self >>= UnitElectricConductance::Siemens(Metric::None));
+                self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+                self.v_electric_conductance = None;
+            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_electric_current = None;
+            } else {
+                panic!("Unit translation: assumption Resistance");
+            }
+
+            self.unit_map = RESISTANCE_MAP;
+            self.exp[RESISTANCE_INDEX] = 1;
+            self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+        } else if self.is_conductance() && self.unit_map != ELECTRIC_CONDUCTANCE_MAP {
+            if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                (*self >>= UnitResistance::Ohm(Metric::None));
+                self.exp[RESISTANCE_INDEX] = 0;
+                self.v_resistance = None;
+            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_electric_current = None;
+            } else {
+                panic!("Unit translation: assumption Electric Conductance");
+            }
+
+            self.unit_map = ELECTRIC_CONDUCTANCE_MAP;
+            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
+            self.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
+        } else if self.is_magnetic_flux() && self.unit_map != MAGNETRIC_FLUX_MAP {
+            if self.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (*self >>= UnitEnergy::Joule(Metric::None));
+                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[ENERGY_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_energy = None;
+                self.v_electric_current = None;
+            } else if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == MAGNETRIC_FLUX_DENSITY_MAP {
+                (*self >>= UnitMagneticFluxDensity::Tesla(Metric::None));
+                (*self >>= UnitLength::Meter(Metric::None));
+                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.v_length = None;
+                self.v_magnetic_flux_density = None;
+            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (*self >>= UnitElectricPotential::Volt(Metric::None));
+                (*self >>= UnitTime::Second(Metric::None));
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_time = None;
+            } else {
+                panic!("Unit translation: assumption Magnetic Flux");
+            }
+
+            self.unit_map = MAGNETRIC_FLUX_MAP;
+            self.exp[MAGNETRIC_FLUX_INDEX] = 1;
+            self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
+        } else if self.is_magnetic_flux_density() && self.unit_map != MAGNETRIC_FLUX_DENSITY_MAP {
+            if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                *self >>= UnitElectricPotential::Volt(Metric::None);
+                *self >>= UnitTime::Second(Metric::None);
+                *self >>= UnitLength::Meter(Metric::None);
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.v_length = None;
+                self.v_time = None;
+                self.v_length = None;
+            } else if self.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+                *self >>= UnitMagneticFlux::Weber(Metric::None);
+                *self >>= UnitLength::Meter(Metric::None);
+                self.exp[LENGTH_INDEX] = 0;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.v_magnetic_flux = None;
+                self.v_length = None;
+            } else if self.unit_map & FORCE_MAP == FORCE_MAP {
+                *self >>= UnitForce::Newton(Metric::None);
+                *self >>= UnitElectricCurrent::Ampere(Metric::None);
+                *self >>= UnitLength::Meter(Metric::None);
+                self.exp[FORCE_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.exp[LENGTH_INDEX] = 0;
+                self.v_length = None;
+                self.v_electric_current = None;
+                self.v_force = None;
+            } else {
+                panic!("Unit translation: assumption Magnetic Flux Density");
+            }
+
+            self.unit_map = MAGNETRIC_FLUX_DENSITY_MAP;
+            self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
+            self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
+        } else if self.is_inductance() && self.unit_map != INDUCTANCE_MAP {
+            if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                *self >>= UnitElectricPotential::Volt(Metric::None);
+                *self >>= UnitTime::Second(Metric::None);
+                *self >>= UnitElectricCurrent::Ampere(Metric::None);
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_electric_potential = None;
+                self.v_time = None;
+                self.v_electric_current = None;
+            } else if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                *self >>= UnitResistance::Ohm(Metric::None);
+                *self >>= UnitTime::Second(Metric::None);
+                self.exp[RESISTANCE_INDEX] = 0;
+                self.exp[TIME_INDEX] = 0;
+                self.v_resistance = None;
+                self.v_time = None;
+            } else if self.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+                *self >>= UnitMagneticFlux::Weber(Metric::None);
+                *self >>= UnitElectricCurrent::Ampere(Metric::None);
+                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                self.v_magnetic_flux = None;
+                self.v_electric_current = None;
+            } else {
+                panic!("Unit translation: assumption Electric Inductance");
+            }
+
+            self.unit_map = INDUCTANCE_MAP;
+            self.exp[INDUCTANCE_INDEX] = 1;
+            self.v_inductance = Some(UnitInductance::Henry(Metric::None));
+        } else if self.is_luminous_flux() && self.unit_map != LUMINOUS_FLUX_MAP {
+            *self >>= UnitLuminousIntensity::Candela(Metric::None);
+            *self >>= UnitSolidAngle::Steradian(Metric::None);
+            self.exp[LUMINOUS_INTENSITY_INDEX] = 0;
+            self.exp[SOLID_ANGLE_INDEX] = 0;
+            self.v_solid_angle = None;
+            self.v_luminous_flux_intensity = None;
+            self.unit_map = LUMINOUS_FLUX_MAP;
+            self.exp[LUMINOUS_FLUX_INDEX] = 1;
+            self.v_luminous_flux = Some(UnitLuminousFlux::Lumen(Metric::None));
+        } else if self.is_illuminance() && self.unit_map != ILLUMINANCE_MAP {
+            *self >>= UnitLuminousFlux::Lumen(Metric::None);
+            *self >>= UnitLength::Meter(Metric::None);
+            self.exp[LUMINOUS_FLUX_INDEX] = 0;
+            self.exp[LENGTH_INDEX] = 0;
+            self.v_length = None;
+            self.v_luminous_flux = None;
+            self.unit_map = ILLUMINANCE_MAP;
+            self.exp[ILLUMINANCE_INDEX] = 1;
+            self.v_illuminance = Some(UnitIlluminance::Lux(Metric::None));
+        } else if self.is_catalytic_activity() && self.unit_map != CATALYTIC_ACTIVITY_MAP {
+            *self >>= UnitSubstance::Mole(Metric::None);
+            *self >>= UnitTime::Second(Metric::None);
+            self.exp[SUBSTANCE_INDEX] = 0;
+            self.exp[TIME_INDEX] = 0;
+            self.v_time = None;
+            self.v_substance = None;
+            self.unit_map = CATALYTIC_ACTIVITY_MAP;
+            self.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
+            self.v_catalytic = Some(UnitCatalyticActivity::Katal(Metric::None));
+        }
     }
 
     pub fn is_length(&self) -> bool {
@@ -4436,16 +4261,12 @@ impl Value {
     pub fn is_absorbed_dose(&self) -> bool {
         if self.unit_map == ABSORBED_DOSE_MAP && self.exp[ABSORBED_DOSE_INDEX] == 1 {
             return true;
-        } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
-            return true;
         }
         false
     }
 
     pub fn is_equivalent_dose(&self) -> bool {
         if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | MASS_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
             return true;
         }
         false
@@ -5668,7 +5489,7 @@ impl Value {
                 self.unit_map |= ABSORBED_DOSE_MAP;
             }
             "sr" => {
-                self.v_solid_angle = Some(UnitSolidAngle::Ster)
+                self.v_solid_angle = Some(UnitSolidAngle::Steradian(m))
             }
             _ => {
                 if m != Metric::None {
@@ -6131,11 +5952,14 @@ mod tests {
     #[test]
     fn value_reduction_1(){
         let mut v1:Value = Value::new(247.0, "g").unwrap();
+        println!("{}", v1);
         let v2:Value = Value::const_earth_gravity();
         let ret:Value = Value::new(2.42224255, "N").unwrap();
 
         v1 *= v2;
-        v1.reduce();
+        println!("{}", v1);
+        //v1.reduce();
+        println!("{}", v1);
         assert_eq!(v1, ret);
         assert_eq!(v1.is_force(), true);
     }

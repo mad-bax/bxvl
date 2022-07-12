@@ -213,6 +213,10 @@ impl UnitTime {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    pub fn convert_freq(&self, other:&UnitFrequency) -> f64 {
+        (self.scale() / other.scale()) * self.base()
+    }
+
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Second(m) => m.clone(),
@@ -948,8 +952,7 @@ impl Display for UnitSolidAngle {
 impl UnitSolidAngle {
     fn scale(&self) -> f64 {
         match self {
-            Self::Steradian(m) => m.scale(),
-            _ => 1.0
+            Self::Steradian(m) => m.scale()
         }
     }
 
@@ -965,8 +968,7 @@ impl UnitSolidAngle {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Steradian(m) => m.clone(),
-            _ => Metric::None
+            Self::Steradian(m) => m.clone()
         }
     }
 }
@@ -996,6 +998,10 @@ impl UnitFrequency {
 
     pub fn convert(&self, other:&UnitFrequency) -> f64 {
         self.scale() / other.scale()
+    }
+
+    pub fn convert_time(&self, other:&UnitTime) -> f64 {
+        (self.scale() / other.scale()) * (other.convert(&UnitTime::Second(Metric::None)))
     }
 
     pub fn get_metric(&self) -> Metric {
