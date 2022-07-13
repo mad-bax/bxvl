@@ -1,6 +1,85 @@
 extern crate v3;
 
 #[cfg(test)]
+mod value_usage_tests {
+    use v3::{values::Value};
+
+    macro_rules! assert_apr {
+        ($x:expr, $y:expr, $d:expr) => {
+            if f64::max($x, $y) - f64::min($x, $y) > $d {panic!("{:?} {:?}", $x, $y);}
+        };
+        ($x:expr, $y:expr) => {
+            if f64::max($x, $y) - f64::min($x, $y) > 0.000001 {panic!("{:?} {:?}", $x, $y);}
+        }
+    }
+
+    #[test]
+    fn value_create() {
+        let n:Value = Value::new(4.5, "m").unwrap();
+        let s:String = n.to_string();
+
+        println!("{}", s);
+
+        assert_eq!(s.len()>0, true);
+        assert_eq!(s, String::from("4.5 m"));
+    }
+
+    #[test]
+    fn value_funcs() {
+        let n:Value = Value::new(0.5, "rad").unwrap();
+        assert_apr!(n.acos().val, 1.0471975511);
+        assert_apr!(n.asin().val, 0.5235987755);
+        assert_apr!(n.atan().val, 0.4636476090);
+        assert_apr!(n.atan2(&n).val, 0.78539816339);
+        assert_apr!(n.sin().val, 0.47942553860);
+        assert_apr!(n.cos().val, 0.87758256189);
+        assert_apr!(n.tan().val, 0.54630248984);
+    }
+
+    #[test]
+    fn value_math_mul_add() {
+        // multiplication
+        let v1:Value = Value::new(4.5, "m").unwrap();
+        let mut v2:Value = Value::new(4.5, "m").unwrap();
+        let multi1:Value = Value::new(50.0, "cm").unwrap();
+        let multi2:Value = Value::new(50.0, "cm^2").unwrap();
+        let ret3:Value = Value::new(9.0, "m").unwrap();
+        let ret:Value = v1 * multi1;
+        v2 *= multi1;
+        assert_eq!(ret, v2);
+        v2 = Value::new(4.5, "m").unwrap();
+        let ret:Value = v1 * multi2;
+        v2 *= multi2;
+        assert_eq!(ret, v2);
+        v2 = Value::new(4.5, "m").unwrap();
+
+        let ret2:Value = v1 + v2;
+        assert_eq!(ret2, ret3);
+    }
+
+    #[test]
+    fn value_math_div_sub() {
+        let v1:Value = Value::new(15.0, "kg*m/s^2").unwrap();
+        let mut v2:Value = Value::new(15.0, "kg*m/s^2").unwrap();
+        let v3:Value = Value::new(3.0, "m/s").unwrap();
+        let ret:Value = Value::new(5.0, "kg/s").unwrap();
+        v2 /= v3;
+
+        assert_eq!(v2, ret);
+        assert_eq!(v1/v3, ret);
+
+        let v4:Value = Value::new(6.3, "m").unwrap();
+        let mut v5:Value = Value::new(6.3, "m").unwrap();
+        let v6:Value = Value::new(24.6, "cm").unwrap();
+        let ret:Value = Value::new(6.053999999999999, "m").unwrap();
+
+        v5 -= v6;
+        assert_eq!(v4-v6, ret);
+        assert_eq!(v5, ret);
+    }
+}
+
+#[cfg(test)]
 mod unit_conversion_tests {
     use v3::values::Value;
 
@@ -688,5 +767,21 @@ mod unit_conversion_tests {
         assert_apr!(t1.val, 26.85);
         t2 >>= "f";
         assert_apr!(t2.val, 80.33);
+    }
+
+    #[test]
+    fn convert_information1(){
+        let mut t1:Value = Value::new(1024.0, "bytes").unwrap();
+        
+        t1 >>= "bits";
+        assert_apr!(t1.val, 1024.0*8.0);
+    }
+
+    #[test]
+    fn convert_information2(){
+        let mut t1:Value = Value::new(1024.0, "bits").unwrap();
+        
+        t1 >>= "bytes";
+        assert_apr!(t1.val, 1024.0/8.0);
     }
 }

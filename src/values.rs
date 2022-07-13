@@ -239,10 +239,8 @@ impl PartialOrd for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -497,7 +495,7 @@ impl Shr<Value> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:Value) -> Self::Output {
         if self.__equivalent(&other) {
-            let mut ret:Value = self.clone();
+            let mut ret:Value = self;
             ret._convert(&other)?;
             return Ok(ret);
         }
@@ -524,7 +522,7 @@ impl Shr<String> for Value {
 impl Shr<UnitLength> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitLength) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & LENGTH_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -537,7 +535,7 @@ impl Shr<UnitLength> for Value {
 impl Shr<UnitAbsorbedDose> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitAbsorbedDose) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -550,7 +548,7 @@ impl Shr<UnitAbsorbedDose> for Value {
 impl Shr<UnitAngle> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitAngle) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ANGLE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -563,7 +561,7 @@ impl Shr<UnitAngle> for Value {
 impl Shr<UnitSolidAngle> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitSolidAngle) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & SOLID_ANGLE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -576,7 +574,7 @@ impl Shr<UnitSolidAngle> for Value {
 impl Shr<UnitCapacitance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitCapacitance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & CAPACITANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -589,7 +587,7 @@ impl Shr<UnitCapacitance> for Value {
 impl Shr<UnitCatalyticActivity> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitCatalyticActivity) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -602,7 +600,7 @@ impl Shr<UnitCatalyticActivity> for Value {
 impl Shr<UnitElectricCharge> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitElectricCharge) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -615,7 +613,7 @@ impl Shr<UnitElectricCharge> for Value {
 impl Shr<UnitElectricConductance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitElectricConductance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -628,7 +626,7 @@ impl Shr<UnitElectricConductance> for Value {
 impl Shr<UnitElectricCurrent> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitElectricCurrent) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -641,7 +639,7 @@ impl Shr<UnitElectricCurrent> for Value {
 impl Shr<UnitElectricPotential> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitElectricPotential) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -654,7 +652,7 @@ impl Shr<UnitElectricPotential> for Value {
 impl Shr<UnitEnergy> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitEnergy) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ENERGY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -667,7 +665,7 @@ impl Shr<UnitEnergy> for Value {
 impl Shr<UnitForce> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitForce) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & FORCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -680,7 +678,7 @@ impl Shr<UnitForce> for Value {
 impl Shr<UnitFrequency> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitFrequency) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & FREQUENCY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -693,7 +691,7 @@ impl Shr<UnitFrequency> for Value {
 impl Shr<UnitIlluminance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitIlluminance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & ILLUMINANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -706,7 +704,7 @@ impl Shr<UnitIlluminance> for Value {
 impl Shr<UnitInductance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitInductance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & INDUCTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -719,7 +717,7 @@ impl Shr<UnitInductance> for Value {
 impl Shr<UnitInformation> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitInformation) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & INFORMATION_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -732,7 +730,7 @@ impl Shr<UnitInformation> for Value {
 impl Shr<UnitLuminousFlux> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitLuminousFlux) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -745,7 +743,7 @@ impl Shr<UnitLuminousFlux> for Value {
 impl Shr<UnitLuminousIntensity> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitLuminousIntensity) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -758,7 +756,7 @@ impl Shr<UnitLuminousIntensity> for Value {
 impl Shr<UnitMagneticFlux> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitMagneticFlux) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -771,7 +769,7 @@ impl Shr<UnitMagneticFlux> for Value {
 impl Shr<UnitMagneticFluxDensity> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitMagneticFluxDensity) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -784,7 +782,7 @@ impl Shr<UnitMagneticFluxDensity> for Value {
 impl Shr<UnitMass> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitMass) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & MASS_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -797,7 +795,7 @@ impl Shr<UnitMass> for Value {
 impl Shr<UnitPower> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitPower) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & POWER_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -810,7 +808,7 @@ impl Shr<UnitPower> for Value {
 impl Shr<UnitPressure> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitPressure) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & PRESSURE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -823,7 +821,7 @@ impl Shr<UnitPressure> for Value {
 impl Shr<UnitRadioactivity> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitRadioactivity) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & RADIOACTIVITY_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -836,7 +834,7 @@ impl Shr<UnitRadioactivity> for Value {
 impl Shr<UnitRadioactivityExposure> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitRadioactivityExposure) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -849,7 +847,7 @@ impl Shr<UnitRadioactivityExposure> for Value {
 impl Shr<UnitResistance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitResistance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & RESISTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -862,7 +860,7 @@ impl Shr<UnitResistance> for Value {
 impl Shr<UnitSound> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitSound) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & SOUND_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -875,7 +873,7 @@ impl Shr<UnitSound> for Value {
 impl Shr<UnitSubstance> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitSubstance) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & SUBSTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -888,7 +886,7 @@ impl Shr<UnitSubstance> for Value {
 impl Shr<UnitTemperature> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitTemperature) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & TEMPERATURE_MAP != TEMPERATURE_MAP {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -904,7 +902,7 @@ impl Shr<UnitTemperature> for Value {
 impl Shr<UnitTime> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitTime) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & TIME_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -917,7 +915,7 @@ impl Shr<UnitTime> for Value {
 impl Shr<UnitVolume> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitVolume) -> Self::Output {
-        let mut n:Value = self.clone();
+        let mut n:Value = self;
         if self.unit_map & VOLUME_MAP == 0 {
             return Err(V3Error::ValueConversionError("Incompatable types"));
         }
@@ -1281,10 +1279,8 @@ impl Add<Value> for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -1472,10 +1468,8 @@ impl AddAssign<Value> for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -1662,10 +1656,8 @@ impl Sub<Value> for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -1853,10 +1845,8 @@ impl SubAssign<Value> for Value {
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -2042,10 +2032,8 @@ impl Mul<Value> for Value {
         n.unit_map = 0;
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -2299,14 +2287,10 @@ impl Mul<Value> for Value {
 impl MulAssign<Value> for Value {
     fn mul_assign(&mut self, other:Value) {
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
         
-        self.unit_map = 0;
-
         let mut cmp_val:f64 = other.val;
         for i in 0..31_usize {
             self.exp[i] += other.exp[i];
@@ -2560,10 +2544,8 @@ impl Div<Value> for Value {
         n.unit_map = 0;
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         let mut cmp_val:f64 = other.val;
@@ -2815,10 +2797,8 @@ impl Div<Value> for Value {
 impl DivAssign<Value> for Value {
     fn div_assign(&mut self, other:Value) {
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP {
-            if self.v_temperature != other.v_temperature {
-                // Error cannot convert as part of larger unit
-            }
+        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+            // Error cannot convert as part of larger unit
         }
 
         self.unit_map = 0;
@@ -3190,26 +3170,24 @@ impl Value {
                 return Ok(());
             }
             return Err(V3Error::ValueConversionError("Error converting unitless to radians"))
-        } else if self.unit_map == FREQUENCY_MAP && other.unit_map == TIME_MAP {
-            if self.exp[FREQUENCY_INDEX] == 1 && other.exp[TIME_INDEX] == -1 {
-                self.exp[FREQUENCY_INDEX] = 0;
-                self.exp[TIME_INDEX] = -1;
-                self.unit_map = TIME_MAP;
-                self.val *= self.v_frequency.unwrap().convert_time(&other.v_time.unwrap());
-                self.v_frequency = None;
-                self.v_time = other.v_time;
-                return Ok(());
-            }
-        } else if self.unit_map == TIME_MAP && other.unit_map == FREQUENCY_MAP {
-            if self.exp[TIME_INDEX] == -1 && other.exp[FREQUENCY_INDEX] == 1 {
-                self.exp[FREQUENCY_INDEX] = 1;
-                self.exp[TIME_INDEX] = 0;
-                self.unit_map = FREQUENCY_MAP;
-                self.val *= self.v_time.unwrap().convert_freq(&other.v_frequency.unwrap());
-                self.v_frequency = other.v_frequency;
-                self.v_time = None;
-                return Ok(());
-            }
+        } else if self.unit_map == FREQUENCY_MAP && other.unit_map == TIME_MAP &&
+                  self.exp[FREQUENCY_INDEX] == 1 && other.exp[TIME_INDEX] == -1 {
+            self.exp[FREQUENCY_INDEX] = 0;
+            self.exp[TIME_INDEX] = -1;
+            self.unit_map = TIME_MAP;
+            self.val *= self.v_frequency.unwrap().convert_time(&other.v_time.unwrap());
+            self.v_frequency = None;
+            self.v_time = other.v_time;
+            return Ok(());
+        } else if self.unit_map == TIME_MAP && other.unit_map == FREQUENCY_MAP &&
+                  self.exp[TIME_INDEX] == -1 && other.exp[FREQUENCY_INDEX] == 1 {
+            self.exp[FREQUENCY_INDEX] = 1;
+            self.exp[TIME_INDEX] = 0;
+            self.unit_map = FREQUENCY_MAP;
+            self.val *= self.v_time.unwrap().convert_freq(&other.v_frequency.unwrap());
+            self.v_frequency = other.v_frequency;
+            self.v_time = None;
+            return Ok(());
         }
 
         if self.unit_map != other.unit_map {
@@ -3399,182 +3377,185 @@ impl Value {
 
     pub fn reduce(&mut self) {
         // converting to a force
-        if self.unit_map == LENGTH_MAP | TIME_MAP | MASS_MAP {
-            if self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] && self.exp[LENGTH_INDEX] == 1 {
-                match self.v_length.unwrap() {
-                    UnitLength::Meter(_) => {}
-                    _ => {
-                        return
-                    }
+        if self.unit_map == LENGTH_MAP | TIME_MAP | MASS_MAP &&
+           self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] &&
+           self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] &&
+           self.exp[LENGTH_INDEX] == 1 {
+            match self.v_length.unwrap() {
+                UnitLength::Meter(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_time.unwrap() {
-                    UnitTime::Second(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                match self.v_mass.unwrap() {
-                    UnitMass::Gram(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-                self.val *= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-                self.val *= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-                self.v_mass = None;
-                self.v_length = None;
-                self.v_time = None;
-                self.v_force = Some(UnitForce::Newton(Metric::None));
-                self.unit_map = FORCE_MAP;
-                self.exp[LENGTH_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[MASS_INDEX] = 0;
-                self.exp[FORCE_INDEX] = 1;
             }
-        } else if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP { // converting force to mass
-            if self.exp[FORCE_INDEX]*2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == -1*self.exp[FORCE_INDEX] && self.exp[FORCE_INDEX] == 1 {
-                match self.v_length.unwrap() {
-                    UnitLength::Meter(_) => {}
-                    _ => {
-                        return
-                    }
+            match self.v_time.unwrap() {
+                UnitTime::Second(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_time.unwrap() {
-                    UnitTime::Second(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                match self.v_force.unwrap() {
-                    UnitForce::Newton(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-                self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-                self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-                self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-                self.v_length = None;
-                self.v_time = None;
-                self.v_force = None;
-                self.unit_map = MASS_MAP;
-                self.exp[LENGTH_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[MASS_INDEX] = 1;
-                self.exp[FORCE_INDEX] = 0;
             }
-        } else if self.unit_map == FORCE_MAP | MASS_MAP { // converting force to acceleration
-            if self.exp[FORCE_INDEX] == 1 && self.exp[MASS_INDEX] == -1 {
-                match self.v_force.unwrap() {
-                    UnitForce::Newton(_) => {}
-                    _ => {
-                        return
-                    }
+            match self.v_mass.unwrap() {
+                UnitMass::Gram(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_mass.unwrap() {
-                    UnitMass::Gram(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-                self.v_mass = None;
-                self.v_length = Some(UnitLength::Meter(Metric::None));
-                self.v_time = Some(UnitTime::Second(Metric::None));
-                self.v_force = None;
-                self.unit_map = LENGTH_MAP | TIME_MAP;
-                self.exp[LENGTH_INDEX] = 1;
-                self.exp[TIME_INDEX] = -2;
-                self.exp[MASS_INDEX] = 0;
-                self.exp[FORCE_INDEX] = 0;
             }
-        } else if self.unit_map == FORCE_MAP | TIME_MAP {
-            if self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] && self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] {
-                match self.v_time.unwrap() {
-                    UnitTime::Second(_) => {}
-                    _ => {
-                        return
-                    }
+            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
+            self.val *= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
+            self.val *= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
+            self.v_mass = None;
+            self.v_length = None;
+            self.v_time = None;
+            self.v_force = Some(UnitForce::Newton(Metric::None));
+            self.unit_map = FORCE_MAP;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[TIME_INDEX] = 0;
+            self.exp[MASS_INDEX] = 0;
+            self.exp[FORCE_INDEX] = 1;
+        } else if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP &&
+                  self.exp[FORCE_INDEX]*2 == self.exp[TIME_INDEX] &&
+                  self.exp[LENGTH_INDEX] == -self.exp[FORCE_INDEX] &&
+                  self.exp[FORCE_INDEX] == 1 {
+            match self.v_length.unwrap() {
+                UnitLength::Meter(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_force.unwrap() {
-                    UnitForce::Newton(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-                self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-                self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-                self.v_length = Some(UnitLength::Meter(Metric::None));
-                self.v_time = None;
-                self.v_force = None;
-                self.unit_map = LENGTH_MAP | MASS_MAP;
-                self.exp[LENGTH_INDEX] = 1;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[MASS_INDEX] = 1;
-                self.exp[FORCE_INDEX] = 0;
             }
-        } else if self.unit_map == FORCE_MAP | LENGTH_MAP {
-            if self.exp[LENGTH_INDEX] == -1 && self.exp[FORCE_INDEX] == 1 {
-                match self.v_length.unwrap() {
-                    UnitLength::Meter(_) => {}
-                    _ => {
-                        return
-                    }
+            match self.v_time.unwrap() {
+                UnitTime::Second(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_force.unwrap() {
-                    UnitForce::Newton(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-                self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-                self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-                self.v_length = None;
-                self.v_time = Some(UnitTime::Second(Metric::None));
-                self.v_force = None;
-                self.unit_map = TIME_MAP | MASS_MAP;
-                self.exp[LENGTH_INDEX] = 0;
-                self.exp[TIME_INDEX] = -2;
-                self.exp[MASS_INDEX] = 1;
-                self.exp[FORCE_INDEX] = 0;
             }
-        } else if self.unit_map == FORCE_MAP | TIME_MAP | MASS_MAP {
-            if self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == -1 && self.exp[FORCE_INDEX] == 1 {
-                match self.v_force.unwrap() {
-                    UnitForce::Newton(_) => {}
-                    _ => {
-                        return
-                    }
+            match self.v_force.unwrap() {
+                UnitForce::Newton(_) => {}
+                _ => {
+                    return
                 }
-                match self.v_time.unwrap() {
-                    UnitTime::Second(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                match self.v_mass.unwrap() {
-                    UnitMass::Gram(_) => {}
-                    _ => {
-                        return
-                    }
-                }
-                self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-                self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-                self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-                self.v_mass = None;
-                self.v_length = Some(UnitLength::Meter(Metric::None));
-                self.v_time = None;
-                self.v_force = None;
-                self.unit_map = LENGTH_MAP;
-                self.exp[LENGTH_INDEX] = 1;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[MASS_INDEX] = 0;
-                self.exp[FORCE_INDEX] = 0;
             }
+            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
+            self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
+            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
+            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+            self.v_length = None;
+            self.v_time = None;
+            self.v_force = None;
+            self.unit_map = MASS_MAP;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[TIME_INDEX] = 0;
+            self.exp[MASS_INDEX] = 1;
+            self.exp[FORCE_INDEX] = 0;
+        } else if self.unit_map == FORCE_MAP | MASS_MAP && 
+                  self.exp[FORCE_INDEX] == 1 &&
+                  self.exp[MASS_INDEX] == -1 {
+            match self.v_force.unwrap() {
+                UnitForce::Newton(_) => {}
+                _ => {
+                    return
+                }
+            }
+            match self.v_mass.unwrap() {
+                UnitMass::Gram(_) => {}
+                _ => {
+                    return
+                }
+            }
+            self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
+            self.v_mass = None;
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_time = Some(UnitTime::Second(Metric::None));
+            self.v_force = None;
+            self.unit_map = LENGTH_MAP | TIME_MAP;
+            self.exp[LENGTH_INDEX] = 1;
+            self.exp[TIME_INDEX] = -2;
+            self.exp[MASS_INDEX] = 0;
+            self.exp[FORCE_INDEX] = 0;
+        } else if self.unit_map == FORCE_MAP | TIME_MAP &&
+                  self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] &&
+                  self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] {
+            match self.v_time.unwrap() {
+                UnitTime::Second(_) => {}
+                _ => {
+                    return
+                }
+            }
+            match self.v_force.unwrap() {
+                UnitForce::Newton(_) => {}
+                _ => {
+                    return
+                }
+            }
+            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
+            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
+            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_time = None;
+            self.v_force = None;
+            self.unit_map = LENGTH_MAP | MASS_MAP;
+            self.exp[LENGTH_INDEX] = 1;
+            self.exp[TIME_INDEX] = 0;
+            self.exp[MASS_INDEX] = 1;
+            self.exp[FORCE_INDEX] = 0;
+        } else if self.unit_map == FORCE_MAP | LENGTH_MAP &&
+                  self.exp[LENGTH_INDEX] == -1 &&
+                  self.exp[FORCE_INDEX] == 1 {
+            match self.v_length.unwrap() {
+                UnitLength::Meter(_) => {}
+                _ => {
+                    return
+                }
+            }
+            match self.v_force.unwrap() {
+                UnitForce::Newton(_) => {}
+                _ => {
+                    return
+                }
+            }
+            self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
+            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
+            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+            self.v_length = None;
+            self.v_time = Some(UnitTime::Second(Metric::None));
+            self.v_force = None;
+            self.unit_map = TIME_MAP | MASS_MAP;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[TIME_INDEX] = -2;
+            self.exp[MASS_INDEX] = 1;
+            self.exp[FORCE_INDEX] = 0;
+        } else if self.unit_map == FORCE_MAP | TIME_MAP | MASS_MAP &&
+                  self.exp[TIME_INDEX] == -1 &&
+                  self.exp[MASS_INDEX] == -1 && 
+                  self.exp[FORCE_INDEX] == 1 {
+            match self.v_force.unwrap() {
+                UnitForce::Newton(_) => {}
+                _ => {
+                    return
+                }
+            }
+            match self.v_time.unwrap() {
+                UnitTime::Second(_) => {}
+                _ => {
+                    return
+                }
+            }
+            match self.v_mass.unwrap() {
+                UnitMass::Gram(_) => {}
+                _ => {
+                    return
+                }
+            }
+            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
+            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
+            self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
+            self.v_mass = None;
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_time = None;
+            self.v_force = None;
+            self.unit_map = LENGTH_MAP;
+            self.exp[LENGTH_INDEX] = 1;
+            self.exp[TIME_INDEX] = 0;
+            self.exp[MASS_INDEX] = 0;
+            self.exp[FORCE_INDEX] = 0;
         }
     }
 
@@ -3983,34 +3964,23 @@ impl Value {
     }
 
     pub fn is_length(&self) -> bool {
-        if self.unit_map & LENGTH_MAP != self.unit_map {
-            return false;
-        }
-        if self.exp[LENGTH_INDEX] != 1 {
+        if self.unit_map & LENGTH_MAP != self.unit_map || self.exp[LENGTH_INDEX] != 1 {
             return false;
         }
         true
     }
 
     pub fn is_area(&self) -> bool {
-        if self.unit_map & LENGTH_MAP != self.unit_map {
-            return false;
-        }
-        if self.exp[LENGTH_INDEX] != 2 {
+        if self.unit_map & LENGTH_MAP != self.unit_map || self.exp[LENGTH_INDEX] != 2 {
             return false;
         }
         true
     }
 
     pub fn is_volume(&self) -> bool {
-        if self.unit_map & LENGTH_MAP == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 3 {
-                return true;
-            }
-        } else if self.unit_map & VOLUME_MAP == self.unit_map {
-            if self.exp[VOLUME_INDEX] == 1 {
-                return true;
-            }
+        if (self.unit_map & LENGTH_MAP == self.unit_map && self.exp[LENGTH_INDEX] == 3) ||
+           (self.unit_map & VOLUME_MAP == self.unit_map && self.exp[VOLUME_INDEX] == 1) {
+            return true;
         }
         false
     }
@@ -4023,9 +3993,8 @@ impl Value {
     }
 
     pub fn is_density(&self) -> bool {
-        if self.unit_map == MASS_MAP | VOLUME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
+        if (self.unit_map == MASS_MAP | VOLUME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1) ||
+           (self.unit_map == MASS_MAP | LENGTH_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3) {
             return true;
         }
         false
@@ -4042,33 +4011,25 @@ impl Value {
     }
 
     pub fn is_acceleration(&self) -> bool {
-        if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
-            return false;
-        }
-        if self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -2 {
+        if (self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map) ||
+           (self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -2) {
             return false;
         }
         true
     }
 
     pub fn is_force(&self) -> bool {
-        if self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -2 && self.exp[MASS_INDEX] == 1 {
-                return true;
-            }
-        } else if self.unit_map & FORCE_MAP == self.unit_map {
-            if self.exp[FORCE_INDEX] == 1 {
-                return true;
-            }
+        if (self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -2 && self.exp[MASS_INDEX] == 1) ||
+           (self.unit_map & FORCE_MAP == self.unit_map && self.exp[FORCE_INDEX] == 1) {
+            return true;
         }
         false
     }
 
     pub fn is_momentum(&self) -> bool {
-        if self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map {
-            if self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == 1 {
-                return true;
-            }
+        if (self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map) && 
+           (self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == 1) {
+            return true;
         }
         false
     }
@@ -4085,151 +4046,119 @@ impl Value {
 
     pub fn is_mass(&self) -> bool {
         if self.unit_map == MASS_MAP && self.exp[MASS_INDEX] == 1 {
-            return true
+            return true;
         }
         false
     }
 
     pub fn is_frequency(&self) -> bool {
-        if self.unit_map == FREQUENCY_MAP && self.exp[FREQUENCY_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == TIME_MAP && self.exp[TIME_INDEX] == -1 {
+        if (self.unit_map == FREQUENCY_MAP && self.exp[FREQUENCY_INDEX] == 1) ||
+           (self.unit_map == TIME_MAP && self.exp[TIME_INDEX] == -1) {
             return true;
         }
         false
     }
 
     pub fn is_pressure(&self) -> bool {
-        if self.unit_map == PRESSURE_MAP && self.exp[PRESSURE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP &&
-                  self.exp[MASS_INDEX] == 1 &&
-                  self.exp[LENGTH_INDEX] == -1 &&
-                  self.exp[TIME_INDEX] == -2 {
+        if (self.unit_map == PRESSURE_MAP && self.exp[PRESSURE_INDEX] == 1) ||
+           (self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
+           (self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == -1 && self.exp[TIME_INDEX] == -2) {
             return true;
         }
         false
     }
 
     pub fn is_energy(&self) -> bool {
-        if self.unit_map == ENERGY_MAP && self.exp[ENERGY_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == LENGTH_MAP | FORCE_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[FORCE_INDEX] == 1{
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == POWER_MAP | TIME_MAP && self.exp[POWER_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -2 {
+        if (self.unit_map == ENERGY_MAP && self.exp[ENERGY_INDEX] == 1) ||
+           (self.unit_map == LENGTH_MAP | FORCE_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[FORCE_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CHARGE_INDEX] == 1) ||
+           (self.unit_map == POWER_MAP | TIME_MAP && self.exp[POWER_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
+           (self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -2) {
             return true;
         }
         false
     }
 
     pub fn is_power(&self) -> bool {
-        if self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3 {
+        if (self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1) ||
+           (self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1) ||
+           (self.unit_map == ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1) ||
+           (self.unit_map == MASS_MAP | LENGTH_MAP | TIME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 && self.exp[TIME_INDEX] == -3) {
             return true;
         }
         false
     }
 
     pub fn is_electric_charge(&self) -> bool {
-        if self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+        if (self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) {
             return true;
         }
         false
     }
 
     pub fn is_electric_potential(&self) -> bool {
-        if self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+        if (self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) ||
+           (self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
+           (self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1) {
             return true;
         }
         false
     }
 
     pub fn is_capacitance(&self) -> bool {
-        if self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1 {
+        if (self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
+           (self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1) {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn is_resistance(&self) -> bool {
-        if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+        if (self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1) ||
+           (self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn is_conductance(&self) -> bool {
-        if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+        if (self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1) ||
+           (self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1) ||
+           (self.unit_map == ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 && self.exp[ELECTRIC_CURRENT_INDEX] == 1) {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn is_magnetic_flux(&self) -> bool {
-        if self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2 {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
+        if (self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1) ||
+           (self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
+           (self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2) ||
+           (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1) {
             return true;
         }
         false
     }
 
     pub fn is_magnetic_flux_density(&self) -> bool {
-        if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
-            return true;
-        } else if self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2 {
-            return true;
-        } else if self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1 {
+        if (self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
+           (self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
+           (self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1) {
             return true;
         }
         false
     }
 
     pub fn is_inductance(&self) -> bool {
-        if self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+        if (self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1) ||
+           (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
+           (self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
+           (self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) { 
             return true;
         }
         false
@@ -4243,9 +4172,8 @@ impl Value {
     }
 
     pub fn is_illuminance(&self) -> bool {
-        if self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2 {
+        if (self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1) || 
+           (self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2) {
             return true;
         }
         false
@@ -4273,9 +4201,8 @@ impl Value {
     }
 
     pub fn is_catalytic_activity(&self) -> bool {
-        if self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+        if (self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1) || 
+           (self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1) {
             return true;
         }
         false
@@ -4359,9 +4286,8 @@ impl Value {
     }
 
     pub fn is_flow(&self) -> bool {
-        if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1 {
-            return true;
-        } else if self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
+        if (self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1) || 
+           (self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1) {
             return true;
         }
         false
@@ -4382,9 +4308,8 @@ impl Value {
     }
 
     pub fn is_torque(&self) -> bool {
-        if self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
-            return true;
-        } else if self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1 {
+        if (self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1) || 
+           (self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1) {
             return true;
         }
         false
@@ -5094,7 +5019,7 @@ impl Value {
                 self.v_length = Some(UnitLength::Mile);
                 self.exp[LENGTH_INDEX] = exp;
                 self.v_time = Some(UnitTime::Hour);
-                self.exp[TIME_INDEX] = -1*exp;
+                self.exp[TIME_INDEX] = -exp;
                 self.unit_map = LENGTH_MAP | TIME_MAP;
                 return Ok(());
             }
@@ -5105,7 +5030,7 @@ impl Value {
                 self.v_length = Some(UnitLength::Meter(Metric::Kilo));
                 self.exp[LENGTH_INDEX] = exp;
                 self.v_time = Some(UnitTime::Hour);
-                self.exp[TIME_INDEX] = -1*exp;
+                self.exp[TIME_INDEX] = -exp;
                 self.unit_map |= LENGTH_MAP | TIME_MAP;
                 return Ok(());
             }
@@ -5603,7 +5528,7 @@ impl Value {
         match self._get_metric(&unit.chars().next().unwrap()) {
             Ok(new_m) => self._get_quadrouple_letter(&unit[1..], exp, new_m),
             Err(e) => {
-                return Err(e);
+                Err(e)
             }
         }
     }

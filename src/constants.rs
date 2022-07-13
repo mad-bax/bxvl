@@ -19,7 +19,7 @@ pub const LENGTH_MILE_TO_METER:f64  = 1609.344;
 pub const LENGTH_AU_TO_METER:f64    = 149597870700.0;
 pub const LENGTH_LYR_TO_METER:f64   = 9460730472580800.0;
 pub const LENGTH_A_TO_METER:f64     = 0.0000000001;
-pub const LENGTH_PC_TO_METER:f64    = 96939420213600000.0/std::f64::consts::PI;
+pub const LENGTH_PC_TO_METER:f64    = (648_000.0/std::f64::consts::PI)*149597870700.0;
 pub const MASS_LB_TO_G:f64          = 453.59237;
 pub const MASS_GR_TO_G:f64          = MASS_LB_TO_G/7000.0;
 pub const MASS_OZ_TO_G:f64          = MASS_LB_TO_G/16.0;
@@ -48,19 +48,20 @@ pub const VAL_ABS_ZERO:f64          = 0.0;
 pub const VAL_AVOGADROS:f64         = 6.02214076e23;
 
 // Faraday's Constant
-pub const VAL_FARADAY:f64           = 96485.3321233100184;
+//pub const VAL_FARADAY:f64           = 96_485.332_123_310_018_4;
+pub const VAL_FARADAY:f64           = 96_485.332_123_310_01;
 
 // Atomic Mass Constant
 pub const VAL_ATOMIC_MASS:f64       = 1.66053906660e-27;
 
 // R for the Ideal Gas Law
-pub const VAL_MOLAR_GAS:f64         = 8.3144621;
+pub const VAL_MOLAR_GAS:f64         = 8.314_462_1;
 
 // Coulombs constant
-pub const VAL_COULOMBS:f64          = 8.987551;
+pub const VAL_COULOMBS:f64          = 8.987_551;
 
 // The speed of light
-pub const VAL_LIGHT_SPEED:f64       = 299792458.0;
+pub const VAL_LIGHT_SPEED:f64       = 299_792_458.0;
 
 // The boltzmann constant
 pub const VAL_BOLTZMANN:f64         = 1.380649e-23;
@@ -69,13 +70,13 @@ pub const VAL_BOLTZMANN:f64         = 1.380649e-23;
 pub const VAL_NEWTONIAN_GRAVITATION:f64 = 6.673015e-11;
 
 // The average gravity of earth
-pub const VAL_EARTH_GRAV:f64        = 9.80665;
+pub const VAL_EARTH_GRAV:f64        = 9.806_65;
 
 // The charge of an electron
 pub const VAL_ELECTRON_CHARGE:f64   = 1.602176634e-19;
 
 // The Rydberg constant
-pub const VAL_RYDBERG:f64           = 10973731.568539;
+pub const VAL_RYDBERG:f64           = 10_973_731.568_539;
 
 // Plank's constant
 pub const VAL_PLANKS:f64            = 6.62607015e-34;

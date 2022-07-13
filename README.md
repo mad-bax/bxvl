@@ -1,12 +1,12 @@
-# V2
-V2 is a library with the aim of assisting other programs that use a lot of math equations to integrate units and unit interactions into a single type. 
+# V3
+V3 is a library with the aim of assisting other programs that use a lot of math equations to integrate units and unit interactions into a single type. 
 
-V2 parses strings given by a user and turns the parsed string into a 'Value' type. This type can be used in a similar way as to a regular ```<f64>``` type. It maintains the value given, as well as the measurement type given. 
+V3 parses strings given by a user and turns the parsed string into a 'Value' type. This type can be used in a similar way as to a regular ```<f64>``` type. It maintains the value given, as well as the measurement type given. 
 
 When used in equations, it will automatically be updated wither within itself or the new construction will contain the updated unit types. 
 
 ## Table of Contents
-- [V2](#v2)
+- [V3](#v3)
   - [Table of Contents](#table-of-contents)
   - [Example](#example)
   - [Unit Support](#unit-support)
@@ -252,7 +252,7 @@ m >>= "m";
 ```
 If you require better runtime efficiency at the cost of specifying each unit type:
 ```rust
-use v2::units::unit_types::{UnitLength, UnitTime};
+use v3::units::unit_types::{UnitLength, UnitTime};
 let mut s:Value = Value::new(5.3, "mph").unwrap();
 s >>= UnitLength::Meter(Metric::Kilo);
 s >>= UnitTime::Second(Metric::None);

@@ -162,7 +162,7 @@ impl UnitLength {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Meter(m) => m.clone(),
+            Self::Meter(m) => *m,
             _ => Metric::None
         }
     }
@@ -219,7 +219,7 @@ impl UnitTime {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Second(m) => m.clone(),
+            Self::Second(m) => *m,
             _ => Metric::None
         }
     }
@@ -272,7 +272,7 @@ impl UnitMass {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Gram(m) => m.clone(),
+            Self::Gram(m) => *m,
             _ => Metric::None
         }
     }
@@ -307,7 +307,7 @@ impl UnitElectricCurrent {
 
         pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Ampere(m) => m.clone()
+            Self::Ampere(m) => *m
         }
     }
 }
@@ -341,7 +341,7 @@ impl UnitElectricCharge {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Coulomb(m) => m.clone()
+            Self::Coulomb(m) => *m
         }
     }
 }
@@ -375,7 +375,7 @@ impl UnitElectricPotential {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Volt(m) => m.clone()
+            Self::Volt(m) => *m
         }
     }
 }
@@ -409,7 +409,7 @@ impl UnitElectricConductance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Siemens(m) => m.clone()
+            Self::Siemens(m) => *m
         }
     }
 }
@@ -443,7 +443,7 @@ impl UnitCapacitance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Farad(m) => m.clone()
+            Self::Farad(m) => *m
         }
     }
 }
@@ -477,7 +477,7 @@ impl UnitResistance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Ohm(m) => m.clone()
+            Self::Ohm(m) => *m
         }
     }
 }
@@ -511,7 +511,7 @@ impl UnitInductance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Henry(m) => m.clone()
+            Self::Henry(m) => *m
         }
     }
 }
@@ -545,7 +545,7 @@ impl UnitMagneticFlux {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Weber(m) => m.clone()
+            Self::Weber(m) => *m
         }
     }
 }
@@ -579,7 +579,7 @@ impl UnitMagneticFluxDensity {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Tesla(m) => m.clone()
+            Self::Tesla(m) => *m
         }
     }
 }
@@ -668,7 +668,7 @@ impl UnitSubstance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Mole(m) => m.clone()
+            Self::Mole(m) => *m
         }
     }
 }
@@ -702,7 +702,7 @@ impl UnitLuminousIntensity {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Candela(m) => m.clone()
+            Self::Candela(m) => *m
         }
     }
 }
@@ -736,7 +736,7 @@ impl UnitLuminousFlux {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Lumen(m) => m.clone()
+            Self::Lumen(m) => *m
         }
     }
 }
@@ -770,7 +770,7 @@ impl UnitIlluminance {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Lux(m) => m.clone()
+            Self::Lux(m) => *m
         }
     }
 }
@@ -808,7 +808,7 @@ impl UnitVolume {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Liter(m) => m.clone()
+            Self::Liter(m) => *m
         }
     }
 }
@@ -873,8 +873,8 @@ impl UnitPressure {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Pascal(m) => m.clone(),
-            Self::Bar(m) => m.clone(),
+            Self::Pascal(m) => *m,
+            Self::Bar(m) => *m,
             _ => Metric::None
         }
     }
@@ -925,7 +925,7 @@ impl UnitAngle {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Radian(m) => m.clone(),
+            Self::Radian(m) => *m,
             _ => Metric::None
         }
     }
@@ -968,7 +968,7 @@ impl UnitSolidAngle {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Steradian(m) => m.clone()
+            Self::Steradian(m) => *m
         }
     }
 }
@@ -1006,7 +1006,7 @@ impl UnitFrequency {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Hertz(m) => m.clone()
+            Self::Hertz(m) => *m
         }
     }
 }
@@ -1052,7 +1052,7 @@ impl UnitForce {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Newton(m) => m.clone(),
+            Self::Newton(m) => *m,
             _ => Metric::None
         }
     }
@@ -1110,8 +1110,8 @@ impl UnitEnergy {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Joule(m) => m.clone(),
-            Self::GramCalorie(m) => m.clone(),
+            Self::Joule(m) => *m,
+            Self::GramCalorie(m) => *m,
             _ => Metric::None
         }
     }
@@ -1146,7 +1146,7 @@ impl UnitPower {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Watt(m) => m.clone()
+            Self::Watt(m) => *m
         }
     }
 }
@@ -1192,7 +1192,7 @@ impl UnitRadioactivity {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Becquerel(m) => m.clone(),
+            Self::Becquerel(m) => *m,
             _ => Metric::None
         }
     }
@@ -1242,7 +1242,7 @@ impl UnitAbsorbedDose {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Gray(m) => m.clone(),
+            Self::Gray(m) => *m,
             _ => Metric::None
         }
     }
@@ -1289,7 +1289,7 @@ impl UnitRadioactivityExposure {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Sievert(m) => m.clone(),
+            Self::Sievert(m) => *m,
             _ => Metric::None
         }
     }
@@ -1324,7 +1324,7 @@ impl UnitCatalyticActivity {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Katal(m) => m.clone()
+            Self::Katal(m) => *m
         }
     }
 }
@@ -1358,7 +1358,7 @@ impl UnitSound {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Bel(m) => m.clone()
+            Self::Bel(m) => *m
         }
     }
 }
@@ -1418,8 +1418,8 @@ impl UnitInformation {
 
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Bit(m) => m.clone(),
-            Self::Byte(m) => m.clone()
+            Self::Bit(m) => *m,
+            Self::Byte(m) => *m
         }
     }
 }
