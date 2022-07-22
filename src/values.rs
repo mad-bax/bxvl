@@ -23,6 +23,12 @@ macro_rules! value {
     };
 }
 
+trait Reduce<T:std::fmt::Debug> {
+    fn reduce(ty:T) -> Result<(), V3Error> {
+        Err(V3Error::UnitReductionError(format!("Unimplemented reduction for type: {:?}", ty)))
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub val:f64,                    // The numerical value
@@ -222,8 +228,18 @@ impl FromStr for Value {
     }
 }
 
-impl PartialEq for Value {
+impl PartialEq<Value> for Value {
     fn eq(&self, other:&Value) -> bool {
+        if !self.__equal(other) {
+            return false;
+        }
+
+        self.val == other.val
+    }
+}
+
+impl PartialEq<&mut Value> for Value {
+    fn eq(&self, other:&&mut Value) -> bool {
         if !self.__equal(other) {
             return false;
         }
@@ -1268,6 +1284,12 @@ impl ShrAssign<UnitVolume> for Value {
         }
         self.val *= self.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         self.v_volume = Some(other);
+    }
+}
+
+impl Reduce<UnitForce> for Value {
+    fn reduce(ty:UnitForce) -> Result<(), V3Error> {
+        
     }
 }
 
@@ -3375,188 +3397,18 @@ impl Value {
         Ok(())
     }
 
-    pub fn reduce(&mut self) {
-        // converting to a force
-        if self.unit_map == LENGTH_MAP | TIME_MAP | MASS_MAP &&
-           self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] &&
-           self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] &&
-           self.exp[LENGTH_INDEX] == 1 {
-            match self.v_length.unwrap() {
-                UnitLength::Meter(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_time.unwrap() {
-                UnitTime::Second(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_mass.unwrap() {
-                UnitMass::Gram(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-            self.val *= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-            self.val *= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-            self.v_mass = None;
-            self.v_length = None;
-            self.v_time = None;
-            self.v_force = Some(UnitForce::Newton(Metric::None));
-            self.unit_map = FORCE_MAP;
-            self.exp[LENGTH_INDEX] = 0;
-            self.exp[TIME_INDEX] = 0;
-            self.exp[MASS_INDEX] = 0;
-            self.exp[FORCE_INDEX] = 1;
-        } else if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP &&
-                  self.exp[FORCE_INDEX]*2 == self.exp[TIME_INDEX] &&
-                  self.exp[LENGTH_INDEX] == -self.exp[FORCE_INDEX] &&
-                  self.exp[FORCE_INDEX] == 1 {
-            match self.v_length.unwrap() {
-                UnitLength::Meter(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_time.unwrap() {
-                UnitTime::Second(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_force.unwrap() {
-                UnitForce::Newton(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-            self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-            self.v_length = None;
-            self.v_time = None;
-            self.v_force = None;
-            self.unit_map = MASS_MAP;
-            self.exp[LENGTH_INDEX] = 0;
-            self.exp[TIME_INDEX] = 0;
-            self.exp[MASS_INDEX] = 1;
-            self.exp[FORCE_INDEX] = 0;
-        } else if self.unit_map == FORCE_MAP | MASS_MAP && 
-                  self.exp[FORCE_INDEX] == 1 &&
-                  self.exp[MASS_INDEX] == -1 {
-            match self.v_force.unwrap() {
-                UnitForce::Newton(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_mass.unwrap() {
-                UnitMass::Gram(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-            self.v_mass = None;
-            self.v_length = Some(UnitLength::Meter(Metric::None));
-            self.v_time = Some(UnitTime::Second(Metric::None));
-            self.v_force = None;
-            self.unit_map = LENGTH_MAP | TIME_MAP;
-            self.exp[LENGTH_INDEX] = 1;
-            self.exp[TIME_INDEX] = -2;
-            self.exp[MASS_INDEX] = 0;
-            self.exp[FORCE_INDEX] = 0;
-        } else if self.unit_map == FORCE_MAP | TIME_MAP &&
-                  self.exp[LENGTH_INDEX]*-2 == self.exp[TIME_INDEX] &&
-                  self.exp[LENGTH_INDEX] == self.exp[MASS_INDEX] {
-            match self.v_time.unwrap() {
-                UnitTime::Second(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_force.unwrap() {
-                UnitForce::Newton(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-            self.v_length = Some(UnitLength::Meter(Metric::None));
-            self.v_time = None;
-            self.v_force = None;
-            self.unit_map = LENGTH_MAP | MASS_MAP;
-            self.exp[LENGTH_INDEX] = 1;
-            self.exp[TIME_INDEX] = 0;
-            self.exp[MASS_INDEX] = 1;
-            self.exp[FORCE_INDEX] = 0;
-        } else if self.unit_map == FORCE_MAP | LENGTH_MAP &&
-                  self.exp[LENGTH_INDEX] == -1 &&
-                  self.exp[FORCE_INDEX] == 1 {
-            match self.v_length.unwrap() {
-                UnitLength::Meter(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_force.unwrap() {
-                UnitForce::Newton(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val /= self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None));
-            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
-            self.v_length = None;
-            self.v_time = Some(UnitTime::Second(Metric::None));
-            self.v_force = None;
-            self.unit_map = TIME_MAP | MASS_MAP;
-            self.exp[LENGTH_INDEX] = 0;
-            self.exp[TIME_INDEX] = -2;
-            self.exp[MASS_INDEX] = 1;
-            self.exp[FORCE_INDEX] = 0;
-        } else if self.unit_map == FORCE_MAP | TIME_MAP | MASS_MAP &&
-                  self.exp[TIME_INDEX] == -1 &&
-                  self.exp[MASS_INDEX] == -1 && 
-                  self.exp[FORCE_INDEX] == 1 {
-            match self.v_force.unwrap() {
-                UnitForce::Newton(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_time.unwrap() {
-                UnitTime::Second(_) => {}
-                _ => {
-                    return
-                }
-            }
-            match self.v_mass.unwrap() {
-                UnitMass::Gram(_) => {}
-                _ => {
-                    return
-                }
-            }
-            self.val *= self.v_time.unwrap().convert(&UnitTime::Second(Metric::None));
-            self.val *= self.v_force.unwrap().convert(&UnitForce::Newton(Metric::None));
-            self.val /= self.v_mass.unwrap().convert(&UnitMass::Gram(Metric::Kilo));
-            self.v_mass = None;
-            self.v_length = Some(UnitLength::Meter(Metric::None));
-            self.v_time = None;
-            self.v_force = None;
-            self.unit_map = LENGTH_MAP;
-            self.exp[LENGTH_INDEX] = 1;
-            self.exp[TIME_INDEX] = 0;
-            self.exp[MASS_INDEX] = 0;
-            self.exp[FORCE_INDEX] = 0;
+    pub fn reduce(&mut self, red:&str) -> Result<(), V3Error> {
+
+        let mut temp:Value = self.clone();
+        temp >>= red;
+
+        if temp != self {
+            return Err(V3Error::UnitReductionError(format!("Cannot reduce {} to {}", self, temp)));
+        } else {
+            *self = temp.clone();
         }
+
+        Ok(())
     }
 
     pub fn inv(&mut self) {
@@ -5896,7 +5748,7 @@ mod tests {
         let mut v3:Value = Value::new(2.42224255, "N").unwrap();
 
         v3 /= v2;
-        v3.reduce();
+        v3.reduce("kg*m/s^2").unwrap();
         assert_apx!(v3, v1);
         assert_eq!(v3.is_mass(), true);
     }
@@ -5909,7 +5761,7 @@ mod tests {
 
         v3 /= v1;
         println!("{:?}", v3);
-        v3.reduce();
+        v3.reduce("kg*m/s^2").unwrap();
         println!("{:?}", v3);
         assert_apx!(v3, v2);
         assert_eq!(v3.is_acceleration(), true);
