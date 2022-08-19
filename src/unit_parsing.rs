@@ -1,21 +1,7 @@
-/**
- * File    :> unit_parsing.rs
- * Author  :> Bax
- * Version :> 0.0.1
- * Details :>
- */
-
 use std::cmp::Ordering;
 use crate::common::*;
 
-/**
- * Function :> pub
- * Args :.
- *  - m : &Metric
- * Returns :> Result of String, error of V2Error
- * Details :> returns the string of a metric prefix
- */
-pub fn get_metric_str(m:&Metric) -> Result<String, V2Error> {
+pub(crate) fn get_metric_str(m:&Metric) -> Result<String, V2Error> {
     let temp = match m {
         Metric::Empty => "",
         Metric::Deca => "da",
@@ -42,14 +28,7 @@ pub fn get_metric_str(m:&Metric) -> Result<String, V2Error> {
     Ok(temp.to_string())
 }
 
-/**
- * Function :> pub
- * Args :.
- *  - ty : &UnitTypes
- * Returns :> Result of String, error of V2Error
- * Details :> returns the string of a given unit
- */
-pub fn get_unit_str(ty:&UnitTypes) -> Result<String, V2Error> {
+pub(crate) fn get_unit_str(ty:&UnitTypes) -> Result<String, V2Error> {
     let temp = match ty {
         UnitTypes::Length(UnitLength::Meter) => "m", //
         UnitTypes::Length(UnitLength::Angstrom) => "Å",
@@ -152,13 +131,6 @@ pub fn get_unit_str(ty:&UnitTypes) -> Result<String, V2Error> {
 }
 
 
-/**
- * Function :> _get_single_letter
- * Args :.
- *  - label : &str
- * Returns :> Result of UnitTypes, error of V2Error
- * Details :> return unit based upon single character representation
- */
 fn _get_single_letter(label:&str) -> Result<UnitTypes, V2Error>{
     match label {
         "m" => {
@@ -236,14 +208,6 @@ fn _get_single_letter(label:&str) -> Result<UnitTypes, V2Error>{
     }
 }
 
-/**
- * Function :> _get_double_letter
- * Args :.
- *  - label : &str
- *  - count : usize
- * Returns :> Result of UnitTypes, error of V2Error
- * Details :> return unit based upon double character representation
- */
 fn _get_double_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     match label {
         // first we check unique 2 letter units
@@ -301,14 +265,6 @@ fn _get_double_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     }
 }
 
-/**
- * Function :> _get_triple_letter
- * Args :.
- *  - label : &str
- *  - count : usize
- * Returns :> Result of UnitTypes, error of V2Error
- * Details :> return unit based upon triple character representation
- */
 fn _get_triple_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     if let Some(stripped) = label.strip_prefix("da") {
         let t:UnitTypes = _get_single_letter(stripped)?;
@@ -344,14 +300,6 @@ fn _get_triple_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     }
 }
 
-/**
- * Function :> _get_quad_letter
- * Args :.
- *  - label : &str
- *  - count : usize
- * Returns :> Result of UnitTypes, error of V2Error
- * Details :> return unit based upon quadruple character representation
- */
 fn _get_quad_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     if let Some(stripped) = label.strip_prefix("da") {
         let t:UnitTypes = _get_double_letter(stripped, count-1)?;
@@ -376,14 +324,6 @@ fn _get_quad_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     }
 }
 
-/**
- * Function :> _get_penta_letter
- * Args :.
- *  - label : &str
- *  - count : usize
- * Returns :> Result of UnitTypes, error of V2Error
- * Details :> return unit based upon pentuple character representation
- */
 fn _get_penta_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     if let Some(stripped) = label.strip_prefix("da") {
         let t:UnitTypes = _get_triple_letter(stripped, count-1)?;
@@ -394,14 +334,6 @@ fn _get_penta_letter(label:&str, count:usize) -> Result<UnitTypes, V2Error> {
     }
 }
 
-/**
- * Function :> _create_unit
- * Args :.
- *  - label : &str
- *  - exp : f64
- * Returns :> Result of Vec<Unit>, error of V2Error
- * Details :> creates a new unit with a given string and exponent
- */
 fn _create_unit(label:&str, exp:f64) -> Result<Vec<Unit>, V2Error> {
     // This will be the vector we return
     let mut ret:Vec<Unit> = Vec::new();
@@ -670,14 +602,6 @@ fn _create_unit(label:&str, exp:f64) -> Result<Vec<Unit>, V2Error> {
     Ok(ret)
 }
 
-/**
- * Function :> _get_metric
- * Args :.
- *  - full_label : &str
- *  - ut : &UnitTypes
- * Returns :> Result of Metric, error of V2Error
- * Details :> determines if a unit is a valid SI unit and can use metric prefixes
- */
 fn _get_metric(full_label:&str, ut:&UnitTypes) -> Result<Metric, V2Error> {
 
     // We make sure that we only 'get metrics' for SI and compatible units 
@@ -747,14 +671,6 @@ fn _get_metric(full_label:&str, ut:&UnitTypes) -> Result<Metric, V2Error> {
     }
 }
 
-/**
- * Function :> _get_tokens
- * Args :.
- *  - block : &str
- *  - do_denom : bool
- * Returns :> Result of (Vec<String>, error of Vec<String>)
- * Details :> gets the pieces of a string for parsing
- */
 fn _get_tokens(block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), V2Error> {
     let mut numor:Vec<String> = Vec::new();
     let mut denom:Vec<String> = Vec::new();
@@ -827,14 +743,7 @@ fn _get_tokens(block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), 
     Ok((numor, denom))
 }
 
-/**
- * Function :> pub
- * Args :.
- *  - label : &str
- * Returns :> Result of Vec<Unit>, error of V2Error
- * Details :> parses a string to create a list of units 
- */
-pub fn parse(label:&str) -> Result<Vec<Unit>, V2Error> {
+pub(crate) fn parse(label:&str) -> Result<Vec<Unit>, V2Error> {
     let mut ret:Vec<Unit> = vec![];
 
     if label.is_empty() {
@@ -875,10 +784,6 @@ pub fn parse(label:&str) -> Result<Vec<Unit>, V2Error> {
 mod unit_parsing_testing {
 
     #[test]
-    /**
-     * Function :> parsing_1
-     * Details :>
-     */
     fn parsing_1(){
         let temp = "kmol/ kg^2";
         let tok = super::_get_tokens(&temp, false).unwrap();
@@ -887,10 +792,6 @@ mod unit_parsing_testing {
     }
 
     #[test]
-    /**
-     * Function :> parsing_2
-     * Details :>
-     */
     fn parsing_2(){
         let temp = "(kmol*kg^2)/(s(J^2))";
         let tok = super::_get_tokens(&temp, false).unwrap();
@@ -901,10 +802,6 @@ mod unit_parsing_testing {
     }
 
     #[test]
-    /**
-     * Function :> parsing_3
-     * Details :>
-     */
     fn parsing_3(){
         let temp = "1/C";
         let tok = super::_get_tokens(&temp, false).unwrap();

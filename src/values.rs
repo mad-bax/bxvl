@@ -34,37 +34,37 @@ pub struct Value {
     pub val:f64,                    // The numerical value
     unit_map:usize,                 // Which units are selected
     exp:[i32;31],                   // The exponent of those units 
-    v_ab_dose:Option<UnitAbsorbedDose>,          // The units
-    v_angle:Option<UnitAngle>,
-    v_capacitance:Option<UnitCapacitance>,
-    v_catalytic:Option<UnitCatalyticActivity>,
-    v_electric_charge:Option<UnitElectricCharge>,
-    v_electric_conductance:Option<UnitElectricConductance>,
-    v_electric_current:Option<UnitElectricCurrent>,
-    v_electric_potential:Option<UnitElectricPotential>,
-    v_energy:Option<UnitEnergy>,
-    v_force:Option<UnitForce>,
-    v_frequency:Option<UnitFrequency>,
-    v_illuminance:Option<UnitIlluminance>,
-    v_inductance:Option<UnitInductance>,
-    v_information:Option<UnitInformation>,
-    v_length:Option<UnitLength>,
-    v_luminous_flux:Option<UnitLuminousFlux>,
-    v_luminous_flux_intensity:Option<UnitLuminousIntensity>,
-    v_mass:Option<UnitMass>,
-    v_power:Option<UnitPower>,
-    v_pressure:Option<UnitPressure>,
-    v_radioactivity:Option<UnitRadioactivity>,
-    v_radioactivity_exposure:Option<UnitRadioactivityExposure>,
-    v_resistance:Option<UnitResistance>,
-    v_sound:Option<UnitSound>,
-    v_substance:Option<UnitSubstance>,
-    v_temperature:Option<UnitTemperature>,
-    v_time:Option<UnitTime>,
-    v_volume:Option<UnitVolume>,
-    v_magnetic_flux:Option<UnitMagneticFlux>,
-    v_magnetic_flux_density:Option<UnitMagneticFluxDensity>,
-    v_solid_angle:Option<UnitSolidAngle>
+    v_ab_dose :                 Option<UnitAbsorbedDose>,          // The units
+    v_angle :                   Option<UnitAngle>,
+    v_capacitance :             Option<UnitCapacitance>,
+    v_catalytic :               Option<UnitCatalyticActivity>,
+    v_electric_charge :         Option<UnitElectricCharge>,
+    v_electric_conductance :    Option<UnitElectricConductance>,
+    v_electric_current :        Option<UnitElectricCurrent>,
+    v_electric_potential :      Option<UnitElectricPotential>,
+    v_energy :                  Option<UnitEnergy>,
+    v_force :                   Option<UnitForce>,
+    v_frequency :               Option<UnitFrequency>,
+    v_illuminance :             Option<UnitIlluminance>,
+    v_inductance :              Option<UnitInductance>,
+    v_information :             Option<UnitInformation>,
+    v_length :                  Option<UnitLength>,
+    v_luminous_flux :           Option<UnitLuminousFlux>,
+    v_luminous_flux_intensity : Option<UnitLuminousIntensity>,
+    v_mass :                    Option<UnitMass>,
+    v_power :                   Option<UnitPower>,
+    v_pressure :                Option<UnitPressure>,
+    v_radioactivity :           Option<UnitRadioactivity>,
+    v_radioactivity_exposure :  Option<UnitRadioactivityExposure>,
+    v_resistance :              Option<UnitResistance>,
+    v_sound :                   Option<UnitSound>,
+    v_substance :               Option<UnitSubstance>,
+    v_temperature :             Option<UnitTemperature>,
+    v_time :                    Option<UnitTime>,
+    v_volume :                  Option<UnitVolume>,
+    v_magnetic_flux :           Option<UnitMagneticFlux>,
+    v_magnetic_flux_density :   Option<UnitMagneticFluxDensity>,
+    v_solid_angle :             Option<UnitSolidAngle>
 }
 
 impl Display for Value {
@@ -1287,11 +1287,11 @@ impl ShrAssign<UnitVolume> for Value {
     }
 }
 
-impl Reduce<UnitForce> for Value {
-    fn reduce(ty:UnitForce) -> Result<(), V3Error> {
+//impl Reduce<UnitForce> for Value {
+//    fn reduce(ty:UnitForce) -> Result<(), V3Error> {
         
-    }
-}
+//    }
+//}
 
 impl Add<Value> for Value {
     type Output = Value;
@@ -3399,13 +3399,13 @@ impl Value {
 
     pub fn reduce(&mut self, red:&str) -> Result<(), V3Error> {
 
-        let mut temp:Value = self.clone();
+        let mut temp:Value = *self;
         temp >>= red;
 
         if temp != self {
             return Err(V3Error::UnitReductionError(format!("Cannot reduce {} to {}", self, temp)));
         } else {
-            *self = temp.clone();
+            *self = temp;
         }
 
         Ok(())
