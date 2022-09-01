@@ -946,10 +946,10 @@ impl ShrAssign<Value> for Value {
         if self.__equivalent(&other) {
             match self._convert(&other) {
                 Ok(_) => {},
-                Err(_) => panic!("Incompatable value types")
+                Err(_) => panic!("Incompatable value types: {}, {}", self, other)
             }
         } else {
-            panic!("Incompatable value types");
+            panic!("Incompatable value types: {}, {}", self, other);
         }
     }
 }
@@ -5748,6 +5748,7 @@ mod tests {
         let mut v3:Value = Value::new(2.42224255, "N").unwrap();
 
         v3 /= v2;
+        println!("{:?}", v3);
         v3.reduce("kg*m/s^2").unwrap();
         assert_apx!(v3, v1);
         assert_eq!(v3.is_mass(), true);
