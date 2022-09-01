@@ -3830,8 +3830,8 @@ impl Value {
     }
 
     pub fn is_volume(&self) -> bool {
-        if (self.unit_map & LENGTH_MAP == self.unit_map && self.exp[LENGTH_INDEX] == 3) ||
-           (self.unit_map & VOLUME_MAP == self.unit_map && self.exp[VOLUME_INDEX] == 1) {
+        if (self.unit_map == LENGTH_MAP && self.exp[LENGTH_INDEX] == 3) ||
+           (self.unit_map == VOLUME_MAP && self.exp[VOLUME_INDEX] == 1) {
             return true;
         }
         false
