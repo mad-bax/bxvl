@@ -23,12 +23,6 @@ macro_rules! value {
     };
 }
 
-trait Reduce<T:std::fmt::Debug> {
-    fn reduce(ty:T) -> Result<(), V3Error> {
-        Err(V3Error::UnitReductionError(format!("Unimplemented reduction for type: {:?}", ty)))
-    }
-}
-
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub val:f64,                    // The numerical value
@@ -1287,11 +1281,6 @@ impl ShrAssign<UnitVolume> for Value {
     }
 }
 
-//impl Reduce<UnitForce> for Value {
-//    fn reduce(ty:UnitForce) -> Result<(), V3Error> {
-        
-//    }
-//}
 
 impl Add<Value> for Value {
     type Output = Value;
@@ -2299,9 +2288,6 @@ impl Mul<Value> for Value {
             }
         }
         n.val *= cmp_val;
-
-        n.new_unit_check();
-
         n
     }
 }
@@ -2555,7 +2541,6 @@ impl MulAssign<Value> for Value {
             }
         }
         self.val *= cmp_val;
-        self.new_unit_check();
     }
 }
 
@@ -2811,7 +2796,6 @@ impl Div<Value> for Value {
             }
         }
         n.val /= cmp_val;
-        n.new_unit_check();
         n
     }
 }
@@ -3066,7 +3050,6 @@ impl DivAssign<Value> for Value {
             }
         }
         self.val /= cmp_val;
-        self.new_unit_check();
     }
 }
 
@@ -3210,6 +3193,10 @@ impl Value {
             self.v_frequency = other.v_frequency;
             self.v_time = None;
             return Ok(());
+        }
+
+        if self.reduce(other) {
+            return Ok(())
         }
 
         if self.unit_map != other.unit_map {
@@ -3397,20 +3384,6 @@ impl Value {
         Ok(())
     }
 
-    pub fn reduce(&mut self, red:&str) -> Result<(), V3Error> {
-
-        let mut temp:Value = *self;
-        temp >>= red;
-
-        if temp != self {
-            return Err(V3Error::UnitReductionError(format!("Cannot reduce {} to {}", self, temp)));
-        } else {
-            *self = temp;
-        }
-
-        Ok(())
-    }
-
     pub fn inv(&mut self) {
         self.val = 1.0/self.val;
         for i in 0..self.exp.len() {
@@ -3511,7 +3484,7 @@ impl Value {
         Value::_radians(self.val.atan2(new_v))
     }
 
-    fn new_unit_check(&mut self) {
+    pub fn complex(&mut self) {
         if self.is_force() && self.unit_map != FORCE_MAP {
             (*self >>= UnitMass::Gram(Metric::Kilo));
             (*self >>= UnitLength::Meter(Metric::None));
@@ -3813,6 +3786,135 @@ impl Value {
             self.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
             self.v_catalytic = Some(UnitCatalyticActivity::Katal(Metric::None));
         }
+    }
+
+    fn reduce(&mut self, other:&Value) -> bool {
+        if self.is_force() && other.is_force() && self.unit_map != other.unit_map {
+            *self >>= UnitForce::Newton(Metric::None);
+            self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+            self.v_time = Some(UnitTime::Second(Metric::None));
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_force = None;
+
+            self.exp[LENGTH_INDEX] = 1;
+            self.exp[MASS_INDEX] = 1;
+            self.exp[TIME_INDEX] = -2;
+            self.exp[FORCE_INDEX] = 0;
+            self.unit_map = LENGTH_MAP | TIME_MAP | MASS_MAP;
+
+            *self >>= *other;
+            return true;
+        } else if self.is_pressure() && other.is_pressure() && self.unit_map != other.unit_map {
+            *self >>= UnitPressure::Pascal(Metric::None);
+            self.v_force = Some(UnitForce::Newton(Metric::None));
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_pressure = None;
+
+            self.exp[LENGTH_INDEX] = -2;
+            self.exp[FORCE_INDEX] = 1;
+            self.exp[PRESSURE_INDEX] = 0;
+            self.unit_map = FORCE_MAP | LENGTH_MAP;
+            *self >>= *other;
+            return true;
+        } else if self.is_energy() && other.is_energy() && self.unit_map != other.unit_map {
+            if other.unit_map & FORCE_MAP > 0 {
+                *self >>= UnitEnergy::Joule(Metric::None);
+                self.v_force = Some(UnitForce::Newton(Metric::None));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_energy = None;
+                self.exp[FORCE_INDEX] = 1;
+                self.exp[LENGTH_INDEX] = 1;
+                self.exp[ENERGY_INDEX] = 0;
+                self.unit_map = FORCE_MAP | LENGTH_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitEnergy::Joule(Metric::None);
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+                self.v_energy = None;
+                self.exp[ELECTRIC_CHARGE_INDEX] = -1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[ENERGY_INDEX] = 1;
+                self.unit_map = ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & POWER_MAP > 0 {
+                *self >>= UnitEnergy::Joule(Metric::None);
+                self.v_power = Some(UnitPower::Watt(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.v_energy = None;
+                self.exp[POWER_INDEX] = 1;
+                self.exp[TIME_INDEX] = -1;
+                self.exp[ENERGY_INDEX] = 0;
+                self.unit_map = POWER_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & MASS_MAP > 0 {
+                *self >>= UnitEnergy::Joule(Metric::None);
+                self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));   
+                self.exp[LENGTH_INDEX] = 2;
+                self.exp[MASS_INDEX] = 1;
+                self.exp[TIME_INDEX] = -2;
+                self.unit_map = LENGTH_MAP | MASS_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.is_frequency() && other.is_frequency() && self.unit_map != other.unit_map {
+            *self >>= UnitFrequency::Hertz(Metric::None);
+            self.v_frequency = None;
+            self.v_time = Some(UnitTime::Second(Metric::None));
+            self.exp[TIME_INDEX] = -1;
+            self.exp[FREQUENCY_INDEX] = 0;
+            self.unit_map = TIME_MAP;
+            *self >>= *other;
+            return true;
+        } else if self.is_power() && other.is_power() && self.unit_map != other.unit_map {
+            if other.unit_map & ENERGY_MAP > 0 {
+                *self >>= UnitPower::Watt(Metric::None);
+                self.v_power = None;
+                self.v_energy = Some(UnitEnergy::Joule(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.exp[ENERGY_INDEX] = 1;
+                self.exp[TIME_INDEX] = -1;
+                self.exp[POWER_INDEX] = 0;
+                self.unit_map = ENERGY_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitPower::Watt(Metric::None);
+                self.v_power = None;
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.exp[POWER_INDEX] = 0;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 1;
+                self.unit_map = ELECTRIC_POTENTIAL_MAP | ELECTRIC_CURRENT_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & MASS_MAP > 0 {
+                *self >>= UnitPower::Watt(Metric::None);
+                self.v_power = None;
+                self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.exp[MASS_INDEX] = 1;
+                self.exp[LENGTH_INDEX] = 2;
+                self.exp[TIME_INDEX] = -3;
+                self.unit_map = MASS_MAP | LENGTH_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.is_electric_charge() && other.is_electric_charge() && self.unit_map != other.unit_map {
+            if other.unit_map & ELECTRIC_CURRENT_MAP > 0 {
+
+            } else if other.unit_map  & ELECTRIC_CONDUCTANCE_MAP > 0 {
+
+            }
+        }
+        false
     }
 
     pub fn is_length(&self) -> bool {
@@ -5749,7 +5851,7 @@ mod tests {
 
         v3 /= v2;
         println!("{:?}", v3);
-        v3.reduce("kg*m/s^2").unwrap();
+        //v3.reduce("kg*m/s^2").unwrap();
         assert_apx!(v3, v1);
         assert_eq!(v3.is_mass(), true);
     }
@@ -5762,7 +5864,7 @@ mod tests {
 
         v3 /= v1;
         println!("{:?}", v3);
-        v3.reduce("kg*m/s^2").unwrap();
+        //v3.reduce("kg*m/s^2").unwrap();
         println!("{:?}", v3);
         assert_apx!(v3, v2);
         assert_eq!(v3.is_acceleration(), true);
