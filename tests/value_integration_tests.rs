@@ -2,7 +2,7 @@ extern crate v3;
 
 #[cfg(test)]
 mod value_usage_tests {
-    use v3::{values::Value};
+    use v3::values::Value;
 
     macro_rules! assert_apr {
         ($x:expr, $y:expr, $d:expr) => {
@@ -783,5 +783,46 @@ mod unit_conversion_tests {
         
         t1 >>= "bytes";
         assert_apr!(t1.val, 1024.0/8.0);
+    }
+}
+
+#[cfg(test)]
+mod value_complex_tests {
+    use v3::values::Value;
+
+    #[test]
+    fn t1() {
+        let m:Value = Value::new(2.5, "kg").unwrap();
+        let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+        let f:Value = Value::new(24.525000000000002, "N").unwrap();
+
+        let t = (m*acc).complex().unwrap();
+
+        assert_eq!(t, f);
+    }
+
+    #[test]
+    fn t2() {
+        let m:Value = Value::new(2500.0, "g").unwrap();
+        let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+        let f:Value = Value::new(24.525000000000002, "N").unwrap();
+
+        let t = (m*acc).complex().unwrap();
+
+        assert_eq!(t, f);
+    }
+}
+
+#[cfg(test)]
+mod value_reduce_tests {
+    use v3::values::Value;
+
+    #[test]
+    fn t1() {
+        let mut f:Value = Value::new(24.525, "N").unwrap();
+        let ret:Value = Value::new(24.525, "kg*m/s^2").unwrap();
+        f.reduce("kg*m/s^2").unwrap();
+
+        assert_eq!(f, ret);
     }
 }

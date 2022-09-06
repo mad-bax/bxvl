@@ -3195,10 +3195,6 @@ impl Value {
             return Ok(());
         }
 
-        if self.reduce(other) {
-            return Ok(())
-        }
-
         if self.unit_map != other.unit_map {
             return Err(V3Error::ValueConversionError("Inequivalent unit types"));
         }
@@ -3484,312 +3480,365 @@ impl Value {
         Value::_radians(self.val.atan2(new_v))
     }
 
-    pub fn complex(&mut self) {
-        if self.is_force() && self.unit_map != FORCE_MAP {
-            (*self >>= UnitMass::Gram(Metric::Kilo));
-            (*self >>= UnitLength::Meter(Metric::None));
-            (*self >>= UnitTime::Second(Metric::None));
-            self.exp[MASS_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 0;
-            self.exp[TIME_INDEX] = 0;
-            self.unit_map = FORCE_MAP;
-            self.exp[FORCE_INDEX] = 1;
-            self.v_force = Some(UnitForce::Newton(Metric::None));
-            self.v_length = None;
-            self.v_mass = None;
-            self.v_time = None;
-        } else if self.is_pressure() && self.unit_map != PRESSURE_MAP {
-            (*self >>= UnitForce::Newton(Metric::None));
-            (*self >>= UnitLength::Meter(Metric::None));
-            self.exp[FORCE_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 0;
-            self.unit_map = PRESSURE_MAP;
-            self.exp[PRESSURE_INDEX] = 1;
-            self.v_pressure = Some(UnitPressure::Pascal(Metric::None));
-            self.v_force = None;
-            self.v_length = None;
-        } else if self.is_energy() && self.unit_map != ENERGY_MAP {
-            if self.unit_map & LENGTH_MAP == LENGTH_MAP {
-                (*self >>= UnitForce::Newton(Metric::None));
-                (*self >>= UnitLength::Meter(Metric::None));
-                self.exp[FORCE_INDEX] = 0;
-                self.exp[LENGTH_INDEX] = 0;
-                self.v_force = None;
-                self.v_length = None;
-            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_electric_charge = None;
-            } else if self.unit_map & POWER_MAP == POWER_MAP {
-                (*self >>= UnitPower::Watt(Metric::None));
-                (*self >>= UnitTime::Second(Metric::None));
-                self.exp[POWER_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.v_power = None;
-                self.v_time = None;
+    pub fn complex(&self) -> Result<Value, V3Error> {
+        let mut ret:Value = self.clone();
+        if ret.is_force() && ret.unit_map != FORCE_MAP {
+            (ret >>= UnitMass::Gram(Metric::Kilo));
+            (ret >>= UnitLength::Meter(Metric::None));
+            (ret >>= UnitTime::Second(Metric::None));
+            ret.exp[MASS_INDEX] = 0;
+            ret.exp[LENGTH_INDEX] = 0;
+            ret.exp[TIME_INDEX] = 0;
+            ret.unit_map = FORCE_MAP;
+            ret.exp[FORCE_INDEX] = 1;
+            ret.v_force = Some(UnitForce::Newton(Metric::None));
+            ret.v_length = None;
+            ret.v_mass = None;
+            ret.v_time = None;
+        } else if ret.is_pressure() && ret.unit_map != PRESSURE_MAP {
+            (ret >>= UnitForce::Newton(Metric::None));
+            (ret >>= UnitLength::Meter(Metric::None));
+            ret.exp[FORCE_INDEX] = 0;
+            ret.exp[LENGTH_INDEX] = 0;
+            ret.unit_map = PRESSURE_MAP;
+            ret.exp[PRESSURE_INDEX] = 1;
+            ret.v_pressure = Some(UnitPressure::Pascal(Metric::None));
+            ret.v_force = None;
+            ret.v_length = None;
+        } else if ret.is_energy() && ret.unit_map != ENERGY_MAP {
+            if ret.unit_map & LENGTH_MAP == LENGTH_MAP {
+                (ret >>= UnitForce::Newton(Metric::None));
+                (ret >>= UnitLength::Meter(Metric::None));
+                ret.exp[FORCE_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.v_force = None;
+                ret.v_length = None;
+            } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (ret >>= UnitElectricCharge::Coulomb(Metric::None));
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_electric_charge = None;
+            } else if ret.unit_map & POWER_MAP == POWER_MAP {
+                (ret >>= UnitPower::Watt(Metric::None));
+                (ret >>= UnitTime::Second(Metric::None));
+                ret.exp[POWER_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_power = None;
+                ret.v_time = None;
             } else {
                 panic!("Unit translation: assumption Energy");
             }
-            self.unit_map = ENERGY_MAP;
-            self.exp[ENERGY_INDEX] = 1;
-            self.v_energy = Some(UnitEnergy::Joule(Metric::None));
-        } else if self.is_power() && self.unit_map != POWER_MAP {
-            if self.unit_map & ENERGY_MAP == ENERGY_MAP {
-                (*self >>= UnitEnergy::Joule(Metric::None));
-                (*self >>= UnitTime::Second(Metric::None));
-                self.exp[ENERGY_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.v_energy = None;
-                self.v_time = None;
-            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_electric_current = None;
+            ret.unit_map = ENERGY_MAP;
+            ret.exp[ENERGY_INDEX] = 1;
+            ret.v_energy = Some(UnitEnergy::Joule(Metric::None));
+        } else if ret.is_power() && ret.unit_map != POWER_MAP {
+            if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (ret >>= UnitEnergy::Joule(Metric::None));
+                (ret >>= UnitTime::Second(Metric::None));
+                ret.exp[ENERGY_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_energy = None;
+                ret.v_time = None;
+            } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_electric_current = None;
             } else {
                 panic!("Unit translation: assumption Power");
             }
-            self.unit_map = POWER_MAP;
-            self.exp[POWER_INDEX] = 1;
-            self.v_power = Some(UnitPower::Watt(Metric::None));
-        } else if self.is_electric_charge() && self.unit_map != ELECTRIC_CHARGE_MAP {
-            if self.unit_map & TIME_MAP == TIME_MAP {
-                (*self >>= UnitTime::Second(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[TIME_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_time = None;
-                self.v_electric_current = None;
-            } else if self.unit_map & CAPACITANCE_MAP == CAPACITANCE_MAP {
-                (*self >>= UnitCapacitance::Farad(Metric::None));
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                self.exp[CAPACITANCE_INDEX] = 0;
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.v_capacitance = None;
-                self.v_electric_potential = None;
+            ret.unit_map = POWER_MAP;
+            ret.exp[POWER_INDEX] = 1;
+            ret.v_power = Some(UnitPower::Watt(Metric::None));
+        } else if ret.is_electric_charge() && self.unit_map != ELECTRIC_CHARGE_MAP {
+            if ret.unit_map & TIME_MAP == TIME_MAP {
+                (ret >>= UnitTime::Second(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[TIME_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_time = None;
+                ret.v_electric_current = None;
+            } else if ret.unit_map & CAPACITANCE_MAP == CAPACITANCE_MAP {
+                (ret >>= UnitCapacitance::Farad(Metric::None));
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                ret.exp[CAPACITANCE_INDEX] = 0;
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.v_capacitance = None;
+                ret.v_electric_potential = None;
             } else {
                 panic!("Unit translation: assumption Electric Charge");
             }
-            self.unit_map = ELECTRIC_CHARGE_MAP;
-            self.exp[ELECTRIC_CHARGE_INDEX] = 1;
-            self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
-        } else if self.is_electric_potential() && self.unit_map != ELECTRIC_POTENTIAL_MAP {
-            if self.unit_map & POWER_MAP == POWER_MAP {
-                (*self >>= UnitPower::Watt(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[POWER_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_power = None;
-                self.v_electric_current = None;
-            } else if self.unit_map & ENERGY_MAP == ENERGY_MAP {
-                (*self >>= UnitEnergy::Joule(Metric::None));
-                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
-                self.exp[ENERGY_INDEX] = 0;
-                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
-                self.v_energy = None;
-                self.v_electric_charge = None;
+            ret.unit_map = ELECTRIC_CHARGE_MAP;
+            ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
+            ret.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+        } else if ret.is_electric_potential() && self.unit_map != ELECTRIC_POTENTIAL_MAP {
+            if ret.unit_map & POWER_MAP == POWER_MAP {
+                (ret >>= UnitPower::Watt(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[POWER_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_power = None;
+                ret.v_electric_current = None;
+            } else if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (ret >>= UnitEnergy::Joule(Metric::None));
+                (ret >>= UnitElectricCharge::Coulomb(Metric::None));
+                ret.exp[ENERGY_INDEX] = 0;
+                ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                ret.v_energy = None;
+                ret.v_electric_charge = None;
             } else {
                 panic!("Unit translation: assumption Electric Potential");
             }
-            self.unit_map = ELECTRIC_POTENTIAL_MAP;
-            self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
-            self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
-        } else if self.is_capacitance() && self.unit_map != CAPACITANCE_MAP {
-            if self.unit_map & ELECTRIC_CHARGE_MAP == ELECTRIC_CHARGE_MAP {
-                (*self >>= UnitElectricCharge::Coulomb(Metric::None));
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_electric_charge = None;
-            } else if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                (*self >>= UnitTime::Second(Metric::None));
-                (*self >>= UnitResistance::Ohm(Metric::None));
-                self.exp[TIME_INDEX] = 0;
-                self.exp[RESISTANCE_INDEX] = 0;
-                self.v_time = None;
-                self.v_resistance = None;
+            ret.unit_map = ELECTRIC_POTENTIAL_MAP;
+            ret.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+            ret.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+        } else if ret.is_capacitance() && self.unit_map != CAPACITANCE_MAP {
+            if ret.unit_map & ELECTRIC_CHARGE_MAP == ELECTRIC_CHARGE_MAP {
+                (ret >>= UnitElectricCharge::Coulomb(Metric::None));
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_electric_charge = None;
+            } else if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                (ret >>= UnitTime::Second(Metric::None));
+                (ret >>= UnitResistance::Ohm(Metric::None));
+                ret.exp[TIME_INDEX] = 0;
+                ret.exp[RESISTANCE_INDEX] = 0;
+                ret.v_time = None;
+                ret.v_resistance = None;
             } else {
                 panic!("Unit translation: assumption Capacitance")
             }
 
-            self.unit_map = CAPACITANCE_MAP;
-            self.exp[CAPACITANCE_INDEX] = 1;
-            self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
-        } else if self.is_resistance() && self.unit_map != RESISTANCE_MAP {
-            if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == ELECTRIC_CONDUCTANCE_MAP {
-                (*self >>= UnitElectricConductance::Siemens(Metric::None));
-                self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
-                self.v_electric_conductance = None;
-            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_electric_current = None;
+            ret.unit_map = CAPACITANCE_MAP;
+            ret.exp[CAPACITANCE_INDEX] = 1;
+            ret.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+        } else if ret.is_resistance() && self.unit_map != RESISTANCE_MAP {
+            if ret.unit_map & ELECTRIC_CONDUCTANCE_MAP == ELECTRIC_CONDUCTANCE_MAP {
+                (ret >>= UnitElectricConductance::Siemens(Metric::None));
+                ret.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+                ret.v_electric_conductance = None;
+            } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_electric_current = None;
             } else {
                 panic!("Unit translation: assumption Resistance");
             }
 
-            self.unit_map = RESISTANCE_MAP;
-            self.exp[RESISTANCE_INDEX] = 1;
-            self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
-        } else if self.is_conductance() && self.unit_map != ELECTRIC_CONDUCTANCE_MAP {
-            if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                (*self >>= UnitResistance::Ohm(Metric::None));
-                self.exp[RESISTANCE_INDEX] = 0;
-                self.v_resistance = None;
-            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_electric_current = None;
+            ret.unit_map = RESISTANCE_MAP;
+            ret.exp[RESISTANCE_INDEX] = 1;
+            ret.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+        } else if ret.is_conductance() && self.unit_map != ELECTRIC_CONDUCTANCE_MAP {
+            if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                (ret >>= UnitResistance::Ohm(Metric::None));
+                ret.exp[RESISTANCE_INDEX] = 0;
+                ret.v_resistance = None;
+            } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_electric_current = None;
             } else {
                 panic!("Unit translation: assumption Electric Conductance");
             }
 
-            self.unit_map = ELECTRIC_CONDUCTANCE_MAP;
-            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
-            self.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
-        } else if self.is_magnetic_flux() && self.unit_map != MAGNETRIC_FLUX_MAP {
-            if self.unit_map & ENERGY_MAP == ENERGY_MAP {
-                (*self >>= UnitEnergy::Joule(Metric::None));
-                (*self >>= UnitElectricCurrent::Ampere(Metric::None));
-                self.exp[ENERGY_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_energy = None;
-                self.v_electric_current = None;
-            } else if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == MAGNETRIC_FLUX_DENSITY_MAP {
-                (*self >>= UnitMagneticFluxDensity::Tesla(Metric::None));
-                (*self >>= UnitLength::Meter(Metric::None));
-                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
-                self.exp[LENGTH_INDEX] = 0;
-                self.v_length = None;
-                self.v_magnetic_flux_density = None;
-            } else if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (*self >>= UnitElectricPotential::Volt(Metric::None));
-                (*self >>= UnitTime::Second(Metric::None));
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_time = None;
+            ret.unit_map = ELECTRIC_CONDUCTANCE_MAP;
+            ret.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
+            ret.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
+        } else if ret.is_magnetic_flux() && self.unit_map != MAGNETRIC_FLUX_MAP {
+            if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (ret >>= UnitEnergy::Joule(Metric::None));
+                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret.exp[ENERGY_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_energy = None;
+                ret.v_electric_current = None;
+            } else if ret.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == MAGNETRIC_FLUX_DENSITY_MAP {
+                (ret >>= UnitMagneticFluxDensity::Tesla(Metric::None));
+                (ret >>= UnitLength::Meter(Metric::None));
+                ret.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.v_length = None;
+                ret.v_magnetic_flux_density = None;
+            } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                (ret >>= UnitTime::Second(Metric::None));
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_time = None;
             } else {
                 panic!("Unit translation: assumption Magnetic Flux");
             }
 
-            self.unit_map = MAGNETRIC_FLUX_MAP;
-            self.exp[MAGNETRIC_FLUX_INDEX] = 1;
-            self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
-        } else if self.is_magnetic_flux_density() && self.unit_map != MAGNETRIC_FLUX_DENSITY_MAP {
-            if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                *self >>= UnitElectricPotential::Volt(Metric::None);
-                *self >>= UnitTime::Second(Metric::None);
-                *self >>= UnitLength::Meter(Metric::None);
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[LENGTH_INDEX] = 0;
-                self.v_length = None;
-                self.v_time = None;
-                self.v_length = None;
-            } else if self.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
-                *self >>= UnitMagneticFlux::Weber(Metric::None);
-                *self >>= UnitLength::Meter(Metric::None);
-                self.exp[LENGTH_INDEX] = 0;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
-                self.v_magnetic_flux = None;
-                self.v_length = None;
-            } else if self.unit_map & FORCE_MAP == FORCE_MAP {
-                *self >>= UnitForce::Newton(Metric::None);
-                *self >>= UnitElectricCurrent::Ampere(Metric::None);
-                *self >>= UnitLength::Meter(Metric::None);
-                self.exp[FORCE_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.exp[LENGTH_INDEX] = 0;
-                self.v_length = None;
-                self.v_electric_current = None;
-                self.v_force = None;
+            ret.unit_map = MAGNETRIC_FLUX_MAP;
+            ret.exp[MAGNETRIC_FLUX_INDEX] = 1;
+            ret.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
+        } else if ret.is_magnetic_flux_density() && self.unit_map != MAGNETRIC_FLUX_DENSITY_MAP {
+            if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                ret >>= UnitElectricPotential::Volt(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.v_length = None;
+                ret.v_time = None;
+                ret.v_length = None;
+            } else if ret.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+                ret >>= UnitMagneticFlux::Weber(Metric::None);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                ret.v_magnetic_flux = None;
+                ret.v_length = None;
+            } else if ret.unit_map & FORCE_MAP == FORCE_MAP {
+                ret >>= UnitForce::Newton(Metric::None);
+                ret >>= UnitElectricCurrent::Ampere(Metric::None);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret.exp[FORCE_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.v_length = None;
+                ret.v_electric_current = None;
+                ret.v_force = None;
             } else {
                 panic!("Unit translation: assumption Magnetic Flux Density");
             }
 
-            self.unit_map = MAGNETRIC_FLUX_DENSITY_MAP;
-            self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
-            self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
-        } else if self.is_inductance() && self.unit_map != INDUCTANCE_MAP {
-            if self.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                *self >>= UnitElectricPotential::Volt(Metric::None);
-                *self >>= UnitTime::Second(Metric::None);
-                *self >>= UnitElectricCurrent::Ampere(Metric::None);
-                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_electric_potential = None;
-                self.v_time = None;
-                self.v_electric_current = None;
-            } else if self.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                *self >>= UnitResistance::Ohm(Metric::None);
-                *self >>= UnitTime::Second(Metric::None);
-                self.exp[RESISTANCE_INDEX] = 0;
-                self.exp[TIME_INDEX] = 0;
-                self.v_resistance = None;
-                self.v_time = None;
-            } else if self.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
-                *self >>= UnitMagneticFlux::Weber(Metric::None);
-                *self >>= UnitElectricCurrent::Ampere(Metric::None);
-                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
-                self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-                self.v_magnetic_flux = None;
-                self.v_electric_current = None;
+            ret.unit_map = MAGNETRIC_FLUX_DENSITY_MAP;
+            ret.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
+            ret.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
+        } else if ret.is_inductance() && self.unit_map != INDUCTANCE_MAP {
+            if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
+                ret >>= UnitElectricPotential::Volt(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret >>= UnitElectricCurrent::Ampere(Metric::None);
+                ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_electric_potential = None;
+                ret.v_time = None;
+                ret.v_electric_current = None;
+            } else if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
+                ret >>= UnitResistance::Ohm(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret.exp[RESISTANCE_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_resistance = None;
+                ret.v_time = None;
+            } else if ret.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+                ret >>= UnitMagneticFlux::Weber(Metric::None);
+                ret >>= UnitElectricCurrent::Ampere(Metric::None);
+                ret.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
+                ret.v_magnetic_flux = None;
+                ret.v_electric_current = None;
             } else {
                 panic!("Unit translation: assumption Electric Inductance");
             }
 
-            self.unit_map = INDUCTANCE_MAP;
-            self.exp[INDUCTANCE_INDEX] = 1;
-            self.v_inductance = Some(UnitInductance::Henry(Metric::None));
-        } else if self.is_luminous_flux() && self.unit_map != LUMINOUS_FLUX_MAP {
-            *self >>= UnitLuminousIntensity::Candela(Metric::None);
-            *self >>= UnitSolidAngle::Steradian(Metric::None);
-            self.exp[LUMINOUS_INTENSITY_INDEX] = 0;
-            self.exp[SOLID_ANGLE_INDEX] = 0;
-            self.v_solid_angle = None;
-            self.v_luminous_flux_intensity = None;
-            self.unit_map = LUMINOUS_FLUX_MAP;
-            self.exp[LUMINOUS_FLUX_INDEX] = 1;
-            self.v_luminous_flux = Some(UnitLuminousFlux::Lumen(Metric::None));
-        } else if self.is_illuminance() && self.unit_map != ILLUMINANCE_MAP {
-            *self >>= UnitLuminousFlux::Lumen(Metric::None);
-            *self >>= UnitLength::Meter(Metric::None);
-            self.exp[LUMINOUS_FLUX_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 0;
-            self.v_length = None;
-            self.v_luminous_flux = None;
-            self.unit_map = ILLUMINANCE_MAP;
-            self.exp[ILLUMINANCE_INDEX] = 1;
-            self.v_illuminance = Some(UnitIlluminance::Lux(Metric::None));
-        } else if self.is_catalytic_activity() && self.unit_map != CATALYTIC_ACTIVITY_MAP {
-            *self >>= UnitSubstance::Mole(Metric::None);
-            *self >>= UnitTime::Second(Metric::None);
-            self.exp[SUBSTANCE_INDEX] = 0;
-            self.exp[TIME_INDEX] = 0;
-            self.v_time = None;
-            self.v_substance = None;
-            self.unit_map = CATALYTIC_ACTIVITY_MAP;
-            self.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
-            self.v_catalytic = Some(UnitCatalyticActivity::Katal(Metric::None));
+            ret.unit_map = INDUCTANCE_MAP;
+            ret.exp[INDUCTANCE_INDEX] = 1;
+            ret.v_inductance = Some(UnitInductance::Henry(Metric::None));
+        } else if ret.is_luminous_flux() && self.unit_map != LUMINOUS_FLUX_MAP {
+            ret >>= UnitLuminousIntensity::Candela(Metric::None);
+            ret >>= UnitSolidAngle::Steradian(Metric::None);
+            ret.exp[LUMINOUS_INTENSITY_INDEX] = 0;
+            ret.exp[SOLID_ANGLE_INDEX] = 0;
+            ret.v_solid_angle = None;
+            ret.v_luminous_flux_intensity = None;
+            ret.unit_map = LUMINOUS_FLUX_MAP;
+            ret.exp[LUMINOUS_FLUX_INDEX] = 1;
+            ret.v_luminous_flux = Some(UnitLuminousFlux::Lumen(Metric::None));
+        } else if ret.is_illuminance() && self.unit_map != ILLUMINANCE_MAP {
+            ret >>= UnitLuminousFlux::Lumen(Metric::None);
+            ret >>= UnitLength::Meter(Metric::None);
+            ret.exp[LUMINOUS_FLUX_INDEX] = 0;
+            ret.exp[LENGTH_INDEX] = 0;
+            ret.v_length = None;
+            ret.v_luminous_flux = None;
+            ret.unit_map = ILLUMINANCE_MAP;
+            ret.exp[ILLUMINANCE_INDEX] = 1;
+            ret.v_illuminance = Some(UnitIlluminance::Lux(Metric::None));
+        } else if ret.is_catalytic_activity() && self.unit_map != CATALYTIC_ACTIVITY_MAP {
+            ret >>= UnitSubstance::Mole(Metric::None);
+            ret >>= UnitTime::Second(Metric::None);
+            ret.exp[SUBSTANCE_INDEX] = 0;
+            ret.exp[TIME_INDEX] = 0;
+            ret.v_time = None;
+            ret.v_substance = None;
+            ret.unit_map = CATALYTIC_ACTIVITY_MAP;
+            ret.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
+            ret.v_catalytic = Some(UnitCatalyticActivity::Katal(Metric::None));
         }
+        Ok(ret)
     }
 
-    fn reduce(&mut self, other:&Value) -> bool {
-        if self.is_force() && other.is_force() && self.unit_map != other.unit_map {
+    pub fn reduce(&mut self, other:&str) -> Result<(), V3Error> {
+        if !self.reducable() {
+            return Err(V3Error::UnitReductionError(format!("Value {} is not reducable", self)));
+        }
+        let temp:Value = Value::new(1.0, other).unwrap();
+        if self._reduce(&temp) {
+            return Ok(());
+        }
+        Err(V3Error::UnitReductionError(format!("Value {} cannot be reduced to {}", self, other)))
+    }
+
+    pub fn reducable(&self) -> bool {
+
+        if self.unit_map == FORCE_MAP {
+            return true;
+        } else if self.unit_map == PRESSURE_MAP {
+            return true;
+        } else if self.unit_map == ENERGY_MAP {
+            return true;
+        } else if self.unit_map == FREQUENCY_MAP {
+            return true;
+        } else if self.unit_map == POWER_MAP {
+            return true;
+        } else if self.unit_map == ELECTRIC_CHARGE_MAP {
+            return true;
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP {
+            return true;
+        } else if self.unit_map == CAPACITANCE_MAP {
+            return true;
+        } else if self.unit_map == RESISTANCE_MAP {
+            return true;
+        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP {
+            return true;
+        } else if self.unit_map == MAGNETRIC_FLUX_MAP {
+            return true;
+        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP {
+            return true;
+        } else if self.unit_map == INDUCTANCE_MAP {
+            return true;
+        } else if self.unit_map == ILLUMINANCE_MAP {
+            return true;
+        } else if self.unit_map == CAPACITANCE_MAP {
+            return true;
+        }
+        false
+    }
+
+    fn _reduce(&mut self, other:&Value) -> bool {
+        if self.unit_map == other.unit_map {
+            return false;
+        }
+
+        if self.unit_map == FORCE_MAP && other.is_force() {
             *self >>= UnitForce::Newton(Metric::None);
             self.v_mass = Some(UnitMass::Gram(Metric::Kilo));
             self.v_time = Some(UnitTime::Second(Metric::None));
@@ -3804,7 +3853,7 @@ impl Value {
 
             *self >>= *other;
             return true;
-        } else if self.is_pressure() && other.is_pressure() && self.unit_map != other.unit_map {
+        } else if self.unit_map == PRESSURE_MAP && other.is_pressure() {
             *self >>= UnitPressure::Pascal(Metric::None);
             self.v_force = Some(UnitForce::Newton(Metric::None));
             self.v_length = Some(UnitLength::Meter(Metric::None));
@@ -3816,7 +3865,7 @@ impl Value {
             self.unit_map = FORCE_MAP | LENGTH_MAP;
             *self >>= *other;
             return true;
-        } else if self.is_energy() && other.is_energy() && self.unit_map != other.unit_map {
+        } else if self.unit_map == ENERGY_MAP && other.is_energy() {
             if other.unit_map & FORCE_MAP > 0 {
                 *self >>= UnitEnergy::Joule(Metric::None);
                 self.v_force = Some(UnitForce::Newton(Metric::None));
@@ -3862,7 +3911,7 @@ impl Value {
                 *self >>= *other;
                 return true;
             }
-        } else if self.is_frequency() && other.is_frequency() && self.unit_map != other.unit_map {
+        } else if self.unit_map == FREQUENCY_MAP && other.is_frequency() {
             *self >>= UnitFrequency::Hertz(Metric::None);
             self.v_frequency = None;
             self.v_time = Some(UnitTime::Second(Metric::None));
@@ -3871,7 +3920,7 @@ impl Value {
             self.unit_map = TIME_MAP;
             *self >>= *other;
             return true;
-        } else if self.is_power() && other.is_power() && self.unit_map != other.unit_map {
+        } else if self.unit_map == POWER_MAP && other.is_power() {
             if other.unit_map & ENERGY_MAP > 0 {
                 *self >>= UnitPower::Watt(Metric::None);
                 self.v_power = None;
@@ -3907,12 +3956,251 @@ impl Value {
                 *self >>= *other;
                 return true;
             }
-        } else if self.is_electric_charge() && other.is_electric_charge() && self.unit_map != other.unit_map {
+        } else if self.unit_map == ELECTRIC_CHARGE_MAP && other.is_electric_charge() {
             if other.unit_map & ELECTRIC_CURRENT_MAP > 0 {
-
+                *self >>= UnitElectricCharge::Coulomb(Metric::None);
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.v_electric_charge = None;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 1;
+                self.exp[TIME_INDEX] = 1;
+                self.unit_map = ELECTRIC_CURRENT_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
             } else if other.unit_map  & ELECTRIC_CONDUCTANCE_MAP > 0 {
-
+                *self >>= UnitElectricCharge::Coulomb(Metric::None);
+                self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_electric_charge = None;
+                self.exp[CAPACITANCE_INDEX] = 1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                self.unit_map = CAPACITANCE_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
             }
+        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP && other.is_electric_potential() {
+            if other.unit_map & POWER_MAP > 0 {
+                *self >>= UnitElectricPotential::Volt(Metric::None);
+                self.v_power = Some(UnitPower::Watt(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_electric_potential = None;
+                self.exp[POWER_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.unit_map = POWER_MAP | ELECTRIC_CURRENT_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ENERGY_MAP > 0 {
+                *self >>= UnitElectricPotential::Volt(Metric::None);
+                self.v_energy = Some(UnitEnergy::Joule(Metric::None));
+                self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+                self.v_electric_potential = None;
+                self.exp[ENERGY_INDEX] = 1;
+                self.exp[ELECTRIC_CHARGE_INDEX] = -1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+                self.unit_map = ENERGY_MAP | ELECTRIC_CHARGE_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == CAPACITANCE_MAP && other.is_capacitance() {
+            if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitCapacitance::Farad(Metric::None);
+                self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_capacitance = None;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = -1;
+                self.exp[CAPACITANCE_INDEX] = 0;
+                self.unit_map = ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ENERGY_MAP > 0 {
+                *self >>= UnitCapacitance::Farad(Metric::None);
+                self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
+                self.v_energy = Some(UnitEnergy::Joule(Metric::None));
+                self.v_capacitance = None;
+                self.exp[CAPACITANCE_INDEX] = 0;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 2;
+                self.exp[ENERGY_INDEX] = -1;
+                self.unit_map = ELECTRIC_CHARGE_MAP | ENERGY_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == RESISTANCE_MAP && other.is_resistance() {
+            if other.unit_map & ELECTRIC_CONDUCTANCE_MAP > 0 {
+                *self >>= UnitResistance::Ohm(Metric::None);
+                self.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
+                self.v_resistance = None;
+                self.exp[ELECTRIC_CONDUCTANCE_INDEX] = -1;
+                self.exp[RESISTANCE_INDEX] = 0;
+                self.unit_map = ELECTRIC_CONDUCTANCE_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ELECTRIC_CURRENT_MAP > 0 {
+                *self >>= UnitResistance::Ohm(Metric::None);
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_resistance = None;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[RESISTANCE_INDEX] = 0;
+                self.unit_map = ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && other.is_conductance() {
+            if other.unit_map & RESISTANCE_MAP > 0 {
+                *self >>= UnitElectricConductance::Siemens(Metric::None);
+                self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+                self.v_electric_conductance = None;
+                self.exp[RESISTANCE_INDEX] = -1;
+                self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+                self.unit_map = RESISTANCE_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ELECTRIC_CURRENT_MAP > 0 {
+                *self >>= UnitElectricConductance::Siemens(Metric::None);
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+                self.exp[ELECTRIC_CURRENT_INDEX] = 1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = -1;
+                self.unit_map = ELECTRIC_CURRENT_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == MAGNETRIC_FLUX_MAP && other.is_magnetic_flux() {
+            if other.unit_map & ENERGY_MAP > 0 {
+                *self >>= UnitMagneticFlux::Weber(Metric::None);
+                self.v_energy = Some(UnitEnergy::Joule(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_magnetic_flux = None;
+                self.exp[ENERGY_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.unit_map = ENERGY_MAP | ELECTRIC_CURRENT_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & MAGNETRIC_FLUX_DENSITY_MAP > 0 {
+                *self >>= UnitMagneticFlux::Weber(Metric::None);
+                self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_magnetic_flux = None;
+                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
+                self.exp[LENGTH_INDEX] = 2;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.unit_map = MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitMagneticFlux::Weber(Metric::None);
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.v_magnetic_flux = None;
+                self.exp[TIME_INDEX] = 1;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.unit_map = TIME_MAP | ELECTRIC_POTENTIAL_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && other.is_magnetic_flux_density() {
+            if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitMagneticFluxDensity::Tesla(Metric::None);
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_magnetic_flux_density = None;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[TIME_INDEX] = 1;
+                self.exp[LENGTH_INDEX] = -2;
+                self.unit_map = ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & MAGNETRIC_FLUX_MAP > 0 {
+                *self >>= UnitMagneticFluxDensity::Tesla(Metric::None);
+                self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.v_magnetic_flux_density = None;
+                self.exp[LENGTH_INDEX] = -2;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 1;
+                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
+                self.unit_map = LENGTH_MAP | MAGNETRIC_FLUX_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & FORCE_MAP > 0 {
+                *self >>= UnitMagneticFluxDensity::Tesla(Metric::None);
+                self.v_force = Some(UnitForce::Newton(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_length = Some(UnitLength::Meter(Metric::None));
+                self.exp[FORCE_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.exp[LENGTH_INDEX] = -1;
+                self.unit_map = FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == INDUCTANCE_MAP && other.is_inductance() {
+            if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
+                *self >>= UnitInductance::Henry(Metric::None);
+                self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_inductance = None;
+                self.exp[INDUCTANCE_INDEX] = 0;
+                self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+                self.exp[TIME_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.unit_map = ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & RESISTANCE_MAP > 0 {
+                *self >>= UnitInductance::Henry(Metric::None);
+                self.v_inductance = None;
+                self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+                self.v_time = Some(UnitTime::Second(Metric::None));
+                self.exp[RESISTANCE_INDEX] = 1;
+                self.exp[TIME_INDEX] = 1;
+                self.exp[INDUCTANCE_INDEX] = 0;
+                self.unit_map = RESISTANCE_MAP | TIME_MAP;
+                *self >>= *other;
+                return true;
+            } else if other.unit_map & MAGNETRIC_FLUX_MAP > 0 {
+                *self >>= UnitInductance::Henry(Metric::None);
+                self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
+                self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
+                self.v_inductance = None;
+                self.exp[MAGNETRIC_FLUX_INDEX] = 1;
+                self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+                self.exp[INDUCTANCE_INDEX] = 0;
+                self.unit_map = MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP;
+                *self >>= *other;
+                return true;
+            }
+        } else if self.unit_map == ILLUMINANCE_MAP && other.is_illuminance() {
+            *self >>= UnitIlluminance::Lux(Metric::None);
+            self.v_luminous_flux = Some(UnitLuminousFlux::Lumen(Metric::None));
+            self.v_length = Some(UnitLength::Meter(Metric::None));
+            self.v_illuminance = None;
+            self.exp[LUMINOUS_FLUX_INDEX] = 1;
+            self.exp[LENGTH_INDEX] = -2;
+            self.exp[ILLUMINANCE_INDEX] = 0;
+            self.unit_map = LUMINOUS_FLUX_MAP | LENGTH_MAP;
+            *self >>= *other;
+            return true;
+        } else if self.unit_map == CATALYTIC_ACTIVITY_MAP && other.is_catalytic_activity() {
+            *self >>= UnitCatalyticActivity::Katal(Metric::None);
+            self.v_substance = Some(UnitSubstance::Mole(Metric::None));
+            self.v_time = Some(UnitTime::Second(Metric::None));
+            self.v_catalytic = None;
+            self.exp[SUBSTANCE_INDEX] = 1;
+            self.exp[TIME_INDEX] = -1;
+            self.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
+            self.unit_map = SUBSTANCE_MAP | TIME_MAP;
+            *self >>= *other;
+            return true;
         }
         false
     }
@@ -4046,7 +4334,7 @@ impl Value {
     pub fn is_electric_charge(&self) -> bool {
         if (self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
-           (self.unit_map == ELECTRIC_CONDUCTANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) {
+           (self.unit_map == CAPACITANCE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[CAPACITANCE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) {
             return true;
         }
         false
@@ -4055,7 +4343,7 @@ impl Value {
     pub fn is_electric_potential(&self) -> bool {
         if (self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) ||
            (self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
-           (self.unit_map == ENERGY_MAP | ELECTRIC_CONDUCTANCE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1) {
+           (self.unit_map == ENERGY_MAP | ELECTRIC_CHARGE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CHARGE_INDEX] == -1) {
             return true;
         }
         false
@@ -4063,8 +4351,8 @@ impl Value {
 
     pub fn is_capacitance(&self) -> bool {
         if (self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1) ||
-           (self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
-           (self.unit_map == TIME_MAP | RESISTANCE_MAP && self.exp[TIME_INDEX] == 1 && self.exp[RESISTANCE_INDEX] == -1) {
+           (self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1) ||
+           (self.unit_map == ELECTRIC_CHARGE_MAP | ENERGY_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 2 && self.exp[ENERGY_INDEX] == -1) {
             return true;
         }
         false
@@ -5826,48 +6114,6 @@ mod tests {
         let mut v1:Value = Value::new(8.0, "m").unwrap();
         v1/=2.0;
         assert_eq!(v1.val, 4.0);
-    }
-
-    #[test]
-    fn value_reduction_1(){
-        let mut v1:Value = Value::new(247.0, "g").unwrap();
-        println!("{}", v1);
-        let v2:Value = Value::const_earth_gravity();
-        let ret:Value = Value::new(2.42224255, "N").unwrap();
-
-        v1 *= v2;
-        println!("{}", v1);
-        //v1.reduce();
-        println!("{}", v1);
-        assert_eq!(v1, ret);
-        assert_eq!(v1.is_force(), true);
-    }
-
-    #[test]
-    fn value_reduction_2(){
-        let v1:Value = Value::new(0.247, "kg").unwrap();
-        let v2:Value = Value::const_earth_gravity();
-        let mut v3:Value = Value::new(2.42224255, "N").unwrap();
-
-        v3 /= v2;
-        println!("{:?}", v3);
-        //v3.reduce("kg*m/s^2").unwrap();
-        assert_apx!(v3, v1);
-        assert_eq!(v3.is_mass(), true);
-    }
-
-        #[test]
-    fn value_reduction_3(){
-        let v1:Value = Value::new(247000.0, "mg").unwrap();
-        let v2:Value = Value::const_earth_gravity();
-        let mut v3:Value = Value::new(2.42224255, "N").unwrap();
-
-        v3 /= v1;
-        println!("{:?}", v3);
-        //v3.reduce("kg*m/s^2").unwrap();
-        println!("{:?}", v3);
-        assert_apx!(v3, v2);
-        assert_eq!(v3.is_acceleration(), true);
     }
 
     #[test]

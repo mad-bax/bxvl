@@ -11,6 +11,7 @@ When used in equations, it will automatically be updated wither within itself or
   - [Example](#example)
   - [Unit Support](#unit-support)
   - [Method Support](#method-support)
+  - [Derrived Units](#derrived-units)
   - [Conversions](#conversions)
   - [Constants](#constants)
 
@@ -230,6 +231,31 @@ if m.is_nan() {
 }
 ```
 
+## Derrived Units
+Many of the SI units are derrived from other base units. When using the values to conduct arithmetic operations, values can be explicity asked to be 'complex' or 'reduced'. 
+
+Making a complex value means combining different types into a new type.
+```rust
+let m:Value = Value::new(2.5, "kg").unwrap();
+let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+
+let f1:Value = m*acc;
+let f2:Value = (m*acc).complex().unwrap();
+```
+Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
+
+Reducing a value means setting a value to its derrived units.
+```rust
+let mut f:Value = Value::new(24.525, "N").unwrap();
+f.reduce("kg*m/s^2").unwrap();
+```
+
+Variable `f` will be `24.525 kg*m/s^2`
+
+This behavior is explicit and must be called by the user.
+
+However functions like `.is_force()` will return `true` for both `kg*m/s^2` and `N`. 
+
 ## Conversions
 All within their given measurement type will be able to be converted to eachother. Values with multiple types, in most cases, can be converted to their compatable types. 
 
@@ -259,7 +285,7 @@ s >>= UnitTime::Second(Metric::None);
 ```
 Temperature cannot be converted to another unit if it has other units (like mass) within the value. 
 
-Units cannot be converted between disparate types, although there are some exceptions. Liters and meters^3 is one such example. 
+Units cannot be converted between disparate types, although there are some exceptions. `ml` to `mm^3` is one such example of volume to a cubed length.
 
 ## Constants
 There are also provided constants for easier usage. 
