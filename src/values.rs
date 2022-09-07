@@ -105,10 +105,10 @@ impl Display for Value {
                 INDUCTANCE_MAP => {
                     self.v_inductance.unwrap().to_string()
                 }
-                MAGNETRIC_FLUX_MAP => {
+                MAGNETIC_FLUX_MAP => {
                     self.v_magnetic_flux.unwrap().to_string()
                 }
-                MAGNETRIC_FLUX_DENSITY_MAP => {
+                MAGNETIC_FLUX_DENSITY_MAP => {
                     self.v_magnetic_flux_density.unwrap().to_string()
                 }
                 TEMPERATURE_MAP => {
@@ -209,7 +209,7 @@ impl FromStr for Value {
             let val:Value = match s.parse::<f64>() {
                 Ok(t) => Value::new(t, "").unwrap(),
                 Err(_) => {
-                    return Err(V3Error::ParsingError("float conversion"));
+                    return Err(V3Error::ParsingError("[from_str] float conversion"));
                 }
             };
             return Ok(val);
@@ -218,7 +218,7 @@ impl FromStr for Value {
         let v:f64 = match temp[0].parse::<f64>() {
             Ok(t) => t,
             Err(_) => {
-                    return Err(V3Error::ParsingError("float conversion"));
+                    return Err(V3Error::ParsingError("[from_str] float conversion"));
             }
         };
         Value::new(v, temp[1])
@@ -316,12 +316,12 @@ impl PartialOrd for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
                             cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
                         }
@@ -512,7 +512,7 @@ impl Shr<Value> for Value {
             ret._convert(&other)?;
             return Ok(ret);
         }
-        Err(V3Error::ValueConversionError("Incompatable types"))
+        Err(V3Error::ValueConversionError("[shr] Incompatable types"))
     }
 }
 
@@ -537,7 +537,7 @@ impl Shr<UnitLength> for Value {
     fn shr(self, other:UnitLength) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & LENGTH_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_length.unwrap().convert(&other).powi(self.exp[LENGTH_INDEX]);
         n.v_length = Some(other);
@@ -550,7 +550,7 @@ impl Shr<UnitAbsorbedDose> for Value {
     fn shr(self, other:UnitAbsorbedDose) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_ab_dose.unwrap().convert(&other).powi(self.exp[ABSORBED_DOSE_INDEX]);
         n.v_ab_dose = Some(other);
@@ -563,7 +563,7 @@ impl Shr<UnitAngle> for Value {
     fn shr(self, other:UnitAngle) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ANGLE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_angle.unwrap().convert(&other).powi(self.exp[ANGLE_INDEX]);
         n.v_angle = Some(other);
@@ -576,7 +576,7 @@ impl Shr<UnitSolidAngle> for Value {
     fn shr(self, other:UnitSolidAngle) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & SOLID_ANGLE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_solid_angle.unwrap().convert(&other).powi(self.exp[SOLID_ANGLE_INDEX]);
         n.v_solid_angle = Some(other);
@@ -589,7 +589,7 @@ impl Shr<UnitCapacitance> for Value {
     fn shr(self, other:UnitCapacitance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & CAPACITANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_capacitance.unwrap().convert(&other).powi(self.exp[CAPACITANCE_INDEX]);
         n.v_capacitance = Some(other);
@@ -602,7 +602,7 @@ impl Shr<UnitCatalyticActivity> for Value {
     fn shr(self, other:UnitCatalyticActivity) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_catalytic.unwrap().convert(&other).powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
         n.v_catalytic = Some(other);
@@ -615,7 +615,7 @@ impl Shr<UnitElectricCharge> for Value {
     fn shr(self, other:UnitElectricCharge) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_electric_charge.unwrap().convert(&other).powi(self.exp[ELECTRIC_CHARGE_INDEX]);
         n.v_electric_charge = Some(other);
@@ -628,7 +628,7 @@ impl Shr<UnitElectricConductance> for Value {
     fn shr(self, other:UnitElectricConductance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_electric_conductance.unwrap().convert(&other).powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
         n.v_electric_conductance = Some(other);
@@ -641,7 +641,7 @@ impl Shr<UnitElectricCurrent> for Value {
     fn shr(self, other:UnitElectricCurrent) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_electric_current.unwrap().convert(&other).powi(self.exp[ELECTRIC_CURRENT_INDEX]);
         n.v_electric_current = Some(other);
@@ -654,7 +654,7 @@ impl Shr<UnitElectricPotential> for Value {
     fn shr(self, other:UnitElectricPotential) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_electric_potential.unwrap().convert(&other).powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
         n.v_electric_potential = Some(other);
@@ -667,7 +667,7 @@ impl Shr<UnitEnergy> for Value {
     fn shr(self, other:UnitEnergy) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ENERGY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_energy.unwrap().convert(&other).powi(self.exp[ENERGY_INDEX]);
         n.v_energy = Some(other);
@@ -680,7 +680,7 @@ impl Shr<UnitForce> for Value {
     fn shr(self, other:UnitForce) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & FORCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_force.unwrap().convert(&other).powi(self.exp[FORCE_INDEX]);
         n.v_force = Some(other);
@@ -693,7 +693,7 @@ impl Shr<UnitFrequency> for Value {
     fn shr(self, other:UnitFrequency) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & FREQUENCY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
         n.v_frequency = Some(other);
@@ -706,7 +706,7 @@ impl Shr<UnitIlluminance> for Value {
     fn shr(self, other:UnitIlluminance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & ILLUMINANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_illuminance.unwrap().convert(&other).powi(self.exp[ILLUMINANCE_INDEX]);
         n.v_illuminance = Some(other);
@@ -719,7 +719,7 @@ impl Shr<UnitInductance> for Value {
     fn shr(self, other:UnitInductance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & INDUCTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_inductance.unwrap().convert(&other).powi(self.exp[INDUCTANCE_INDEX]);
         n.v_inductance = Some(other);
@@ -732,7 +732,7 @@ impl Shr<UnitInformation> for Value {
     fn shr(self, other:UnitInformation) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & INFORMATION_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_information.unwrap().convert(&other).powi(self.exp[INFORMATION_INDEX]);
         n.v_information = Some(other);
@@ -745,7 +745,7 @@ impl Shr<UnitLuminousFlux> for Value {
     fn shr(self, other:UnitLuminousFlux) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_luminous_flux.unwrap().convert(&other).powi(self.exp[LUMINOUS_FLUX_INDEX]);
         n.v_luminous_flux = Some(other);
@@ -758,7 +758,7 @@ impl Shr<UnitLuminousIntensity> for Value {
     fn shr(self, other:UnitLuminousIntensity) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_luminous_flux_intensity.unwrap().convert(&other).powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
         n.v_luminous_flux_intensity = Some(other);
@@ -770,10 +770,10 @@ impl Shr<UnitMagneticFlux> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitMagneticFlux) -> Self::Output {
         let mut n:Value = self;
-        if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+        if self.unit_map & MAGNETIC_FLUX_MAP == 0 {
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
-        n.val *= n.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_INDEX]);
+        n.val *= n.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETIC_FLUX_INDEX]);
         n.v_magnetic_flux = Some(other);
         Ok(n)
     }
@@ -783,10 +783,10 @@ impl Shr<UnitMagneticFluxDensity> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitMagneticFluxDensity) -> Self::Output {
         let mut n:Value = self;
-        if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+        if self.unit_map & MAGNETIC_FLUX_DENSITY_MAP == 0 {
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
-        n.val *= n.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_DENSITY_INDEX]);
+        n.val *= n.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
         n.v_magnetic_flux_density = Some(other);
         Ok(n)
     }
@@ -797,7 +797,7 @@ impl Shr<UnitMass> for Value {
     fn shr(self, other:UnitMass) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & MASS_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_mass.unwrap().convert(&other).powi(self.exp[MASS_INDEX]);
         n.v_mass = Some(other);
@@ -810,7 +810,7 @@ impl Shr<UnitPower> for Value {
     fn shr(self, other:UnitPower) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & POWER_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_power.unwrap().convert(&other).powi(self.exp[POWER_INDEX]);
         n.v_power = Some(other);
@@ -823,7 +823,7 @@ impl Shr<UnitPressure> for Value {
     fn shr(self, other:UnitPressure) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & PRESSURE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_pressure.unwrap().convert(&other).powi(self.exp[PRESSURE_INDEX]);
         n.v_pressure = Some(other);
@@ -836,7 +836,7 @@ impl Shr<UnitRadioactivity> for Value {
     fn shr(self, other:UnitRadioactivity) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & RADIOACTIVITY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_radioactivity.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_INDEX]);
         n.v_radioactivity = Some(other);
@@ -849,7 +849,7 @@ impl Shr<UnitRadioactivityExposure> for Value {
     fn shr(self, other:UnitRadioactivityExposure) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_radioactivity_exposure.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
         n.v_radioactivity_exposure = Some(other);
@@ -862,7 +862,7 @@ impl Shr<UnitResistance> for Value {
     fn shr(self, other:UnitResistance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & RESISTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_resistance.unwrap().convert(&other).powi(self.exp[RESISTANCE_INDEX]);
         n.v_resistance = Some(other);
@@ -875,7 +875,7 @@ impl Shr<UnitSound> for Value {
     fn shr(self, other:UnitSound) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & SOUND_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_sound.unwrap().convert(&other).powi(self.exp[SOUND_INDEX]);
         n.v_sound = Some(other);
@@ -888,7 +888,7 @@ impl Shr<UnitSubstance> for Value {
     fn shr(self, other:UnitSubstance) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & SUBSTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_substance.unwrap().convert(&other).powi(self.exp[SUBSTANCE_INDEX]);
         n.v_substance = Some(other);
@@ -901,10 +901,10 @@ impl Shr<UnitTemperature> for Value {
     fn shr(self, other:UnitTemperature) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & TEMPERATURE_MAP != TEMPERATURE_MAP {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val = n.v_temperature.unwrap().convert(&other, n.val).powi(self.exp[TEMPERATURE_INDEX]);
         n.v_temperature = Some(other);
@@ -917,7 +917,7 @@ impl Shr<UnitTime> for Value {
     fn shr(self, other:UnitTime) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & TIME_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_time.unwrap().convert(&other).powi(self.exp[TIME_INDEX]);
         n.v_time = Some(other);
@@ -930,7 +930,7 @@ impl Shr<UnitVolume> for Value {
     fn shr(self, other:UnitVolume) -> Self::Output {
         let mut n:Value = self;
         if self.unit_map & VOLUME_MAP == 0 {
-            return Err(V3Error::ValueConversionError("Incompatable types"));
+            return Err(V3Error::ValueConversionError("[shr] Incompatable types"));
         }
         n.val *= n.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         n.v_volume = Some(other);
@@ -943,10 +943,10 @@ impl ShrAssign<Value> for Value {
         if self.__equivalent(&other) {
             match self._convert(&other) {
                 Ok(_) => {},
-                Err(_) => panic!("Incompatable value types: {}, {}", self, other)
+                Err(_) => panic!("[shr_assign] Incompatable value types: {}, {}", self, other)
             }
         } else {
-            panic!("Incompatable value types: {}, {}", self, other);
+            panic!("[shr_assign] Incompatable value types: {}, {}", self, other);
         }
     }
 }
@@ -955,7 +955,7 @@ impl ShrAssign<&str> for Value {
     fn shr_assign(&mut self, other:&str) {
         let n:Value = match Value::new(1.0, other) {
             Ok(t) => t,
-            Err(_) => panic!("Incompatable value types")
+            Err(_) => panic!("[shr_assign] Incompatable value types")
         };
         *self >>= n;
     }
@@ -965,7 +965,7 @@ impl ShrAssign<String> for Value {
     fn shr_assign(&mut self, other:String) {
         let n:Value = match Value::new(1.0, other.as_str()) {
             Ok(t) => t,
-            Err(_) => panic!("Incompatable value types")
+            Err(_) => panic!("[shr_assign] Incompatable value types")
         };
         *self >>= n;
     }
@@ -974,7 +974,7 @@ impl ShrAssign<String> for Value {
 impl ShrAssign<UnitLength> for Value {
     fn shr_assign(&mut self, other:UnitLength) {
         if self.unit_map & LENGTH_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_length.unwrap().convert(&other).powi(self.exp[LENGTH_INDEX]);
         self.v_length = Some(other);
@@ -984,7 +984,7 @@ impl ShrAssign<UnitLength> for Value {
 impl ShrAssign<UnitAbsorbedDose> for Value {
     fn shr_assign(&mut self, other:UnitAbsorbedDose) {
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_ab_dose.unwrap().convert(&other).powi(self.exp[ABSORBED_DOSE_INDEX]);
         self.v_ab_dose = Some(other);
@@ -994,7 +994,7 @@ impl ShrAssign<UnitAbsorbedDose> for Value {
 impl ShrAssign<UnitAngle> for Value {
     fn shr_assign(&mut self, other:UnitAngle) {
         if self.unit_map & ANGLE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_angle.unwrap().convert(&other).powi(self.exp[ANGLE_INDEX]);
         self.v_angle = Some(other);
@@ -1004,7 +1004,7 @@ impl ShrAssign<UnitAngle> for Value {
 impl ShrAssign<UnitSolidAngle> for Value {
     fn shr_assign(&mut self, other:UnitSolidAngle) {
         if self.unit_map & SOLID_ANGLE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_solid_angle.unwrap().convert(&other).powi(self.exp[SOLID_ANGLE_INDEX]);
         self.v_solid_angle = Some(other);
@@ -1014,7 +1014,7 @@ impl ShrAssign<UnitSolidAngle> for Value {
 impl ShrAssign<UnitCapacitance> for Value {
     fn shr_assign(&mut self, other:UnitCapacitance) {
         if self.unit_map & CAPACITANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_capacitance.unwrap().convert(&other).powi(self.exp[CAPACITANCE_INDEX]);
         self.v_capacitance = Some(other);
@@ -1024,7 +1024,7 @@ impl ShrAssign<UnitCapacitance> for Value {
 impl ShrAssign<UnitCatalyticActivity> for Value {
     fn shr_assign(&mut self, other:UnitCatalyticActivity) {
         if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_catalytic.unwrap().convert(&other).powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
         self.v_catalytic = Some(other);
@@ -1034,7 +1034,7 @@ impl ShrAssign<UnitCatalyticActivity> for Value {
 impl ShrAssign<UnitElectricCharge> for Value {
     fn shr_assign(&mut self, other:UnitElectricCharge) {
         if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_electric_charge.unwrap().convert(&other).powi(self.exp[ELECTRIC_CHARGE_INDEX]);
         self.v_electric_charge = Some(other);
@@ -1044,7 +1044,7 @@ impl ShrAssign<UnitElectricCharge> for Value {
 impl ShrAssign<UnitElectricConductance> for Value {
     fn shr_assign(&mut self, other:UnitElectricConductance) {
         if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_electric_conductance.unwrap().convert(&other).powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
         self.v_electric_conductance = Some(other);
@@ -1054,7 +1054,7 @@ impl ShrAssign<UnitElectricConductance> for Value {
 impl ShrAssign<UnitElectricCurrent> for Value {
     fn shr_assign(&mut self, other:UnitElectricCurrent) {
         if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_electric_current.unwrap().convert(&other).powi(self.exp[ELECTRIC_CURRENT_INDEX]);
         self.v_electric_current = Some(other);
@@ -1064,7 +1064,7 @@ impl ShrAssign<UnitElectricCurrent> for Value {
 impl ShrAssign<UnitElectricPotential> for Value {
     fn shr_assign(&mut self, other:UnitElectricPotential) {
         if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_electric_potential.unwrap().convert(&other).powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
         self.v_electric_potential = Some(other);
@@ -1074,7 +1074,7 @@ impl ShrAssign<UnitElectricPotential> for Value {
 impl ShrAssign<UnitEnergy> for Value {
     fn shr_assign(&mut self, other:UnitEnergy) {
         if self.unit_map & ENERGY_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_energy.unwrap().convert(&other).powi(self.exp[ENERGY_INDEX]);
         self.v_energy = Some(other);
@@ -1084,7 +1084,7 @@ impl ShrAssign<UnitEnergy> for Value {
 impl ShrAssign<UnitForce> for Value {
     fn shr_assign(&mut self, other:UnitForce) {
         if self.unit_map & FORCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_force.unwrap().convert(&other).powi(self.exp[FORCE_INDEX]);
         self.v_force = Some(other);
@@ -1094,7 +1094,7 @@ impl ShrAssign<UnitForce> for Value {
 impl ShrAssign<UnitFrequency> for Value {
     fn shr_assign(&mut self, other:UnitFrequency) {
         if self.unit_map & FREQUENCY_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
         self.v_frequency = Some(other);
@@ -1104,7 +1104,7 @@ impl ShrAssign<UnitFrequency> for Value {
 impl ShrAssign<UnitIlluminance> for Value {
     fn shr_assign(&mut self, other:UnitIlluminance) {
         if self.unit_map & ILLUMINANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_illuminance.unwrap().convert(&other).powi(self.exp[ILLUMINANCE_INDEX]);
         self.v_illuminance = Some(other);
@@ -1114,7 +1114,7 @@ impl ShrAssign<UnitIlluminance> for Value {
 impl ShrAssign<UnitInductance> for Value {
     fn shr_assign(&mut self, other:UnitInductance) {
         if self.unit_map & INDUCTANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_inductance.unwrap().convert(&other).powi(self.exp[INDUCTANCE_INDEX]);
         self.v_inductance = Some(other);
@@ -1124,7 +1124,7 @@ impl ShrAssign<UnitInductance> for Value {
 impl ShrAssign<UnitInformation> for Value {
     fn shr_assign(&mut self, other:UnitInformation) {
         if self.unit_map & INFORMATION_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_information.unwrap().convert(&other).powi(self.exp[INFORMATION_INDEX]);
         self.v_information = Some(other);
@@ -1134,7 +1134,7 @@ impl ShrAssign<UnitInformation> for Value {
 impl ShrAssign<UnitLuminousFlux> for Value {
     fn shr_assign(&mut self, other:UnitLuminousFlux) {
         if self.unit_map & LUMINOUS_FLUX_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_luminous_flux.unwrap().convert(&other).powi(self.exp[LUMINOUS_FLUX_INDEX]);
         self.v_luminous_flux = Some(other);
@@ -1144,7 +1144,7 @@ impl ShrAssign<UnitLuminousFlux> for Value {
 impl ShrAssign<UnitLuminousIntensity> for Value {
     fn shr_assign(&mut self, other:UnitLuminousIntensity) {
         if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_luminous_flux_intensity.unwrap().convert(&other).powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
         self.v_luminous_flux_intensity = Some(other);
@@ -1153,20 +1153,20 @@ impl ShrAssign<UnitLuminousIntensity> for Value {
 
 impl ShrAssign<UnitMagneticFlux> for Value {
     fn shr_assign(&mut self, other:UnitMagneticFlux) {
-        if self.unit_map & MAGNETRIC_FLUX_MAP == 0 {
-            panic!("Incompatable value types");
+        if self.unit_map & MAGNETIC_FLUX_MAP == 0 {
+            panic!("[shr_assign] Incompatable value types");
         }
-        self.val *= self.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_INDEX]);
+        self.val *= self.v_magnetic_flux.unwrap().convert(&other).powi(self.exp[MAGNETIC_FLUX_INDEX]);
         self.v_magnetic_flux = Some(other);
     }
 }
 
 impl ShrAssign<UnitMagneticFluxDensity> for Value {
     fn shr_assign(&mut self, other:UnitMagneticFluxDensity) {
-        if self.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == 0 {
-            panic!("Incompatable value types");
+        if self.unit_map & MAGNETIC_FLUX_DENSITY_MAP == 0 {
+            panic!("[shr_assign] Incompatable value types");
         }
-        self.val *= self.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETRIC_FLUX_DENSITY_INDEX]);
+        self.val *= self.v_magnetic_flux_density.unwrap().convert(&other).powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
         self.v_magnetic_flux_density = Some(other);
     }
 }
@@ -1174,7 +1174,7 @@ impl ShrAssign<UnitMagneticFluxDensity> for Value {
 impl ShrAssign<UnitMass> for Value {
     fn shr_assign(&mut self, other:UnitMass) {
         if self.unit_map & MASS_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_mass.unwrap().convert(&other).powi(self.exp[MASS_INDEX]);
         self.v_mass = Some(other);
@@ -1184,7 +1184,7 @@ impl ShrAssign<UnitMass> for Value {
 impl ShrAssign<UnitPower> for Value {
     fn shr_assign(&mut self, other:UnitPower) {
         if self.unit_map & POWER_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_power.unwrap().convert(&other).powi(self.exp[POWER_INDEX]);
         self.v_power = Some(other);
@@ -1194,7 +1194,7 @@ impl ShrAssign<UnitPower> for Value {
 impl ShrAssign<UnitPressure> for Value {
     fn shr_assign(&mut self, other:UnitPressure) {
         if self.unit_map & PRESSURE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_pressure.unwrap().convert(&other).powi(self.exp[PRESSURE_INDEX]);
         self.v_pressure = Some(other);
@@ -1204,7 +1204,7 @@ impl ShrAssign<UnitPressure> for Value {
 impl ShrAssign<UnitRadioactivity> for Value {
     fn shr_assign(&mut self, other:UnitRadioactivity) {
         if self.unit_map & RADIOACTIVITY_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_radioactivity.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_INDEX]);
         self.v_radioactivity = Some(other);
@@ -1214,7 +1214,7 @@ impl ShrAssign<UnitRadioactivity> for Value {
 impl ShrAssign<UnitRadioactivityExposure> for Value {
     fn shr_assign(&mut self, other:UnitRadioactivityExposure) {
         if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_radioactivity_exposure.unwrap().convert(&other).powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
         self.v_radioactivity_exposure = Some(other);
@@ -1224,7 +1224,7 @@ impl ShrAssign<UnitRadioactivityExposure> for Value {
 impl ShrAssign<UnitResistance> for Value {
     fn shr_assign(&mut self, other:UnitResistance) {
         if self.unit_map & RESISTANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_resistance.unwrap().convert(&other).powi(self.exp[RESISTANCE_INDEX]);
         self.v_resistance = Some(other);
@@ -1234,7 +1234,7 @@ impl ShrAssign<UnitResistance> for Value {
 impl ShrAssign<UnitSound> for Value {
     fn shr_assign(&mut self, other:UnitSound) {
         if self.unit_map & SOUND_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_sound.unwrap().convert(&other).powi(self.exp[SOUND_INDEX]);
         self.v_sound = Some(other);
@@ -1244,7 +1244,7 @@ impl ShrAssign<UnitSound> for Value {
 impl ShrAssign<UnitSubstance> for Value {
     fn shr_assign(&mut self, other:UnitSubstance) {
         if self.unit_map & SUBSTANCE_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_substance.unwrap().convert(&other).powi(self.exp[SUBSTANCE_INDEX]);
         self.v_substance = Some(other);
@@ -1254,10 +1254,10 @@ impl ShrAssign<UnitSubstance> for Value {
 impl ShrAssign<UnitTemperature> for Value {
     fn shr_assign(&mut self, other:UnitTemperature) {
         if self.unit_map & TEMPERATURE_MAP != TEMPERATURE_MAP {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         if self.exp[TEMPERATURE_INDEX] != 1 || self.exp[TEMPERATURE_INDEX] != -1 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val = self.v_temperature.unwrap().convert(&other, self.val).powi(self.exp[TEMPERATURE_INDEX]);
         self.v_temperature = Some(other);
@@ -1267,7 +1267,7 @@ impl ShrAssign<UnitTemperature> for Value {
 impl ShrAssign<UnitTime> for Value {
     fn shr_assign(&mut self, other:UnitTime) {
         if self.unit_map & TIME_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_time.unwrap().convert(&other).powi(self.exp[TIME_INDEX]);
         self.v_time = Some(other);
@@ -1277,7 +1277,7 @@ impl ShrAssign<UnitTime> for Value {
 impl ShrAssign<UnitVolume> for Value {
     fn shr_assign(&mut self, other:UnitVolume) {
         if self.unit_map & VOLUME_MAP == 0 {
-            panic!("Incompatable value types");
+            panic!("[shr_assign] Incompatable value types");
         }
         self.val *= self.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         self.v_volume = Some(other);
@@ -1357,12 +1357,12 @@ impl Add<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
                             cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
                         }
@@ -1546,12 +1546,12 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
                             cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
                         }
@@ -1734,12 +1734,12 @@ impl Sub<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
                             cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
                         }
@@ -1923,12 +1923,12 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
                             cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
                         }
@@ -2136,14 +2136,14 @@ impl Mul<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if must_assign {
                             n.v_magnetic_flux = other.v_magnetic_flux;
                         } else if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if must_assign {
                             n.v_magnetic_flux_density = other.v_magnetic_flux_density;
                         } else if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
@@ -2389,14 +2389,14 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if must_assign {
                             self.v_magnetic_flux = other.v_magnetic_flux;
                         } else if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if must_assign {
                             self.v_magnetic_flux_density = other.v_magnetic_flux_density;
                         } else if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
@@ -2644,14 +2644,14 @@ impl Div<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if must_assign {
                             n.v_magnetic_flux = other.v_magnetic_flux;
                         } else if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if must_assign {
                             n.v_magnetic_flux_density = other.v_magnetic_flux_density;
                         } else if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
@@ -2898,14 +2898,14 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if must_assign {
                             self.v_magnetic_flux = other.v_magnetic_flux;
                         } else if self.v_magnetic_flux != other.v_magnetic_flux {
                             cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if must_assign {
                             self.v_magnetic_flux_density = other.v_magnetic_flux_density;
                         } else if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
@@ -3197,7 +3197,7 @@ impl Value {
                 self.v_length = other.v_length;
                 return Ok(());
             } 
-            return Err(V3Error::ValueConversionError("Error converting volume to cubic"));
+            return Err(V3Error::ValueConversionError("[_convert] Error converting volume to cubic"));
         } else if self.unit_map == LENGTH_MAP && other.unit_map == VOLUME_MAP {
             if self.exp[LENGTH_INDEX] == 3 && other.exp[VOLUME_INDEX] == 1 {
                 self.val *= f64::powf(self.v_length.unwrap().convert(&UnitLength::Meter(Metric::None)), 3.0);
@@ -3209,7 +3209,7 @@ impl Value {
                 self.v_length = None;
                 return Ok(());
             }
-            return Err(V3Error::ValueConversionError("Error converting cubic to volume"));
+            return Err(V3Error::ValueConversionError("[_convert] Error converting cubic to volume"));
         } else if self.unit_map == 0 && other.unit_map == ANGLE_MAP {
             if other.v_angle.unwrap() == UnitAngle::Radian(Metric::None) {
                 self.exp[ANGLE_INDEX] = 1;
@@ -3217,7 +3217,7 @@ impl Value {
                 self.v_angle = Some(UnitAngle::Radian(Metric::None));
                 return Ok(());
             }
-            return Err(V3Error::ValueConversionError("Error converting unitless to radians"))
+            return Err(V3Error::ValueConversionError("[_convert] Error converting unitless to radians"))
         } else if self.unit_map == FREQUENCY_MAP && other.unit_map == TIME_MAP &&
                   self.exp[FREQUENCY_INDEX] == 1 && other.exp[TIME_INDEX] == -1 {
             self.exp[FREQUENCY_INDEX] = 0;
@@ -3239,13 +3239,13 @@ impl Value {
         }
 
         if self.unit_map != other.unit_map {
-            return Err(V3Error::ValueConversionError("Inequivalent unit types"));
+            return Err(V3Error::ValueConversionError("[_convert] Inequivalent unit types"));
         }
 
         // check against temperature 
         if self.unit_map & TEMPERATURE_MAP < self.unit_map {
             if self.v_temperature != other.v_temperature {
-                return Err(V3Error::ValueConversionError("Temperature unit mismatch"));
+                return Err(V3Error::ValueConversionError("[_convert] Temperature unit mismatch"));
             }
         } else if self.unit_map == TEMPERATURE_MAP {
             self.val = self.v_temperature.unwrap().convert(&other.v_temperature.unwrap(), self.val);
@@ -3255,7 +3255,7 @@ impl Value {
 
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
-                return Err(V3Error::ValueConversionError("Mismatched value exponents"));
+                return Err(V3Error::ValueConversionError("[_convert] Mismatched value exponents"));
             }
             let region:usize = 1<<i;
             if region & self.unit_map != 0 {
@@ -3311,12 +3311,12 @@ impl Value {
                         self.v_inductance = other.v_inductance;
                         tmp
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         tmp = self.v_magnetic_flux.unwrap().convert(&other.v_magnetic_flux.unwrap());
                         self.v_magnetic_flux = other.v_magnetic_flux;
                         tmp
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         tmp = self.v_magnetic_flux_density.unwrap().convert(&other.v_magnetic_flux_density.unwrap());
                         self.v_magnetic_flux_density = other.v_magnetic_flux_density;
                         tmp
@@ -3415,7 +3415,7 @@ impl Value {
                         tmp
                     }
                     _ => {
-                        return Err(V3Error::UnknownError("Value conversion"));
+                        return Err(V3Error::UnknownError("[_convert] Value conversion"));
                     }
                 }, self.exp[i]);
             }
@@ -3432,14 +3432,14 @@ impl Value {
 
     pub fn to_radians(&mut self) {
         if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
-            // panic
+            panic!("[to_radians] Cannot convert non angle to radians");
         }
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
     }
 
     pub fn to_degrees(&mut self) {
         if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
-            // panic
+            panic!("[to_degrees] Cannot convert non angle to degrees");
         }
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Degree);
     }
@@ -3475,6 +3475,9 @@ impl Value {
     pub fn sqrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..31_usize {
+            if n.exp[i]%2 != 0 {
+                panic!("[sqrt] Cannot square root Value: {}", self);
+            }
             n.exp[i] /= 2;
         }
         n.val = n.val.sqrt();
@@ -3484,6 +3487,9 @@ impl Value {
     pub fn cbrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..31_usize {
+            if n.exp[i]%3 != 0 {
+                panic!("[cbrt] Cannot cube root Value: {}", self);
+            }
             n.exp[i] /= 3;
         }
         n.val = n.val.cbrt();
@@ -3516,8 +3522,7 @@ impl Value {
 
     pub fn atan2(&self, other:&Value) -> Value {
         if other.unit_map != ANGLE_MAP && other.exp[ANGLE_INDEX] != 1 {
-            // panic
-            panic!("atan2 requires an Value angle");
+            panic!("[atan2] atan2 requires an Value angle");
         }
         let new_v:f64 = other.val * other.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
         Value::_radians(self.val.atan2(new_v))
@@ -3571,7 +3576,7 @@ impl Value {
                 ret.v_power = None;
                 ret.v_time = None;
             } else {
-                panic!("Unit translation: assumption Energy");
+                panic!("[complex] Unit translation: assumption Energy");
             }
             ret.unit_map = ENERGY_MAP;
             ret.exp[ENERGY_INDEX] = 1;
@@ -3592,7 +3597,7 @@ impl Value {
                 ret.v_electric_potential = None;
                 ret.v_electric_current = None;
             } else {
-                panic!("Unit translation: assumption Power");
+                panic!("[complex] Unit translation: assumption Power");
             }
             ret.unit_map = POWER_MAP;
             ret.exp[POWER_INDEX] = 1;
@@ -3613,7 +3618,7 @@ impl Value {
                 ret.v_capacitance = None;
                 ret.v_electric_potential = None;
             } else {
-                panic!("Unit translation: assumption Electric Charge");
+                panic!("[complex] Unit translation: assumption Electric Charge");
             }
             ret.unit_map = ELECTRIC_CHARGE_MAP;
             ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
@@ -3634,7 +3639,7 @@ impl Value {
                 ret.v_energy = None;
                 ret.v_electric_charge = None;
             } else {
-                panic!("Unit translation: assumption Electric Potential");
+                panic!("[complex] Unit translation: assumption Electric Potential");
             }
             ret.unit_map = ELECTRIC_POTENTIAL_MAP;
             ret.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
@@ -3655,7 +3660,7 @@ impl Value {
                 ret.v_time = None;
                 ret.v_resistance = None;
             } else {
-                panic!("Unit translation: assumption Capacitance")
+                panic!("[complex] Unit translation: assumption Capacitance")
             }
 
             ret.unit_map = CAPACITANCE_MAP;
@@ -3674,7 +3679,7 @@ impl Value {
                 ret.v_electric_potential = None;
                 ret.v_electric_current = None;
             } else {
-                panic!("Unit translation: assumption Resistance");
+                panic!("[complex] Unit translation: assumption Resistance");
             }
 
             ret.unit_map = RESISTANCE_MAP;
@@ -3693,13 +3698,13 @@ impl Value {
                 ret.v_electric_potential = None;
                 ret.v_electric_current = None;
             } else {
-                panic!("Unit translation: assumption Electric Conductance");
+                panic!("[complex] Unit translation: assumption Electric Conductance");
             }
 
             ret.unit_map = ELECTRIC_CONDUCTANCE_MAP;
             ret.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
             ret.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
-        } else if ret.is_magnetic_flux() && self.unit_map != MAGNETRIC_FLUX_MAP {
+        } else if ret.is_magnetic_flux() && self.unit_map != MAGNETIC_FLUX_MAP {
             if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
                 (ret >>= UnitEnergy::Joule(Metric::None));
                 (ret >>= UnitElectricCurrent::Ampere(Metric::None));
@@ -3707,10 +3712,10 @@ impl Value {
                 ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
                 ret.v_energy = None;
                 ret.v_electric_current = None;
-            } else if ret.unit_map & MAGNETRIC_FLUX_DENSITY_MAP == MAGNETRIC_FLUX_DENSITY_MAP {
+            } else if ret.unit_map & MAGNETIC_FLUX_DENSITY_MAP == MAGNETIC_FLUX_DENSITY_MAP {
                 (ret >>= UnitMagneticFluxDensity::Tesla(Metric::None));
                 (ret >>= UnitLength::Meter(Metric::None));
-                ret.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
+                ret.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
                 ret.exp[LENGTH_INDEX] = 0;
                 ret.v_length = None;
                 ret.v_magnetic_flux_density = None;
@@ -3722,13 +3727,13 @@ impl Value {
                 ret.v_electric_potential = None;
                 ret.v_time = None;
             } else {
-                panic!("Unit translation: assumption Magnetic Flux");
+                panic!("[complex] Unit translation: assumption Magnetic Flux");
             }
 
-            ret.unit_map = MAGNETRIC_FLUX_MAP;
-            ret.exp[MAGNETRIC_FLUX_INDEX] = 1;
+            ret.unit_map = MAGNETIC_FLUX_MAP;
+            ret.exp[MAGNETIC_FLUX_INDEX] = 1;
             ret.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
-        } else if ret.is_magnetic_flux_density() && self.unit_map != MAGNETRIC_FLUX_DENSITY_MAP {
+        } else if ret.is_magnetic_flux_density() && self.unit_map != MAGNETIC_FLUX_DENSITY_MAP {
             if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
                 ret >>= UnitElectricPotential::Volt(Metric::None);
                 ret >>= UnitTime::Second(Metric::None);
@@ -3739,11 +3744,11 @@ impl Value {
                 ret.v_length = None;
                 ret.v_time = None;
                 ret.v_length = None;
-            } else if ret.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+            } else if ret.unit_map & MAGNETIC_FLUX_MAP == MAGNETIC_FLUX_MAP {
                 ret >>= UnitMagneticFlux::Weber(Metric::None);
                 ret >>= UnitLength::Meter(Metric::None);
                 ret.exp[LENGTH_INDEX] = 0;
-                ret.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                ret.exp[MAGNETIC_FLUX_INDEX] = 0;
                 ret.v_magnetic_flux = None;
                 ret.v_length = None;
             } else if ret.unit_map & FORCE_MAP == FORCE_MAP {
@@ -3757,11 +3762,11 @@ impl Value {
                 ret.v_electric_current = None;
                 ret.v_force = None;
             } else {
-                panic!("Unit translation: assumption Magnetic Flux Density");
+                panic!("[complex] Unit translation: assumption Magnetic Flux Density");
             }
 
-            ret.unit_map = MAGNETRIC_FLUX_DENSITY_MAP;
-            ret.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
+            ret.unit_map = MAGNETIC_FLUX_DENSITY_MAP;
+            ret.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 1;
             ret.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
         } else if ret.is_inductance() && self.unit_map != INDUCTANCE_MAP {
             if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
@@ -3781,15 +3786,15 @@ impl Value {
                 ret.exp[TIME_INDEX] = 0;
                 ret.v_resistance = None;
                 ret.v_time = None;
-            } else if ret.unit_map & MAGNETRIC_FLUX_MAP == MAGNETRIC_FLUX_MAP {
+            } else if ret.unit_map & MAGNETIC_FLUX_MAP == MAGNETIC_FLUX_MAP {
                 ret >>= UnitMagneticFlux::Weber(Metric::None);
                 ret >>= UnitElectricCurrent::Ampere(Metric::None);
-                ret.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                ret.exp[MAGNETIC_FLUX_INDEX] = 0;
                 ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
                 ret.v_magnetic_flux = None;
                 ret.v_electric_current = None;
             } else {
-                panic!("Unit translation: assumption Electric Inductance");
+                panic!("[complex] Unit translation: assumption Electric Inductance");
             }
 
             ret.unit_map = INDUCTANCE_MAP;
@@ -3831,13 +3836,16 @@ impl Value {
 
     pub fn reduce(&mut self, other:&str) -> Result<(), V3Error> {
         if !self.reducable() {
-            return Err(V3Error::UnitReductionError(format!("Value {} is not reducable", self)));
+            return Err(V3Error::UnitReductionError(format!("[reduce] Value {} is not reducable", self)));
         }
-        let temp:Value = Value::new(1.0, other).unwrap();
+        let temp:Value = match Value::new(1.0, other) {
+            Ok(t) => t,
+            Err(e) => return Err(e)
+        };
         if self._reduce(&temp) {
             return Ok(());
         }
-        Err(V3Error::UnitReductionError(format!("Value {} cannot be reduced to {}", self, other)))
+        Err(V3Error::UnitReductionError(format!("[reduce] Value {} cannot be reduced to {}", self, other)))
     }
 
     pub fn reducable(&self) -> bool {
@@ -3852,8 +3860,8 @@ impl Value {
             ELECTRIC_POTENTIAL_MAP |
             RESISTANCE_MAP |
             ELECTRIC_CONDUCTANCE_MAP |
-            MAGNETRIC_FLUX_MAP |
-            MAGNETRIC_FLUX_DENSITY_MAP |
+            MAGNETIC_FLUX_MAP |
+            MAGNETIC_FLUX_DENSITY_MAP |
             INDUCTANCE_MAP |
             ILLUMINANCE_MAP |
             CAPACITANCE_MAP
@@ -4098,7 +4106,7 @@ impl Value {
                 *self >>= *other;
                 return true;
             }
-        } else if self.unit_map == MAGNETRIC_FLUX_MAP && other.is_magnetic_flux() {
+        } else if self.unit_map == MAGNETIC_FLUX_MAP && other.is_magnetic_flux() {
             if other.unit_map & ENERGY_MAP > 0 {
                 *self >>= UnitMagneticFlux::Weber(Metric::None);
                 self.v_energy = Some(UnitEnergy::Joule(Metric::None));
@@ -4106,19 +4114,19 @@ impl Value {
                 self.v_magnetic_flux = None;
                 self.exp[ENERGY_INDEX] = 1;
                 self.exp[ELECTRIC_CURRENT_INDEX] = -1;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.exp[MAGNETIC_FLUX_INDEX] = 0;
                 self.unit_map = ENERGY_MAP | ELECTRIC_CURRENT_MAP;
                 *self >>= *other;
                 return true;
-            } else if other.unit_map & MAGNETRIC_FLUX_DENSITY_MAP > 0 {
+            } else if other.unit_map & MAGNETIC_FLUX_DENSITY_MAP > 0 {
                 *self >>= UnitMagneticFlux::Weber(Metric::None);
                 self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(Metric::None));
                 self.v_length = Some(UnitLength::Meter(Metric::None));
                 self.v_magnetic_flux = None;
-                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 1;
+                self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 1;
                 self.exp[LENGTH_INDEX] = 2;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
-                self.unit_map = MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP;
+                self.exp[MAGNETIC_FLUX_INDEX] = 0;
+                self.unit_map = MAGNETIC_FLUX_DENSITY_MAP | LENGTH_MAP;
                 *self >>= *other;
                 return true;
             } else if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
@@ -4128,12 +4136,12 @@ impl Value {
                 self.v_magnetic_flux = None;
                 self.exp[TIME_INDEX] = 1;
                 self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 0;
+                self.exp[MAGNETIC_FLUX_INDEX] = 0;
                 self.unit_map = TIME_MAP | ELECTRIC_POTENTIAL_MAP;
                 *self >>= *other;
                 return true;
             }
-        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && other.is_magnetic_flux_density() {
+        } else if self.unit_map == MAGNETIC_FLUX_DENSITY_MAP && other.is_magnetic_flux_density() {
             if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
                 *self >>= UnitMagneticFluxDensity::Tesla(Metric::None);
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
@@ -4146,15 +4154,15 @@ impl Value {
                 self.unit_map = ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP;
                 *self >>= *other;
                 return true;
-            } else if other.unit_map & MAGNETRIC_FLUX_MAP > 0 {
+            } else if other.unit_map & MAGNETIC_FLUX_MAP > 0 {
                 *self >>= UnitMagneticFluxDensity::Tesla(Metric::None);
                 self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
                 self.v_length = Some(UnitLength::Meter(Metric::None));
                 self.v_magnetic_flux_density = None;
                 self.exp[LENGTH_INDEX] = -2;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 1;
-                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = 0;
-                self.unit_map = LENGTH_MAP | MAGNETRIC_FLUX_MAP;
+                self.exp[MAGNETIC_FLUX_INDEX] = 1;
+                self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
+                self.unit_map = LENGTH_MAP | MAGNETIC_FLUX_MAP;
                 *self >>= *other;
                 return true;
             } else if other.unit_map & FORCE_MAP > 0 {
@@ -4194,15 +4202,15 @@ impl Value {
                 self.unit_map = RESISTANCE_MAP | TIME_MAP;
                 *self >>= *other;
                 return true;
-            } else if other.unit_map & MAGNETRIC_FLUX_MAP > 0 {
+            } else if other.unit_map & MAGNETIC_FLUX_MAP > 0 {
                 *self >>= UnitInductance::Henry(Metric::None);
                 self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
                 self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
                 self.v_inductance = None;
-                self.exp[MAGNETRIC_FLUX_INDEX] = 1;
+                self.exp[MAGNETIC_FLUX_INDEX] = 1;
                 self.exp[ELECTRIC_CURRENT_INDEX] = -1;
                 self.exp[INDUCTANCE_INDEX] = 0;
-                self.unit_map = MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP;
+                self.unit_map = MAGNETIC_FLUX_MAP | ELECTRIC_CURRENT_MAP;
                 *self >>= *other;
                 return true;
             }
@@ -4404,9 +4412,9 @@ impl Value {
     }
 
     pub fn is_magnetic_flux(&self) -> bool {
-        if (self.unit_map == MAGNETRIC_FLUX_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1) ||
+        if (self.unit_map == MAGNETIC_FLUX_MAP && self.exp[MAGNETIC_FLUX_INDEX] == 1) ||
            (self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
-           (self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2) ||
+           (self.unit_map == MAGNETIC_FLUX_DENSITY_MAP | LENGTH_MAP && self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1 && self.exp[LENGTH_INDEX] == 2) ||
            (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1) {
             return true;
         }
@@ -4414,9 +4422,9 @@ impl Value {
     }
 
     pub fn is_magnetic_flux_density(&self) -> bool {
-        if (self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP && self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] == 1) ||
+        if (self.unit_map == MAGNETIC_FLUX_DENSITY_MAP && self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
-           (self.unit_map == MAGNETRIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
+           (self.unit_map == MAGNETIC_FLUX_MAP | LENGTH_MAP && self.exp[MAGNETIC_FLUX_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
            (self.unit_map == FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1 && self.exp[LENGTH_INDEX] == -1) {
             return true;
         }
@@ -4427,7 +4435,7 @@ impl Value {
         if (self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
            (self.unit_map == RESISTANCE_MAP | TIME_MAP && self.exp[RESISTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
-           (self.unit_map == MAGNETRIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETRIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) { 
+           (self.unit_map == MAGNETIC_FLUX_MAP | ELECTRIC_CURRENT_MAP && self.exp[MAGNETIC_FLUX_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) { 
             return true;
         }
         false
@@ -5183,7 +5191,10 @@ impl Value {
             let mut expon:i32 = 1;
             let temp_split:Vec<&str> = t.split('^').collect();
             if temp_split.len() > 1 {
-                expon = temp_split[1].parse::<i32>().unwrap();
+                expon = match temp_split[1].parse::<i32>(){
+                    Ok(t) => t,
+                    Err(_) => return Err(V3Error::ParsingError("[_create_unit_1] Cannot parse int"))
+                };
             }
             self._parse_units(temp_split[0], expon)?;
         }
@@ -5193,7 +5204,10 @@ impl Value {
             let mut expon:i32 = -1;
             let temp_split:Vec<&str> = t.split('^').collect();
             if temp_split.len() > 1 {
-                expon *= temp_split[1].parse::<i32>().unwrap();
+                expon *= match temp_split[1].parse::<i32>() {
+                    Ok(t) => t,
+                    Err(_) => return Err(V3Error::ParsingError("[_create_unit_2] Cannot parse int"))
+                };
             }
             self._parse_units(temp_split[0], expon)?;
         }
@@ -5213,7 +5227,10 @@ impl Value {
         let mut found_divisor:bool = do_denom;
         let mut constructor:String = String::new();
         for index in 0..block.chars().count() {
-            let c:char = block.chars().nth(index).unwrap();
+            let c:char = match block.chars().nth(index) {
+                Some(t) => t,
+                None => return Err(V3Error::ParsingError("[_get_tokens] Index error"))
+            };
             match c {
                 '(' => {
                     if left_count == 0 {
@@ -5283,7 +5300,7 @@ impl Value {
         match unit {
             "mph" => {
                 if exp != 1 || exp != -1 {
-                    return Err(V3Error::ParsingError("MPH exponent"));
+                    return Err(V3Error::ParsingError("[_parse_units] MPH exponent"));
                 }
                 self.v_length = Some(UnitLength::Mile);
                 self.exp[LENGTH_INDEX] = exp;
@@ -5294,7 +5311,7 @@ impl Value {
             }
             "kph" => {
                 if exp != 1 || exp != -1 {
-                    // error
+                    return Err(V3Error::ParsingError("[_parse_units] KPH exponent"));
                 }
                 self.v_length = Some(UnitLength::Meter(Metric::Kilo));
                 self.exp[LENGTH_INDEX] = exp;
@@ -5505,7 +5522,7 @@ impl Value {
         } else if l == 5 {
             self._get_pentuple_letter(unit, exp, Metric::None)?;
         } else {
-            return Err(V3Error::UnsupportedUnit(format!("Unit {} exceeds parsing bounds", unit)));
+            return Err(V3Error::UnsupportedUnit(format!("[_parse_units] Unit {} exceeds parsing bounds", unit)));
         }
         Ok(())
     }
@@ -5564,8 +5581,8 @@ impl Value {
             }
             "T" => {
                 self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(m));
-                self.exp[MAGNETRIC_FLUX_DENSITY_INDEX] = exp;
-                self.unit_map |= MAGNETRIC_FLUX_DENSITY_MAP;
+                self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = exp;
+                self.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
             }
             "N" => {
                 self.v_force = Some(UnitForce::Newton(m));
@@ -5614,7 +5631,7 @@ impl Value {
                 self.unit_map |= VOLUME_MAP;
             }
             _ => {
-                return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
+                return Err(V3Error::UnsupportedUnit(format!("[_get_single_letter] Unsupported unit: {}", unit)));
             }
         }
         Ok(())
@@ -5634,8 +5651,8 @@ impl Value {
             }
             "Wb" => {
                 self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(m));
-                self.exp[MAGNETRIC_FLUX_INDEX] = exp;
-                self.unit_map |= MAGNETRIC_FLUX_MAP;
+                self.exp[MAGNETIC_FLUX_INDEX] = exp;
+                self.unit_map |= MAGNETIC_FLUX_MAP;
             }
             "lm" => {
                 self.v_luminous_flux = Some(UnitLuminousFlux::Lumen(m));
@@ -5687,9 +5704,12 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
+                    return Err(V3Error::UnsupportedUnit(format!("[_get_double_letter] Unsupported unit: {}", unit)));
                 }
-                match self._get_metric(&unit.chars().next().unwrap()) {
+                match self._get_metric(match &unit.chars().next() {
+                    Some(t) => t,
+                    None => return Err(V3Error::ParsingError("[_get_double_letter] Cannot get next metric char"))
+                }) {
                     Ok(new_m) => self._get_single_letter(&unit[1..], exp, new_m)?,
                     Err(e) => {
                         return Err(e);
@@ -5740,9 +5760,12 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
+                    return Err(V3Error::UnsupportedUnit(format!("[_get_triple_letter] Unsupported unit: {}", unit)));
                 }
-                match self._get_metric(&unit.chars().next().unwrap()) {
+                match self._get_metric(match &unit.chars().next() {
+                    Some(t) => t,
+                    None => return Err(V3Error::ParsingError("[_get_triple_letter] Cannot get next metric char"))
+                }) {
                     Ok(new_m) => self._get_double_letter(&unit[1..], exp, new_m)?,
                     Err(e) => {
                         return Err(e);
@@ -5772,9 +5795,12 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
+                    return Err(V3Error::UnsupportedUnit(format!("[_get_quadrouple_letter] Unsupported unit: {}", unit)));
                 }
-                match self._get_metric(&unit.chars().next().unwrap()) {
+                match self._get_metric(match &unit.chars().next() {
+                    Some(t) => t,
+                    None => return Err(V3Error::ParsingError("[_get_quadrouple_letter] Cannot get next metric char"))
+                }) {
                     Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m)?,
                     Err(e) => {
                         return Err(e);
@@ -5792,9 +5818,12 @@ impl Value {
         }
 
         if m != Metric::None {
-            return Err(V3Error::UnsupportedUnit(format!("Unsupported unit: {}", unit)));
+            return Err(V3Error::UnsupportedUnit(format!("[_get_pentuple_letter] Unsupported unit: {}", unit)));
         }
-        match self._get_metric(&unit.chars().next().unwrap()) {
+        match self._get_metric(match &unit.chars().next() {
+            Some(t) => t,
+            None => return Err(V3Error::ParsingError("[_get_pentuple_letter] Cannot get next metric char"))
+        }) {
             Ok(new_m) => self._get_quadrouple_letter(&unit[1..], exp, new_m),
             Err(e) => {
                 Err(e)
@@ -5816,7 +5845,7 @@ impl Value {
             'd' => Ok(Metric::Deci),
             'c' => Ok(Metric::Centi),
             'm' => Ok(Metric::Milli),
-            'u' | 'μ' => Ok(Metric::Milli),
+            'u' | 'μ' => Ok(Metric::Micro),
             'n' => Ok(Metric::Nano),
             'p' => Ok(Metric::Pico),
             'f' => Ok(Metric::Femto),
@@ -5824,7 +5853,7 @@ impl Value {
             'z' => Ok(Metric::Zepto),
             'y' => Ok(Metric::Yocto),
             _ => {
-                Err(V3Error::UnsupportedMetric(format!("Unsupported metric: {}", unit)))
+                Err(V3Error::UnsupportedMetric(format!("[_get_metric] Unsupported metric: {}", unit)))
             }
         }
     }
@@ -5919,12 +5948,12 @@ impl Value {
                             return false;
                         }
                     }
-                    MAGNETRIC_FLUX_MAP => {
+                    MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux.unwrap() != other.v_magnetic_flux.unwrap() {
                             return false;
                         }
                     }
-                    MAGNETRIC_FLUX_DENSITY_MAP => {
+                    MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density.unwrap() != other.v_magnetic_flux_density.unwrap() {
                             return false;
                         }
@@ -6034,7 +6063,6 @@ impl Value {
     }
 }
 
-// For assigning values
 impl BitAnd<UnitLength> for f64 {
     type Output = Value;
     fn bitand(self, other:UnitLength) -> Self::Output {
@@ -6047,7 +6075,6 @@ impl BitAnd<UnitLength> for f64 {
     }
 }
 
-// For assignin new units
 impl BitOr<UnitLength> for Value {
     type Output = Value;
     fn bitor(self, other:UnitLength) -> Self::Output {
@@ -6061,15 +6088,20 @@ impl BitOr<UnitLength> for Value {
             new.v_length = None;
             new.unit_map ^= LENGTH_MAP;
         } else {
+            if self.v_length != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_length.unwrap());
+            }
             new.exp[LENGTH_INDEX] += 1;
         }
         new
     }
 }
 
-// For removing units from a value
 impl BitXorAssign<UnitLength> for Value {
     fn bitxor_assign(&mut self, other:UnitLength) {
+        if self.v_length != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
         if self.exp[LENGTH_INDEX] == 0 {
             self.v_length = Some(other);
             self.unit_map |= LENGTH_MAP;
@@ -6084,6 +6116,1596 @@ impl BitXorAssign<UnitLength> for Value {
     }
 }
 
+impl BitAnd<UnitTime> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitTime) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_time = Some(other);
+        new.unit_map = TIME_MAP;
+        new.exp[TIME_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitTime> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitTime) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[TIME_INDEX] == 0 {
+            new.v_time = Some(other);
+            new.exp[TIME_INDEX] = 1;
+            new.unit_map |= TIME_MAP;
+        } else if self.exp[TIME_INDEX] == -1 {
+            new.exp[TIME_INDEX] = 0;
+            new.v_time = None;
+            new.unit_map ^= TIME_MAP;
+        } else {
+            if self.v_time != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_time.unwrap());
+            }
+            new.exp[TIME_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitTime> for Value {
+    fn bitxor_assign(&mut self, other:UnitTime) {
+        if self.v_time != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[TIME_INDEX] == 0 {
+            self.v_time = Some(other);
+            self.unit_map |= TIME_MAP;
+            self.exp[TIME_INDEX] = -1;
+        } else if self.exp[TIME_INDEX] == 1 {
+            self.exp[TIME_INDEX] = 0;
+            self.v_time = None;
+            self.unit_map ^= TIME_MAP;
+        } else {
+            self.exp[TIME_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitAbsorbedDose> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitAbsorbedDose) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_ab_dose = Some(other);
+        new.unit_map = ABSORBED_DOSE_MAP;
+        new.exp[ABSORBED_DOSE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitAbsorbedDose> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitAbsorbedDose) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ABSORBED_DOSE_INDEX] == 0 {
+            new.v_ab_dose = Some(other);
+            new.exp[ABSORBED_DOSE_INDEX] = 1;
+            new.unit_map |= ABSORBED_DOSE_MAP;
+        } else if self.exp[ABSORBED_DOSE_INDEX] == -1 {
+            new.exp[ABSORBED_DOSE_INDEX] = 0;
+            new.v_ab_dose = None;
+            new.unit_map ^= ABSORBED_DOSE_MAP;
+        } else {
+            if self.v_ab_dose != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_ab_dose.unwrap());
+            }
+            new.exp[ABSORBED_DOSE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitAbsorbedDose> for Value {
+    fn bitxor_assign(&mut self, other:UnitAbsorbedDose) {
+        if self.v_ab_dose != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ABSORBED_DOSE_INDEX] == 0 {
+            self.v_ab_dose = Some(other);
+            self.unit_map |= ABSORBED_DOSE_MAP;
+            self.exp[ABSORBED_DOSE_INDEX] = -1;
+        } else if self.exp[ABSORBED_DOSE_INDEX] == 1 {
+            self.exp[ABSORBED_DOSE_INDEX] = 0;
+            self.v_ab_dose = None;
+            self.unit_map ^= ABSORBED_DOSE_MAP;
+        } else {
+            self.exp[ABSORBED_DOSE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitAngle> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitAngle) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_angle = Some(other);
+        new.unit_map = ANGLE_MAP;
+        new.exp[ANGLE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitAngle> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitAngle) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ANGLE_INDEX] == 0 {
+            new.v_angle = Some(other);
+            new.exp[ANGLE_INDEX] = 1;
+            new.unit_map |= ANGLE_MAP;
+        } else if self.exp[ANGLE_INDEX] == -1 {
+            new.exp[ANGLE_INDEX] = 0;
+            new.v_angle = None;
+            new.unit_map ^= ANGLE_MAP;
+        } else {
+            if self.v_angle != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_angle.unwrap());
+            }
+            new.exp[ANGLE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitAngle> for Value {
+    fn bitxor_assign(&mut self, other:UnitAngle) {
+        if self.v_angle != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ANGLE_INDEX] == 0 {
+            self.v_angle = Some(other);
+            self.unit_map |= ANGLE_MAP;
+            self.exp[ANGLE_INDEX] = -1;
+        } else if self.exp[ANGLE_INDEX] == 1 {
+            self.exp[ANGLE_INDEX] = 0;
+            self.v_angle = None;
+            self.unit_map ^= ANGLE_MAP;
+        } else {
+            self.exp[ANGLE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitCapacitance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitCapacitance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_capacitance = Some(other);
+        new.unit_map = CAPACITANCE_MAP;
+        new.exp[CAPACITANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitCapacitance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitCapacitance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[CAPACITANCE_INDEX] == 0 {
+            new.v_capacitance = Some(other);
+            new.exp[CAPACITANCE_INDEX] = 1;
+            new.unit_map |= CAPACITANCE_MAP;
+        } else if self.exp[CAPACITANCE_INDEX] == -1 {
+            new.exp[CAPACITANCE_INDEX] = 0;
+            new.v_capacitance = None;
+            new.unit_map ^= CAPACITANCE_MAP;
+        } else {
+            if self.v_capacitance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_capacitance.unwrap());
+            }
+            new.exp[CAPACITANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitCapacitance> for Value {
+    fn bitxor_assign(&mut self, other:UnitCapacitance) {
+        if self.v_capacitance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[CAPACITANCE_INDEX] == 0 {
+            self.v_capacitance = Some(other);
+            self.unit_map |= CAPACITANCE_MAP;
+            self.exp[CAPACITANCE_INDEX] = -1;
+        } else if self.exp[CAPACITANCE_INDEX] == 1 {
+            self.exp[CAPACITANCE_INDEX] = 0;
+            self.v_capacitance = None;
+            self.unit_map ^= CAPACITANCE_MAP;
+        } else {
+            self.exp[CAPACITANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitCatalyticActivity> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitCatalyticActivity) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_catalytic = Some(other);
+        new.unit_map = CATALYTIC_ACTIVITY_MAP;
+        new.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitCatalyticActivity> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitCatalyticActivity) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
+            new.v_catalytic = Some(other);
+            new.exp[CATALYTIC_ACTIVITY_INDEX] = 1;
+            new.unit_map |= CATALYTIC_ACTIVITY_MAP;
+        } else if self.exp[CATALYTIC_ACTIVITY_INDEX] == -1 {
+            new.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
+            new.v_catalytic = None;
+            new.unit_map ^= CATALYTIC_ACTIVITY_MAP;
+        } else {
+            if self.v_catalytic != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_catalytic.unwrap());
+            }
+            new.exp[CATALYTIC_ACTIVITY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitCatalyticActivity> for Value {
+    fn bitxor_assign(&mut self, other:UnitCatalyticActivity) {
+        if self.v_catalytic != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
+            self.v_catalytic = Some(other);
+            self.unit_map |= CATALYTIC_ACTIVITY_MAP;
+            self.exp[CATALYTIC_ACTIVITY_INDEX] = -1;
+        } else if self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
+            self.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
+            self.v_catalytic = None;
+            self.unit_map ^= CATALYTIC_ACTIVITY_MAP;
+        } else {
+            self.exp[CATALYTIC_ACTIVITY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitElectricCharge> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitElectricCharge) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_electric_charge = Some(other);
+        new.unit_map = ELECTRIC_CHARGE_MAP;
+        new.exp[ELECTRIC_CHARGE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitElectricCharge> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitElectricCharge) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
+            new.v_electric_charge = Some(other);
+            new.exp[ELECTRIC_CHARGE_INDEX] = 1;
+            new.unit_map |= ELECTRIC_CHARGE_MAP;
+        } else if self.exp[ELECTRIC_CHARGE_INDEX] == -1 {
+            new.exp[ELECTRIC_CHARGE_INDEX] = 0;
+            new.v_electric_charge = None;
+            new.unit_map ^= ELECTRIC_CHARGE_MAP;
+        } else {
+            if self.v_electric_charge != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_charge.unwrap());
+            }
+            new.exp[ELECTRIC_CHARGE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitElectricCharge> for Value {
+    fn bitxor_assign(&mut self, other:UnitElectricCharge) {
+        if self.v_electric_charge != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
+            self.v_electric_charge = Some(other);
+            self.unit_map |= ELECTRIC_CHARGE_MAP;
+            self.exp[ELECTRIC_CHARGE_INDEX] = -1;
+        } else if self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+            self.exp[ELECTRIC_CHARGE_INDEX] = 0;
+            self.v_electric_charge = None;
+            self.unit_map ^= ELECTRIC_CHARGE_MAP;
+        } else {
+            self.exp[ELECTRIC_CHARGE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitElectricConductance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitElectricConductance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_electric_conductance = Some(other);
+        new.unit_map = ELECTRIC_CONDUCTANCE_MAP;
+        new.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitElectricConductance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitElectricConductance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
+            new.v_electric_conductance = Some(other);
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] = 1;
+            new.unit_map |= ELECTRIC_CONDUCTANCE_MAP;
+        } else if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1 {
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+            new.v_electric_conductance = None;
+            new.unit_map ^= ELECTRIC_CONDUCTANCE_MAP;
+        } else {
+            if self.v_electric_conductance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_conductance.unwrap());
+            }
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitElectricConductance> for Value {
+    fn bitxor_assign(&mut self, other:UnitElectricConductance) {
+        if self.v_electric_conductance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
+            self.v_electric_conductance = Some(other);
+            self.unit_map |= ELECTRIC_CONDUCTANCE_MAP;
+            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = -1;
+        } else if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
+            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+            self.v_electric_conductance = None;
+            self.unit_map ^= ELECTRIC_CONDUCTANCE_MAP;
+        } else {
+            self.exp[ELECTRIC_CONDUCTANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitElectricCurrent> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitElectricCurrent) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_electric_current = Some(other);
+        new.unit_map = ELECTRIC_CURRENT_MAP;
+        new.exp[ELECTRIC_CURRENT_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitElectricCurrent> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitElectricCurrent) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
+            new.v_electric_current = Some(other);
+            new.exp[ELECTRIC_CURRENT_INDEX] = 1;
+            new.unit_map |= ELECTRIC_CURRENT_MAP;
+        } else if self.exp[ELECTRIC_CURRENT_INDEX] == -1 {
+            new.exp[ELECTRIC_CURRENT_INDEX] = 0;
+            new.v_electric_current = None;
+            new.unit_map ^= ELECTRIC_CURRENT_MAP;
+        } else {
+            if self.v_electric_current != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_current.unwrap());
+            }
+            new.exp[ELECTRIC_CURRENT_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitElectricCurrent> for Value {
+    fn bitxor_assign(&mut self, other:UnitElectricCurrent) {
+        if self.v_electric_current != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
+            self.v_electric_current = Some(other);
+            self.unit_map |= ELECTRIC_CURRENT_MAP;
+            self.exp[ELECTRIC_CURRENT_INDEX] = -1;
+        } else if self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            self.exp[ELECTRIC_CURRENT_INDEX] = 0;
+            self.v_electric_current = None;
+            self.unit_map ^= ELECTRIC_CURRENT_MAP;
+        } else {
+            self.exp[ELECTRIC_CURRENT_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitElectricPotential> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitElectricPotential) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_electric_potential = Some(other);
+        new.unit_map = ELECTRIC_POTENTIAL_MAP;
+        new.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitElectricPotential> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitElectricPotential) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
+            new.v_electric_potential = Some(other);
+            new.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
+            new.unit_map |= ELECTRIC_POTENTIAL_MAP;
+        } else if self.exp[ELECTRIC_POTENTIAL_INDEX] == -1 {
+            new.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+            new.v_electric_potential = None;
+            new.unit_map ^= ELECTRIC_POTENTIAL_MAP;
+        } else {
+            if self.v_electric_potential != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_potential.unwrap());
+            }
+            new.exp[ELECTRIC_POTENTIAL_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitElectricPotential> for Value {
+    fn bitxor_assign(&mut self, other:UnitElectricPotential) {
+        if self.v_electric_potential != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
+            self.v_electric_potential = Some(other);
+            self.unit_map |= ELECTRIC_POTENTIAL_MAP;
+            self.exp[ELECTRIC_POTENTIAL_INDEX] = -1;
+        } else if self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+            self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+            self.v_electric_potential = None;
+            self.unit_map ^= ELECTRIC_POTENTIAL_MAP;
+        } else {
+            self.exp[ELECTRIC_POTENTIAL_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitEnergy> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitEnergy) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_energy = Some(other);
+        new.unit_map = ENERGY_MAP;
+        new.exp[ENERGY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitEnergy> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitEnergy) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ENERGY_INDEX] == 0 {
+            new.v_energy = Some(other);
+            new.exp[ENERGY_INDEX] = 1;
+            new.unit_map |= ENERGY_MAP;
+        } else if self.exp[ENERGY_INDEX] == -1 {
+            new.exp[ENERGY_INDEX] = 0;
+            new.v_energy = None;
+            new.unit_map ^= ENERGY_MAP;
+        } else {
+            if self.v_energy != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_energy.unwrap());
+            }
+            new.exp[ENERGY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitEnergy> for Value {
+    fn bitxor_assign(&mut self, other:UnitEnergy) {
+        if self.v_energy != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ENERGY_INDEX] == 0 {
+            self.v_energy = Some(other);
+            self.unit_map |= ENERGY_MAP;
+            self.exp[ENERGY_INDEX] = -1;
+        } else if self.exp[ENERGY_INDEX] == 1 {
+            self.exp[ENERGY_INDEX] = 0;
+            self.v_energy = None;
+            self.unit_map ^= ENERGY_MAP;
+        } else {
+            self.exp[ENERGY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitForce> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitForce) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_force = Some(other);
+        new.unit_map = FORCE_MAP;
+        new.exp[FORCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitForce> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitForce) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[FORCE_INDEX] == 0 {
+            new.v_force = Some(other);
+            new.exp[FORCE_INDEX] = 1;
+            new.unit_map |= FORCE_MAP;
+        } else if self.exp[FORCE_INDEX] == -1 {
+            new.exp[FORCE_INDEX] = 0;
+            new.v_force = None;
+            new.unit_map ^= FORCE_MAP;
+        } else {
+            if self.v_force != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_force.unwrap());
+            }
+            new.exp[FORCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitForce> for Value {
+    fn bitxor_assign(&mut self, other:UnitForce) {
+        if self.v_force != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[FORCE_INDEX] == 0 {
+            self.v_force = Some(other);
+            self.unit_map |= FORCE_MAP;
+            self.exp[FORCE_INDEX] = -1;
+        } else if self.exp[FORCE_INDEX] == 1 {
+            self.exp[FORCE_INDEX] = 0;
+            self.v_force = None;
+            self.unit_map ^= FORCE_MAP;
+        } else {
+            self.exp[FORCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitFrequency> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitFrequency) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_frequency = Some(other);
+        new.unit_map = FREQUENCY_MAP;
+        new.exp[FREQUENCY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitFrequency> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitFrequency) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[FREQUENCY_INDEX] == 0 {
+            new.v_frequency = Some(other);
+            new.exp[FREQUENCY_INDEX] = 1;
+            new.unit_map |= FREQUENCY_MAP;
+        } else if self.exp[FREQUENCY_INDEX] == -1 {
+            new.exp[FREQUENCY_INDEX] = 0;
+            new.v_frequency = None;
+            new.unit_map ^= FREQUENCY_MAP;
+        } else {
+            if self.v_frequency != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_frequency.unwrap());
+            }
+            new.exp[FREQUENCY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitFrequency> for Value {
+    fn bitxor_assign(&mut self, other:UnitFrequency) {
+        if self.v_frequency != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[FREQUENCY_INDEX] == 0 {
+            self.v_frequency = Some(other);
+            self.unit_map |= FREQUENCY_MAP;
+            self.exp[FREQUENCY_INDEX] = -1;
+        } else if self.exp[FREQUENCY_INDEX] == 1 {
+            self.exp[FREQUENCY_INDEX] = 0;
+            self.v_frequency = None;
+            self.unit_map ^= FREQUENCY_MAP;
+        } else {
+            self.exp[FREQUENCY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitIlluminance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitIlluminance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_illuminance = Some(other);
+        new.unit_map = ILLUMINANCE_MAP;
+        new.exp[ILLUMINANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitIlluminance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitIlluminance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[ILLUMINANCE_INDEX] == 0 {
+            new.v_illuminance = Some(other);
+            new.exp[ILLUMINANCE_INDEX] = 1;
+            new.unit_map |= ILLUMINANCE_MAP;
+        } else if self.exp[ILLUMINANCE_INDEX] == -1 {
+            new.exp[ILLUMINANCE_INDEX] = 0;
+            new.v_illuminance = None;
+            new.unit_map ^= ILLUMINANCE_MAP;
+        } else {
+            if self.v_illuminance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_illuminance.unwrap());
+            }
+            new.exp[ILLUMINANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitIlluminance> for Value {
+    fn bitxor_assign(&mut self, other:UnitIlluminance) {
+        if self.v_illuminance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[ILLUMINANCE_INDEX] == 0 {
+            self.v_illuminance = Some(other);
+            self.unit_map |= ILLUMINANCE_MAP;
+            self.exp[ILLUMINANCE_INDEX] = -1;
+        } else if self.exp[ILLUMINANCE_INDEX] == 1 {
+            self.exp[ILLUMINANCE_INDEX] = 0;
+            self.v_illuminance = None;
+            self.unit_map ^= ILLUMINANCE_MAP;
+        } else {
+            self.exp[ILLUMINANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitVolume> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitVolume) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_volume = Some(other);
+        new.unit_map = VOLUME_MAP;
+        new.exp[VOLUME_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitVolume> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitVolume) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[VOLUME_INDEX] == 0 {
+            new.v_volume = Some(other);
+            new.exp[VOLUME_INDEX] = 1;
+            new.unit_map |= VOLUME_MAP;
+        } else if self.exp[VOLUME_INDEX] == -1 {
+            new.exp[VOLUME_INDEX] = 0;
+            new.v_volume = None;
+            new.unit_map ^= VOLUME_MAP;
+        } else {
+            if self.v_volume != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_volume.unwrap());
+            }
+            new.exp[VOLUME_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitVolume> for Value {
+    fn bitxor_assign(&mut self, other:UnitVolume) {
+        if self.v_volume != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[VOLUME_INDEX] == 0 {
+            self.v_volume = Some(other);
+            self.unit_map |= VOLUME_MAP;
+            self.exp[VOLUME_INDEX] = -1;
+        } else if self.exp[VOLUME_INDEX] == 1 {
+            self.exp[VOLUME_INDEX] = 0;
+            self.v_volume = None;
+            self.unit_map ^= VOLUME_MAP;
+        } else {
+            self.exp[VOLUME_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitTemperature> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitTemperature) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_temperature = Some(other);
+        new.unit_map = TEMPERATURE_MAP;
+        new.exp[TEMPERATURE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitTemperature> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitTemperature) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[TEMPERATURE_INDEX] == 0 {
+            new.v_temperature = Some(other);
+            new.exp[TEMPERATURE_INDEX] = 1;
+            new.unit_map |= TEMPERATURE_MAP;
+        } else if self.exp[TEMPERATURE_INDEX] == -1 {
+            new.exp[TEMPERATURE_INDEX] = 0;
+            new.v_temperature = None;
+            new.unit_map ^= TEMPERATURE_MAP;
+        } else {
+            if self.v_temperature != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_temperature.unwrap());
+            }
+            new.exp[TEMPERATURE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitTemperature> for Value {
+    fn bitxor_assign(&mut self, other:UnitTemperature) {
+        if self.v_temperature != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[TEMPERATURE_INDEX] == 0 {
+            self.v_temperature = Some(other);
+            self.unit_map |= TEMPERATURE_MAP;
+            self.exp[TEMPERATURE_INDEX] = -1;
+        } else if self.exp[TEMPERATURE_INDEX] == 1 {
+            self.exp[TEMPERATURE_INDEX] = 0;
+            self.v_temperature = None;
+            self.unit_map ^= TEMPERATURE_MAP;
+        } else {
+            self.exp[TEMPERATURE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitSubstance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitSubstance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_substance = Some(other);
+        new.unit_map = SUBSTANCE_MAP;
+        new.exp[SUBSTANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitSubstance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitSubstance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[SUBSTANCE_INDEX] == 0 {
+            new.v_substance = Some(other);
+            new.exp[SUBSTANCE_INDEX] = 1;
+            new.unit_map |= SUBSTANCE_MAP;
+        } else if self.exp[SUBSTANCE_INDEX] == -1 {
+            new.exp[SUBSTANCE_INDEX] = 0;
+            new.v_substance = None;
+            new.unit_map ^= SUBSTANCE_MAP;
+        } else {
+            if self.v_substance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_substance.unwrap());
+            }
+            new.exp[SUBSTANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitSubstance> for Value {
+    fn bitxor_assign(&mut self, other:UnitSubstance) {
+        if self.v_substance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[SUBSTANCE_INDEX] == 0 {
+            self.v_substance = Some(other);
+            self.unit_map |= SUBSTANCE_MAP;
+            self.exp[SUBSTANCE_INDEX] = -1;
+        } else if self.exp[SUBSTANCE_INDEX] == 1 {
+            self.exp[SUBSTANCE_INDEX] = 0;
+            self.v_substance = None;
+            self.unit_map ^= SUBSTANCE_MAP;
+        } else {
+            self.exp[SUBSTANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitSound> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitSound) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_sound = Some(other);
+        new.unit_map = SOUND_MAP;
+        new.exp[SOUND_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitSound> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitSound) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[SOUND_INDEX] == 0 {
+            new.v_sound = Some(other);
+            new.exp[SOUND_INDEX] = 1;
+            new.unit_map |= SOUND_MAP;
+        } else if self.exp[SOUND_INDEX] == -1 {
+            new.exp[SOUND_INDEX] = 0;
+            new.v_sound = None;
+            new.unit_map ^= SOUND_MAP;
+        } else {
+            if self.v_sound != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_sound.unwrap());
+            }
+            new.exp[SOUND_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitSound> for Value {
+    fn bitxor_assign(&mut self, other:UnitSound) {
+        if self.v_sound != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[SOUND_INDEX] == 0 {
+            self.v_sound = Some(other);
+            self.unit_map |= SOUND_MAP;
+            self.exp[SOUND_INDEX] = -1;
+        } else if self.exp[SOUND_INDEX] == 1 {
+            self.exp[SOUND_INDEX] = 0;
+            self.v_sound = None;
+            self.unit_map ^= SOUND_MAP;
+        } else {
+            self.exp[SOUND_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitSolidAngle> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitSolidAngle) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_solid_angle = Some(other);
+        new.unit_map = SOLID_ANGLE_MAP;
+        new.exp[SOLID_ANGLE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitSolidAngle> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitSolidAngle) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[SOLID_ANGLE_INDEX] == 0 {
+            new.v_solid_angle = Some(other);
+            new.exp[SOLID_ANGLE_INDEX] = 1;
+            new.unit_map |= SOLID_ANGLE_MAP;
+        } else if self.exp[SOLID_ANGLE_INDEX] == -1 {
+            new.exp[SOLID_ANGLE_INDEX] = 0;
+            new.v_solid_angle = None;
+            new.unit_map ^= SOLID_ANGLE_MAP;
+        } else {
+            if self.v_solid_angle != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_solid_angle.unwrap());
+            }
+            new.exp[SOLID_ANGLE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitSolidAngle> for Value {
+    fn bitxor_assign(&mut self, other:UnitSolidAngle) {
+        if self.v_solid_angle != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[SOLID_ANGLE_INDEX] == 0 {
+            self.v_solid_angle = Some(other);
+            self.unit_map |= SOLID_ANGLE_MAP;
+            self.exp[SOLID_ANGLE_INDEX] = -1;
+        } else if self.exp[SOLID_ANGLE_INDEX] == 1 {
+            self.exp[SOLID_ANGLE_INDEX] = 0;
+            self.v_solid_angle = None;
+            self.unit_map ^= SOLID_ANGLE_MAP;
+        } else {
+            self.exp[SOLID_ANGLE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitResistance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitResistance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_resistance = Some(other);
+        new.unit_map = RESISTANCE_MAP;
+        new.exp[RESISTANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitResistance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitResistance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[RESISTANCE_INDEX] == 0 {
+            new.v_resistance = Some(other);
+            new.exp[RESISTANCE_INDEX] = 1;
+            new.unit_map |= RESISTANCE_MAP;
+        } else if self.exp[RESISTANCE_INDEX] == -1 {
+            new.exp[RESISTANCE_INDEX] = 0;
+            new.v_resistance = None;
+            new.unit_map ^= RESISTANCE_MAP;
+        } else {
+            if self.v_resistance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_resistance.unwrap());
+            }
+            new.exp[RESISTANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitResistance> for Value {
+    fn bitxor_assign(&mut self, other:UnitResistance) {
+        if self.v_resistance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[RESISTANCE_INDEX] == 0 {
+            self.v_resistance = Some(other);
+            self.unit_map |= RESISTANCE_MAP;
+            self.exp[RESISTANCE_INDEX] = -1;
+        } else if self.exp[RESISTANCE_INDEX] == 1 {
+            self.exp[RESISTANCE_INDEX] = 0;
+            self.v_resistance = None;
+            self.unit_map ^= RESISTANCE_MAP;
+        } else {
+            self.exp[RESISTANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitRadioactivityExposure> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitRadioactivityExposure) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_radioactivity_exposure = Some(other);
+        new.unit_map = RADIOACTIVITY_EXPOSURE_MAP;
+        new.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitRadioactivityExposure> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitRadioactivityExposure) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
+            new.v_radioactivity_exposure = Some(other);
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 1;
+            new.unit_map |= RADIOACTIVITY_EXPOSURE_MAP;
+        } else if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == -1 {
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 0;
+            new.v_radioactivity_exposure = None;
+            new.unit_map ^= RADIOACTIVITY_EXPOSURE_MAP;
+        } else {
+            if self.v_radioactivity_exposure != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity_exposure.unwrap());
+            }
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitRadioactivityExposure> for Value {
+    fn bitxor_assign(&mut self, other:UnitRadioactivityExposure) {
+        if self.v_radioactivity_exposure != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
+            self.v_radioactivity_exposure = Some(other);
+            self.unit_map |= RADIOACTIVITY_EXPOSURE_MAP;
+            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] = -1;
+        } else if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 1 {
+            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 0;
+            self.v_radioactivity_exposure = None;
+            self.unit_map ^= RADIOACTIVITY_EXPOSURE_MAP;
+        } else {
+            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitRadioactivity> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitRadioactivity) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_radioactivity = Some(other);
+        new.unit_map = RADIOACTIVITY_MAP;
+        new.exp[RADIOACTIVITY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitRadioactivity> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitRadioactivity) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[RADIOACTIVITY_INDEX] == 0 {
+            new.v_radioactivity = Some(other);
+            new.exp[RADIOACTIVITY_INDEX] = 1;
+            new.unit_map |= RADIOACTIVITY_MAP;
+        } else if self.exp[RADIOACTIVITY_INDEX] == -1 {
+            new.exp[RADIOACTIVITY_INDEX] = 0;
+            new.v_radioactivity = None;
+            new.unit_map ^= RADIOACTIVITY_MAP;
+        } else {
+            if self.v_radioactivity != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity.unwrap());
+            }
+            new.exp[RADIOACTIVITY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitRadioactivity> for Value {
+    fn bitxor_assign(&mut self, other:UnitRadioactivity) {
+        if self.v_radioactivity != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[RADIOACTIVITY_INDEX] == 0 {
+            self.v_radioactivity = Some(other);
+            self.unit_map |= RADIOACTIVITY_MAP;
+            self.exp[RADIOACTIVITY_INDEX] = -1;
+        } else if self.exp[RADIOACTIVITY_INDEX] == 1 {
+            self.exp[RADIOACTIVITY_INDEX] = 0;
+            self.v_radioactivity = None;
+            self.unit_map ^= RADIOACTIVITY_MAP;
+        } else {
+            self.exp[RADIOACTIVITY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitPressure> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitPressure) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_pressure = Some(other);
+        new.unit_map = PRESSURE_MAP;
+        new.exp[PRESSURE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitPressure> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitPressure) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[PRESSURE_INDEX] == 0 {
+            new.v_pressure = Some(other);
+            new.exp[PRESSURE_INDEX] = 1;
+            new.unit_map |= PRESSURE_MAP;
+        } else if self.exp[PRESSURE_INDEX] == -1 {
+            new.exp[PRESSURE_INDEX] = 0;
+            new.v_pressure = None;
+            new.unit_map ^= PRESSURE_MAP;
+        } else {
+            if self.v_pressure != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_pressure.unwrap());
+            }
+            new.exp[PRESSURE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitPressure> for Value {
+    fn bitxor_assign(&mut self, other:UnitPressure) {
+        if self.v_pressure != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[PRESSURE_INDEX] == 0 {
+            self.v_pressure = Some(other);
+            self.unit_map |= PRESSURE_MAP;
+            self.exp[PRESSURE_INDEX] = -1;
+        } else if self.exp[PRESSURE_INDEX] == 1 {
+            self.exp[PRESSURE_INDEX] = 0;
+            self.v_pressure = None;
+            self.unit_map ^= PRESSURE_MAP;
+        } else {
+            self.exp[PRESSURE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitPower> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitPower) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_power = Some(other);
+        new.unit_map = POWER_MAP;
+        new.exp[POWER_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitPower> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitPower) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[POWER_INDEX] == 0 {
+            new.v_power = Some(other);
+            new.exp[POWER_INDEX] = 1;
+            new.unit_map |= POWER_MAP;
+        } else if self.exp[POWER_INDEX] == -1 {
+            new.exp[POWER_INDEX] = 0;
+            new.v_power = None;
+            new.unit_map ^= POWER_MAP;
+        } else {
+            if self.v_power != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_power.unwrap());
+            }
+            new.exp[POWER_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitPower> for Value {
+    fn bitxor_assign(&mut self, other:UnitPower) {
+        if self.v_power != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[POWER_INDEX] == 0 {
+            self.v_power = Some(other);
+            self.unit_map |= POWER_MAP;
+            self.exp[POWER_INDEX] = -1;
+        } else if self.exp[POWER_INDEX] == 1 {
+            self.exp[POWER_INDEX] = 0;
+            self.v_power = None;
+            self.unit_map ^= POWER_MAP;
+        } else {
+            self.exp[POWER_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitInductance> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitInductance) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_inductance = Some(other);
+        new.unit_map = INDUCTANCE_MAP;
+        new.exp[INDUCTANCE_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitInductance> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitInductance) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[INDUCTANCE_INDEX] == 0 {
+            new.v_inductance = Some(other);
+            new.exp[INDUCTANCE_INDEX] = 1;
+            new.unit_map |= INDUCTANCE_MAP;
+        } else if self.exp[INDUCTANCE_INDEX] == -1 {
+            new.exp[INDUCTANCE_INDEX] = 0;
+            new.v_inductance = None;
+            new.unit_map ^= INDUCTANCE_MAP;
+        } else {
+            if self.v_inductance != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_inductance.unwrap());
+            }
+            new.exp[INDUCTANCE_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitInductance> for Value {
+    fn bitxor_assign(&mut self, other:UnitInductance) {
+        if self.v_inductance != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[INDUCTANCE_INDEX] == 0 {
+            self.v_inductance = Some(other);
+            self.unit_map |= INDUCTANCE_MAP;
+            self.exp[INDUCTANCE_INDEX] = -1;
+        } else if self.exp[INDUCTANCE_INDEX] == 1 {
+            self.exp[INDUCTANCE_INDEX] = 0;
+            self.v_inductance = None;
+            self.unit_map ^= INDUCTANCE_MAP;
+        } else {
+            self.exp[INDUCTANCE_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitInformation> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitInformation) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_information = Some(other);
+        new.unit_map = INFORMATION_MAP;
+        new.exp[INFORMATION_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitInformation> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitInformation) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[INFORMATION_INDEX] == 0 {
+            new.v_information = Some(other);
+            new.exp[INFORMATION_INDEX] = 1;
+            new.unit_map |= INFORMATION_MAP;
+        } else if self.exp[INFORMATION_INDEX] == -1 {
+            new.exp[INFORMATION_INDEX] = 0;
+            new.v_information = None;
+            new.unit_map ^= INFORMATION_MAP;
+        } else {
+            if self.v_information != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_information.unwrap());
+            }
+            new.exp[INFORMATION_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitInformation> for Value {
+    fn bitxor_assign(&mut self, other:UnitInformation) {
+        if self.v_information != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[INFORMATION_INDEX] == 0 {
+            self.v_information = Some(other);
+            self.unit_map |= INFORMATION_MAP;
+            self.exp[INFORMATION_INDEX] = -1;
+        } else if self.exp[INFORMATION_INDEX] == 1 {
+            self.exp[INFORMATION_INDEX] = 0;
+            self.v_information = None;
+            self.unit_map ^= INFORMATION_MAP;
+        } else {
+            self.exp[INFORMATION_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitLuminousFlux> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitLuminousFlux) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_luminous_flux = Some(other);
+        new.unit_map = LUMINOUS_FLUX_MAP;
+        new.exp[LUMINOUS_FLUX_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitLuminousFlux> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitLuminousFlux) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[LUMINOUS_FLUX_INDEX] == 0 {
+            new.v_luminous_flux = Some(other);
+            new.exp[LUMINOUS_FLUX_INDEX] = 1;
+            new.unit_map |= LUMINOUS_FLUX_MAP;
+        } else if self.exp[LUMINOUS_FLUX_INDEX] == -1 {
+            new.exp[LUMINOUS_FLUX_INDEX] = 0;
+            new.v_luminous_flux = None;
+            new.unit_map ^= LUMINOUS_FLUX_MAP;
+        } else {
+            if self.v_luminous_flux != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux.unwrap());
+            }
+            new.exp[LUMINOUS_FLUX_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitLuminousFlux> for Value {
+    fn bitxor_assign(&mut self, other:UnitLuminousFlux) {
+        if self.v_luminous_flux != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[LUMINOUS_FLUX_INDEX] == 0 {
+            self.v_luminous_flux = Some(other);
+            self.unit_map |= LUMINOUS_FLUX_MAP;
+            self.exp[LUMINOUS_FLUX_INDEX] = -1;
+        } else if self.exp[LUMINOUS_FLUX_INDEX] == 1 {
+            self.exp[LUMINOUS_FLUX_INDEX] = 0;
+            self.v_luminous_flux = None;
+            self.unit_map ^= LUMINOUS_FLUX_MAP;
+        } else {
+            self.exp[LUMINOUS_FLUX_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitLuminousIntensity> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitLuminousIntensity) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_luminous_flux_intensity = Some(other);
+        new.unit_map = LUMINOUS_INTENSITY_MAP;
+        new.exp[LUMINOUS_INTENSITY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitLuminousIntensity> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitLuminousIntensity) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
+            new.v_luminous_flux_intensity = Some(other);
+            new.exp[LUMINOUS_INTENSITY_INDEX] = 1;
+            new.unit_map |= LUMINOUS_INTENSITY_MAP;
+        } else if self.exp[LUMINOUS_INTENSITY_INDEX] == -1 {
+            new.exp[LUMINOUS_INTENSITY_INDEX] = 0;
+            new.v_luminous_flux_intensity = None;
+            new.unit_map ^= LUMINOUS_INTENSITY_MAP;
+        } else {
+            if self.v_luminous_flux_intensity != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux_intensity.unwrap());
+            }
+            new.exp[LUMINOUS_INTENSITY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitLuminousIntensity> for Value {
+    fn bitxor_assign(&mut self, other:UnitLuminousIntensity) {
+        if self.v_luminous_flux_intensity != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
+            self.v_luminous_flux_intensity = Some(other);
+            self.unit_map |= LUMINOUS_INTENSITY_MAP;
+            self.exp[LUMINOUS_INTENSITY_INDEX] = -1;
+        } else if self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
+            self.exp[LUMINOUS_INTENSITY_INDEX] = 0;
+            self.v_luminous_flux_intensity = None;
+            self.unit_map ^= LUMINOUS_INTENSITY_MAP;
+        } else {
+            self.exp[LUMINOUS_INTENSITY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitMagneticFlux> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitMagneticFlux) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_magnetic_flux = Some(other);
+        new.unit_map = MAGNETIC_FLUX_MAP;
+        new.exp[MAGNETIC_FLUX_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitMagneticFlux> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitMagneticFlux) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[MAGNETIC_FLUX_INDEX] == 0 {
+            new.v_magnetic_flux = Some(other);
+            new.exp[MAGNETIC_FLUX_INDEX] = 1;
+            new.unit_map |= MAGNETIC_FLUX_MAP;
+        } else if self.exp[MAGNETIC_FLUX_INDEX] == -1 {
+            new.exp[MAGNETIC_FLUX_INDEX] = 0;
+            new.v_magnetic_flux = None;
+            new.unit_map ^= MAGNETIC_FLUX_MAP;
+        } else {
+            if self.v_magnetic_flux != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux.unwrap());
+            }
+            new.exp[MAGNETIC_FLUX_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitMagneticFlux> for Value {
+    fn bitxor_assign(&mut self, other:UnitMagneticFlux) {
+        if self.v_magnetic_flux != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[MAGNETIC_FLUX_INDEX] == 0 {
+            self.v_magnetic_flux = Some(other);
+            self.unit_map |= MAGNETIC_FLUX_MAP;
+            self.exp[MAGNETIC_FLUX_INDEX] = -1;
+        } else if self.exp[MAGNETIC_FLUX_INDEX] == 1 {
+            self.exp[MAGNETIC_FLUX_INDEX] = 0;
+            self.v_magnetic_flux = None;
+            self.unit_map ^= MAGNETIC_FLUX_MAP;
+        } else {
+            self.exp[MAGNETIC_FLUX_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitMagneticFluxDensity> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitMagneticFluxDensity) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_magnetic_flux_density = Some(other);
+        new.unit_map = MAGNETIC_FLUX_DENSITY_MAP;
+        new.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitMagneticFluxDensity> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitMagneticFluxDensity) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
+            new.v_magnetic_flux_density = Some(other);
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 1;
+            new.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
+        } else if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == -1 {
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
+            new.v_magnetic_flux_density = None;
+            new.unit_map ^= MAGNETIC_FLUX_DENSITY_MAP;
+        } else {
+            if self.v_magnetic_flux_density != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux_density.unwrap());
+            }
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitMagneticFluxDensity> for Value {
+    fn bitxor_assign(&mut self, other:UnitMagneticFluxDensity) {
+        if self.v_magnetic_flux_density != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
+            self.v_magnetic_flux_density = Some(other);
+            self.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
+            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = -1;
+        } else if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1 {
+            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
+            self.v_magnetic_flux_density = None;
+            self.unit_map ^= MAGNETIC_FLUX_DENSITY_MAP;
+        } else {
+            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] -= 1;
+        }
+    }
+}
+
+impl BitAnd<UnitMass> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitMass) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_mass = Some(other);
+        new.unit_map = MASS_MAP;
+        new.exp[MASS_INDEX] = 1;
+        new
+    }
+}
+
+impl BitOr<UnitMass> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitMass) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[MASS_INDEX] == 0 {
+            new.v_mass = Some(other);
+            new.exp[MASS_INDEX] = 1;
+            new.unit_map |= MASS_MAP;
+        } else if self.exp[MASS_INDEX] == -1 {
+            new.exp[MASS_INDEX] = 0;
+            new.v_mass = None;
+            new.unit_map ^= MASS_MAP;
+        } else {
+            if self.v_mass != Some(other) {
+                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_mass.unwrap());
+            }
+            new.exp[MASS_INDEX] += 1;
+        }
+        new
+    }
+}
+
+impl BitXorAssign<UnitMass> for Value {
+    fn bitxor_assign(&mut self, other:UnitMass) {
+        if self.v_mass != Some(other) {
+            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+        }
+        if self.exp[MASS_INDEX] == 0 {
+            self.v_mass = Some(other);
+            self.unit_map |= MASS_MAP;
+            self.exp[MASS_INDEX] = -1;
+        } else if self.exp[MASS_INDEX] == 1 {
+            self.exp[MASS_INDEX] = 0;
+            self.v_mass = None;
+            self.unit_map ^= MASS_MAP;
+        } else {
+            self.exp[MASS_INDEX] -= 1;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -6094,29 +7716,6 @@ mod tests {
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
     use crate::values::Value;
-
-    /* This value is used for exponent equivalency
-     * When a unit's or values's exponent needs to be compared to another 
-     * units exponent, this 'cut off' is where exp are deemed 'equal'. 
-     */ 
-    const CUTOFF:f64 = 0.0000001;
-    
-    macro_rules! assert_apx {
-        ($x:expr, $y:expr, $d:expr) => {
-            if $x.__equivalent(&$y) {
-                if f64::max($x.val, $y.val) - f64::min($x.val, $y.val) > %d {panic!();}
-            } else {
-                panic!();
-            }
-        };
-        ($x:expr, $y:expr) => {
-            if $x.__equal(&$y) {
-                if f64::max($x.val, $y.val) - f64::min($x.val, $y.val) > CUTOFF {panic!();}
-            } else {
-                panic!();
-            }
-        }
-    }
 
     #[test]
     fn value_create_1(){
