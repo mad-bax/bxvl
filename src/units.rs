@@ -17,7 +17,7 @@ trait Convert<T1> {
 }
 
 /* Metric scales */
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum Metric {
     Yocto,
     Zepto,
@@ -96,7 +96,7 @@ impl Metric {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLength {
     Meter(Metric),
     Inch,
@@ -168,7 +168,7 @@ impl UnitLength {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitTime {
     Second(Metric),
     Minute,
@@ -225,7 +225,7 @@ impl UnitTime {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMass {
     Gram(Metric),
     Grain,
@@ -278,7 +278,7 @@ impl UnitMass {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricCurrent {
     Ampere(Metric)
 }
@@ -312,7 +312,7 @@ impl UnitElectricCurrent {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricCharge {
     Coulomb(Metric)
 }
@@ -346,7 +346,7 @@ impl UnitElectricCharge {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricPotential {
     Volt(Metric)
 }
@@ -380,7 +380,7 @@ impl UnitElectricPotential {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricConductance {
     Siemens(Metric)
 }
@@ -414,7 +414,7 @@ impl UnitElectricConductance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitCapacitance {
     Farad(Metric)
 }
@@ -448,7 +448,7 @@ impl UnitCapacitance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitResistance {
     Ohm(Metric)
 }
@@ -482,7 +482,7 @@ impl UnitResistance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitInductance {
     Henry(Metric)
 }
@@ -516,7 +516,7 @@ impl UnitInductance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMagneticFlux {
     Weber(Metric)
 }
@@ -550,7 +550,7 @@ impl UnitMagneticFlux {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMagneticFluxDensity {
     Tesla(Metric)
 }
@@ -584,7 +584,7 @@ impl UnitMagneticFluxDensity {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitTemperature {
     Celsius,
     Fahrenheit,
@@ -639,7 +639,7 @@ impl UnitTemperature {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSubstance {
     Mole(Metric)
 }
@@ -673,7 +673,7 @@ impl UnitSubstance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLuminousIntensity {
     Candela(Metric)
 }
@@ -707,7 +707,7 @@ impl UnitLuminousIntensity {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLuminousFlux {
     Lumen(Metric)
 }
@@ -741,7 +741,7 @@ impl UnitLuminousFlux {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitIlluminance {
     Lux(Metric)
 }
@@ -775,7 +775,7 @@ impl UnitIlluminance {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitVolume {
     Liter(Metric)
 }
@@ -813,7 +813,7 @@ impl UnitVolume {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitPressure {
     Pascal(Metric),
     Bar(Metric),
@@ -880,7 +880,7 @@ impl UnitPressure {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitAngle {
     Degree,
     Radian(Metric),
@@ -931,7 +931,7 @@ impl UnitAngle {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSolidAngle {
     Steradian(Metric)
 }
@@ -973,7 +973,7 @@ impl UnitSolidAngle {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitFrequency {
     Hertz(Metric)
 }
@@ -1011,7 +1011,7 @@ impl UnitFrequency {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitForce {
     Newton(Metric),
     PoundForce
@@ -1058,7 +1058,7 @@ impl UnitForce {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitEnergy {
     Joule(Metric),
     GramCalorie(Metric),
@@ -1117,7 +1117,7 @@ impl UnitEnergy {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitPower {
     Watt(Metric)
 }
@@ -1151,7 +1151,7 @@ impl UnitPower {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitRadioactivity {
     Becquerel(Metric),
     Curie
@@ -1198,7 +1198,7 @@ impl UnitRadioactivity {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitAbsorbedDose {
     Gray(Metric),
     Roentgen,
@@ -1248,7 +1248,7 @@ impl UnitAbsorbedDose {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitRadioactivityExposure {
     Sievert(Metric),
     Rem
@@ -1295,7 +1295,7 @@ impl UnitRadioactivityExposure {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitCatalyticActivity {
     Katal(Metric)
 }
@@ -1329,7 +1329,7 @@ impl UnitCatalyticActivity {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSound {
     Bel(Metric)
 }
@@ -1363,7 +1363,7 @@ impl UnitSound {
     }
 }
 
-#[derive(Debug, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitInformation {
     Bit(Metric),
     Byte(Metric)

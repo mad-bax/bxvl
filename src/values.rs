@@ -3,6 +3,9 @@ use crate::constants::*;
 use crate::errors::V3Error;
 
 use std::fmt::Display;
+use std::ops::BitAnd;
+use std::ops::BitOr;
+use std::ops::BitXorAssign;
 use std::ops::Shr;
 use std::ops::ShrAssign;
 use std::str::FromStr;
@@ -3054,6 +3057,46 @@ impl DivAssign<Value> for Value {
 }
 
 impl Value {
+
+    pub fn default() -> Value {
+        Value {
+            val:0.0,
+            unit_map:0,
+            exp:[0;31],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: None,
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: None,
+            v_volume: None,
+            v_magnetic_flux : None,
+            v_magnetic_flux_density : None,
+            v_solid_angle : None
+        }
+    }
+
     pub fn new(val:f64, units:&str) -> Result<Value, V3Error> {
         let mut ret:Value = Value {
             val,
@@ -3481,7 +3524,7 @@ impl Value {
     }
 
     pub fn complex(&self) -> Result<Value, V3Error> {
-        let mut ret:Value = self.clone();
+        let mut ret:Value = *self;
         if ret.is_force() && ret.unit_map != FORCE_MAP {
             (ret >>= UnitMass::Gram(Metric::Kilo));
             (ret >>= UnitLength::Meter(Metric::None));
@@ -3799,38 +3842,22 @@ impl Value {
 
     pub fn reducable(&self) -> bool {
 
-        if self.unit_map == FORCE_MAP {
-            return true;
-        } else if self.unit_map == PRESSURE_MAP {
-            return true;
-        } else if self.unit_map == ENERGY_MAP {
-            return true;
-        } else if self.unit_map == FREQUENCY_MAP {
-            return true;
-        } else if self.unit_map == POWER_MAP {
-            return true;
-        } else if self.unit_map == ELECTRIC_CHARGE_MAP {
-            return true;
-        } else if self.unit_map == ELECTRIC_POTENTIAL_MAP {
-            return true;
-        } else if self.unit_map == CAPACITANCE_MAP {
-            return true;
-        } else if self.unit_map == RESISTANCE_MAP {
-            return true;
-        } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP {
-            return true;
-        } else if self.unit_map == MAGNETRIC_FLUX_MAP {
-            return true;
-        } else if self.unit_map == MAGNETRIC_FLUX_DENSITY_MAP {
-            return true;
-        } else if self.unit_map == INDUCTANCE_MAP {
-            return true;
-        } else if self.unit_map == ILLUMINANCE_MAP {
-            return true;
-        } else if self.unit_map == CAPACITANCE_MAP {
-            return true;
-        }
-        false
+        matches!(self.unit_map,
+            FORCE_MAP |
+            PRESSURE_MAP |
+            ENERGY_MAP |
+            FREQUENCY_MAP |
+            POWER_MAP |
+            ELECTRIC_CHARGE_MAP |
+            ELECTRIC_POTENTIAL_MAP |
+            RESISTANCE_MAP |
+            ELECTRIC_CONDUCTANCE_MAP |
+            MAGNETRIC_FLUX_MAP |
+            MAGNETRIC_FLUX_DENSITY_MAP |
+            INDUCTANCE_MAP |
+            ILLUMINANCE_MAP |
+            CAPACITANCE_MAP
+        )
     }
 
     fn _reduce(&mut self, other:&Value) -> bool {
@@ -6007,10 +6034,61 @@ impl Value {
     }
 }
 
+// For assigning values
+impl BitAnd<UnitLength> for f64 {
+    type Output = Value;
+    fn bitand(self, other:UnitLength) -> Self::Output {
+        let mut new:Value = Value::default();
+        new.val = self;
+        new.v_length = Some(other);
+        new.unit_map = LENGTH_MAP;
+        new.exp[LENGTH_INDEX] = 1;
+        new
+    }
+}
+
+// For assignin new units
+impl BitOr<UnitLength> for Value {
+    type Output = Value;
+    fn bitor(self, other:UnitLength) -> Self::Output {
+        let mut new:Value = self;
+        if self.exp[LENGTH_INDEX] == 0 {
+            new.v_length = Some(other);
+            new.exp[LENGTH_INDEX] = 1;
+            new.unit_map |= LENGTH_MAP;
+        } else if self.exp[LENGTH_INDEX] == -1 {
+            new.exp[LENGTH_INDEX] = 0;
+            new.v_length = None;
+            new.unit_map ^= LENGTH_MAP;
+        } else {
+            new.exp[LENGTH_INDEX] += 1;
+        }
+        new
+    }
+}
+
+// For removing units from a value
+impl BitXorAssign<UnitLength> for Value {
+    fn bitxor_assign(&mut self, other:UnitLength) {
+        if self.exp[LENGTH_INDEX] == 0 {
+            self.v_length = Some(other);
+            self.unit_map |= LENGTH_MAP;
+            self.exp[LENGTH_INDEX] = -1;
+        } else if self.exp[LENGTH_INDEX] == 1 {
+            self.exp[LENGTH_INDEX] = 0;
+            self.v_length = None;
+            self.unit_map ^= LENGTH_MAP;
+        } else {
+            self.exp[LENGTH_INDEX] -= 1;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
     use crate::units::Metric;
+    use crate::units::UnitLength;
     use crate::units::UnitMass;
     use crate::units::UnitSubstance;
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
@@ -6125,5 +6203,19 @@ mod tests {
         println!("{:.2}", v4);
         assert_eq!((v1 >> "m/s^2").unwrap(), v2);
         assert_eq!((v1 >> "m/min^2").unwrap(), v3);
+    }
+
+    #[test]
+    fn value_10(){
+        let v1:Value = 4.5 & UnitLength::Meter(Metric::None);
+        let v2:Value = Value::new(4.5, "m").unwrap();
+        assert_eq!(v1, v2);
+
+        let mut v3:Value = 4.5 & UnitLength::Meter(Metric::None) | UnitLength::Meter(Metric::None);
+        let v4:Value = Value::new(4.5, "m^2").unwrap();
+        assert_eq!(v3, v4);
+
+        v3 ^= UnitLength::Meter(Metric::None);
+        assert_eq!(v2, v3);
     }
 }
