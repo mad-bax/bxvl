@@ -19,6 +19,7 @@ use std::ops::MulAssign;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
+/// value!
 #[macro_export]
 macro_rules! value {
     ($v:expr, $u:expr) => {
@@ -26,12 +27,15 @@ macro_rules! value {
     };
 }
 
+/// Value
+/// The struct that is used to represent a value
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
-    pub val:f64,                    // The numerical value
-    unit_map:usize,                 // Which units are selected
-    exp:[i32;31],                   // The exponent of those units 
-    v_ab_dose :                 Option<UnitAbsorbedDose>,          // The units
+    /// The numerical value for the `Value` struct
+    pub val:f64,
+    unit_map:usize,
+    exp:[i32;31],
+    v_ab_dose :                 Option<UnitAbsorbedDose>,
     v_angle :                   Option<UnitAngle>,
     v_capacitance :             Option<UnitCapacitance>,
     v_catalytic :               Option<UnitCatalyticActivity>,
@@ -3058,6 +3062,13 @@ impl DivAssign<Value> for Value {
 
 impl Value {
 
+    /// The default constructor for a `Value`
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut m:Value = Value::default();
+    /// m.val = 1.3;
+    /// ```
     pub fn default() -> Value {
         Value {
             val:0.0,
@@ -3097,6 +3108,15 @@ impl Value {
         }
     }
 
+    /// The main constructor for a `Value`
+    /// 
+    /// Example
+    /// ```rust
+    /// let m:Value = match Value::new(4.5, "m") {
+    ///     Ok(v) => v,
+    ///     Err(e) => panic!("{}", e)
+    /// };
+    /// ```
     pub fn new(val:f64, units:&str) -> Result<Value, V3Error> {
         let mut ret:Value = Value {
             val,
@@ -3180,6 +3200,24 @@ impl Value {
         ret
     }
 
+    /// Convert a `Value` to another of the same base unit types.
+    /// 
+    /// `convert` uses a `&str` as an argument and parses it into the relevant units.
+    /// The parsed `&str` must be over the same unit types as the `Value` to be converted. 
+    /// 
+    /// e.g. m/s and ft/hour, or J/kg and cal/lbs
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut speed:Value = match Value::new(20.0, "mph") {
+    ///     Ok(t) => t,
+    ///     Err(e) => panic!("{}", e)
+    /// };
+    /// match speed.convert("miles") {
+    ///     Ok(_) => {}
+    ///     Err(e) => panic!("{}", e)
+    /// }
+    /// ```
     pub fn convert(&mut self, other:&str) -> Result<(), V3Error> {
         let temp:Value = Value::new(0.0, other)?;
         self._convert(&temp)
@@ -3423,6 +3461,14 @@ impl Value {
         Ok(())
     }
 
+    /// Inverses the `Value`
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut v:Value = 4.0 & UnitLength::Inch;
+    /// v.inv()
+    /// ```
+    /// `v` will now be equal to `0.25 1/in`
     pub fn inv(&mut self) {
         self.val = 1.0/self.val;
         for i in 0..self.exp.len() {
@@ -3430,6 +3476,13 @@ impl Value {
         }
     }
 
+    /// Converts an angle to radians
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut a:Value = 45.0 & UnitAngle::Degree;
+    /// a.to_radians();
+    /// ```
     pub fn to_radians(&mut self) {
         if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
             panic!("[to_radians] Cannot convert non angle to radians");
@@ -3437,6 +3490,13 @@ impl Value {
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Radian(Metric::None));
     }
 
+    /// Converts an angle to degrees
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut a:Value = 2.0/std::f64::consts::PI & UnitAngle::Radian(Metric::None);
+    /// a.to_degrees();
+    /// ```
     pub fn to_degrees(&mut self) {
         if self.unit_map != ANGLE_MAP && self.exp[ANGLE_INDEX] != 1 {
             panic!("[to_degrees] Cannot convert non angle to degrees");
@@ -3444,34 +3504,51 @@ impl Value {
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Degree);
     }
 
+    /// Returns if the `Value` numeric is NAN
     pub fn is_nan(&self) -> bool {
         self.val.is_nan()
     }
 
+    /// Returns if the `Value` numeric is finite
     pub fn is_finite(&self) -> bool {
         self.val.is_finite()
     }
 
+    /// Returns if the `Value` numeric is infinite
     pub fn is_infinite(&self) -> bool {
         self.val.is_infinite()
     }
 
+    /// Returns if the `Value` numeric is normal
     pub fn is_normal(&self) -> bool {
         self.val.is_normal()
     }
 
+    /// Returns if the `Value` numeric is subnormal
     pub fn is_subnormal(&self)  -> bool {
         self.val.is_subnormal()
     }
 
+    /// Resturns if the `Value` numeric is sign positive
     pub fn is_sign_positive(&self) -> bool {
         self.val.is_sign_positive()
     }
 
+    /// Returns if the `Value` numeric is sign negative
     pub fn is_sign_negative(&self) -> bool {
         self.val.is_sign_negative()
     }
 
+    /// Takes the square root of the Value
+    /// 
+    /// Note: That if the unit exponents are not evenly dvisible by 2, the function will panic.
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut v:Value = 16.0 & UnitLength::Foot | UnitLength::Foot;
+    /// let x:Value = v.sqrt();
+    /// ```
+    /// `x` will be equal to `4.0 ft`
     pub fn sqrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..31_usize {
@@ -3484,6 +3561,16 @@ impl Value {
         n
     }
 
+    /// Takes the cube root of the Value
+    /// 
+    /// Note: That if the unit exponents are not evenly dvisible by 3, the function will panic.
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut v:Value = 9.0 & UnitLength::Foot | UnitLength::Foot | UnitLength::Foot;
+    /// let x:Value = v.cbrt();
+    /// ```
+    /// `x` will be equal to `3.0 ft`
     pub fn cbrt(&self) -> Value {
         let mut n:Value = *self;
         for i in 0..31_usize {
@@ -3496,30 +3583,47 @@ impl Value {
         n
     }
 
+    /// Returns the sine of a `Value` in radians
     pub fn sin(&self) -> Value {
         Value::_radians(self.val.sin())
     }
 
+    /// Returns the cosine of a `Value` in radians
     pub fn cos(&self) -> Value {
         Value::_radians(self.val.cos())
     }
 
+    /// Returns the tangent of a `Value` in radians
     pub fn tan(&self) -> Value {
         Value::_radians(self.val.tan())
     }
 
+    /// Returns the arcsine of a `Value` in radians
     pub fn asin(&self) -> Value {
         Value::_radians(self.val.asin())
     }
 
+    /// Returns the arcosine of a `Value` in radians
     pub fn acos(&self) -> Value {
         Value::_radians(self.val.acos())
     }
 
+    /// Returns the arctangent of a `Value` in radians
     pub fn atan(&self) -> Value {
         Value::_radians(self.val.atan())
     }
 
+    /// Returns the full unit circle arctangent of a `Value` in radians
+    /// 
+    /// atan2 will panic if the the given `Value` is not an angle.
+    /// 
+    /// Example
+    /// ```rust
+    /// let a:Value = 10.0 & UnitTime::Second(Metric::None);
+    /// let b:Value = 0.3 & UnitAngle::Radian(Metric::None);
+    /// let x:Value = a.atan2(b);
+    /// ```
+    /// `x` will be approximately equal to `1.5408 radians`
     pub fn atan2(&self, other:&Value) -> Value {
         if other.unit_map != ANGLE_MAP && other.exp[ANGLE_INDEX] != 1 {
             panic!("[atan2] atan2 requires an Value angle");
@@ -3528,6 +3632,27 @@ impl Value {
         Value::_radians(self.val.atan2(new_v))
     }
 
+    /// Combines unit types in a `Value` if applicable.
+    /// 
+    /// When multiplying different `Value`s together, there are specific combinations that 
+    /// can create more complex unit types which are supported by the `Value` type. 
+    /// 
+    /// e.g. F = m*a, where Newtons = kilogram * (meters/second^2).
+    /// 
+    /// This unit complexity is not handled implicitly by the `mul` and `div` methods, and must be called by users. 
+    /// 
+    /// Note: This function will not return an error if a combination cannot be found. This function is intended to be a 'pass through' function.
+    /// 
+    /// Example
+    /// ```rust
+    /// let mass:Value = 4.5 & UnitMass::Gram(Metric::Kilo);
+    /// met acc:Value = 9.81 & UnitLength::Meter(Metric::None) ^ UnitTime::Second(Metric::None) ^ UnitTime::Second(Metric::None);
+    /// let mut f:Value = match (mass*acc).complex() {
+    ///     Ok(t) => t,
+    ///     Err(e) => panic!("{}", e)
+    /// }
+    /// ```
+    /// `f` will be equal to `44.145 N`
     pub fn complex(&self) -> Result<Value, V3Error> {
         let mut ret:Value = *self;
         if ret.is_force() && ret.unit_map != FORCE_MAP {
@@ -3834,6 +3959,24 @@ impl Value {
         Ok(ret)
     }
 
+    /// Reduces a `Value`'s unit complexity. 
+    /// 
+    /// When a `Value` has a specific type that is composed from base units such as `Newtons`; 
+    /// it can be reduced to those base units.
+    /// 
+    /// Example
+    /// ```rust
+    /// let mut f:Value = match Value::new(3.0, "N") {
+    ///     Ok(t) => t,
+    ///     Err(e) => panic!("{}", e)
+    /// };
+    /// 
+    /// match f.reduce("kg*m/s^2") {
+    ///     Ok(_) => {}
+    ///     Err(e) => panic!("{}", e)
+    /// }
+    /// ```
+    /// `f` will now be equal to `3.0 kg*m/s^2`
     pub fn reduce(&mut self, other:&str) -> Result<(), V3Error> {
         if !self.reducable() {
             return Err(V3Error::UnitReductionError(format!("[reduce] Value {} is not reducable", self)));
@@ -3848,6 +3991,7 @@ impl Value {
         Err(V3Error::UnitReductionError(format!("[reduce] Value {} cannot be reduced to {}", self, other)))
     }
 
+    /// Returns if a `Value`'s unit type is reducable.
     pub fn reducable(&self) -> bool {
 
         matches!(self.unit_map,
@@ -4240,6 +4384,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a length
+    /// 
+    /// `length`
     pub fn is_length(&self) -> bool {
         if self.unit_map & LENGTH_MAP != self.unit_map || self.exp[LENGTH_INDEX] != 1 {
             return false;
@@ -4247,6 +4394,9 @@ impl Value {
         true
     }
 
+    /// Returns `true` if a `Value` is an area
+    /// 
+    /// `length^2`
     pub fn is_area(&self) -> bool {
         if self.unit_map & LENGTH_MAP != self.unit_map || self.exp[LENGTH_INDEX] != 2 {
             return false;
@@ -4254,6 +4404,11 @@ impl Value {
         true
     }
 
+    /// Returns `true` if a `Value` is a volume
+    /// 
+    /// `volume`
+    /// 
+    /// `length^3`
     pub fn is_volume(&self) -> bool {
         if (self.unit_map == LENGTH_MAP && self.exp[LENGTH_INDEX] == 3) ||
            (self.unit_map == VOLUME_MAP && self.exp[VOLUME_INDEX] == 1) {
@@ -4262,6 +4417,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a temperature
+    /// 
+    /// `temperature`
     pub fn is_temperature(&self) -> bool {
         if self.unit_map == TEMPERATURE_MAP && self.exp[TEMPERATURE_INDEX] == 1 {
             return true;
@@ -4269,6 +4427,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a density
+    /// 
+    /// `mass / volume`
     pub fn is_density(&self) -> bool {
         if (self.unit_map == MASS_MAP | VOLUME_MAP && self.exp[MASS_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1) ||
            (self.unit_map == MASS_MAP | LENGTH_MAP && self.exp[MASS_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3) {
@@ -4277,6 +4438,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a velocity
+    /// 
+    /// `length / time`
     pub fn is_velocity(&self) -> bool {
         if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
             return false;
@@ -4287,6 +4451,9 @@ impl Value {
         true
     }
 
+    /// Returns `true` if a `Value` is an acceleration
+    /// 
+    /// `length / time^2`
     pub fn is_acceleration(&self) -> bool {
         if (self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map) ||
            (self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -2) {
@@ -4295,6 +4462,11 @@ impl Value {
         true
     }
 
+    /// Returns `true` if a `Value` is a force
+    /// 
+    /// `force`
+    /// 
+    /// `mass * acceleration`
     pub fn is_force(&self) -> bool {
         if (self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -2 && self.exp[MASS_INDEX] == 1) ||
            (self.unit_map & FORCE_MAP == self.unit_map && self.exp[FORCE_INDEX] == 1) {
@@ -4303,6 +4475,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is measurement of momentum
+    /// 
+    /// `mass * velocity`
     pub fn is_momentum(&self) -> bool {
         if (self.unit_map & (MASS_MAP | LENGTH_MAP | TIME_MAP) == self.unit_map) && 
            (self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -1 && self.exp[MASS_INDEX] == 1) {
@@ -4311,6 +4486,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a time
+    /// 
+    /// `time`
     pub fn is_time(&self) -> bool {
         if self.unit_map & TIME_MAP != self.unit_map {
             return false;
@@ -4321,6 +4499,9 @@ impl Value {
         true
     }
 
+    /// Returns `true` if a `Value` is a mass
+    /// 
+    /// `mass`
     pub fn is_mass(&self) -> bool {
         if self.unit_map == MASS_MAP && self.exp[MASS_INDEX] == 1 {
             return true;
@@ -4328,6 +4509,11 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a frequency
+    /// 
+    /// `frequency`
+    /// 
+    /// `1/time`
     pub fn is_frequency(&self) -> bool {
         if (self.unit_map == FREQUENCY_MAP && self.exp[FREQUENCY_INDEX] == 1) ||
            (self.unit_map == TIME_MAP && self.exp[TIME_INDEX] == -1) {
@@ -4336,6 +4522,13 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a pressure
+    /// 
+    /// `pressure`
+    /// 
+    /// `force / area`
+    /// 
+    /// `mass / (length*time^2)`
     pub fn is_pressure(&self) -> bool {
         if (self.unit_map == PRESSURE_MAP && self.exp[PRESSURE_INDEX] == 1) ||
            (self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
@@ -4345,6 +4538,17 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of energy
+    /// 
+    /// `energy`
+    /// 
+    /// `length * force`
+    /// 
+    /// `electric potential * electric charge`
+    /// 
+    /// `power * time`
+    /// 
+    /// `mass * area / time^2`
     pub fn is_energy(&self) -> bool {
         if (self.unit_map == ENERGY_MAP && self.exp[ENERGY_INDEX] == 1) ||
            (self.unit_map == LENGTH_MAP | FORCE_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[FORCE_INDEX] == 1) ||
@@ -4356,6 +4560,15 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of power
+    /// 
+    /// `power`
+    /// 
+    /// `energy / time`
+    /// 
+    /// `electric potential * electric current`
+    /// 
+    /// `mass * area / time^3`
     pub fn is_power(&self) -> bool {
         if (self.unit_map == POWER_MAP && self.exp[POWER_INDEX] == 1) ||
            (self.unit_map == ENERGY_MAP | TIME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[TIME_INDEX] == -1) ||
@@ -4366,6 +4579,13 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric charge
+    /// 
+    /// `electric charge`
+    /// 
+    /// `electric current * time`
+    /// 
+    /// `electric capacitance * electric potential`
     pub fn is_electric_charge(&self) -> bool {
         if (self.unit_map == ELECTRIC_CHARGE_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_CURRENT_MAP | TIME_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 && self.exp[TIME_INDEX] == 1) ||
@@ -4375,6 +4595,23 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric current
+    /// 
+    /// `electric current`
+    pub fn is_electric_current(&self) -> bool {
+        if self.unit_map == ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    /// Returns `true` if a `Value` is a measurement of electric potential
+    /// 
+    /// `electric potential`
+    /// 
+    /// `power / electric current`
+    /// 
+    /// `energy / electric charge`
     pub fn is_electric_potential(&self) -> bool {
         if (self.unit_map == ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1) ||
            (self.unit_map == POWER_MAP | ELECTRIC_CURRENT_MAP && self.exp[POWER_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
@@ -4384,6 +4621,13 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric capacitance
+    /// 
+    /// `electric capacitance`
+    /// 
+    /// `electric charge / electric potential`
+    /// 
+    /// `electric charge^2 / energy`
     pub fn is_capacitance(&self) -> bool {
         if (self.unit_map == CAPACITANCE_MAP && self.exp[CAPACITANCE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP && self.exp[ELECTRIC_CHARGE_INDEX] == 1 && self.exp[ELECTRIC_POTENTIAL_INDEX] == -1) ||
@@ -4393,6 +4637,13 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric resistance
+    /// 
+    /// `electric resistance`
+    /// 
+    /// `1/electric conductance`
+    /// 
+    /// `electric potential / electric current`
     pub fn is_resistance(&self) -> bool {
         if (self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == -1) ||
@@ -4402,6 +4653,13 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric conductance
+    /// 
+    /// `electric conductance`
+    /// 
+    /// `1/electric resistance`
+    /// 
+    /// `electric current / electric potential`
     pub fn is_conductance(&self) -> bool {
         if (self.unit_map == ELECTRIC_CONDUCTANCE_MAP && self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1) ||
            (self.unit_map == RESISTANCE_MAP && self.exp[RESISTANCE_INDEX] == -1) ||
@@ -4411,6 +4669,15 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of magnetic flux
+    /// 
+    /// `magnetic flux`
+    /// 
+    /// `energy / electric current`
+    /// 
+    /// `magnetic flux density * area`
+    /// 
+    /// `electric potential * time`
     pub fn is_magnetic_flux(&self) -> bool {
         if (self.unit_map == MAGNETIC_FLUX_MAP && self.exp[MAGNETIC_FLUX_INDEX] == 1) ||
            (self.unit_map == ENERGY_MAP | ELECTRIC_CURRENT_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
@@ -4421,6 +4688,15 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of magnetic flux density
+    /// 
+    /// `magnetic flux density`
+    /// 
+    /// `electric potential * time / area`
+    /// 
+    /// `magnetic flux / area`
+    /// 
+    /// `force / (electric current * length)`
     pub fn is_magnetic_flux_density(&self) -> bool {
         if (self.unit_map == MAGNETIC_FLUX_DENSITY_MAP && self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == -2) ||
@@ -4431,6 +4707,15 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of electric inductance
+    /// 
+    /// `inductance`
+    /// 
+    /// `electric potential * time / electric current`
+    /// 
+    /// `electric resistance * time`
+    /// 
+    /// `magnetic flux / electric current`
     pub fn is_inductance(&self) -> bool {
         if (self.unit_map == INDUCTANCE_MAP && self.exp[INDUCTANCE_INDEX] == 1) ||
            (self.unit_map == ELECTRIC_POTENTIAL_MAP | TIME_MAP | ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[ELECTRIC_CURRENT_INDEX] == -1) ||
@@ -4441,6 +4726,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of luminous flux
+    /// 
+    /// `luminous flux`
     pub fn is_luminous_flux(&self) -> bool {
         if self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 {
             return true;
@@ -4448,6 +4736,11 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of illuminance
+    /// 
+    /// `illuminance`
+    /// 
+    /// `luminous flux / area`
     pub fn is_illuminance(&self) -> bool {
         if (self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1) || 
            (self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 && self.exp[LENGTH_MAP] == -2) {
@@ -4456,6 +4749,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of radiactivity
+    /// 
+    /// `radioactivity`
     pub fn is_radioactivity(&self) -> bool {
         if self.unit_map == RADIOACTIVITY_MAP && self.exp[RADIOACTIVITY_INDEX] == 1 {
             return true;
@@ -4463,6 +4759,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of absorbed dose of ionizing radiation
+    /// 
+    /// `absorbed dose`
     pub fn is_absorbed_dose(&self) -> bool {
         if self.unit_map == ABSORBED_DOSE_MAP && self.exp[ABSORBED_DOSE_INDEX] == 1 {
             return true;
@@ -4470,6 +4769,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of an equivalent dose of ionizing radiation
+    /// 
+    /// `equivalent dose`
     pub fn is_equivalent_dose(&self) -> bool {
         if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
             return true;
@@ -4477,6 +4779,11 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of catalytic activity
+    /// 
+    /// `catalytic activity`
+    /// 
+    /// `substance / time`
     pub fn is_catalytic_activity(&self) -> bool {
         if (self.unit_map == CATALYTIC_ACTIVITY_MAP && self.exp[CATALYTIC_ACTIVITY_INDEX] == 1) || 
            (self.unit_map == SUBSTANCE_MAP | TIME_MAP && self.exp[SUBSTANCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1) {
@@ -4485,6 +4792,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is an angle
+    /// 
+    /// `angle`
     pub fn is_angle(&self) -> bool {
         if self.unit_map == ANGLE_MAP && self.exp[ANGLE_INDEX] == 1 {
             return true;
@@ -4492,13 +4802,9 @@ impl Value {
         false
     }
 
-    pub fn is_electric_current(&self) -> bool {
-        if self.unit_map == ELECTRIC_CURRENT_MAP && self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-            return true;
-        }
-        false
-    }
-
+    /// Returns `true` if a `Value` is a measurement of information
+    /// 
+    /// `information`
     pub fn is_information(&self) -> bool {
         if self.unit_map == INFORMATION_MAP && self.exp[INFORMATION_INDEX] == 1 {
             return true;
@@ -4506,6 +4812,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of luminous intensity
+    /// 
+    /// `luminous intensity`
     pub fn is_luminous_intensity(&self) -> bool {
         if self.unit_map == LUMINOUS_INTENSITY_MAP && self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
             return true;
@@ -4513,6 +4822,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of sound
+    /// 
+    /// `sound`
     pub fn is_sound(&self) -> bool {
         if self.unit_map == SOUND_MAP && self.exp[SOUND_INDEX] == 1 {
             return true;
@@ -4520,6 +4832,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of substance
+    /// 
+    /// `substance`
     pub fn is_substance(&self) -> bool {
         if self.unit_map == SUBSTANCE_MAP && self.exp[SUBSTANCE_INDEX] == 1 {
             return true;
@@ -4527,6 +4842,11 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a jerk
+    /// 
+    /// `length / time^3`
+    /// 
+    /// `school bully`
     pub fn is_jerk(&self) -> bool {
         if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -3 {
             return true;
@@ -4534,6 +4854,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a snap
+    /// 
+    /// `length / time^4`
     pub fn is_snap(&self) -> bool {
         if self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 1 && self.exp[TIME_INDEX] == -4 {
             return true;
@@ -4541,6 +4864,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of angular velocity
+    /// 
+    /// `angle / time`
     pub fn is_angular_velocity(&self) -> bool {
         if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
             return true;
@@ -4548,6 +4874,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of angular acceleration
+    /// 
+    /// `angle / time^2`
     pub fn is_angular_acceleration(&self) -> bool {
         if self.unit_map == ANGLE_MAP | TIME_MAP && self.exp[ANGLE_INDEX] == 1 && self.exp[TIME_INDEX] == -2 {
             return true;
@@ -4555,6 +4884,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of frequency drift
+    /// 
+    /// `frequency / time`
     pub fn is_frequency_drift(&self) -> bool {
         if self.unit_map == FREQUENCY_MAP | TIME_MAP && self.exp[FREQUENCY_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
             return true;
@@ -4562,6 +4894,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of flow
+    /// 
+    /// `volume / time`
     pub fn is_flow(&self) -> bool {
         if (self.unit_map == LENGTH_MAP | TIME_MAP && self.exp[LENGTH_INDEX] == 3 && self.exp[TIME_INDEX] == -1) || 
            (self.unit_map == VOLUME_MAP | TIME_MAP && self.exp[VOLUME_INDEX] == 1 && self.exp[TIME_INDEX] == -1) {
@@ -4570,6 +4905,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a yank
+    /// 
+    /// `force / time`
     pub fn is_yank(&self) -> bool {
         if self.unit_map == FORCE_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == -1 {
             return true;
@@ -4577,6 +4915,9 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of angular momentum
+    /// 
+    /// `force * length * time`
     pub fn is_angular_momentum(&self) -> bool {
         if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[TIME_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1 {
             return true;
@@ -4584,6 +4925,11 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of torque
+    /// 
+    /// `force * length`
+    /// 
+    /// `energy / angle`
     pub fn is_torque(&self) -> bool {
         if (self.unit_map == FORCE_MAP | LENGTH_MAP && self.exp[FORCE_INDEX] == 1 && self.exp[LENGTH_INDEX] == 1) || 
            (self.unit_map == ENERGY_MAP | ANGLE_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[ANGLE_INDEX] == -1) {
@@ -4592,13 +4938,19 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is a measurement of energy density
+    /// 
+    /// `energy / volume`
     pub fn is_energy_density(&self) -> bool {
-        if self.unit_map == ENERGY_MAP | LENGTH_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3 {
+        if (self.unit_map == ENERGY_MAP | LENGTH_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[LENGTH_INDEX] == -3) || 
+           (self.unit_map == ENERGY_MAP | VOLUME_MAP && self.exp[ENERGY_INDEX] == 1 && self.exp[VOLUME_INDEX] == -1)
+         {
             return true;
         }
         false
     }
 
+    /// Returns a `Value` preset to the value of Earth's gravitational acceleration
     pub const fn const_earth_gravity() -> Value {
         let mut ret:Value = Value {
             val:VAL_EARTH_GRAV,
@@ -4641,6 +4993,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be absolute zero
     pub const fn const_abs_zero() -> Value {
         let mut ret:Value = Value {
             val:VAL_ABS_ZERO,
@@ -4682,6 +5035,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be Avagadro's Number
     pub const fn const_avagadros_number() -> Value {
         let mut ret:Value = Value {
             val:VAL_AVOGADROS,
@@ -4723,6 +5077,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be Faraday's Constant
     pub const fn const_faraday() -> Value {
         let mut ret:Value = Value {
             val:VAL_FARADAY,
@@ -4765,6 +5120,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the Atomic Mass Constant
     pub const fn const_atomic_mass() -> Value {
         let mut ret:Value = Value {
             val:VAL_ATOMIC_MASS,
@@ -4806,6 +5162,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the molar gas constant
     pub const fn const_molar_gas() -> Value {
         let mut ret:Value = Value {
             val:VAL_MOLAR_GAS,
@@ -4849,6 +5206,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be Coulomb's Constant
     pub const fn const_coulomb() -> Value {
         let mut ret:Value = Value {
             val:VAL_COULOMBS,
@@ -4890,6 +5248,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the speed of light
     pub const fn const_speed_of_light() -> Value {
         let mut ret:Value = Value {
             val:VAL_LIGHT_SPEED,
@@ -4932,6 +5291,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the Boltzmann Constant
     pub const fn const_boltzmann() -> Value {
         let mut ret:Value = Value {
             val:VAL_BOLTZMANN,
@@ -4974,6 +5334,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the newtonian gravitational constant
     pub const fn const_newtonian_gravitation() -> Value {
         let mut ret:Value = Value {
             val:VAL_NEWTONIAN_GRAVITATION,
@@ -5017,6 +5378,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the charge of an electron
     pub const fn const_electron_charge() -> Value {
         let mut ret:Value = Value {
             val:VAL_ELECTRON_CHARGE,
@@ -5058,6 +5420,7 @@ impl Value {
         ret
     }
 
+    /// Returns a `Value` preset to be the Rydberg Constant
     pub const fn const_rydberg() -> Value {
         let mut ret:Value = Value {
             val:VAL_RYDBERG,
@@ -5099,6 +5462,7 @@ impl Value {
         ret       
     }
 
+    /// Returns a `Value` preset to be the Plank Constant
     pub const fn const_plank() -> Value {
         let mut ret:Value = Value {
             val:VAL_PLANKS,
@@ -5141,9 +5505,10 @@ impl Value {
         ret       
     }
 
+    /// Returns a `Value` preset to be the Vacuum Electric Permitivity Constant
     pub const fn const_vacuum_permitivity() -> Value {
         let mut ret:Value = Value {
-            val:VAL_VACUUM_ELECTIRC_PERMITTIVITY,
+            val:VAL_VACUUM_ELECTRIC_PERMITTIVITY,
             unit_map: LENGTH_MAP | CAPACITANCE_MAP,
             exp:[0;31],
             v_ab_dose: None,

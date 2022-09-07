@@ -16,33 +16,55 @@ trait Convert<T1> {
     fn convert(&self, other:&T1) -> f64;
 }
 
-/* Metric scales */
+/// The Metric scale names
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum Metric {
+    /// Yocto
     Yocto,
+    /// Zepto
     Zepto,
+    /// Atto
     Atto,
+    /// Femto
     Femto,
+    /// Pico
     Pico,
+    /// Nano
     Nano,
+    /// Micro
     Micro,
+    /// Milli
     Milli,
+    /// Centi
     Centi,
+    /// Deci
     Deci,
+    /// None
     None,
+    /// Deca
     Deca,
+    /// Hecto
     Hecto,
+    /// Kilo
     Kilo,
+    /// Mega
     Mega,
+    /// Giga
     Giga,
+    /// Tera
     Tera,
+    /// Peta
     Peta,
+    /// Exa
     Exa,
+    /// Zetta
     Zetta,
+    /// Yotta
     Yotta
 }
 
 impl Metric {
+    /// Returns the numeric scaling of a given metric prefix
     pub fn scale(&self) -> f64 {
         match self {
             Metric::Yotta => 1000000000000000000000000.0,
@@ -69,6 +91,7 @@ impl Metric {
         }
     }
 
+    /// Returns the string representation of the metric prefix
     pub fn as_str(&self) -> &str {
         match self {
             Metric::Yotta => "Y",
@@ -96,16 +119,26 @@ impl Metric {
     }
 }
 
+/// The unit types for length
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLength {
+    /// SI unit
     Meter(Metric),
+    /// Imperial
     Inch,
+    /// Imperial
     Foot,
+    /// Imperial
     Yard,
+    /// Imperial
     Mile,
+    /// Astronomical
     AstronomicalUnit,
+    /// Atronomical
     Parsec,
+    /// SI integrated 
     LightYear,
+    /// Legacy
     Angstrom
 }
 
@@ -168,11 +201,16 @@ impl UnitLength {
     }
 }
 
+/// The unit types for time
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitTime {
+    /// SI unit
     Second(Metric),
+    /// Non - SI
     Minute,
+    /// Non - SI
     Hour,
+    /// Non - SI
     Day
 }
 
@@ -225,11 +263,16 @@ impl UnitTime {
     }
 }
 
+/// The unit types for mass
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMass {
+    /// SI unit
     Gram(Metric),
+    /// Imperial
     Grain,
+    /// Imperial
     Ounce,
+    /// Imperial
     Pound,
 }
 
@@ -278,8 +321,10 @@ impl UnitMass {
     }
 }
 
+/// The unit types for electric current
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricCurrent {
+    /// SI unit
     Ampere(Metric)
 }
 
@@ -312,8 +357,10 @@ impl UnitElectricCurrent {
     }
 }
 
+/// The unit types for electric charge
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricCharge {
+    /// SI unit
     Coulomb(Metric)
 }
 
@@ -346,8 +393,10 @@ impl UnitElectricCharge {
     }
 }
 
+/// The unit types for electric potential
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricPotential {
+    // SI unit
     Volt(Metric)
 }
 
@@ -380,8 +429,10 @@ impl UnitElectricPotential {
     }
 }
 
+/// The unit types for electric conductance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricConductance {
+    /// SI unit
     Siemens(Metric)
 }
 
@@ -414,8 +465,10 @@ impl UnitElectricConductance {
     }
 }
 
+/// The unit types for electric capacitance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitCapacitance {
+    /// SI unit
     Farad(Metric)
 }
 
@@ -448,8 +501,10 @@ impl UnitCapacitance {
     }
 }
 
+/// The unit types for electric resistance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitResistance {
+    /// SI unit
     Ohm(Metric)
 }
 
@@ -482,8 +537,10 @@ impl UnitResistance {
     }
 }
 
+/// The unit types for electric inductance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitInductance {
+    /// SI unit
     Henry(Metric)
 }
 
@@ -516,8 +573,10 @@ impl UnitInductance {
     }
 }
 
+/// The unit types for magnetic flux
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMagneticFlux {
+    /// SI unit
     Weber(Metric)
 }
 
@@ -550,8 +609,10 @@ impl UnitMagneticFlux {
     }
 }
 
+/// The unit types for magnetic flux density
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitMagneticFluxDensity {
+    /// SI unit
     Tesla(Metric)
 }
 
@@ -584,10 +645,14 @@ impl UnitMagneticFluxDensity {
     }
 }
 
+/// The unit types for temperature
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitTemperature {
+    /// SI Unit
     Celsius,
+    /// Imperial
     Fahrenheit,
+    /// SI unit 
     Kelvin
 }
 
@@ -639,8 +704,10 @@ impl UnitTemperature {
     }
 }
 
+/// The unit types for substance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSubstance {
+    /// SI unit
     Mole(Metric)
 }
 
@@ -673,8 +740,10 @@ impl UnitSubstance {
     }
 }
 
+/// The unit types for luminous intensity
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLuminousIntensity {
+    /// SI unit
     Candela(Metric)
 }
 
@@ -707,8 +776,10 @@ impl UnitLuminousIntensity {
     }
 }
 
+/// The unit types for luminous flux
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitLuminousFlux {
+    /// SI unit
     Lumen(Metric)
 }
 
@@ -741,8 +812,10 @@ impl UnitLuminousFlux {
     }
 }
 
+/// The unit types for illuminance
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitIlluminance {
+    /// SI unit
     Lux(Metric)
 }
 
@@ -775,8 +848,10 @@ impl UnitIlluminance {
     }
 }
 
+/// The unit types for volume
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitVolume {
+    /// SI unit
     Liter(Metric)
 }
 
@@ -813,14 +888,22 @@ impl UnitVolume {
     }
 }
 
+/// The unit types for pressure
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitPressure {
+    /// SI unit
     Pascal(Metric),
+    /// SI integrated, Common Standard
     Bar(Metric),
+    /// Common Standard
     Torr,
+    /// SI integrated 
     Hgmm,
+    /// Imperial
     Hgin,
+    /// Common Standard
     Atm,
+    /// Imperial
     Psi
 }
 
@@ -880,10 +963,14 @@ impl UnitPressure {
     }
 }
 
+/// The unit types for angles
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitAngle {
+    /// Common Standard
     Degree,
+    /// SI unit
     Radian(Metric),
+    /// Common Standard
     Moa
 }
 
@@ -931,8 +1018,10 @@ impl UnitAngle {
     }
 }
 
+/// The unit types of solid angles
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSolidAngle {
+    /// SI unit
     Steradian(Metric)
 }
 
@@ -973,8 +1062,10 @@ impl UnitSolidAngle {
     }
 }
 
+/// The unit types of frequency
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitFrequency {
+    /// SI unit
     Hertz(Metric)
 }
 
@@ -1011,9 +1102,12 @@ impl UnitFrequency {
     }
 }
 
+/// The unit types of force
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitForce {
+    /// SI unit
     Newton(Metric),
+    /// Imperial
     PoundForce
 }
 
@@ -1058,11 +1152,16 @@ impl UnitForce {
     }
 }
 
+/// The unit types of energy
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitEnergy {
+    /// SI unit
     Joule(Metric),
+    /// SI integrated
     GramCalorie(Metric),
+    /// Imperial
     FootPound,
+    /// SI integrated
     ElectronVolt
 }
 
@@ -1117,8 +1216,10 @@ impl UnitEnergy {
     }
 }
 
+/// The unit types of power
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitPower {
+    /// SI unit
     Watt(Metric)
 }
 
@@ -1151,9 +1252,12 @@ impl UnitPower {
     }
 }
 
+/// The unit types of radioactivity
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitRadioactivity {
+    /// SI unit
     Becquerel(Metric),
+    /// Legacy
     Curie
 }
 
@@ -1198,10 +1302,14 @@ impl UnitRadioactivity {
     }
 }
 
+/// The unit types of absorbed dose of ionizing radiation
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitAbsorbedDose {
+    /// SI unit
     Gray(Metric),
+    /// Legacy
     Roentgen,
+    /// Legacy
     Rad
 }
 
@@ -1248,9 +1356,12 @@ impl UnitAbsorbedDose {
     }
 }
 
+/// The unit types of equaivalent dose of ionizing radiation
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitRadioactivityExposure {
+    /// SI unit
     Sievert(Metric),
+    /// Legacy
     Rem
 }
 
@@ -1295,6 +1406,7 @@ impl UnitRadioactivityExposure {
     }
 }
 
+/// The unit types for catalytica activity
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitCatalyticActivity {
     Katal(Metric)

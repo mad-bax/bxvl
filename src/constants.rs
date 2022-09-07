@@ -81,7 +81,7 @@ pub const VAL_RYDBERG:f64           = 10_973_731.568_539;
 // Plank's constant
 pub const VAL_PLANKS:f64            = 6.62607015e-34;
 
-pub const VAL_VACUUM_ELECTIRC_PERMITTIVITY:f64 = 8.8541878128e-12;
+pub const VAL_VACUUM_ELECTRIC_PERMITTIVITY:f64 = 8.8541878128e-12;
 
 /* These are the unit indexes into the Value unit array. 
  * These allow Values to keep track of what units are present
