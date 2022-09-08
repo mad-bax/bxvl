@@ -185,14 +185,17 @@ impl UnitLength {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitLength) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert_liter(&self, other:&UnitVolume) -> f64 {
         constants::METER3_TO_LITER / other.convert(&UnitVolume::Liter(Metric::None))
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Meter(m) => *m,
@@ -247,14 +250,17 @@ impl UnitTime {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitTime) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert_freq(&self, other:&UnitFrequency) -> f64 {
         (self.scale() / other.scale()) * self.base()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Second(m) => *m,
@@ -309,10 +315,12 @@ impl UnitMass {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitMass) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Gram(m) => *m,
@@ -346,11 +354,13 @@ impl UnitElectricCurrent {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitElectricCurrent) -> f64 {
         self.scale() / other.scale()
     }
 
-        pub fn get_metric(&self) -> Metric {
+    /// Returns the `Metric` prefix for the unit
+    pub fn get_metric(&self) -> Metric {
         match self {
             Self::Ampere(m) => *m
         }
@@ -382,10 +392,12 @@ impl UnitElectricCharge {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitElectricCharge) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Coulomb(m) => *m
@@ -396,7 +408,7 @@ impl UnitElectricCharge {
 /// The unit types for electric potential
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitElectricPotential {
-    // SI unit
+    /// SI unit
     Volt(Metric)
 }
 
@@ -418,10 +430,12 @@ impl UnitElectricPotential {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitElectricPotential) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Volt(m) => *m
@@ -454,10 +468,12 @@ impl UnitElectricConductance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitElectricConductance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Siemens(m) => *m
@@ -490,10 +506,12 @@ impl UnitCapacitance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitCapacitance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Farad(m) => *m
@@ -526,10 +544,12 @@ impl UnitResistance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitResistance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Ohm(m) => *m
@@ -562,10 +582,12 @@ impl UnitInductance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitInductance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Henry(m) => *m
@@ -598,10 +620,12 @@ impl UnitMagneticFlux {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitMagneticFlux) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Weber(m) => *m
@@ -634,10 +658,12 @@ impl UnitMagneticFluxDensity {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitMagneticFluxDensity) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Tesla(m) => *m
@@ -669,6 +695,8 @@ impl Display for UnitTemperature {
 }
 
 impl UnitTemperature {
+
+    /// Returns a `f64` to assign to a `Value`
     pub fn convert(&self, other:&UnitTemperature, val:f64) -> f64 {
         if self == other {
             return val;
@@ -699,6 +727,7 @@ impl UnitTemperature {
         }
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         Metric::None
     }
@@ -729,10 +758,12 @@ impl UnitSubstance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitSubstance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Mole(m) => *m
@@ -765,10 +796,12 @@ impl UnitLuminousIntensity {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitLuminousIntensity) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Candela(m) => *m
@@ -801,10 +834,12 @@ impl UnitLuminousFlux {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitLuminousFlux) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Lumen(m) => *m
@@ -837,10 +872,12 @@ impl UnitIlluminance {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitIlluminance) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Lux(m) => *m
@@ -873,14 +910,17 @@ impl UnitVolume {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitVolume) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert_meter(&self, other:&UnitLength) -> f64 {
         self.scale() * (constants::METER3_TO_LITER * other.convert(&UnitLength::Meter(Metric::None)))
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Liter(m) => *m
@@ -950,10 +990,12 @@ impl UnitPressure {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitPressure) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Pascal(m) => *m,
@@ -1006,10 +1048,12 @@ impl UnitAngle {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitAngle) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Radian(m) => *m,
@@ -1051,10 +1095,12 @@ impl UnitSolidAngle {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitSolidAngle) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Steradian(m) => *m
@@ -1087,14 +1133,17 @@ impl UnitFrequency {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitFrequency) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert_time(&self, other:&UnitTime) -> f64 {
         (self.scale() / other.scale()) * (other.convert(&UnitTime::Second(Metric::None)))
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Hertz(m) => *m
@@ -1140,10 +1189,12 @@ impl UnitForce {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitForce) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Newton(m) => *m,
@@ -1203,10 +1254,12 @@ impl UnitEnergy {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitEnergy) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Joule(m) => *m,
@@ -1241,10 +1294,12 @@ impl UnitPower {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitPower) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Watt(m) => *m
@@ -1290,10 +1345,12 @@ impl UnitRadioactivity {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitRadioactivity) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Becquerel(m) => *m,
@@ -1344,10 +1401,12 @@ impl UnitAbsorbedDose {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitAbsorbedDose) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Gray(m) => *m,
@@ -1394,10 +1453,12 @@ impl UnitRadioactivityExposure {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitRadioactivityExposure) -> f64 {
         (self.scale() / self.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Sievert(m) => *m,
@@ -1406,9 +1467,10 @@ impl UnitRadioactivityExposure {
     }
 }
 
-/// The unit types for catalytica activity
+/// The unit types for catalytic activity
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitCatalyticActivity {
+    /// SI unit
     Katal(Metric)
 }
 
@@ -1430,10 +1492,12 @@ impl UnitCatalyticActivity {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitCatalyticActivity) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Katal(m) => *m
@@ -1441,8 +1505,10 @@ impl UnitCatalyticActivity {
     }
 }
 
+/// The unit types of a measurement of sound
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitSound {
+    /// SI unit
     Bel(Metric)
 }
 
@@ -1464,10 +1530,12 @@ impl UnitSound {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitSound) -> f64 {
         self.scale() / other.scale()
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Bel(m) => *m
@@ -1475,9 +1543,12 @@ impl UnitSound {
     }
 }
 
+/// The unit types for a measurement of information
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum UnitInformation {
+    /// Not SI but uses metric prefixing
     Bit(Metric),
+    /// Not SI but uses metric prefixing
     Byte(Metric)
 }
 
@@ -1524,10 +1595,12 @@ impl UnitInformation {
         }
     }
 
+    /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert(&self, other:&UnitInformation) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
+    /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Bit(m) => *m,

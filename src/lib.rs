@@ -3,7 +3,13 @@
 #![warn(clippy::missing_docs_in_private_items)]
 #![deny(clippy::missing_doc_code_examples)]
 
+//! The V3 library crate
+
 mod constants;
 mod errors;
+
+/// The main module for `Metric` and `Unit` types
 pub mod units;
+
+/// The main module for V3 and `Value`s
 pub mod values;

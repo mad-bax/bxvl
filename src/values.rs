@@ -1,3 +1,4 @@
+
 use crate::units::*;
 use crate::constants::*;
 use crate::errors::V3Error;
@@ -19,7 +20,7 @@ use std::ops::MulAssign;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
-/// value!
+/// Macro to create a new `Value`
 #[macro_export]
 macro_rules! value {
     ($v:expr, $u:expr) => {
@@ -27,8 +28,7 @@ macro_rules! value {
     };
 }
 
-/// Value
-/// The struct that is used to represent a value
+/// The `Value` struct definition
 #[derive(Debug, Clone, Copy)]
 pub struct Value {
     /// The numerical value for the `Value` struct
@@ -43,29 +43,29 @@ pub struct Value {
     v_electric_conductance :    Option<UnitElectricConductance>,
     v_electric_current :        Option<UnitElectricCurrent>,
     v_electric_potential :      Option<UnitElectricPotential>,
-    v_energy :                  Option<UnitEnergy>,
-    v_force :                   Option<UnitForce>,
-    v_frequency :               Option<UnitFrequency>,
-    v_illuminance :             Option<UnitIlluminance>,
-    v_inductance :              Option<UnitInductance>,
-    v_information :             Option<UnitInformation>,
-    v_length :                  Option<UnitLength>,
-    v_luminous_flux :           Option<UnitLuminousFlux>,
-    v_luminous_flux_intensity : Option<UnitLuminousIntensity>,
-    v_mass :                    Option<UnitMass>,
-    v_power :                   Option<UnitPower>,
-    v_pressure :                Option<UnitPressure>,
-    v_radioactivity :           Option<UnitRadioactivity>,
-    v_radioactivity_exposure :  Option<UnitRadioactivityExposure>,
-    v_resistance :              Option<UnitResistance>,
-    v_sound :                   Option<UnitSound>,
-    v_substance :               Option<UnitSubstance>,
-    v_temperature :             Option<UnitTemperature>,
-    v_time :                    Option<UnitTime>,
-    v_volume :                  Option<UnitVolume>,
-    v_magnetic_flux :           Option<UnitMagneticFlux>,
-    v_magnetic_flux_density :   Option<UnitMagneticFluxDensity>,
-    v_solid_angle :             Option<UnitSolidAngle>
+    v_energy :                  Option<UnitEnergy>,                 // the energy measure
+    v_force :                   Option<UnitForce>,                  // the force measure
+    v_frequency :               Option<UnitFrequency>,              // the frequency measure
+    v_illuminance :             Option<UnitIlluminance>,            // the illuminance measure
+    v_inductance :              Option<UnitInductance>,             // the inductance measure
+    v_information :             Option<UnitInformation>,            // the information measure
+    v_length :                  Option<UnitLength>,                 // the length measure
+    v_luminous_flux :           Option<UnitLuminousFlux>,           // the luminous flux mesasure
+    v_luminous_flux_intensity : Option<UnitLuminousIntensity>,      // the luminous intensity measure
+    v_mass :                    Option<UnitMass>,                   // the mass measure
+    v_power :                   Option<UnitPower>,                  // the power measure
+    v_pressure :                Option<UnitPressure>,               // the pressure measure
+    v_radioactivity :           Option<UnitRadioactivity>,          // the radioactivity measure
+    v_radioactivity_exposure :  Option<UnitRadioactivityExposure>,  // the equivalent dose measure
+    v_resistance :              Option<UnitResistance>,             // the resistance measure
+    v_sound :                   Option<UnitSound>,                  // the sound measure
+    v_substance :               Option<UnitSubstance>,              // the substance measure
+    v_temperature :             Option<UnitTemperature>,            // the temperature measure
+    v_time :                    Option<UnitTime>,                   // the time measure
+    v_volume :                  Option<UnitVolume>,                 // the volume measure
+    v_magnetic_flux :           Option<UnitMagneticFlux>,           // the magnetic flux measure
+    v_magnetic_flux_density :   Option<UnitMagneticFluxDensity>,    // The magnetic flux density measure
+    v_solid_angle :             Option<UnitSolidAngle>              // the solid angle measure
 }
 
 impl Display for Value {
@@ -3219,10 +3219,11 @@ impl Value {
     /// }
     /// ```
     pub fn convert(&mut self, other:&str) -> Result<(), V3Error> {
-        let temp:Value = Value::new(0.0, other)?;
+        let temp:Value = Value::new(0.0, other)?; // We make a temporary Value to make conversion easier
         self._convert(&temp)
     }
 
+    /// Actual convert functionality with a given `Value` argument
     fn _convert(&mut self, other:&Value) -> Result<(), V3Error> {
 
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
@@ -4012,6 +4013,7 @@ impl Value {
         )
     }
 
+    /// Actual reduce function that operates on a `Value` type
     fn _reduce(&mut self, other:&Value) -> bool {
         if self.unit_map == other.unit_map {
             return false;
@@ -5548,6 +5550,7 @@ impl Value {
         ret       
     }
 
+    /// Creates a new unit type when constructing a `Value`
     fn _create_unit(&mut self, units:&str) -> Result<(), V3Error>{
         let tokens:(Vec<String>, Vec<String>) = self._get_tokens(units, false)?;
 
@@ -5580,6 +5583,7 @@ impl Value {
         Ok(())
     }
 
+    /// Tokenizes a given string for a new `Value` for easier parsing
     fn _get_tokens(&self, block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), V3Error> {
         let mut numor:Vec<String> = Vec::new();
         let mut denom:Vec<String> = Vec::new();
@@ -5655,6 +5659,7 @@ impl Value {
         Ok((numor, denom))
     }
 
+    /// Searches through the given string for a new `Value` to parse for units
     fn _parse_units(&mut self, unit:&str, exp:i32) -> Result<(), V3Error> {
         let l:usize = unit.chars().count();
         if l == 0 {
@@ -5892,6 +5897,7 @@ impl Value {
         Ok(())
     }
 
+    /// Searches and assigns a unit type to a `Value` during string parsing and construction
     fn _get_single_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error>{
         match unit {
             "m" => {
@@ -6002,6 +6008,7 @@ impl Value {
         Ok(())
     }
 
+    /// Searches and assigns a unit type to a `Value` during string parsing and construction
     fn _get_double_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
         match unit {
             "Hz" => {
@@ -6085,6 +6092,7 @@ impl Value {
         Ok(())
     }
 
+    /// Searches and assigns a unit type to a `Value` during string parsing and construction
     fn _get_triple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
@@ -6141,6 +6149,7 @@ impl Value {
         Ok(())
     }
 
+    /// Searches and assigns a unit type to a `Value` during string parsing and construction
     fn _get_quadrouple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
@@ -6176,6 +6185,7 @@ impl Value {
         Ok(())
     }
 
+    /// Searches and assigns a unit type to a `Value` during string parsing and construction
     fn _get_pentuple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
@@ -6196,6 +6206,7 @@ impl Value {
         }
     }
 
+    /// Returns the `Metric` enum for a given prefix
     fn _get_metric(&mut self, unit:&char) -> Result<Metric, V3Error> {
         match unit {
             'Y' => Ok(Metric::Yotta),
@@ -6223,7 +6234,7 @@ impl Value {
         }
     }
 
-    // check if we are equivalent units
+    /// Returns `true` if two `Values` have comparable, not equal, unit types
     fn __equivalent(&self, other:&Value) -> bool {
 
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
@@ -6251,7 +6262,7 @@ impl Value {
         true
     }
 
-    // only if checking if the types are the same
+    /// Checks if the `Value` unit types are the same
     fn __equal(&self, other:&Value) -> bool {
         if self.unit_map != other.unit_map {
             return false;
