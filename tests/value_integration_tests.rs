@@ -81,7 +81,7 @@ mod value_usage_tests {
 
 #[cfg(test)]
 mod unit_conversion_tests {
-    use v3::values::Value;
+    use v3::{values::Value, units::{UnitLength, Metric, UnitTime}};
 
     macro_rules! assert_apr {
         ($x:expr, $y:expr, $d:expr) => {
@@ -783,6 +783,14 @@ mod unit_conversion_tests {
         
         t1 >>= "bytes";
         assert_apr!(t1.val, 1024.0/8.0);
+    }
+
+    #[test]
+    fn convert_mph(){
+        let mut v1:Value = Value::new(20.0, "mph").unwrap();
+        let v2:Value = 32.18688 & UnitLength::Meter(Metric::Kilo) ^ UnitTime::Hour;
+        v1.convert("km/hr").unwrap();
+        assert_eq!(v1, v2);
     }
 }
 

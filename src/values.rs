@@ -6,7 +6,7 @@ use crate::errors::V3Error;
 use std::fmt::Display;
 use std::ops::BitAnd;
 use std::ops::BitOr;
-use std::ops::BitXorAssign;
+use std::ops::BitXor;
 use std::ops::Shr;
 use std::ops::ShrAssign;
 use std::str::FromStr;
@@ -33,39 +33,72 @@ macro_rules! value {
 pub struct Value {
     /// The numerical value for the `Value` struct
     pub val:f64,
+    /// The unit map which specifies which units are present in the `Value`
     unit_map:usize,
+    /// The exponent storage of all the units within a `Value`
     exp:[i32;31],
+    /// the absorbed dose of ionizing radiation measure
     v_ab_dose :                 Option<UnitAbsorbedDose>,
+    /// the angle measure
     v_angle :                   Option<UnitAngle>,
+    /// the capacitance measure
     v_capacitance :             Option<UnitCapacitance>,
+    /// the catalytic activity measure
     v_catalytic :               Option<UnitCatalyticActivity>,
+    /// the electric charge measure
     v_electric_charge :         Option<UnitElectricCharge>,
+    /// the electric conductance measure
     v_electric_conductance :    Option<UnitElectricConductance>,
+    /// the electric current measure
     v_electric_current :        Option<UnitElectricCurrent>,
+    /// the electric potential measure
     v_electric_potential :      Option<UnitElectricPotential>,
-    v_energy :                  Option<UnitEnergy>,                 // the energy measure
-    v_force :                   Option<UnitForce>,                  // the force measure
-    v_frequency :               Option<UnitFrequency>,              // the frequency measure
-    v_illuminance :             Option<UnitIlluminance>,            // the illuminance measure
-    v_inductance :              Option<UnitInductance>,             // the inductance measure
-    v_information :             Option<UnitInformation>,            // the information measure
-    v_length :                  Option<UnitLength>,                 // the length measure
-    v_luminous_flux :           Option<UnitLuminousFlux>,           // the luminous flux mesasure
-    v_luminous_flux_intensity : Option<UnitLuminousIntensity>,      // the luminous intensity measure
-    v_mass :                    Option<UnitMass>,                   // the mass measure
-    v_power :                   Option<UnitPower>,                  // the power measure
-    v_pressure :                Option<UnitPressure>,               // the pressure measure
-    v_radioactivity :           Option<UnitRadioactivity>,          // the radioactivity measure
-    v_radioactivity_exposure :  Option<UnitRadioactivityExposure>,  // the equivalent dose measure
-    v_resistance :              Option<UnitResistance>,             // the resistance measure
-    v_sound :                   Option<UnitSound>,                  // the sound measure
-    v_substance :               Option<UnitSubstance>,              // the substance measure
-    v_temperature :             Option<UnitTemperature>,            // the temperature measure
-    v_time :                    Option<UnitTime>,                   // the time measure
-    v_volume :                  Option<UnitVolume>,                 // the volume measure
-    v_magnetic_flux :           Option<UnitMagneticFlux>,           // the magnetic flux measure
-    v_magnetic_flux_density :   Option<UnitMagneticFluxDensity>,    // The magnetic flux density measure
-    v_solid_angle :             Option<UnitSolidAngle>              // the solid angle measure
+    /// the energy measure
+    v_energy :                  Option<UnitEnergy>,
+    /// the force measure
+    v_force :                   Option<UnitForce>,
+    /// the frequency measure
+    v_frequency :               Option<UnitFrequency>,
+    /// the illuminance measure
+    v_illuminance :             Option<UnitIlluminance>,
+    /// the inductance measure
+    v_inductance :              Option<UnitInductance>,
+    /// the information measure
+    v_information :             Option<UnitInformation>,
+    /// the length measure
+    v_length :                  Option<UnitLength>,
+    /// the luminous flux mesasure
+    v_luminous_flux :           Option<UnitLuminousFlux>,
+    /// the luminous intensity measure
+    v_luminous_flux_intensity : Option<UnitLuminousIntensity>,
+    /// the mass measure
+    v_mass :                    Option<UnitMass>,
+    /// the power measure
+    v_power :                   Option<UnitPower>,
+    /// the pressure measure
+    v_pressure :                Option<UnitPressure>,
+    /// the radioactivity measure
+    v_radioactivity :           Option<UnitRadioactivity>,
+    /// the equivalent dose measure
+    v_radioactivity_exposure :  Option<UnitRadioactivityExposure>,
+    /// the resistance measure
+    v_resistance :              Option<UnitResistance>,
+    /// the sound measure
+    v_sound :                   Option<UnitSound>,
+    /// the substance measure
+    v_substance :               Option<UnitSubstance>,
+    /// the temperature measure
+    v_temperature :             Option<UnitTemperature>,
+    /// the time measure
+    v_time :                    Option<UnitTime>,
+    /// the volume measure
+    v_volume :                  Option<UnitVolume>,
+    /// the magnetic flux measure
+    v_magnetic_flux :           Option<UnitMagneticFlux>,
+    /// The magnetic flux density measure
+    v_magnetic_flux_density :   Option<UnitMagneticFluxDensity>,
+    /// The solid angle measure
+    v_solid_angle :             Option<UnitSolidAngle>
 }
 
 impl Display for Value {
@@ -3066,6 +3099,7 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
     /// let mut m:Value = Value::default();
     /// m.val = 1.3;
     /// ```
@@ -3112,6 +3146,7 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
     /// let m:Value = match Value::new(4.5, "m") {
     ///     Ok(v) => v,
     ///     Err(e) => panic!("{}", e)
@@ -3159,6 +3194,7 @@ impl Value {
         Ok(ret)
     }
 
+    /// Creates a `Value` specifically in radians
     fn _radians(val:f64) -> Value {
         let mut ret:Value = Value {
             val,
@@ -3207,13 +3243,19 @@ impl Value {
     /// 
     /// e.g. m/s and ft/hour, or J/kg and cal/lbs
     /// 
+    /// The given string *must* be representative of the full unit to convert to.
+    /// 
+    /// e.g. `20 miles/hr` must be converted with `km/hr` or `kph` not just `km`
+    /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
     /// let mut speed:Value = match Value::new(20.0, "mph") {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)
     /// };
-    /// match speed.convert("miles") {
+    /// 
+    /// match speed.convert("kph") {
     ///     Ok(_) => {}
     ///     Err(e) => panic!("{}", e)
     /// }
@@ -3276,6 +3318,8 @@ impl Value {
             self.v_time = None;
             return Ok(());
         }
+
+        println!("{} - {}", self, other);
 
         if self.unit_map != other.unit_map {
             return Err(V3Error::ValueConversionError("[_convert] Inequivalent unit types"));
@@ -3466,6 +3510,8 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 4.0 & UnitLength::Inch;
     /// v.inv()
     /// ```
@@ -3481,6 +3527,8 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::UnitAngle;
     /// let mut a:Value = 45.0 & UnitAngle::Degree;
     /// a.to_radians();
     /// ```
@@ -3495,7 +3543,9 @@ impl Value {
     /// 
     /// Example
     /// ```rust
-    /// let mut a:Value = 2.0/std::f64::consts::PI & UnitAngle::Radian(Metric::None);
+    /// use v3::values::Value;
+    /// use v3::units::{UnitAngle, Metric};
+    /// let mut a:Value = (2.0/std::f64::consts::PI) & UnitAngle::Radian(Metric::None);
     /// a.to_degrees();
     /// ```
     pub fn to_degrees(&mut self) {
@@ -3546,6 +3596,8 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 16.0 & UnitLength::Foot | UnitLength::Foot;
     /// let x:Value = v.sqrt();
     /// ```
@@ -3568,6 +3620,8 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 9.0 & UnitLength::Foot | UnitLength::Foot | UnitLength::Foot;
     /// let x:Value = v.cbrt();
     /// ```
@@ -3620,9 +3674,11 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::{UnitTime, UnitAngle, Metric};
     /// let a:Value = 10.0 & UnitTime::Second(Metric::None);
     /// let b:Value = 0.3 & UnitAngle::Radian(Metric::None);
-    /// let x:Value = a.atan2(b);
+    /// let x:Value = a.atan2(&b);
     /// ```
     /// `x` will be approximately equal to `1.5408 radians`
     pub fn atan2(&self, other:&Value) -> Value {
@@ -3646,12 +3702,14 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::{UnitLength, UnitMass, UnitTime, Metric};
     /// let mass:Value = 4.5 & UnitMass::Gram(Metric::Kilo);
-    /// met acc:Value = 9.81 & UnitLength::Meter(Metric::None) ^ UnitTime::Second(Metric::None) ^ UnitTime::Second(Metric::None);
+    /// let acc:Value = 9.81 & UnitLength::Meter(Metric::None) ^ UnitTime::Second(Metric::None) ^ UnitTime::Second(Metric::None);
     /// let mut f:Value = match (mass*acc).complex() {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)
-    /// }
+    /// };
     /// ```
     /// `f` will be equal to `44.145 N`
     pub fn complex(&self) -> Result<Value, V3Error> {
@@ -3967,6 +4025,7 @@ impl Value {
     /// 
     /// Example
     /// ```rust
+    /// use v3::values::Value;
     /// let mut f:Value = match Value::new(3.0, "N") {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)
@@ -5669,7 +5728,7 @@ impl Value {
         // first match it against known unique strings
         match unit {
             "mph" => {
-                if exp != 1 || exp != -1 {
+                if exp != 1 && exp != -1 {
                     return Err(V3Error::ParsingError("[_parse_units] MPH exponent"));
                 }
                 self.v_length = Some(UnitLength::Mile);
@@ -5680,7 +5739,7 @@ impl Value {
                 return Ok(());
             }
             "kph" => {
-                if exp != 1 || exp != -1 {
+                if exp != 1 && exp != -1 {
                     return Err(V3Error::ParsingError("[_parse_units] KPH exponent"));
                 }
                 self.v_length = Some(UnitLength::Meter(Metric::Kilo));
@@ -5858,7 +5917,7 @@ impl Value {
                 self.unit_map |= TIME_MAP;
                 return Ok(());
             }
-            "h" | "hour" | "hours" => {
+            "h" | "hr" | "hour" | "hours" => {
                 self.v_time = Some(UnitTime::Hour);
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
@@ -6473,22 +6532,25 @@ impl BitOr<UnitLength> for Value {
     }
 }
 
-impl BitXorAssign<UnitLength> for Value {
-    fn bitxor_assign(&mut self, other:UnitLength) {
-        if self.v_length != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitLength> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitLength) -> Value {
+        let mut new:Value = self;
+        if self.v_length != None && self.v_length != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[LENGTH_INDEX] == 0 {
-            self.v_length = Some(other);
-            self.unit_map |= LENGTH_MAP;
-            self.exp[LENGTH_INDEX] = -1;
+            new.v_length = Some(other);
+            new.unit_map |= LENGTH_MAP;
+            new.exp[LENGTH_INDEX] = -1;
         } else if self.exp[LENGTH_INDEX] == 1 {
-            self.exp[LENGTH_INDEX] = 0;
-            self.v_length = None;
-            self.unit_map ^= LENGTH_MAP;
+            new.exp[LENGTH_INDEX] = 0;
+            new.v_length = None;
+            new.unit_map ^= LENGTH_MAP;
         } else {
-            self.exp[LENGTH_INDEX] -= 1;
+            new.exp[LENGTH_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6526,22 +6588,26 @@ impl BitOr<UnitTime> for Value {
     }
 }
 
-impl BitXorAssign<UnitTime> for Value {
-    fn bitxor_assign(&mut self, other:UnitTime) {
-        if self.v_time != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitTime> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitTime) -> Value {
+        let mut new:Value = self;
+        if self.v_time != None && self.v_time != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TIME_INDEX] == 0 {
-            self.v_time = Some(other);
-            self.unit_map |= TIME_MAP;
-            self.exp[TIME_INDEX] = -1;
+            new.v_time = Some(other);
+            new.unit_map |= TIME_MAP;
+            new.exp[TIME_INDEX] = -1;
         } else if self.exp[TIME_INDEX] == 1 {
-            self.exp[TIME_INDEX] = 0;
-            self.v_time = None;
-            self.unit_map ^= TIME_MAP;
+            new.exp[TIME_INDEX] = 0;
+            new.v_time = None;
+            new.unit_map ^= TIME_MAP;
         } else {
-            self.exp[TIME_INDEX] -= 1;
+            new.exp[TIME_INDEX] -= 1;
         }
+        new
+
     }
 }
 
@@ -6579,22 +6645,25 @@ impl BitOr<UnitAbsorbedDose> for Value {
     }
 }
 
-impl BitXorAssign<UnitAbsorbedDose> for Value {
-    fn bitxor_assign(&mut self, other:UnitAbsorbedDose) {
-        if self.v_ab_dose != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitAbsorbedDose> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitAbsorbedDose) -> Value {
+        let mut new:Value = self;
+        if self.v_ab_dose != None && self.v_ab_dose != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ABSORBED_DOSE_INDEX] == 0 {
-            self.v_ab_dose = Some(other);
-            self.unit_map |= ABSORBED_DOSE_MAP;
-            self.exp[ABSORBED_DOSE_INDEX] = -1;
+            new.v_ab_dose = Some(other);
+            new.unit_map |= ABSORBED_DOSE_MAP;
+            new.exp[ABSORBED_DOSE_INDEX] = -1;
         } else if self.exp[ABSORBED_DOSE_INDEX] == 1 {
-            self.exp[ABSORBED_DOSE_INDEX] = 0;
-            self.v_ab_dose = None;
-            self.unit_map ^= ABSORBED_DOSE_MAP;
+            new.exp[ABSORBED_DOSE_INDEX] = 0;
+            new.v_ab_dose = None;
+            new.unit_map ^= ABSORBED_DOSE_MAP;
         } else {
-            self.exp[ABSORBED_DOSE_INDEX] -= 1;
+            new.exp[ABSORBED_DOSE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6632,22 +6701,25 @@ impl BitOr<UnitAngle> for Value {
     }
 }
 
-impl BitXorAssign<UnitAngle> for Value {
-    fn bitxor_assign(&mut self, other:UnitAngle) {
-        if self.v_angle != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitAngle> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitAngle) -> Value {
+        let mut new:Value = self;
+        if self.v_angle != None && self.v_angle != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ANGLE_INDEX] == 0 {
-            self.v_angle = Some(other);
-            self.unit_map |= ANGLE_MAP;
-            self.exp[ANGLE_INDEX] = -1;
+            new.v_angle = Some(other);
+            new.unit_map |= ANGLE_MAP;
+            new.exp[ANGLE_INDEX] = -1;
         } else if self.exp[ANGLE_INDEX] == 1 {
-            self.exp[ANGLE_INDEX] = 0;
-            self.v_angle = None;
-            self.unit_map ^= ANGLE_MAP;
+            new.exp[ANGLE_INDEX] = 0;
+            new.v_angle = None;
+            new.unit_map ^= ANGLE_MAP;
         } else {
-            self.exp[ANGLE_INDEX] -= 1;
+            new.exp[ANGLE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6685,22 +6757,25 @@ impl BitOr<UnitCapacitance> for Value {
     }
 }
 
-impl BitXorAssign<UnitCapacitance> for Value {
-    fn bitxor_assign(&mut self, other:UnitCapacitance) {
-        if self.v_capacitance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitCapacitance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitCapacitance) -> Value {
+        let mut new:Value = self;
+        if self.v_capacitance != None && self.v_capacitance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CAPACITANCE_INDEX] == 0 {
-            self.v_capacitance = Some(other);
-            self.unit_map |= CAPACITANCE_MAP;
-            self.exp[CAPACITANCE_INDEX] = -1;
+            new.v_capacitance = Some(other);
+            new.unit_map |= CAPACITANCE_MAP;
+            new.exp[CAPACITANCE_INDEX] = -1;
         } else if self.exp[CAPACITANCE_INDEX] == 1 {
-            self.exp[CAPACITANCE_INDEX] = 0;
-            self.v_capacitance = None;
-            self.unit_map ^= CAPACITANCE_MAP;
+            new.exp[CAPACITANCE_INDEX] = 0;
+            new.v_capacitance = None;
+            new.unit_map ^= CAPACITANCE_MAP;
         } else {
-            self.exp[CAPACITANCE_INDEX] -= 1;
+            new.exp[CAPACITANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6738,22 +6813,25 @@ impl BitOr<UnitCatalyticActivity> for Value {
     }
 }
 
-impl BitXorAssign<UnitCatalyticActivity> for Value {
-    fn bitxor_assign(&mut self, other:UnitCatalyticActivity) {
-        if self.v_catalytic != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitCatalyticActivity> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitCatalyticActivity) -> Value {
+        let mut new:Value = self;
+        if self.v_catalytic != None && self.v_catalytic != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
-            self.v_catalytic = Some(other);
-            self.unit_map |= CATALYTIC_ACTIVITY_MAP;
-            self.exp[CATALYTIC_ACTIVITY_INDEX] = -1;
-        } else if self.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
-            self.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
-            self.v_catalytic = None;
-            self.unit_map ^= CATALYTIC_ACTIVITY_MAP;
+            new.v_catalytic = Some(other);
+            new.unit_map |= CATALYTIC_ACTIVITY_MAP;
+            new.exp[CATALYTIC_ACTIVITY_INDEX] = -1;
+        } else if new.exp[CATALYTIC_ACTIVITY_INDEX] == 1 {
+            new.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
+            new.v_catalytic = None;
+            new.unit_map ^= CATALYTIC_ACTIVITY_MAP;
         } else {
-            self.exp[CATALYTIC_ACTIVITY_INDEX] -= 1;
+            new.exp[CATALYTIC_ACTIVITY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6791,22 +6869,25 @@ impl BitOr<UnitElectricCharge> for Value {
     }
 }
 
-impl BitXorAssign<UnitElectricCharge> for Value {
-    fn bitxor_assign(&mut self, other:UnitElectricCharge) {
-        if self.v_electric_charge != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitElectricCharge> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitElectricCharge) -> Value {
+        let mut new:Value = self;
+        if self.v_electric_charge != None && self.v_electric_charge != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
-            self.v_electric_charge = Some(other);
-            self.unit_map |= ELECTRIC_CHARGE_MAP;
-            self.exp[ELECTRIC_CHARGE_INDEX] = -1;
-        } else if self.exp[ELECTRIC_CHARGE_INDEX] == 1 {
-            self.exp[ELECTRIC_CHARGE_INDEX] = 0;
-            self.v_electric_charge = None;
-            self.unit_map ^= ELECTRIC_CHARGE_MAP;
+            new.v_electric_charge = Some(other);
+            new.unit_map |= ELECTRIC_CHARGE_MAP;
+            new.exp[ELECTRIC_CHARGE_INDEX] = -1;
+        } else if new.exp[ELECTRIC_CHARGE_INDEX] == 1 {
+            new.exp[ELECTRIC_CHARGE_INDEX] = 0;
+            new.v_electric_charge = None;
+            new.unit_map ^= ELECTRIC_CHARGE_MAP;
         } else {
-            self.exp[ELECTRIC_CHARGE_INDEX] -= 1;
+            new.exp[ELECTRIC_CHARGE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6844,22 +6925,25 @@ impl BitOr<UnitElectricConductance> for Value {
     }
 }
 
-impl BitXorAssign<UnitElectricConductance> for Value {
-    fn bitxor_assign(&mut self, other:UnitElectricConductance) {
-        if self.v_electric_conductance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitElectricConductance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitElectricConductance) -> Value {
+        let mut new:Value = self;
+        if self.v_electric_conductance != None && self.v_electric_conductance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
-            self.v_electric_conductance = Some(other);
-            self.unit_map |= ELECTRIC_CONDUCTANCE_MAP;
-            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = -1;
+            new.v_electric_conductance = Some(other);
+            new.unit_map |= ELECTRIC_CONDUCTANCE_MAP;
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] = -1;
         } else if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 1 {
-            self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
-            self.v_electric_conductance = None;
-            self.unit_map ^= ELECTRIC_CONDUCTANCE_MAP;
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+            new.v_electric_conductance = None;
+            new.unit_map ^= ELECTRIC_CONDUCTANCE_MAP;
         } else {
-            self.exp[ELECTRIC_CONDUCTANCE_INDEX] -= 1;
+            new.exp[ELECTRIC_CONDUCTANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6897,22 +6981,25 @@ impl BitOr<UnitElectricCurrent> for Value {
     }
 }
 
-impl BitXorAssign<UnitElectricCurrent> for Value {
-    fn bitxor_assign(&mut self, other:UnitElectricCurrent) {
-        if self.v_electric_current != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitElectricCurrent> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitElectricCurrent) -> Value {
+        let mut new:Value = self;
+        if self.v_electric_current != None && self.v_electric_current != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
-            self.v_electric_current = Some(other);
-            self.unit_map |= ELECTRIC_CURRENT_MAP;
-            self.exp[ELECTRIC_CURRENT_INDEX] = -1;
-        } else if self.exp[ELECTRIC_CURRENT_INDEX] == 1 {
-            self.exp[ELECTRIC_CURRENT_INDEX] = 0;
-            self.v_electric_current = None;
-            self.unit_map ^= ELECTRIC_CURRENT_MAP;
+            new.v_electric_current = Some(other);
+            new.unit_map |= ELECTRIC_CURRENT_MAP;
+            new.exp[ELECTRIC_CURRENT_INDEX] = -1;
+        } else if new.exp[ELECTRIC_CURRENT_INDEX] == 1 {
+            new.exp[ELECTRIC_CURRENT_INDEX] = 0;
+            new.v_electric_current = None;
+            new.unit_map ^= ELECTRIC_CURRENT_MAP;
         } else {
-            self.exp[ELECTRIC_CURRENT_INDEX] -= 1;
+            new.exp[ELECTRIC_CURRENT_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -6950,22 +7037,25 @@ impl BitOr<UnitElectricPotential> for Value {
     }
 }
 
-impl BitXorAssign<UnitElectricPotential> for Value {
-    fn bitxor_assign(&mut self, other:UnitElectricPotential) {
-        if self.v_electric_potential != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitElectricPotential> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitElectricPotential) -> Value {
+        let mut new:Value = self;
+        if self.v_electric_potential != None && self.v_electric_potential != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
-            self.v_electric_potential = Some(other);
-            self.unit_map |= ELECTRIC_POTENTIAL_MAP;
-            self.exp[ELECTRIC_POTENTIAL_INDEX] = -1;
-        } else if self.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
-            self.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
-            self.v_electric_potential = None;
-            self.unit_map ^= ELECTRIC_POTENTIAL_MAP;
+            new.v_electric_potential = Some(other);
+            new.unit_map |= ELECTRIC_POTENTIAL_MAP;
+            new.exp[ELECTRIC_POTENTIAL_INDEX] = -1;
+        } else if new.exp[ELECTRIC_POTENTIAL_INDEX] == 1 {
+            new.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+            new.v_electric_potential = None;
+            new.unit_map ^= ELECTRIC_POTENTIAL_MAP;
         } else {
-            self.exp[ELECTRIC_POTENTIAL_INDEX] -= 1;
+            new.exp[ELECTRIC_POTENTIAL_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7003,22 +7093,25 @@ impl BitOr<UnitEnergy> for Value {
     }
 }
 
-impl BitXorAssign<UnitEnergy> for Value {
-    fn bitxor_assign(&mut self, other:UnitEnergy) {
-        if self.v_energy != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitEnergy> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitEnergy) -> Value {
+        let mut new:Value = self;
+        if self.v_energy != None && self.v_energy != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ENERGY_INDEX] == 0 {
-            self.v_energy = Some(other);
-            self.unit_map |= ENERGY_MAP;
-            self.exp[ENERGY_INDEX] = -1;
-        } else if self.exp[ENERGY_INDEX] == 1 {
-            self.exp[ENERGY_INDEX] = 0;
-            self.v_energy = None;
-            self.unit_map ^= ENERGY_MAP;
+            new.v_energy = Some(other);
+            new.unit_map |= ENERGY_MAP;
+            new.exp[ENERGY_INDEX] = -1;
+        } else if new.exp[ENERGY_INDEX] == 1 {
+            new.exp[ENERGY_INDEX] = 0;
+            new.v_energy = None;
+            new.unit_map ^= ENERGY_MAP;
         } else {
-            self.exp[ENERGY_INDEX] -= 1;
+            new.exp[ENERGY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7056,22 +7149,25 @@ impl BitOr<UnitForce> for Value {
     }
 }
 
-impl BitXorAssign<UnitForce> for Value {
-    fn bitxor_assign(&mut self, other:UnitForce) {
-        if self.v_force != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitForce> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitForce) -> Value {
+        let mut new:Value = self;
+        if self.v_force != None && self.v_force != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FORCE_INDEX] == 0 {
-            self.v_force = Some(other);
-            self.unit_map |= FORCE_MAP;
-            self.exp[FORCE_INDEX] = -1;
-        } else if self.exp[FORCE_INDEX] == 1 {
-            self.exp[FORCE_INDEX] = 0;
-            self.v_force = None;
-            self.unit_map ^= FORCE_MAP;
+            new.v_force = Some(other);
+            new.unit_map |= FORCE_MAP;
+            new.exp[FORCE_INDEX] = -1;
+        } else if new.exp[FORCE_INDEX] == 1 {
+            new.exp[FORCE_INDEX] = 0;
+            new.v_force = None;
+            new.unit_map ^= FORCE_MAP;
         } else {
-            self.exp[FORCE_INDEX] -= 1;
+            new.exp[FORCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7109,22 +7205,25 @@ impl BitOr<UnitFrequency> for Value {
     }
 }
 
-impl BitXorAssign<UnitFrequency> for Value {
-    fn bitxor_assign(&mut self, other:UnitFrequency) {
-        if self.v_frequency != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitFrequency> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitFrequency) -> Value {
+        let mut new:Value = self;
+        if self.v_frequency != None && self.v_frequency != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FREQUENCY_INDEX] == 0 {
-            self.v_frequency = Some(other);
-            self.unit_map |= FREQUENCY_MAP;
-            self.exp[FREQUENCY_INDEX] = -1;
-        } else if self.exp[FREQUENCY_INDEX] == 1 {
-            self.exp[FREQUENCY_INDEX] = 0;
-            self.v_frequency = None;
-            self.unit_map ^= FREQUENCY_MAP;
+            new.v_frequency = Some(other);
+            new.unit_map |= FREQUENCY_MAP;
+            new.exp[FREQUENCY_INDEX] = -1;
+        } else if new.exp[FREQUENCY_INDEX] == 1 {
+            new.exp[FREQUENCY_INDEX] = 0;
+            new.v_frequency = None;
+            new.unit_map ^= FREQUENCY_MAP;
         } else {
-            self.exp[FREQUENCY_INDEX] -= 1;
+            new.exp[FREQUENCY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7162,22 +7261,25 @@ impl BitOr<UnitIlluminance> for Value {
     }
 }
 
-impl BitXorAssign<UnitIlluminance> for Value {
-    fn bitxor_assign(&mut self, other:UnitIlluminance) {
-        if self.v_illuminance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitIlluminance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitIlluminance) -> Value {
+        let mut new:Value = self;
+        if self.v_illuminance != None && self.v_illuminance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ILLUMINANCE_INDEX] == 0 {
-            self.v_illuminance = Some(other);
-            self.unit_map |= ILLUMINANCE_MAP;
-            self.exp[ILLUMINANCE_INDEX] = -1;
-        } else if self.exp[ILLUMINANCE_INDEX] == 1 {
-            self.exp[ILLUMINANCE_INDEX] = 0;
-            self.v_illuminance = None;
-            self.unit_map ^= ILLUMINANCE_MAP;
+            new.v_illuminance = Some(other);
+            new.unit_map |= ILLUMINANCE_MAP;
+            new.exp[ILLUMINANCE_INDEX] = -1;
+        } else if new.exp[ILLUMINANCE_INDEX] == 1 {
+            new.exp[ILLUMINANCE_INDEX] = 0;
+            new.v_illuminance = None;
+            new.unit_map ^= ILLUMINANCE_MAP;
         } else {
-            self.exp[ILLUMINANCE_INDEX] -= 1;
+            new.exp[ILLUMINANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7215,22 +7317,25 @@ impl BitOr<UnitVolume> for Value {
     }
 }
 
-impl BitXorAssign<UnitVolume> for Value {
-    fn bitxor_assign(&mut self, other:UnitVolume) {
-        if self.v_volume != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitVolume> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitVolume) -> Value {
+        let mut new:Value = self;
+        if self.v_volume != None && self.v_volume != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[VOLUME_INDEX] == 0 {
-            self.v_volume = Some(other);
-            self.unit_map |= VOLUME_MAP;
-            self.exp[VOLUME_INDEX] = -1;
-        } else if self.exp[VOLUME_INDEX] == 1 {
-            self.exp[VOLUME_INDEX] = 0;
-            self.v_volume = None;
-            self.unit_map ^= VOLUME_MAP;
+            new.v_volume = Some(other);
+            new.unit_map |= VOLUME_MAP;
+            new.exp[VOLUME_INDEX] = -1;
+        } else if new.exp[VOLUME_INDEX] == 1 {
+            new.exp[VOLUME_INDEX] = 0;
+            new.v_volume = None;
+            new.unit_map ^= VOLUME_MAP;
         } else {
-            self.exp[VOLUME_INDEX] -= 1;
+            new.exp[VOLUME_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7268,22 +7373,25 @@ impl BitOr<UnitTemperature> for Value {
     }
 }
 
-impl BitXorAssign<UnitTemperature> for Value {
-    fn bitxor_assign(&mut self, other:UnitTemperature) {
-        if self.v_temperature != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitTemperature> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitTemperature) -> Value {
+        let mut new:Value = self;
+        if self.v_temperature != None && self.v_temperature != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TEMPERATURE_INDEX] == 0 {
-            self.v_temperature = Some(other);
-            self.unit_map |= TEMPERATURE_MAP;
-            self.exp[TEMPERATURE_INDEX] = -1;
-        } else if self.exp[TEMPERATURE_INDEX] == 1 {
-            self.exp[TEMPERATURE_INDEX] = 0;
-            self.v_temperature = None;
-            self.unit_map ^= TEMPERATURE_MAP;
+            new.v_temperature = Some(other);
+            new.unit_map |= TEMPERATURE_MAP;
+            new.exp[TEMPERATURE_INDEX] = -1;
+        } else if new.exp[TEMPERATURE_INDEX] == 1 {
+            new.exp[TEMPERATURE_INDEX] = 0;
+            new.v_temperature = None;
+            new.unit_map ^= TEMPERATURE_MAP;
         } else {
-            self.exp[TEMPERATURE_INDEX] -= 1;
+            new.exp[TEMPERATURE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7321,22 +7429,25 @@ impl BitOr<UnitSubstance> for Value {
     }
 }
 
-impl BitXorAssign<UnitSubstance> for Value {
-    fn bitxor_assign(&mut self, other:UnitSubstance) {
-        if self.v_substance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitSubstance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitSubstance) -> Value {
+        let mut new:Value = self;
+        if self.v_substance != None && self.v_substance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[SUBSTANCE_INDEX] == 0 {
-            self.v_substance = Some(other);
-            self.unit_map |= SUBSTANCE_MAP;
-            self.exp[SUBSTANCE_INDEX] = -1;
-        } else if self.exp[SUBSTANCE_INDEX] == 1 {
-            self.exp[SUBSTANCE_INDEX] = 0;
-            self.v_substance = None;
-            self.unit_map ^= SUBSTANCE_MAP;
+            new.v_substance = Some(other);
+            new.unit_map |= SUBSTANCE_MAP;
+            new.exp[SUBSTANCE_INDEX] = -1;
+        } else if new.exp[SUBSTANCE_INDEX] == 1 {
+            new.exp[SUBSTANCE_INDEX] = 0;
+            new.v_substance = None;
+            new.unit_map ^= SUBSTANCE_MAP;
         } else {
-            self.exp[SUBSTANCE_INDEX] -= 1;
+            new.exp[SUBSTANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7374,22 +7485,25 @@ impl BitOr<UnitSound> for Value {
     }
 }
 
-impl BitXorAssign<UnitSound> for Value {
-    fn bitxor_assign(&mut self, other:UnitSound) {
-        if self.v_sound != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitSound> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitSound) -> Value {
+        let mut new:Value = self;
+        if self.v_sound != None && self.v_sound != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[SOUND_INDEX] == 0 {
-            self.v_sound = Some(other);
-            self.unit_map |= SOUND_MAP;
-            self.exp[SOUND_INDEX] = -1;
-        } else if self.exp[SOUND_INDEX] == 1 {
-            self.exp[SOUND_INDEX] = 0;
-            self.v_sound = None;
-            self.unit_map ^= SOUND_MAP;
+        if new.exp[SOUND_INDEX] == 0 {
+            new.v_sound = Some(other);
+            new.unit_map |= SOUND_MAP;
+            new.exp[SOUND_INDEX] = -1;
+        } else if new.exp[SOUND_INDEX] == 1 {
+            new.exp[SOUND_INDEX] = 0;
+            new.v_sound = None;
+            new.unit_map ^= SOUND_MAP;
         } else {
-            self.exp[SOUND_INDEX] -= 1;
+            new.exp[SOUND_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7427,22 +7541,25 @@ impl BitOr<UnitSolidAngle> for Value {
     }
 }
 
-impl BitXorAssign<UnitSolidAngle> for Value {
-    fn bitxor_assign(&mut self, other:UnitSolidAngle) {
-        if self.v_solid_angle != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitSolidAngle> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitSolidAngle) -> Value {
+        let mut new:Value = self;
+        if self.v_solid_angle != None && self.v_solid_angle != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[SOLID_ANGLE_INDEX] == 0 {
-            self.v_solid_angle = Some(other);
-            self.unit_map |= SOLID_ANGLE_MAP;
-            self.exp[SOLID_ANGLE_INDEX] = -1;
-        } else if self.exp[SOLID_ANGLE_INDEX] == 1 {
-            self.exp[SOLID_ANGLE_INDEX] = 0;
-            self.v_solid_angle = None;
-            self.unit_map ^= SOLID_ANGLE_MAP;
+        if new.exp[SOLID_ANGLE_INDEX] == 0 {
+            new.v_solid_angle = Some(other);
+            new.unit_map |= SOLID_ANGLE_MAP;
+            new.exp[SOLID_ANGLE_INDEX] = -1;
+        } else if new.exp[SOLID_ANGLE_INDEX] == 1 {
+            new.exp[SOLID_ANGLE_INDEX] = 0;
+            new.v_solid_angle = None;
+            new.unit_map ^= SOLID_ANGLE_MAP;
         } else {
-            self.exp[SOLID_ANGLE_INDEX] -= 1;
+            new.exp[SOLID_ANGLE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7480,22 +7597,25 @@ impl BitOr<UnitResistance> for Value {
     }
 }
 
-impl BitXorAssign<UnitResistance> for Value {
-    fn bitxor_assign(&mut self, other:UnitResistance) {
-        if self.v_resistance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitResistance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitResistance) -> Value {
+        let mut new:Value = self;
+        if self.v_resistance != None && self.v_resistance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[RESISTANCE_INDEX] == 0 {
-            self.v_resistance = Some(other);
-            self.unit_map |= RESISTANCE_MAP;
-            self.exp[RESISTANCE_INDEX] = -1;
-        } else if self.exp[RESISTANCE_INDEX] == 1 {
-            self.exp[RESISTANCE_INDEX] = 0;
-            self.v_resistance = None;
-            self.unit_map ^= RESISTANCE_MAP;
+        if new.exp[RESISTANCE_INDEX] == 0 {
+            new.v_resistance = Some(other);
+            new.unit_map |= RESISTANCE_MAP;
+            new.exp[RESISTANCE_INDEX] = -1;
+        } else if new.exp[RESISTANCE_INDEX] == 1 {
+            new.exp[RESISTANCE_INDEX] = 0;
+            new.v_resistance = None;
+            new.unit_map ^= RESISTANCE_MAP;
         } else {
-            self.exp[RESISTANCE_INDEX] -= 1;
+            new.exp[RESISTANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7533,22 +7653,25 @@ impl BitOr<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl BitXorAssign<UnitRadioactivityExposure> for Value {
-    fn bitxor_assign(&mut self, other:UnitRadioactivityExposure) {
-        if self.v_radioactivity_exposure != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitRadioactivityExposure> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitRadioactivityExposure) -> Value {
+        let mut new:Value = self;
+        if self.v_radioactivity_exposure != None && self.v_radioactivity_exposure != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
-            self.v_radioactivity_exposure = Some(other);
-            self.unit_map |= RADIOACTIVITY_EXPOSURE_MAP;
-            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] = -1;
-        } else if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 1 {
-            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 0;
-            self.v_radioactivity_exposure = None;
-            self.unit_map ^= RADIOACTIVITY_EXPOSURE_MAP;
+        if new.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
+            new.v_radioactivity_exposure = Some(other);
+            new.unit_map |= RADIOACTIVITY_EXPOSURE_MAP;
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] = -1;
+        } else if new.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 1 {
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] = 0;
+            new.v_radioactivity_exposure = None;
+            new.unit_map ^= RADIOACTIVITY_EXPOSURE_MAP;
         } else {
-            self.exp[RADIOACTIVITY_EXPOSURE_INDEX] -= 1;
+            new.exp[RADIOACTIVITY_EXPOSURE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7586,22 +7709,25 @@ impl BitOr<UnitRadioactivity> for Value {
     }
 }
 
-impl BitXorAssign<UnitRadioactivity> for Value {
-    fn bitxor_assign(&mut self, other:UnitRadioactivity) {
-        if self.v_radioactivity != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitRadioactivity> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitRadioactivity) -> Value {
+        let mut new:Value = self;
+        if self.v_radioactivity != None && self.v_radioactivity != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[RADIOACTIVITY_INDEX] == 0 {
-            self.v_radioactivity = Some(other);
-            self.unit_map |= RADIOACTIVITY_MAP;
-            self.exp[RADIOACTIVITY_INDEX] = -1;
-        } else if self.exp[RADIOACTIVITY_INDEX] == 1 {
-            self.exp[RADIOACTIVITY_INDEX] = 0;
-            self.v_radioactivity = None;
-            self.unit_map ^= RADIOACTIVITY_MAP;
+        if new.exp[RADIOACTIVITY_INDEX] == 0 {
+            new.v_radioactivity = Some(other);
+            new.unit_map |= RADIOACTIVITY_MAP;
+            new.exp[RADIOACTIVITY_INDEX] = -1;
+        } else if new.exp[RADIOACTIVITY_INDEX] == 1 {
+            new.exp[RADIOACTIVITY_INDEX] = 0;
+            new.v_radioactivity = None;
+            new.unit_map ^= RADIOACTIVITY_MAP;
         } else {
-            self.exp[RADIOACTIVITY_INDEX] -= 1;
+            new.exp[RADIOACTIVITY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7639,22 +7765,25 @@ impl BitOr<UnitPressure> for Value {
     }
 }
 
-impl BitXorAssign<UnitPressure> for Value {
-    fn bitxor_assign(&mut self, other:UnitPressure) {
-        if self.v_pressure != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitPressure> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitPressure) -> Value {
+        let mut new:Value = self;
+        if self.v_pressure != None && self.v_pressure != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[PRESSURE_INDEX] == 0 {
-            self.v_pressure = Some(other);
-            self.unit_map |= PRESSURE_MAP;
-            self.exp[PRESSURE_INDEX] = -1;
-        } else if self.exp[PRESSURE_INDEX] == 1 {
-            self.exp[PRESSURE_INDEX] = 0;
-            self.v_pressure = None;
-            self.unit_map ^= PRESSURE_MAP;
+        if new.exp[PRESSURE_INDEX] == 0 {
+            new.v_pressure = Some(other);
+            new.unit_map |= PRESSURE_MAP;
+            new.exp[PRESSURE_INDEX] = -1;
+        } else if new.exp[PRESSURE_INDEX] == 1 {
+            new.exp[PRESSURE_INDEX] = 0;
+            new.v_pressure = None;
+            new.unit_map ^= PRESSURE_MAP;
         } else {
-            self.exp[PRESSURE_INDEX] -= 1;
+            new.exp[PRESSURE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7692,22 +7821,25 @@ impl BitOr<UnitPower> for Value {
     }
 }
 
-impl BitXorAssign<UnitPower> for Value {
-    fn bitxor_assign(&mut self, other:UnitPower) {
-        if self.v_power != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitPower> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitPower) -> Value {
+        let mut new:Value = self;
+        if self.v_power != None && self.v_power != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[POWER_INDEX] == 0 {
-            self.v_power = Some(other);
-            self.unit_map |= POWER_MAP;
-            self.exp[POWER_INDEX] = -1;
-        } else if self.exp[POWER_INDEX] == 1 {
-            self.exp[POWER_INDEX] = 0;
-            self.v_power = None;
-            self.unit_map ^= POWER_MAP;
+        if new.exp[POWER_INDEX] == 0 {
+            new.v_power = Some(other);
+            new.unit_map |= POWER_MAP;
+            new.exp[POWER_INDEX] = -1;
+        } else if new.exp[POWER_INDEX] == 1 {
+            new.exp[POWER_INDEX] = 0;
+            new.v_power = None;
+            new.unit_map ^= POWER_MAP;
         } else {
-            self.exp[POWER_INDEX] -= 1;
+            new.exp[POWER_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7745,22 +7877,25 @@ impl BitOr<UnitInductance> for Value {
     }
 }
 
-impl BitXorAssign<UnitInductance> for Value {
-    fn bitxor_assign(&mut self, other:UnitInductance) {
-        if self.v_inductance != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitInductance> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitInductance) -> Value {
+        let mut new:Value = self;
+        if self.v_inductance != None && self.v_inductance != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[INDUCTANCE_INDEX] == 0 {
-            self.v_inductance = Some(other);
-            self.unit_map |= INDUCTANCE_MAP;
-            self.exp[INDUCTANCE_INDEX] = -1;
-        } else if self.exp[INDUCTANCE_INDEX] == 1 {
-            self.exp[INDUCTANCE_INDEX] = 0;
-            self.v_inductance = None;
-            self.unit_map ^= INDUCTANCE_MAP;
+        if new.exp[INDUCTANCE_INDEX] == 0 {
+            new.v_inductance = Some(other);
+            new.unit_map |= INDUCTANCE_MAP;
+            new.exp[INDUCTANCE_INDEX] = -1;
+        } else if new.exp[INDUCTANCE_INDEX] == 1 {
+            new.exp[INDUCTANCE_INDEX] = 0;
+            new.v_inductance = None;
+            new.unit_map ^= INDUCTANCE_MAP;
         } else {
-            self.exp[INDUCTANCE_INDEX] -= 1;
+            new.exp[INDUCTANCE_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7798,22 +7933,25 @@ impl BitOr<UnitInformation> for Value {
     }
 }
 
-impl BitXorAssign<UnitInformation> for Value {
-    fn bitxor_assign(&mut self, other:UnitInformation) {
-        if self.v_information != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitInformation> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitInformation) -> Value {
+        let mut new:Value = self;
+        if self.v_information != None && self.v_information != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[INFORMATION_INDEX] == 0 {
-            self.v_information = Some(other);
-            self.unit_map |= INFORMATION_MAP;
-            self.exp[INFORMATION_INDEX] = -1;
-        } else if self.exp[INFORMATION_INDEX] == 1 {
-            self.exp[INFORMATION_INDEX] = 0;
-            self.v_information = None;
-            self.unit_map ^= INFORMATION_MAP;
+        if new.exp[INFORMATION_INDEX] == 0 {
+            new.v_information = Some(other);
+            new.unit_map |= INFORMATION_MAP;
+            new.exp[INFORMATION_INDEX] = -1;
+        } else if new.exp[INFORMATION_INDEX] == 1 {
+            new.exp[INFORMATION_INDEX] = 0;
+            new.v_information = None;
+            new.unit_map ^= INFORMATION_MAP;
         } else {
-            self.exp[INFORMATION_INDEX] -= 1;
+            new.exp[INFORMATION_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7851,22 +7989,25 @@ impl BitOr<UnitLuminousFlux> for Value {
     }
 }
 
-impl BitXorAssign<UnitLuminousFlux> for Value {
-    fn bitxor_assign(&mut self, other:UnitLuminousFlux) {
-        if self.v_luminous_flux != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitLuminousFlux> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitLuminousFlux) -> Value {
+        let mut new:Value = self;
+        if self.v_luminous_flux != None && self.v_luminous_flux != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[LUMINOUS_FLUX_INDEX] == 0 {
-            self.v_luminous_flux = Some(other);
-            self.unit_map |= LUMINOUS_FLUX_MAP;
-            self.exp[LUMINOUS_FLUX_INDEX] = -1;
-        } else if self.exp[LUMINOUS_FLUX_INDEX] == 1 {
-            self.exp[LUMINOUS_FLUX_INDEX] = 0;
-            self.v_luminous_flux = None;
-            self.unit_map ^= LUMINOUS_FLUX_MAP;
+        if new.exp[LUMINOUS_FLUX_INDEX] == 0 {
+            new.v_luminous_flux = Some(other);
+            new.unit_map |= LUMINOUS_FLUX_MAP;
+            new.exp[LUMINOUS_FLUX_INDEX] = -1;
+        } else if new.exp[LUMINOUS_FLUX_INDEX] == 1 {
+            new.exp[LUMINOUS_FLUX_INDEX] = 0;
+            new.v_luminous_flux = None;
+            new.unit_map ^= LUMINOUS_FLUX_MAP;
         } else {
-            self.exp[LUMINOUS_FLUX_INDEX] -= 1;
+            new.exp[LUMINOUS_FLUX_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7904,22 +8045,25 @@ impl BitOr<UnitLuminousIntensity> for Value {
     }
 }
 
-impl BitXorAssign<UnitLuminousIntensity> for Value {
-    fn bitxor_assign(&mut self, other:UnitLuminousIntensity) {
-        if self.v_luminous_flux_intensity != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitLuminousIntensity> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitLuminousIntensity) -> Value {
+        let mut new:Value = self;
+        if self.v_luminous_flux_intensity != None && self.v_luminous_flux_intensity != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
-            self.v_luminous_flux_intensity = Some(other);
-            self.unit_map |= LUMINOUS_INTENSITY_MAP;
-            self.exp[LUMINOUS_INTENSITY_INDEX] = -1;
-        } else if self.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
-            self.exp[LUMINOUS_INTENSITY_INDEX] = 0;
-            self.v_luminous_flux_intensity = None;
-            self.unit_map ^= LUMINOUS_INTENSITY_MAP;
+        if new.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
+            new.v_luminous_flux_intensity = Some(other);
+            new.unit_map |= LUMINOUS_INTENSITY_MAP;
+            new.exp[LUMINOUS_INTENSITY_INDEX] = -1;
+        } else if new.exp[LUMINOUS_INTENSITY_INDEX] == 1 {
+            new.exp[LUMINOUS_INTENSITY_INDEX] = 0;
+            new.v_luminous_flux_intensity = None;
+            new.unit_map ^= LUMINOUS_INTENSITY_MAP;
         } else {
-            self.exp[LUMINOUS_INTENSITY_INDEX] -= 1;
+            new.exp[LUMINOUS_INTENSITY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -7957,22 +8101,25 @@ impl BitOr<UnitMagneticFlux> for Value {
     }
 }
 
-impl BitXorAssign<UnitMagneticFlux> for Value {
-    fn bitxor_assign(&mut self, other:UnitMagneticFlux) {
-        if self.v_magnetic_flux != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitMagneticFlux> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitMagneticFlux) -> Value {
+        let mut new:Value = self;
+        if self.v_magnetic_flux != None && self.v_magnetic_flux != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[MAGNETIC_FLUX_INDEX] == 0 {
-            self.v_magnetic_flux = Some(other);
-            self.unit_map |= MAGNETIC_FLUX_MAP;
-            self.exp[MAGNETIC_FLUX_INDEX] = -1;
-        } else if self.exp[MAGNETIC_FLUX_INDEX] == 1 {
-            self.exp[MAGNETIC_FLUX_INDEX] = 0;
-            self.v_magnetic_flux = None;
-            self.unit_map ^= MAGNETIC_FLUX_MAP;
+        if new.exp[MAGNETIC_FLUX_INDEX] == 0 {
+            new.v_magnetic_flux = Some(other);
+            new.unit_map |= MAGNETIC_FLUX_MAP;
+            new.exp[MAGNETIC_FLUX_INDEX] = -1;
+        } else if new.exp[MAGNETIC_FLUX_INDEX] == 1 {
+            new.exp[MAGNETIC_FLUX_INDEX] = 0;
+            new.v_magnetic_flux = None;
+            new.unit_map ^= MAGNETIC_FLUX_MAP;
         } else {
-            self.exp[MAGNETIC_FLUX_INDEX] -= 1;
+            new.exp[MAGNETIC_FLUX_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -8010,22 +8157,25 @@ impl BitOr<UnitMagneticFluxDensity> for Value {
     }
 }
 
-impl BitXorAssign<UnitMagneticFluxDensity> for Value {
-    fn bitxor_assign(&mut self, other:UnitMagneticFluxDensity) {
-        if self.v_magnetic_flux_density != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitMagneticFluxDensity> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitMagneticFluxDensity) -> Value {
+        let mut new:Value = self;
+        if self.v_magnetic_flux_density != None && self.v_magnetic_flux_density != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
-            self.v_magnetic_flux_density = Some(other);
-            self.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
-            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = -1;
-        } else if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1 {
-            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
-            self.v_magnetic_flux_density = None;
-            self.unit_map ^= MAGNETIC_FLUX_DENSITY_MAP;
+        if new.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
+            new.v_magnetic_flux_density = Some(other);
+            new.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] = -1;
+        } else if new.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 1 {
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
+            new.v_magnetic_flux_density = None;
+            new.unit_map ^= MAGNETIC_FLUX_DENSITY_MAP;
         } else {
-            self.exp[MAGNETIC_FLUX_DENSITY_INDEX] -= 1;
+            new.exp[MAGNETIC_FLUX_DENSITY_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -8063,22 +8213,25 @@ impl BitOr<UnitMass> for Value {
     }
 }
 
-impl BitXorAssign<UnitMass> for Value {
-    fn bitxor_assign(&mut self, other:UnitMass) {
-        if self.v_mass != Some(other) {
-            panic!("[bitxor_assign] Cannot decrement unit: {} from Value {}", other, self);
+impl BitXor<UnitMass> for Value {
+    type Output = Value;
+    fn bitxor(self, other:UnitMass) -> Value {
+        let mut new:Value = self;
+        if self.v_mass != None && new.v_mass != Some(other) {
+            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
-        if self.exp[MASS_INDEX] == 0 {
-            self.v_mass = Some(other);
-            self.unit_map |= MASS_MAP;
-            self.exp[MASS_INDEX] = -1;
-        } else if self.exp[MASS_INDEX] == 1 {
-            self.exp[MASS_INDEX] = 0;
-            self.v_mass = None;
-            self.unit_map ^= MASS_MAP;
+        if new.exp[MASS_INDEX] == 0 {
+            new.v_mass = Some(other);
+            new.unit_map |= MASS_MAP;
+            new.exp[MASS_INDEX] = -1;
+        } else if new.exp[MASS_INDEX] == 1 {
+            new.exp[MASS_INDEX] = 0;
+            new.v_mass = None;
+            new.unit_map ^= MASS_MAP;
         } else {
-            self.exp[MASS_INDEX] -= 1;
+            new.exp[MASS_INDEX] -= 1;
         }
+        new
     }
 }
 
@@ -8186,11 +8339,8 @@ mod tests {
         let v2:Value = Value::new(4.5, "m").unwrap();
         assert_eq!(v1, v2);
 
-        let mut v3:Value = 4.5 & UnitLength::Meter(Metric::None) | UnitLength::Meter(Metric::None);
+        let v3:Value = 4.5 & UnitLength::Meter(Metric::None) | UnitLength::Meter(Metric::None);
         let v4:Value = Value::new(4.5, "m^2").unwrap();
         assert_eq!(v3, v4);
-
-        v3 ^= UnitLength::Meter(Metric::None);
-        assert_eq!(v2, v3);
     }
 }

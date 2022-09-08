@@ -5,7 +5,10 @@
 
 //! The V3 library crate
 
+/// Various `const` definitions that are used throughout V3
 mod constants;
+
+/// The error code definitions
 mod errors;
 
 /// The main module for `Metric` and `Unit` types

@@ -12,12 +12,14 @@ use std::fmt::Display;
 
 use crate::constants;
 
+/// Trait that can be used and called by all of the unit types
 trait Convert<T1> {
+    /// The function template for a unit type
     fn convert(&self, other:&T1) -> f64;
 }
 
 /// The Metric scale names
-#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone, Default)]
 pub enum Metric {
     /// Yocto
     Yocto,
@@ -39,8 +41,8 @@ pub enum Metric {
     Centi,
     /// Deci
     Deci,
-    /// None
-    None,
+    /// None (default)
+    #[default] None,
     /// Deca
     Deca,
     /// Hecto
@@ -164,6 +166,7 @@ impl Display for UnitLength {
 }
 
 impl UnitLength {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Meter(m) => m.scale(),
@@ -171,6 +174,7 @@ impl UnitLength {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Meter(_) => 1.0,
@@ -234,6 +238,7 @@ impl Display for UnitTime {
 }
 
 impl UnitTime {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Second(m) => m.scale(),
@@ -241,6 +246,7 @@ impl UnitTime {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Second(_) => 1.0,
@@ -299,6 +305,7 @@ impl Display for UnitMass {
 }
 
 impl UnitMass {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Gram(m) => m.scale(),
@@ -306,6 +313,7 @@ impl UnitMass {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Gram(_) => 1.0,
@@ -348,6 +356,7 @@ impl Display for UnitElectricCurrent {
 }
 
 impl UnitElectricCurrent {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Ampere(m) => m.scale(),
@@ -386,6 +395,7 @@ impl Display for UnitElectricCharge {
 }
 
 impl UnitElectricCharge {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Coulomb(m) => m.scale(),
@@ -424,6 +434,7 @@ impl Display for UnitElectricPotential {
 }
 
 impl UnitElectricPotential {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Volt(m) => m.scale(),
@@ -462,6 +473,7 @@ impl Display for UnitElectricConductance {
 }
 
 impl UnitElectricConductance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Siemens(m) => m.scale(),
@@ -500,6 +512,7 @@ impl Display for UnitCapacitance {
 }
 
 impl UnitCapacitance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Farad(m) => m.scale(),
@@ -538,6 +551,7 @@ impl Display for UnitResistance {
 }
 
 impl UnitResistance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Ohm(m) => m.scale(),
@@ -576,6 +590,7 @@ impl Display for UnitInductance {
 }
 
 impl UnitInductance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Henry(m) => m.scale(),
@@ -614,6 +629,7 @@ impl Display for UnitMagneticFlux {
 }
 
 impl UnitMagneticFlux {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Weber(m) => m.scale(),
@@ -652,6 +668,7 @@ impl Display for UnitMagneticFluxDensity {
 }
 
 impl UnitMagneticFluxDensity {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Tesla(m) => m.scale(),
@@ -752,6 +769,7 @@ impl Display for UnitSubstance {
 }
 
 impl UnitSubstance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Mole(m) => m.scale(),
@@ -790,6 +808,7 @@ impl Display for UnitLuminousIntensity {
 }
 
 impl UnitLuminousIntensity {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Candela(m) => m.scale(),
@@ -828,6 +847,7 @@ impl Display for UnitLuminousFlux {
 }
 
 impl UnitLuminousFlux {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Lumen(m) => m.scale(),
@@ -866,6 +886,7 @@ impl Display for UnitIlluminance {
 }
 
 impl UnitIlluminance {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Lux(m) => m.scale(),
@@ -904,6 +925,7 @@ impl Display for UnitVolume {
 }
 
 impl UnitVolume {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Liter(m) => m.scale(),
@@ -970,6 +992,7 @@ impl Display for UnitPressure {
 }
 
 impl UnitPressure {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Pascal(m) => m.scale(),
@@ -978,6 +1001,7 @@ impl UnitPressure {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Pascal(_) => 1.0,
@@ -1033,6 +1057,7 @@ impl Display for UnitAngle {
 }
 
 impl UnitAngle {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Radian(m) => m.scale(),
@@ -1040,6 +1065,7 @@ impl UnitAngle {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Radian(_) => 1.0,
@@ -1083,12 +1109,14 @@ impl Display for UnitSolidAngle {
 }
 
 impl UnitSolidAngle {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Steradian(m) => m.scale()
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Steradian(_) => 1.0
@@ -1127,6 +1155,7 @@ impl Display for UnitFrequency {
 }
 
 impl UnitFrequency {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Hertz(m) => m.scale(),
@@ -1175,6 +1204,7 @@ impl Display for UnitForce {
 }
 
 impl UnitForce {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Newton(m) => m.scale(),
@@ -1182,6 +1212,7 @@ impl UnitForce {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 { 
         match self {
             Self::Newton(_) => 1.0,
@@ -1237,6 +1268,7 @@ impl Display for UnitEnergy {
 }
 
 impl UnitEnergy {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Joule(m) => m.scale(),
@@ -1245,6 +1277,7 @@ impl UnitEnergy {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Joule(_) => 1.0,
@@ -1288,6 +1321,7 @@ impl Display for UnitPower {
 }
 
 impl UnitPower {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Watt(m) => m.scale(),
@@ -1331,6 +1365,7 @@ impl Display for UnitRadioactivity {
 }
 
 impl UnitRadioactivity {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Becquerel(m) => m.scale(),
@@ -1338,6 +1373,7 @@ impl UnitRadioactivity {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Becquerel(_) => 1.0,
@@ -1386,6 +1422,7 @@ impl Display for UnitAbsorbedDose {
 }
 
 impl UnitAbsorbedDose {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Gray(m) => m.scale(),
@@ -1393,6 +1430,7 @@ impl UnitAbsorbedDose {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Gray(_) => 1.0,
@@ -1439,6 +1477,7 @@ impl Display for UnitRadioactivityExposure {
 }
 
 impl UnitRadioactivityExposure {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Sievert(m) => m.scale(),
@@ -1446,6 +1485,7 @@ impl UnitRadioactivityExposure {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Sievert(_) => 1.0,
@@ -1486,6 +1526,7 @@ impl Display for UnitCatalyticActivity {
 }
 
 impl UnitCatalyticActivity {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Katal(m) => m.scale(),
@@ -1524,6 +1565,7 @@ impl Display for UnitSound {
 }
 
 impl UnitSound {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             Self::Bel(m) => m.scale(),
@@ -1570,6 +1612,7 @@ impl Display for UnitInformation {
 }
 
 impl UnitInformation {
+    /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
             UnitInformation::Bit(m) | UnitInformation::Byte(m) => {
@@ -1588,6 +1631,7 @@ impl UnitInformation {
         }
     }
 
+    /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
             Self::Byte(_) => 1.0,
