@@ -30,7 +30,7 @@ pub const LENGTH_LYR_TO_METER:f64   = 9_460_730_472_580_800.0;
 /// The conversion numeric for an Ångström to a meter
 pub const LENGTH_A_TO_METER:f64     = 0.000_000_000_1;
 /// The conversion numeric for a parsec to a meter
-pub const LENGTH_PC_TO_METER:f64    = (648_000.0/std::f64::consts::PI)*149_597_870_700.0;
+pub const LENGTH_PC_TO_METER:f64    = (648_000.0/std::f64::consts::PI)*LENGTH_AU_TO_METER;
 
 /// Mass
 ///

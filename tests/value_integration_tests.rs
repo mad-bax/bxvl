@@ -788,7 +788,7 @@ mod unit_conversion_tests {
     #[test]
     fn convert_mph(){
         let mut v1:Value = Value::new(20.0, "mph").unwrap();
-        let v2:Value = 32.18688 & UnitLength::Meter(Metric::Kilo) ^ UnitTime::Hour;
+        let v2:Value = 32.18688 ^ UnitTime::Hour | UnitLength::Meter(Metric::Kilo);
         v1.convert("km/hr").unwrap();
         assert_eq!(v1, v2);
     }

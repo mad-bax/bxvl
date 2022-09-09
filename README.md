@@ -15,7 +15,7 @@ When used in equations, it will automatically be updated wither within itself or
   - [Conversions](#conversions)
   - [Constants](#constants)
 
-## Example
+## Examples
 To create a new value:
 ```rust
 let t:Value = Value::new(1.2, "seconds").unwrap();

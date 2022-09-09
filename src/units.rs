@@ -1654,78 +1654,215 @@ impl UnitInformation {
 }
 
 #[cfg(test)]
-mod test {
-    use super::Metric::*;
-    use super::UnitLength::*;
-    use super::UnitTime;
-    use super::UnitTime::*;
-    use super::UnitMass::*;
-    use super::UnitInformation::*;
+mod units_unit_test {
+    use crate::units::Metric;
+    use crate::units::UnitInformation;
 
+    use super::UnitAbsorbedDose;
+    use super::UnitAngle;
+    use super::UnitEnergy;
+    use super::UnitForce;
+    use super::UnitLength;
+    use super::UnitMass;
+    use super::UnitPressure;
+    use super::UnitRadioactivity;
+    use super::UnitRadioactivityExposure;
+
+    /// # Metric Comparison
+    /// 
+    /// All of the metric prefixes are in the right order
     #[test]
-    fn metric_comparison_1(){
-        let x = Meter(None);
-        let y = Meter(Kilo);
-        let z = Meter(Milli);
-
-        assert_ne!(x, z);
-        assert_eq!(y > x, true);
-        assert_eq!(x > z, true);
-        assert_eq!(y > x && x > z, true);
+    fn metric_comparison() {
+        assert_eq!(true, Metric::Yocto < Metric::Zepto);
+        assert_eq!(true, Metric::Zepto < Metric::Atto);
+        assert_eq!(true, Metric::Atto < Metric::Pico);
+        assert_eq!(true, Metric::Pico < Metric::Nano);
+        assert_eq!(true, Metric::Nano < Metric::Micro);
+        assert_eq!(true, Metric::Micro < Metric::Milli);
+        assert_eq!(true, Metric::Milli < Metric::Centi);
+        assert_eq!(true, Metric::Centi < Metric::Deci);
+        assert_eq!(true, Metric::Deci < Metric::None);
+        assert_eq!(true, Metric::None < Metric::Deca);
+        assert_eq!(true, Metric::Deca < Metric::Hecto);
+        assert_eq!(true, Metric::Hecto < Metric::Kilo);
+        assert_eq!(true, Metric::Kilo < Metric::Mega);
+        assert_eq!(true, Metric::Mega < Metric::Giga);
+        assert_eq!(true, Metric::Giga < Metric::Tera);
+        assert_eq!(true, Metric::Tera < Metric::Peta);
+        assert_eq!(true, Metric::Peta < Metric::Exa);
+        assert_eq!(true, Metric::Exa < Metric::Zetta);
+        assert_eq!(true, Metric::Zetta < Metric::Yotta);
     }
 
+    /// # Metric Comparison Scale
+    /// 
+    /// All of the metric scale values are in the right order
     #[test]
-    fn metric_comparison_2(){
-        let y:UnitTime = Second(None);
-        let z:UnitTime = Second(Milli);
-
-        assert_ne!(y, z);
-        assert_eq!(y > z, true);
+    fn metric_comparison_scale() {
+        assert_eq!(true, Metric::Yocto.scale() < Metric::Zepto.scale());
+        assert_eq!(true, Metric::Zepto.scale() < Metric::Atto.scale());
+        assert_eq!(true, Metric::Atto.scale() < Metric::Pico.scale());
+        assert_eq!(true, Metric::Pico.scale() < Metric::Nano.scale());
+        assert_eq!(true, Metric::Nano.scale() < Metric::Micro.scale());
+        assert_eq!(true, Metric::Micro.scale() < Metric::Milli.scale());
+        assert_eq!(true, Metric::Milli.scale() < Metric::Centi.scale());
+        assert_eq!(true, Metric::Centi.scale() < Metric::Deci.scale());
+        assert_eq!(true, Metric::Deci.scale() < Metric::None.scale());
+        assert_eq!(true, Metric::None.scale() < Metric::Deca.scale());
+        assert_eq!(true, Metric::Deca.scale() < Metric::Hecto.scale());
+        assert_eq!(true, Metric::Hecto.scale() < Metric::Kilo.scale());
+        assert_eq!(true, Metric::Kilo.scale() < Metric::Mega.scale());
+        assert_eq!(true, Metric::Mega.scale() < Metric::Giga.scale());
+        assert_eq!(true, Metric::Giga.scale() < Metric::Tera.scale());
+        assert_eq!(true, Metric::Tera.scale() < Metric::Peta.scale());
+        assert_eq!(true, Metric::Peta.scale() < Metric::Exa.scale());
+        assert_eq!(true, Metric::Exa.scale() < Metric::Zetta.scale());
+        assert_eq!(true, Metric::Zetta.scale() < Metric::Yotta.scale());
     }
 
+    /// Unit Information Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
-    fn metric_comparison_3(){
-        let x = Meter(None);
-        let y = Meter(Kilo);
-
-        assert_eq!(y.scale() > x.scale(), true);
-        assert_eq!(y.scale() - x.scale(), 1000.0-1.0);
+    fn unit_information_base_comparison() {
+        // Bits
+        assert!(UnitInformation::Bit(Metric::None).base() == 0.125);
+        // Bytes are the base 'SI unit'
+        assert!(UnitInformation::Byte(Metric::None).base() == 1.0);
     }
 
+    /// Unit Length Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
-    fn conv_test1(){
-        let x = Meter(Kilo);
-        let y = Mile;
-
-        assert_eq!(y.convert(&x), 1.609344);
+    fn unit_length_base_comparison() {
+        // Meters are the base SI unit
+        assert!(UnitLength::Meter(Metric::None).base() == 1.0);
+        // Feet
+        assert!(UnitLength::Foot.base() == 0.3048);
+        // Inches
+        assert!(UnitLength::Inch.base() == 0.0254);
+        // Yards
+        assert!(UnitLength::Yard.base() == 0.9144);
+        // Mile
+        assert!(UnitLength::Mile.base() == 1609.344);
+        // Astronomical Unit
+        assert!(UnitLength::AstronomicalUnit.base() == 149_597_870_700.0);
+        // Lightyear
+        assert!(UnitLength::LightYear.base() == 9_460_730_472_580_800.0);
+        // Ångström
+        assert!(UnitLength::Angstrom.base() == 0.000_000_000_1);
+        // Parsec
+        assert!(UnitLength::Parsec.base() >= 3.085_677_581_491e16);
     }
 
+    /// Unit Mass Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
-    fn conv_test2(){
-        let x = Grain;
-        let y = Pound;
-        let z = Ounce;
-        let w = Gram(Milli);
-        assert_eq!(y.convert(&x), 7000.0);
-        assert_eq!(x.convert(&y), 1.0/7000.0);
-        assert_eq!(z.convert(&y), 1.0/16.0);
-        assert_eq!(y.convert(&z), 16.0);
-        assert_eq!(z.convert(&w), 28349.523125);
-        assert_eq!(w.convert(&z), 1.0/28349.523125);
+    fn unit_mass_base_comparison() {
+        // Grams are the base SI unit
+        assert!(UnitMass::Gram(Metric::None).base() == 1.0);
+        // Pounds
+        assert!(UnitMass::Pound.base() == 453.592_37);
+        // Grains
+        assert!(UnitMass::Grain.base() >= 0.06479890);
+        // Ounces
+        assert!(UnitMass::Ounce.base() >= 28.349_523_124);
     }
 
+    /// Unit Angle Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
-    fn conv_test3(){
-        let x = Byte(Giga);
-        let y = Byte(Mega);
-
-        assert_eq!(x.convert(&y), 1024.0);
-        assert_eq!(y.convert(&x), 1.0/1024.0);
+    fn unit_angle_base_comparison() {
+        // Radians are the base SI unit
+        assert!(UnitAngle::Radian(Metric::None).base() == 1.0);
+        // Degrees
+        assert!(UnitAngle::Degree.base() >= 0.017_453_292_50);
+        // Minute of Angle
+        assert!(UnitAngle::Moa.base() >= 0.000_290_888_208_664);
     }
 
+    /// Unit Energy Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
-    fn str_test1(){
-        let x = Meter(Kilo);
-        assert_eq!(x.to_string(), "km");
+    fn unit_energy_base_comparison() {
+        // Joules are the base SI unit
+        assert!(UnitEnergy::Joule(Metric::None).base() == 1.0);
+        // Calories
+        assert!(UnitEnergy::GramCalorie(Metric::None).base() == 4.184);
+        // Footpounds
+        assert!(UnitEnergy::FootPound.base() == 1.355818);
+        // Electron Volts
+        assert!(UnitEnergy::ElectronVolt.base() >= 1.602_176_633e-19);
+    }
+
+    /// Unit Force Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_force_base_comparison() {
+        // Newtons are the base SI unit
+        assert!(UnitForce::Newton(Metric::None).base() == 1.0);
+        // Poundforce
+        assert!(UnitForce::PoundForce.base() == 4.448_221_615_260_5);
+    }
+
+    /// Unit Pressure Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_pressure_base_comparison() {
+        // Pascals are the base SI unit
+        assert!(UnitPressure::Pascal(Metric::None).base() == 1.0);
+        // Atmospheres
+        assert!(UnitPressure::Atm.base() == 101325.0);
+        // Bar
+        assert!(UnitPressure::Bar(Metric::None).base() == 100000.0);
+        // inHg
+        assert!(UnitPressure::Hgin.base() >= 3386.3886665);
+        // mmHg
+        assert!(UnitPressure::Hgmm.base() >= 133.322387414);
+        // PSI
+        assert!(UnitPressure::Psi.base() == 6894.757);
+        // Torr
+        assert!(UnitPressure::Torr.base() >= 133.322368420);
+    }
+
+    /// Unit Radioactivity Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_radioactivity_base_comparison() {
+        // Becquerels are the base SI unit
+        assert!(UnitRadioactivity::Becquerel(Metric::None).base() == 1.0);
+        // Curies
+        assert!(UnitRadioactivity::Curie.base() == 37_000_000_000.0);
+    }
+
+    /// Unit Absorbed Dose of Ionizing Radiation Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_absorbed_base_comparison() {
+        // Grays are the base SI unit
+        assert!(UnitAbsorbedDose::Gray(Metric::None).base() == 1.0);
+        // Rads
+        assert!(UnitAbsorbedDose::Rad.base() == 0.01);
+        // Roentgens
+        assert!(UnitAbsorbedDose::Roentgen.base() >= 0.00877000656);
+    }
+
+    /// Unit Equivalen Dose of Ionizing Radiation Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_equivalent_base_comparison() {
+        // Seiverts are the base SI unit
+        assert!(UnitRadioactivityExposure::Sievert(Metric::None).base() == 1.0);
+        // Rems
+        assert!(UnitRadioactivityExposure::Rem.base() == 0.01);
     }
 }
