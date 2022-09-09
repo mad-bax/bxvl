@@ -36,14 +36,6 @@ use crate::units::{
     UnitSolidAngle
 };
 
-/// Macro to create a new `Value`
-#[macro_export]
-macro_rules! value {
-    ($v:expr, $u:expr) => {
-        Value::new($v as f64, &$u.to_string()).unwrap()
-    };
-}
-
 impl BitOr<UnitLength> for f64 {
     type Output = Value;
     fn bitor(self, other:UnitLength) -> Self::Output {

@@ -126,6 +126,14 @@ pub struct Value {
     v_solid_angle :             Option<UnitSolidAngle>
 }
 
+/// Macro to create a new `Value`
+#[macro_export]
+macro_rules! value {
+    ($v:expr, $u:expr) => {
+        Value::new($v as f64, &$u.to_string()).unwrap()
+    };
+}
+
 #[cfg(test)]
 mod value_unit_tests {
 

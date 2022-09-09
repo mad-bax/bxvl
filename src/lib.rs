@@ -5,6 +5,8 @@
 
 //! The V3 library crate
 
+#[doc = include_str!("../README.md")]
+
 /// Various `const` definitions that are used throughout V3
 mod constants;
 
