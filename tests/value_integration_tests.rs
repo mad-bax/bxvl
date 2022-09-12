@@ -823,7 +823,7 @@ mod value_complex_tests {
 
 #[cfg(test)]
 mod value_display_tests {
-    use v3::{values::Value, units::{UnitLength, Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume}};
+    use v3::{values::Value, units::{UnitLength, Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume, UnitTemperature}};
 
     #[test]
     fn t1() {
@@ -2419,6 +2419,82 @@ mod value_display_tests {
         assert_eq!(format!("3.4 z{}", s), x.to_string());
         let x:Value = 3.4 | t(Metric::Zetta);
         assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn non_metric() {
+        let x:Value = 3.4 | UnitLength::Angstrom;
+        assert_eq!("3.4 Å", x.to_string());
+        let x:Value = 3.4 | UnitLength::AstronomicalUnit;
+        assert_eq!("3.4 AU", x.to_string());
+        let x:Value = 3.4 | UnitLength::Foot;
+        assert_eq!("3.4 ft", x.to_string());
+        let x:Value = 3.4 | UnitLength::Inch;
+        assert_eq!("3.4 in", x.to_string());
+        let x:Value = 3.4 | UnitLength::LightYear;
+        assert_eq!("3.4 lyr", x.to_string());
+        let x:Value = 3.4 | UnitLength::Mile;
+        assert_eq!("3.4 miles", x.to_string());
+        let x:Value = 3.4 | UnitLength::Parsec;
+        assert_eq!("3.4 pc", x.to_string());
+        let x:Value = 3.4 | UnitLength::Yard;
+        assert_eq!("3.4 yds", x.to_string());
+
+        let x:Value = 3.4 | UnitAbsorbedDose::Rad;
+        assert_eq!("3.4 rads", x.to_string());
+        let x:Value = 3.4 | UnitAbsorbedDose::Roentgen;
+        assert_eq!("3.4 R", x.to_string());
+
+        let x:Value = 3.4 | UnitAngle::Degree;
+        assert_eq!("3.4 °", x.to_string());
+        let x:Value = 3.4 | UnitAngle::Moa;
+        assert_eq!("3.4 moa", x.to_string());
+
+        let x:Value = 3.4 | UnitEnergy::ElectronVolt;
+        assert_eq!("3.4 eV", x.to_string());
+        let x:Value = 3.4 | UnitEnergy::FootPound;
+        assert_eq!("3.4 ftlb", x.to_string());
+
+        let x:Value = 3.4 | UnitForce::PoundForce;
+        assert_eq!("3.4 lbfr", x.to_string());
+
+        let x:Value = 3.4 | UnitMass::Grain;
+        assert_eq!("3.4 gr", x.to_string());
+        let x:Value = 3.4 | UnitMass::Ounce;
+        assert_eq!("3.4 oz", x.to_string());
+        let x:Value = 3.4 | UnitMass::Pound;
+        assert_eq!("3.4 lb", x.to_string());
+
+        let x:Value = 3.4 | UnitPressure::Atm;
+        assert_eq!("3.4 atm", x.to_string());
+        let x:Value = 3.4 | UnitPressure::Hgin;
+        assert_eq!("3.4 inHg", x.to_string());
+        let x:Value = 3.4 | UnitPressure::Hgmm;
+        assert_eq!("3.4 mmHg", x.to_string());
+        let x:Value = 3.4 | UnitPressure::Psi;
+        assert_eq!("3.4 psi", x.to_string());
+        let x:Value = 3.4 | UnitPressure::Torr;
+        assert_eq!("3.4 torr", x.to_string());
+
+        let x:Value = 3.4 | UnitRadioactivity::Curie;
+        assert_eq!("3.4 Ci", x.to_string());
+
+        let x:Value = 3.4 | UnitRadioactivityExposure::Rem;
+        assert_eq!("3.4 rem", x.to_string());
+
+        let x:Value = 3.4 | UnitTime::Day;
+        assert_eq!("3.4 day", x.to_string());
+        let x:Value = 3.4 | UnitTime::Hour;
+        assert_eq!("3.4 hr", x.to_string());
+        let x:Value = 3.4 | UnitTime::Minute;
+        assert_eq!("3.4 min", x.to_string());
+
+        let x:Value = 3.4 | UnitTemperature::Celsius;
+        assert_eq!("3.4 °c", x.to_string());
+        let x:Value = 3.4 | UnitTemperature::Kelvin;
+        assert_eq!("3.4 K", x.to_string());
+        let x:Value = 3.4 | UnitTemperature::Fahrenheit;
+        assert_eq!("3.4 °f", x.to_string());
     }
 }
 
