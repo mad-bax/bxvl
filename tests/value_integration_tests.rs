@@ -822,6 +822,1607 @@ mod value_complex_tests {
 }
 
 #[cfg(test)]
+mod value_display_tests {
+    use v3::{values::Value, units::{UnitLength, Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume}};
+
+    #[test]
+    fn t1() {
+
+        let t = UnitLength::Meter;
+        let s:&str = "m";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t2() {
+
+        let t = UnitAbsorbedDose::Gray;
+        let s:&str = "Gy";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t3() {
+
+        let t = UnitAngle::Radian;
+        let s:&str = "rad";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 mil"), x.to_string()); // This one is unique because of milliradians
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t4() {
+
+        let t = UnitCapacitance::Farad;
+        let s:&str = "F";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t5() {
+
+        let t = UnitCatalyticActivity::Katal;
+        let s:&str = "kat";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t6() {
+
+        let t = UnitElectricCharge::Coulomb;
+        let s:&str = "C";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t7() {
+
+        let t = UnitElectricConductance::Siemens;
+        let s:&str = "S";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t8() {
+
+        let t = UnitElectricCurrent::Ampere;
+        let s:&str = "A";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t9() {
+
+        let t = UnitElectricPotential::Volt;
+        let s:&str = "V";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t10() {
+
+        let t = UnitEnergy::Joule;
+        let s:&str = "J";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t11() {
+
+        let t = UnitEnergy::GramCalorie;
+        let s:&str = "cal";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 Cal"), x.to_string()); // Unique for Cal/cal difference
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t12() {
+
+        let t = UnitForce::Newton;
+        let s:&str = "N";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t13() {
+
+        let t = UnitFrequency::Hertz;
+        let s:&str = "Hz";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t14() {
+
+        let t = UnitIlluminance::Lux;
+        let s:&str = "lx";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t15() {
+
+        let t = UnitInductance::Henry;
+        let s:&str = "H";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t16() {
+
+        let t = UnitInformation::Byte;
+        let s:&str = "b";
+
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t17() {
+
+        let t = UnitInformation::Bit;
+        let s:&str = "bits";
+
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t18() {
+
+        let t = UnitLuminousFlux::Lumen;
+        let s:&str = "lm";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t19() {
+
+        let t = UnitLuminousIntensity::Candela;
+        let s:&str = "cd";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t20() {
+
+        let t = UnitMagneticFlux::Weber;
+        let s:&str = "Wb";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t21() {
+
+        let t = UnitMagneticFluxDensity::Tesla;
+        let s:&str = "T";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t22() {
+
+        let t = UnitMass::Gram;
+        let s:&str = "g";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t23() {
+
+        let t = UnitPower::Watt;
+        let s:&str = "W";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t24() {
+
+        let t = UnitPressure::Pascal;
+        let s:&str = "Pa";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+        #[test]
+    fn t25() {
+
+        let t = UnitPressure::Bar;
+        let s:&str = "bar";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t26() {
+
+        let t = UnitRadioactivity::Becquerel;
+        let s:&str = "Bq";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t27() {
+
+        let t = UnitRadioactivityExposure::Sievert;
+        let s:&str = "Sv";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t28() {
+
+        let t = UnitResistance::Ohm;
+        let s:&str = "Ω";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t29() {
+
+        let t = UnitSolidAngle::Steradian;
+        let s:&str = "sr";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t30() {
+
+        let t = UnitSound::Bel;
+        let s:&str = "B";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t31() {
+
+        let t = UnitSubstance::Mole;
+        let s:&str = "mol";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t32() {
+
+        let t = UnitTime::Second;
+        let s:&str = "s";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+
+    #[test]
+    fn t33() {
+
+        let t = UnitVolume::Liter;
+        let s:&str = "l";
+
+        let x:Value = 3.4 | t(Metric::Yotta);
+        assert_eq!(format!("3.4 Y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Atto);
+        assert_eq!(format!("3.4 a{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Centi);
+        assert_eq!(format!("3.4 c{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deca);
+        assert_eq!(format!("3.4 da{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Deci);
+        assert_eq!(format!("3.4 d{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Exa);
+        assert_eq!(format!("3.4 E{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Femto);
+        assert_eq!(format!("3.4 f{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Giga);
+        assert_eq!(format!("3.4 G{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Hecto);
+        assert_eq!(format!("3.4 h{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Kilo);
+        assert_eq!(format!("3.4 k{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Mega);
+        assert_eq!(format!("3.4 M{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Micro);
+        assert_eq!(format!("3.4 μ{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Milli);
+        assert_eq!(format!("3.4 m{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Nano);
+        assert_eq!(format!("3.4 n{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::None);
+        assert_eq!(format!("3.4 {}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Peta);
+        assert_eq!(format!("3.4 P{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Pico);
+        assert_eq!(format!("3.4 p{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Tera);
+        assert_eq!(format!("3.4 T{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Yocto);
+        assert_eq!(format!("3.4 y{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zepto);
+        assert_eq!(format!("3.4 z{}", s), x.to_string());
+        let x:Value = 3.4 | t(Metric::Zetta);
+        assert_eq!(format!("3.4 Z{}", s), x.to_string());
+    }
+}
+
+#[cfg(test)]
 mod value_reduce_tests {
     use v3::values::Value;
 
