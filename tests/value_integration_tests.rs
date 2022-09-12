@@ -81,7 +81,7 @@ mod value_usage_tests {
 
 #[cfg(test)]
 mod unit_conversion_tests {
-    use v3::{values::Value, units::{UnitLength, Metric, UnitTime}};
+    use v3::{values::Value, units::{UnitLength, Metric, UnitTime, UnitAbsorbedDose, UnitAngle}};
 
     macro_rules! assert_apr {
         ($x:expr, $y:expr, $d:expr) => {
@@ -792,6 +792,126 @@ mod unit_conversion_tests {
         v1.convert("km/hr").unwrap();
         assert_eq!(v1, v2);
     }
+
+    #[test]
+    fn convert_length_metric() {
+
+        let t = UnitLength::Meter;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_time_metric() {
+
+        let t = UnitTime::Second;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+        #[test]
+    fn convert_absorbed_dose_metric() {
+
+        let t = UnitAbsorbedDose::Gray;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+        #[test]
+    fn convert_angle_metric() {
+
+        let t = UnitAngle::Radian;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
 }
 
 #[cfg(test)]
@@ -826,7 +946,7 @@ mod value_display_tests {
     use v3::{values::Value, units::{UnitLength, Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume, UnitTemperature}};
 
     #[test]
-    fn t1() {
+    fn length_metric() {
 
         let t = UnitLength::Meter;
         let s:&str = "m";
@@ -876,7 +996,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t2() {
+    fn absorbed_dose_metric() {
 
         let t = UnitAbsorbedDose::Gray;
         let s:&str = "Gy";
@@ -926,7 +1046,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t3() {
+    fn angle_metric() {
 
         let t = UnitAngle::Radian;
         let s:&str = "rad";
@@ -976,7 +1096,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t4() {
+    fn capacitance_metric() {
 
         let t = UnitCapacitance::Farad;
         let s:&str = "F";
@@ -1026,7 +1146,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t5() {
+    fn catalytic_metric() {
 
         let t = UnitCatalyticActivity::Katal;
         let s:&str = "kat";
@@ -1076,7 +1196,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t6() {
+    fn electric_charge_metric() {
 
         let t = UnitElectricCharge::Coulomb;
         let s:&str = "C";
@@ -1125,8 +1245,8 @@ mod value_display_tests {
         assert_eq!(format!("3.4 Z{}", s), x.to_string());
     }
 
-        #[test]
-    fn t7() {
+    #[test]
+    fn electric_conductance() {
 
         let t = UnitElectricConductance::Siemens;
         let s:&str = "S";
@@ -1176,7 +1296,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t8() {
+    fn electric_current_metric() {
 
         let t = UnitElectricCurrent::Ampere;
         let s:&str = "A";
@@ -1226,7 +1346,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t9() {
+    fn electric_potential_metric() {
 
         let t = UnitElectricPotential::Volt;
         let s:&str = "V";
@@ -1276,7 +1396,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t10() {
+    fn energy_metric1() {
 
         let t = UnitEnergy::Joule;
         let s:&str = "J";
@@ -1326,7 +1446,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t11() {
+    fn energy_metric_2() {
 
         let t = UnitEnergy::GramCalorie;
         let s:&str = "cal";
@@ -1376,7 +1496,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t12() {
+    fn force_metric() {
 
         let t = UnitForce::Newton;
         let s:&str = "N";
@@ -1426,7 +1546,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t13() {
+    fn frequency_metric() {
 
         let t = UnitFrequency::Hertz;
         let s:&str = "Hz";
@@ -1476,7 +1596,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t14() {
+    fn illuminance_metric() {
 
         let t = UnitIlluminance::Lux;
         let s:&str = "lx";
@@ -1526,7 +1646,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t15() {
+    fn inductance_metric() {
 
         let t = UnitInductance::Henry;
         let s:&str = "H";
@@ -1576,7 +1696,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t16() {
+    fn information_1() {
 
         let t = UnitInformation::Byte;
         let s:&str = "b";
@@ -1600,7 +1720,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t17() {
+    fn information_2() {
 
         let t = UnitInformation::Bit;
         let s:&str = "bits";
@@ -1622,7 +1742,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t18() {
+    fn luminous_flux_metric() {
 
         let t = UnitLuminousFlux::Lumen;
         let s:&str = "lm";
@@ -1672,7 +1792,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t19() {
+    fn luminous_intensity_metric() {
 
         let t = UnitLuminousIntensity::Candela;
         let s:&str = "cd";
@@ -1722,7 +1842,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t20() {
+    fn magnetic_flux_metric() {
 
         let t = UnitMagneticFlux::Weber;
         let s:&str = "Wb";
@@ -1772,7 +1892,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t21() {
+    fn magnetic_flux_density_metric() {
 
         let t = UnitMagneticFluxDensity::Tesla;
         let s:&str = "T";
@@ -1822,7 +1942,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t22() {
+    fn mass_metric() {
 
         let t = UnitMass::Gram;
         let s:&str = "g";
@@ -1872,7 +1992,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t23() {
+    fn power_metric() {
 
         let t = UnitPower::Watt;
         let s:&str = "W";
@@ -1922,7 +2042,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t24() {
+    fn pressure_metric_1() {
 
         let t = UnitPressure::Pascal;
         let s:&str = "Pa";
@@ -1972,7 +2092,7 @@ mod value_display_tests {
     }
 
         #[test]
-    fn t25() {
+    fn pressure_metric_2() {
 
         let t = UnitPressure::Bar;
         let s:&str = "bar";
@@ -2022,7 +2142,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t26() {
+    fn radioactivity_metric() {
 
         let t = UnitRadioactivity::Becquerel;
         let s:&str = "Bq";
@@ -2072,7 +2192,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t27() {
+    fn radiation_exposure_metric() {
 
         let t = UnitRadioactivityExposure::Sievert;
         let s:&str = "Sv";
@@ -2122,7 +2242,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t28() {
+    fn resistance_metric() {
 
         let t = UnitResistance::Ohm;
         let s:&str = "Ω";
@@ -2172,7 +2292,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t29() {
+    fn solid_angle_metric() {
 
         let t = UnitSolidAngle::Steradian;
         let s:&str = "sr";
@@ -2222,7 +2342,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t30() {
+    fn sound_metric() {
 
         let t = UnitSound::Bel;
         let s:&str = "B";
@@ -2272,7 +2392,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t31() {
+    fn substance_metric() {
 
         let t = UnitSubstance::Mole;
         let s:&str = "mol";
@@ -2322,7 +2442,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t32() {
+    fn time_metric() {
 
         let t = UnitTime::Second;
         let s:&str = "s";
@@ -2372,7 +2492,7 @@ mod value_display_tests {
     }
 
     #[test]
-    fn t33() {
+    fn volume_metric() {
 
         let t = UnitVolume::Liter;
         let s:&str = "l";
