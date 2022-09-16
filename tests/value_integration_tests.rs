@@ -81,7 +81,7 @@ mod value_usage_tests {
 
 #[cfg(test)]
 mod unit_conversion_tests {
-    use v3::{values::Value, units::{UnitLength, Metric, UnitTime, UnitAbsorbedDose, UnitAngle}};
+    use v3::{values::Value, units::{UnitLength, Metric, UnitTime, UnitAbsorbedDose, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitMass, UnitPressure}};
 
     macro_rules! assert_apr {
         ($x:expr, $y:expr, $d:expr) => {
@@ -853,7 +853,7 @@ mod unit_conversion_tests {
         assert!(x.val >= 1.0);
     }
 
-        #[test]
+    #[test]
     fn convert_absorbed_dose_metric() {
 
         let t = UnitAbsorbedDose::Gray;
@@ -883,10 +883,226 @@ mod unit_conversion_tests {
         assert!(x.val >= 1.0);
     }
 
-        #[test]
+    #[test]
     fn convert_angle_metric() {
 
         let t = UnitAngle::Radian;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_energy_metric_1() {
+
+        let t = UnitEnergy::Joule;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_energy_metric_2() {
+
+        let t = UnitEnergy::GramCalorie;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_force_metric() {
+
+        let t = UnitForce::Newton;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_information_metric_1() {
+
+        let t = UnitInformation::Bit;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_information_metric_2() {
+
+        let t = UnitInformation::Byte;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_mass_metric() {
+
+        let t = UnitMass::Gram;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_pressure_metric_1() {
+
+        let t = UnitPressure::Pascal;
+
+        let mut x:Value = 1.0 | t(Metric::Yotta);
+        x >>= t(Metric::Atto);
+        x >>= t(Metric::Centi);
+        x >>= t(Metric::Deca);
+        x >>= t(Metric::Deci);
+        x >>= t(Metric::Exa);
+        x >>= t(Metric::Giga);
+        x >>= t(Metric::Femto);
+        x >>= t(Metric::Hecto);
+        x >>= t(Metric::Kilo);
+        x >>= t(Metric::Mega);
+        x >>= t(Metric::Micro);
+        x >>= t(Metric::Milli);
+        x >>= t(Metric::Nano);
+        x >>= t(Metric::None);
+        x >>= t(Metric::Peta);
+        x >>= t(Metric::Pico);
+        x >>= t(Metric::Tera);
+        x >>= t(Metric::Yocto);
+        x >>= t(Metric::Zepto);
+        x >>= t(Metric::Zetta);
+        x >>= t(Metric::Yotta);
+        assert!(x.val >= 1.0);
+    }
+
+    #[test]
+    fn convert_pressure_metric_2() {
+
+        let t = UnitPressure::Bar;
 
         let mut x:Value = 1.0 | t(Metric::Yotta);
         x >>= t(Metric::Atto);
