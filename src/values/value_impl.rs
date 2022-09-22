@@ -1386,6 +1386,16 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` has no units
+    /// 
+    /// <none>
+    pub fn is_empty(&self) -> bool {
+        if self.unit_map == 0 {
+            return true;
+        }
+        false
+    }
+
     /// Returns `true` if a `Value` is a length
     /// 
     /// `length`
