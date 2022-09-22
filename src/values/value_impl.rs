@@ -1804,6 +1804,16 @@ impl Value {
         false
     }
 
+    /// Returns `true` if a `Value` is an angle measured in radians
+    /// 
+    /// `angle`
+    pub fn is_radians(&self) -> bool {
+        if self.unit_map == ANGLE_MAP && self.exp[ANGLE_INDEX] == 1 && self.v_angle == Some(UnitAngle::Radian(Metric::None)) {
+            return true;
+        }
+        false
+    }
+
     /// Returns `true` if a `Value` is a measurement of information
     /// 
     /// `information`

@@ -140,6 +140,13 @@ impl Display for Value {
     }
 }
 
+impl PartialEq<&str> for Value {
+    fn eq(&self, other: &&str) -> bool {
+        let temp:Value = Value::new(1.0, other).unwrap();
+        self.__equal(&temp)
+    }
+}
+
 impl FromStr for Value {
     type Err = V3Error;
     fn from_str(s:&str) -> Result<Value, V3Error> {
