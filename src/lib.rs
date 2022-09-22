@@ -11,7 +11,7 @@
 mod constants;
 
 /// The error code definitions
-mod errors;
+pub mod errors;
 
 /// The main module for `Metric` and `Unit` types
 pub mod units;
