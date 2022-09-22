@@ -1,262 +1,382 @@
-# V2
-V2 is a library with the aim of assisting other programs that use a lot of math equations to integrate units and unit interactions into a single type. 
-
-V2 parses strings given by a user and turns the parsed string into a 'Value' type. This type can be used in a similar way as to a regular ```<f64>``` type. It maintains the value given, as well as the measurement type given. 
-
-When used in equations, it will automatically be updated wither within itself or the new construction will contain the updated unit types. 
+# V3
+V3 is a scientific unit type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metricly scaled, arithmetically combined with others, build new units, and divided into their base units.
 
 ## Table of Contents
-- [V2](#v2)
+- [V3](#v3)
   - [Table of Contents](#table-of-contents)
-  - [Example](#example)
   - [Unit Support](#unit-support)
+  - [Examples](#examples)
+  - [Method Support](#method-support)
+  - [Derrived Units](#derrived-units)
   - [Conversions](#conversions)
   - [Constants](#constants)
-
-## Example
-To create a new value:
-```rust
-let t:Value = Value::new(1.2, "seconds").unwrap();
-```
-
-And to use it:
-```rust
-let s:Value = Value::new(5.6, "m/s").unwrap();
-let d:Value = t * s;
-```
-d will contain the value: `6.72 m`
-
-You can also conduct other operations:
-```rust
-let mut m:Value = Value::new(60.0, "liters").unwrap();
-m += 40.0;
-```
-```rust
-uet mut r:Value = Value::new(2.0, "radians").unwrap();
-let n:f64 = r.sin();
-```
+  - [Future Work](#futurework)
 
 ## Unit Support
 
-The project supports all official SI units as listed by the National Institute of Standards and Technology (NIST) and many units listed by the General Conference on Weights and Measures (CGPM). *Some* American Imperial Units are also included. 
+The project supports all base SI units as listed by the National Institute of Standards and Technology (NIST) and many units listed by the General Conference on Weights and Measures (CGPM). *Some* American Imperial Units are also supported.
 
-Metric units, unless otherwise specified, will support full Yocto-Yotta metric ranges. 
+`[m]` indicates that the unit supports `Metric` prefixes.
 
 Lengths
-```
-Meter
-Inch
-Foot
-Yard
-Mile
-Astronomical Unit
-Parsec
-Light Year
-Ångström
+```#[ignore]
+Meter             [m] => m (kph; for kilometers per hour)
+Inch                  => in, inch, inches
+Foot                  => ft, feet
+Yard                  => yd, yds
+Mile                  => mile, miles (mph; for miles per hour)
+Astronomical Unit     => AU
+Parsec                => pc
+Light Year            => lightyear, lightyears, lyr
+Ångström              => angstrom, angstroms, Å
 ```
 Time
-```
-Second
-Minute
-Hour
-Day
+```#[ignore]
+Second            [m] => s
+Minute                => min, minute, minutes 
+Hour                  => h, hr, hour, hours
+Day                   => d, day, days
 ```
 Mass
-```
-Gram
-Grain
-Ounce
-Pound
+```#[ignore]
+Gram              [m] => g
+Grain                 => gr, grain, grains
+Ounce                 => oz, ounce, ounces
+Pound                 => lb, lbs, pounds
 ```
 Electric Current
-```
-Ampere
+```#[ignore]
+Ampere            [m] => A
 ```
 Electric Charge
-```
-Coulomb
+```#[ignore]
+Coulomb           [m] => C
 ```
 Electric Potential
-```
-Volt
+```#[ignore]
+Volt              [m] => V
 ```
 Electric Conductance
-```
-Siemens
+```#[ignore]
+Siemens           [m] => S
 ```
 Capacitance
-```
-Farad
+```#[ignore]
+Farad             [m] => F, farad, farads
 ```
 Resistance
-```
-Ohm
+```#[ignore]
+Ohm               [m] => Ω, O
 ```
 Inductance
-```
-Henry
+```#[ignore]
+Henry             [m] => H
 ```
 Magnetic Flux
-```
-Weber
+```#[ignore]
+Weber             [m] => Wb
 ```
 Magnetic Flux Density
-```
-Tesla
+```#[ignore]
+Tesla             [m] => T
 ```
 Temperature
-```
-Celsius
-Fahrenheit
-Kelvin
+```#[ignore]
+Celsius               => c, °c, °C
+Fahrenheit            => f, °f, °F
+Kelvin                => K
 ```
 Substance
-```
-Mole
+```#[ignore]
+Mole              [m] => mol
 ```
 Luminous Intensity
-```
-Candela
+```#[ignore]
+Candela           [m] => cd
 ```
 Luminous Flux
-```
-Lumen
+```#[ignore]
+Lumen             [m] => lm
 ```
 Illuminance
-```
-Lux
+```#[ignore]
+Lux               [m] => lx
 ```
 Volume
-```
-Liter
+```#[ignore]
+Liter             [m] => l
 ```
 Pressure
-```
-Pascal
-Bar
-Torr
-Hgmm
-Hgin
-Atm
-Psi
+```#[ignore]
+Pascal            [m] => Pa
+Bar               [m] => bar
+Torr                  => torr
+mmHg                  => mmHg
+inHg                  => inHg
+Atm                   => ATM, atm
+Psi                   => PSI, psi
 ```
 Angle
-```
-Degree
-Radian
-Minute of Angle
-Milliradian
+```#[ignore]
+Degree                => °, degree, degrees
+Radian            [m] => rad, radian, radians
+milliradian       [m] => mil, mils, MIL
+Minute of Angle       => moa, MOA
 ```
 Frequency
-```
-Hertz
+```#[ignore]
+Hertz             [m] => Hz
 ```
 Force
-```
-Newton
-Pound Force
+```#[ignore]
+Newton            [m] => N
+Pound Force           => lbfr, lbsfr, poundforce, poundsforce
 ```
 Energy
-```
-Joule
-Calorie
-Kilocalorie
-Foot Pound
-Electron Volt
+```#[ignore]
+Joule             [m] => J
+Calorie           [m] => cal (Cal; for kilocalorie)
+Foot Pound            => ftlb, ftlbs, footpound, footpounds
+Electron Volt         => eV
 ```
 Power
-```
-Watt
+```#[ignore]
+Watt              [m] => W
 ```
 Radioactivity
+```#[ignore]
+Becquerel         [m] => Bq
+Curie                 => Ci
 ```
-Becquerel
-Curie
+Absorbed Dosage of Ionizing Radiation
+```#[ignore]
+Gray              [m] => Gy
+Röntgen               => R
+Rad                   => rads, Rads
 ```
-Absorbed Dosage of Radiation
-```
-Gray
-Röntgen
-Rad
-```
-Radioactivity Exposure
-```
-Sievert
-Rem
+Equivalent Dosage of Ionizing Radiation
+```#[ignore]
+Sievert           [m] => Sv
+Rem                   => rem, Rem
 ```
 Catalytic Activity
-```
-Katal
+```#[ignore]
+Katal             [m] => kat
 ```
 Sound
-```
-Bel
+```#[ignore]
+Bel               [m] => B
 ```
 Information
-```
-Bit -> Partial metric support
-Byte -> Partial metric support
+```#[ignore]
+Bit  [m base 2 : Kilo - Yotta] => bits
+Byte [m base 2 : Kilo - Yotta] => b, byte, bytes
 ```
 
+Metric prefixes
+```#[ignore]
+Yotta => Y
+Zetta => Z
+Exa   => E
+Peta  => P
+Tera  => T
+Giga  => G
+Mega  => M
+Kilo  => k
+Hecto => h
+Deca  => da
+Deci  => c
+Milli => m
+Micro => u, μ
+Nano  => n
+Pico  => p
+Femto => f
+Atto  => a
+Zepto => z
+Yocto => y
+```
+
+Note that some unit strings like `eV` could be indended to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler. 
+
+## Examples
+Creating `Value`s:
+```rust
+use v3::value;
+use v3::values::Value;
+use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
+
+// Slowest
+let v1:Value = "22.3 kg*m/s^2".parse::<Value>().unwrap();
+
+// Slow
+let v2:Value = value!(22.3, "kg*m/s^2");
+
+// Average
+let v3:Value = Value::new(22.3, "kg*m/s^2").unwrap();
+
+// Fastest
+let v4:Value = 22.3
+  ^ UnitTime::Second(Metric::None)
+  ^ UnitTime::Second(Metric::None)
+  | UnitMass::Gram(Metric::Kilo)
+  | UnitLength::Meter(Metric::None);
+```
+
+Using `Values`:
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitTime, UnitLength};
+
+let time:Value = 3.4 | UnitTime::Second(Metric::None);
+let dist:Value = 10.3 | UnitLength::Meter(Metric::None);
+
+let speed:Value = dist/time;
+assert!(speed >= 3.0293);
+```
+
+## Method Support
+Values provide similar functionality to many functions that are available to other units such as i32, f32, f64 etc. 
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitLength};
+
+let m:Value = Value::new(f64::NAN, "feet").unwrap();
+if m.is_nan() {
+  println!("Our value is not a number!");
+}
+
+let a:Value = 1.4 | UnitLength::Meter(Metric::None);
+let r:Value = a.sin(); // Value is in radians
+```
+
+## Derrived Units
+Many of the SI units are derrived from other base units. When using the values to conduct arithmetic operations, values can be explicity asked to be 'complex' or 'reduced'. 
+
+Making a complex value means combining different types into a new type.
+```rust
+use v3::values::Value;
+
+let m:Value = Value::new(2.5, "kg").unwrap();
+let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+
+let f1:Value = m*acc;
+let f2:Value = (m*acc).complex().unwrap();
+```
+Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
+
+Reducing a value means setting a value to its derrived units.
+```rust
+use v3::values::Value;
+
+let mut f:Value = Value::new(24.525, "N").unwrap();
+
+f.reduce("kg*m/s^2").unwrap();
+```
+Variable `f` will be `24.525 kg*m/s^2`
+
+This behavior is explicit and must be called by the user.
+
+However functions like `.is_force()` will return `true` for both `kg*m/s^2` and `N`. 
+
 ## Conversions
-All within their given measurement type will be able to be converted to eachother. Values with multiple types, in most cases, can be converted to their compatable types. 
+All `Value`s within their given measurement type will be able to be converted to each other. Values with multiple types, in most cases, can be converted to their compatable types. 
 
 Example converting feet into meters:
 ```rust
+use v3::values::Value;
+
 let mut m:Value = Value::new(3.2, "feet").unwrap();
-m.convert("m");
+
+m.convert("m").unwrap();
 ```
+
 There is also direct syntax for this feature:
 ```rust
-let mut m:Value = Value::new(5.9, "km/h").unwrap();
-m >>= "m";
+use v3::values::Value;
+
+let mut m:Value = Value::new(5.9, "km/hr").unwrap();
+
+m >>= "m/s";
 ```
-If you require better runtime efficiency at the cost of specifying each unit type:
+
+You can use other Values for conversion:
 ```rust
-use v2::units::unit_types::{UnitLength, UnitTime};
-let mut s:Value = Value::new(5.3, "mph").unwrap();
-s >>= (Metric::Kilo, UnitLength::Meter);
-s >>= UnitTime::Second;
+use v3::values::Value;
+
+let m:Value = Value::new(1.2, "yards").unwrap();
+let n:Value = Value::new(1.0, "m").unwrap();
+
+let k:Value = (m >> n).unwrap();
+```
+
+The types can also be directly used: (The fastest method)
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitLength, UnitTime};
+
+let mut m:Value = Value::new(5.9, "kph").unwrap();
+
+if m.is_velocity() {
+  m >>= UnitLength::Meter(Metric::None);
+  m >>= UnitTime::Second(Metric::None);
+} else {
+  panic!();
+}
 ```
 Temperature cannot be converted to another unit if it has other units (like mass) within the value. 
 
-Units cannot be converted between disparate types, although there are some exceptions. Liters and meters^3 is one such example. 
+Units cannot be converted between disparate types, although there are some exceptions. `ml` to `mm^3` is one such example of volume to a cubed length.
 
 ## Constants
 There are also provided constants for easier usage. 
+```#[ignore]
+Absolute Zero         - K
 ```
-Absolute Zero - K
+```#[ignore]
+Avogadro's Number     - mol^-1
 ```
+```#[ignore]
+Faraday Constant      - C/mol
 ```
-Avogadro's Number - mol^-1
+```#[ignore]
+Atomic Mass Constant  - kg
 ```
+```#[ignore]
+Molar Gas Constant    - J/(K*mol)
 ```
-Faraday Constant
+```#[ignore]
+Coulombs Constant     - 1/mol
 ```
+```#[ignore]
+The Speed of light    - m/s
 ```
-Atomic Mass Constant
+```#[ignore]
+Boltzmann Constant    - J/K
 ```
+```#[ignore]
+The gravity of Earth  - m/s^2
 ```
-Molar Gas Constant - J/(K*mol)
+```#[ignore]
+Newtonian Gravitation - m^3/(kg*s^2)
 ```
+```#[ignore]
+Electron Charge       - C
 ```
-Coulombs Constant
+```#[ignore]
+Rydberg Constant      - 1/m
 ```
+```#[ignore]
+Plank's Constant      - J/Hz
 ```
-The Speed of light
+```#[ignore]
+Vacuum Permitivity    - F/m
 ```
-```
-Boltzmann Constant
-```
-```
-The gravity of Earth - m/s^2
-```
-```
-Electron Charge 
-```
-```
-Rydberg Constant
-```
-```
-Plank's Constant
-```
+
+## Future Work
+V3 can and is intended to be improved with some of these goals in mind:
+- Support for `<f32>`, `<i32>`, `<i64>`, and `<i128>` numeric types
+- Numerator and Denominator numeric variables to ensure floating point accuracy
+- Significant digit considerations
+- Equation definitions, which can expect a specific `Value` type
+- More Imperial measurement support 🤢
+- speed speed speed
