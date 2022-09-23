@@ -1267,6 +1267,11 @@ impl Mul<Value> for Value {
 
         if other.is_radians() && !self.is_angle() {
             n.val *= other.val;
+            n.unit_map = self.unit_map;
+            return n;
+        } else if self.is_radians() && !other.is_angle() {
+            n.val *= other.val;
+            n.unit_map = other.unit_map;
             return n;
         }
 
@@ -1523,12 +1528,18 @@ impl MulAssign<Value> for Value {
             // Error cannot convert as part of larger unit
             panic!("Cannot MulAssign values {} and {}", self, other);
         }
-
+        
         if other.is_radians() && !self.is_angle() {
             self.val *= other.val;
+            self.unit_map = self.unit_map;
+            return;
+        } else if self.is_radians() && !other.is_angle() {
+            let t:f64 = self.val;
+            *self = other;
+            self.val *= t;
             return;
         }
-        
+
         let mut cmp_val:f64 = other.val;
         for i in 0..31_usize {
             self.exp[i] += other.exp[i];
@@ -1787,6 +1798,16 @@ impl Div<Value> for Value {
             panic!("Cannot Div values {} and {}", self, other);
         }
 
+        if other.is_radians() && !self.is_angle() {
+            n.val *= other.val;
+            n.unit_map = self.unit_map;
+            return n;
+        } else if self.is_radians() && !other.is_angle() {
+            n.val *= other.val;
+            n.unit_map = other.unit_map;
+            return n;
+        }
+
         let mut cmp_val:f64 = other.val;
         for i in 0..31_usize {
             n.exp[i] = self.exp[i] - other.exp[i];
@@ -2039,6 +2060,17 @@ impl DivAssign<Value> for Value {
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
             panic!("Cannot DivAssign values {} and {}", self, other);
+        }
+
+        if other.is_radians() && !self.is_angle() {
+            self.val *= other.val;
+            self.unit_map = self.unit_map;
+            return;
+        } else if self.is_radians() && !other.is_angle() {
+            let t:f64 = self.val;
+            *self = other;
+            self.val *= t;
+            return;
         }
 
         self.unit_map = 0;
