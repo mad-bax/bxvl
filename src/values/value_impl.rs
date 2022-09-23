@@ -2385,6 +2385,7 @@ impl Value {
             }
             "K" => {
                 // if m, error
+                // TODO add kelvin metric support
                 self.v_temperature = Some(UnitTemperature::Kelvin);
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
@@ -2854,6 +2855,7 @@ impl Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot compare Values {} and {}", self, other);
                     }
                 }
             }

@@ -198,6 +198,7 @@ impl PartialOrd for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot compare Values {} and {}", self, other);
                     }
                 }
             }

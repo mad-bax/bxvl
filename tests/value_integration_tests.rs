@@ -3,6 +3,7 @@ extern crate v3;
 #[cfg(test)]
 mod value_usage_tests {
     use v3::values::Value;
+    use v3::units::{Metric, UnitLength, UnitEnergy};
 
     macro_rules! assert_apr {
         ($x:expr, $y:expr, $d:expr) => {
@@ -76,6 +77,15 @@ mod value_usage_tests {
         v5 -= v6;
         assert_eq!(v4-v6, ret);
         assert_eq!(v5, ret);
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_incorrect_add() {
+        let v1:Value = 4.5 | UnitLength::Meter(Metric::None);
+        let v2:Value = 3.2 | UnitEnergy::FootPound;
+
+        let _:Value = v1 + v2;
     }
 }
 

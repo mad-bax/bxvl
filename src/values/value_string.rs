@@ -142,7 +142,10 @@ impl Display for Value {
 
 impl PartialEq<&str> for Value {
     fn eq(&self, other: &&str) -> bool {
-        let temp:Value = Value::new(1.0, other).unwrap();
+        let temp:Value = match Value::new(1.0, other) {
+            Ok(t) => t,
+            Err(_) => return false // Report Error?
+        };
         self.__equal(&temp)
     }
 }

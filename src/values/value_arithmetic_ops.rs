@@ -488,11 +488,13 @@ impl Add<Value> for Value {
     fn add(self, other:Value) -> Value {
         if self.unit_map != other.unit_map {
             // Error
+            panic!("Cannot Add values {} and {}", self, other);
         }
 
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot Add values {} and {}", self, other);
         }
 
         let mut cmp_val:f64 = other.val;
@@ -500,6 +502,7 @@ impl Add<Value> for Value {
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
+                panic!("Cannot Add values {} and {}", self, other);
             }
 
             let region:usize = 1<<i;
@@ -662,6 +665,7 @@ impl Add<Value> for Value {
                     }                    
                     _ => {
                         // error
+                        panic!("Cannot Add values {} and {}", self, other);
                     }
                 }
             }
@@ -677,11 +681,13 @@ impl AddAssign<Value> for Value {
     fn add_assign(&mut self, other:Value) {
         if self.unit_map != other.unit_map {
             // Error
+            panic!("Cannot AddAssign values {} and {}", self, other);
         }
 
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot AddAssign values {} and {}", self, other);
         }
 
         let mut cmp_val:f64 = other.val;
@@ -689,6 +695,7 @@ impl AddAssign<Value> for Value {
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
+                panic!("Cannot AddAssign values {} and {}", self, other);
             }
 
             let region:usize = 1<<i;
@@ -851,6 +858,7 @@ impl AddAssign<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot AddAssign values {} and {}", self, other);
                     }
                 }
             }
@@ -865,11 +873,13 @@ impl Sub<Value> for Value {
     fn sub(self, other:Value) -> Value {
         if self.unit_map != other.unit_map {
             // Error
+            panic!("Cannot Sub values {} and {}", self, other);
         }
 
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot Sub values {} and {}", self, other);
         }
 
         let mut cmp_val:f64 = other.val;
@@ -877,6 +887,7 @@ impl Sub<Value> for Value {
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
+                panic!("Cannot Sub values {} and {}", self, other);
             }
 
             let region:usize = 1<<i;
@@ -1039,6 +1050,7 @@ impl Sub<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot Sub values {} and {}", self, other);
                     }
                 }
             }
@@ -1054,11 +1066,13 @@ impl SubAssign<Value> for Value {
     fn sub_assign(&mut self, other:Value) {
         if self.unit_map != other.unit_map {
             // Error
+            panic!("Cannot SubAssign values {} and {}", self, other);
         }
 
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot SubAssign values {} and {}", self, other);
         }
 
         let mut cmp_val:f64 = other.val;
@@ -1066,6 +1080,7 @@ impl SubAssign<Value> for Value {
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 // Error
+                panic!("Cannot SubAssign values {} and {}", self, other);
             }
 
             let region:usize = 1<<i;
@@ -1228,6 +1243,7 @@ impl SubAssign<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot SubAssign values {} and {}", self, other);
                     }
                 }
             }
@@ -1246,6 +1262,7 @@ impl Mul<Value> for Value {
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot Mul values {} and {}", self, other);
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -1489,6 +1506,7 @@ impl Mul<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot Mul values {} and {}", self, other);
                     }
                 }
             }
@@ -1503,6 +1521,7 @@ impl MulAssign<Value> for Value {
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot MulAssign values {} and {}", self, other);
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -1747,6 +1766,7 @@ impl MulAssign<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot MulAssign values {} and {}", self, other);
                     }
                 }
             }
@@ -1764,6 +1784,7 @@ impl Div<Value> for Value {
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot Div values {} and {}", self, other);
         }
 
         let mut cmp_val:f64 = other.val;
@@ -2002,6 +2023,7 @@ impl Div<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot Div values {} and {}", self, other);
                     }
                 }
             }
@@ -2016,6 +2038,7 @@ impl DivAssign<Value> for Value {
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map > TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
             // Error cannot convert as part of larger unit
+            panic!("Cannot DivAssign values {} and {}", self, other);
         }
 
         self.unit_map = 0;
@@ -2256,6 +2279,7 @@ impl DivAssign<Value> for Value {
                     }
                     _ => {
                         // error
+                        panic!("Cannot DivAssign values {} and {}", self, other);
                     }
                 }
             }
