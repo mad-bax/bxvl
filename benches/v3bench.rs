@@ -27,6 +27,8 @@ fn criterion_benchmark(c:&mut Criterion) {
     c.bench_function("from_str", |b| b.iter(|| "10.0 ft/s".parse::<Value>()));
     c.bench_function("convert from value", |b| b.iter(|| va3_1 >> va3_3));
     c.bench_function("mul", |b| b.iter(|| black_box(va1*va2)));
+    c.bench_function("mul as pow", |b| b.iter(|| va1*va1));
+    c.bench_function("powv as pow", |b| b.iter(|| va1.powv(2)));
     c.bench_function("div", |b| b.iter(|| black_box(va5/va1)));
     c.bench_function("add", |b| b.iter(|| black_box(va4+va2)));
     c.bench_function("sub", |b| b.iter(|| black_box(va2-va4)));

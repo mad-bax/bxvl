@@ -555,6 +555,27 @@ impl Value {
         n
     }
 
+    /// Returns a new value to some arbitrary power.
+    /// 
+    /// Note: This is faster than simply multiplying `v*v` to acheive a value to a power.
+    /// 
+    /// # Example
+    /// ```rust
+    /// use v3::values::Value;
+    /// use v3::units::UnitLength;
+    /// let v:Value = 4.0 | UnitLength::Foot;
+    /// let x:Value = v.powv(2);
+    /// assert!(String::from("16 ft^2") == format!("{}", x));
+    /// ```
+    pub fn powv(&self, p:i32) -> Value {
+        let mut n:Value = *self;
+        for i in 0..31_usize {
+            n.exp[i] *= p;
+        }
+        n.val = n.val.powf(p as f64);
+        n
+    }
+
     /// Takes the cube root of the Value
     /// 
     /// Note: That if the unit exponents are not evenly dvisible by 3, the function will panic.
