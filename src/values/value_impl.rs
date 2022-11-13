@@ -1996,7 +1996,7 @@ impl Value {
     
     /// Creates a new unit type when constructing a `Value`
     fn _create_unit(&mut self, units:&str) -> Result<(), V3Error>{
-        let tokens:(Vec<String>, Vec<String>) = self._get_tokens(units, false)?;
+        let tokens:(Vec<String>, Vec<String>) = Value::_get_tokens(units, false)?;
 
         // do the numors first
         for t in tokens.0 {
@@ -2028,7 +2028,7 @@ impl Value {
     }
 
     /// Tokenizes a given string for a new `Value` for easier parsing
-    fn _get_tokens(&self, block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), V3Error> {
+    fn _get_tokens(block:&str, do_denom:bool) -> Result<(Vec<String>, Vec<String>), V3Error> {
         let mut numor:Vec<String> = Vec::new();
         let mut denom:Vec<String> = Vec::new();
     
@@ -2055,7 +2055,7 @@ impl Value {
                     left_count-=1;
                     if left_count == 0 {
                         end_index = index;
-                        let mut ret:(Vec<String>, Vec<String>) = self._get_tokens(&block[start_index..end_index], found_divisor)?;
+                        let mut ret:(Vec<String>, Vec<String>) = Self::_get_tokens(&block[start_index..end_index], found_divisor)?;
                         numor.append(&mut ret.0);
                         denom.append(&mut ret.1);
                     }

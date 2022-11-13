@@ -1,7 +1,7 @@
 #![crate_type="lib"]
 #![deny(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
-#![deny(rustdoc::missing_doc_code_examples)]
+#![deny(clippy::missing_doc_code_examples)]
 
 //! The V3 library crate
 
