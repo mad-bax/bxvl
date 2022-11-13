@@ -86,7 +86,7 @@ impl BitXor<UnitLength> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitLength) -> Value {
         let mut new:Value = self;
-        if self.v_length != None && self.v_length != Some(other) {
+        if self.v_length.is_some() && self.v_length != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[LENGTH_INDEX] == 0 {
@@ -154,7 +154,7 @@ impl BitXor<UnitTime> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitTime) -> Value {
         let mut new:Value = self;
-        if self.v_time != None && self.v_time != Some(other) {
+        if self.v_time.is_some() && self.v_time != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TIME_INDEX] == 0 {
@@ -223,7 +223,7 @@ impl BitXor<UnitAbsorbedDose> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitAbsorbedDose) -> Value {
         let mut new:Value = self;
-        if self.v_ab_dose != None && self.v_ab_dose != Some(other) {
+        if self.v_ab_dose.is_some() && self.v_ab_dose != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ABSORBED_DOSE_INDEX] == 0 {
@@ -291,7 +291,7 @@ impl BitXor<UnitAngle> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitAngle) -> Value {
         let mut new:Value = self;
-        if self.v_angle != None && self.v_angle != Some(other) {
+        if self.v_angle.is_some() && self.v_angle != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ANGLE_INDEX] == 0 {
@@ -359,7 +359,7 @@ impl BitXor<UnitCapacitance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitCapacitance) -> Value {
         let mut new:Value = self;
-        if self.v_capacitance != None && self.v_capacitance != Some(other) {
+        if self.v_capacitance.is_some() && self.v_capacitance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CAPACITANCE_INDEX] == 0 {
@@ -427,7 +427,7 @@ impl BitXor<UnitCatalyticActivity> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitCatalyticActivity) -> Value {
         let mut new:Value = self;
-        if self.v_catalytic != None && self.v_catalytic != Some(other) {
+        if self.v_catalytic.is_some() && self.v_catalytic != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
@@ -495,7 +495,7 @@ impl BitXor<UnitElectricCharge> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitElectricCharge) -> Value {
         let mut new:Value = self;
-        if self.v_electric_charge != None && self.v_electric_charge != Some(other) {
+        if self.v_electric_charge.is_some() && self.v_electric_charge != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
@@ -563,7 +563,7 @@ impl BitXor<UnitElectricConductance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitElectricConductance) -> Value {
         let mut new:Value = self;
-        if self.v_electric_conductance != None && self.v_electric_conductance != Some(other) {
+        if self.v_electric_conductance.is_some() && self.v_electric_conductance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
@@ -631,7 +631,7 @@ impl BitXor<UnitElectricCurrent> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitElectricCurrent) -> Value {
         let mut new:Value = self;
-        if self.v_electric_current != None && self.v_electric_current != Some(other) {
+        if self.v_electric_current.is_some() && self.v_electric_current != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
@@ -699,7 +699,7 @@ impl BitXor<UnitElectricPotential> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitElectricPotential) -> Value {
         let mut new:Value = self;
-        if self.v_electric_potential != None && self.v_electric_potential != Some(other) {
+        if self.v_electric_potential.is_some() && self.v_electric_potential != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
@@ -767,7 +767,7 @@ impl BitXor<UnitEnergy> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitEnergy) -> Value {
         let mut new:Value = self;
-        if self.v_energy != None && self.v_energy != Some(other) {
+        if self.v_energy.is_some() && self.v_energy != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ENERGY_INDEX] == 0 {
@@ -835,7 +835,7 @@ impl BitXor<UnitForce> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitForce) -> Value {
         let mut new:Value = self;
-        if self.v_force != None && self.v_force != Some(other) {
+        if self.v_force.is_some() && self.v_force != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FORCE_INDEX] == 0 {
@@ -903,7 +903,7 @@ impl BitXor<UnitFrequency> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitFrequency) -> Value {
         let mut new:Value = self;
-        if self.v_frequency != None && self.v_frequency != Some(other) {
+        if self.v_frequency.is_some() && self.v_frequency != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FREQUENCY_INDEX] == 0 {
@@ -971,7 +971,7 @@ impl BitXor<UnitIlluminance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitIlluminance) -> Value {
         let mut new:Value = self;
-        if self.v_illuminance != None && self.v_illuminance != Some(other) {
+        if self.v_illuminance.is_some() && self.v_illuminance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ILLUMINANCE_INDEX] == 0 {
@@ -1039,7 +1039,7 @@ impl BitXor<UnitVolume> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitVolume) -> Value {
         let mut new:Value = self;
-        if self.v_volume != None && self.v_volume != Some(other) {
+        if self.v_volume.is_some() && self.v_volume != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[VOLUME_INDEX] == 0 {
@@ -1107,7 +1107,7 @@ impl BitXor<UnitTemperature> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitTemperature) -> Value {
         let mut new:Value = self;
-        if self.v_temperature != None && self.v_temperature != Some(other) {
+        if self.v_temperature.is_some() && self.v_temperature != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TEMPERATURE_INDEX] == 0 {
@@ -1175,7 +1175,7 @@ impl BitXor<UnitSubstance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitSubstance) -> Value {
         let mut new:Value = self;
-        if self.v_substance != None && self.v_substance != Some(other) {
+        if self.v_substance.is_some() && self.v_substance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[SUBSTANCE_INDEX] == 0 {
@@ -1243,7 +1243,7 @@ impl BitXor<UnitSound> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitSound) -> Value {
         let mut new:Value = self;
-        if self.v_sound != None && self.v_sound != Some(other) {
+        if self.v_sound.is_some() && self.v_sound != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[SOUND_INDEX] == 0 {
@@ -1311,7 +1311,7 @@ impl BitXor<UnitSolidAngle> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitSolidAngle) -> Value {
         let mut new:Value = self;
-        if self.v_solid_angle != None && self.v_solid_angle != Some(other) {
+        if self.v_solid_angle.is_some() && self.v_solid_angle != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[SOLID_ANGLE_INDEX] == 0 {
@@ -1379,7 +1379,7 @@ impl BitXor<UnitResistance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitResistance) -> Value {
         let mut new:Value = self;
-        if self.v_resistance != None && self.v_resistance != Some(other) {
+        if self.v_resistance.is_some() && self.v_resistance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RESISTANCE_INDEX] == 0 {
@@ -1447,7 +1447,7 @@ impl BitXor<UnitRadioactivityExposure> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitRadioactivityExposure) -> Value {
         let mut new:Value = self;
-        if self.v_radioactivity_exposure != None && self.v_radioactivity_exposure != Some(other) {
+        if self.v_radioactivity_exposure.is_some() && self.v_radioactivity_exposure != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
@@ -1515,7 +1515,7 @@ impl BitXor<UnitRadioactivity> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitRadioactivity) -> Value {
         let mut new:Value = self;
-        if self.v_radioactivity != None && self.v_radioactivity != Some(other) {
+        if self.v_radioactivity.is_some() && self.v_radioactivity != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RADIOACTIVITY_INDEX] == 0 {
@@ -1583,7 +1583,7 @@ impl BitXor<UnitPressure> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitPressure) -> Value {
         let mut new:Value = self;
-        if self.v_pressure != None && self.v_pressure != Some(other) {
+        if self.v_pressure.is_some() && self.v_pressure != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[PRESSURE_INDEX] == 0 {
@@ -1651,7 +1651,7 @@ impl BitXor<UnitPower> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitPower) -> Value {
         let mut new:Value = self;
-        if self.v_power != None && self.v_power != Some(other) {
+        if self.v_power.is_some() && self.v_power != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[POWER_INDEX] == 0 {
@@ -1719,7 +1719,7 @@ impl BitXor<UnitInductance> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitInductance) -> Value {
         let mut new:Value = self;
-        if self.v_inductance != None && self.v_inductance != Some(other) {
+        if self.v_inductance.is_some() && self.v_inductance != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[INDUCTANCE_INDEX] == 0 {
@@ -1787,7 +1787,7 @@ impl BitXor<UnitInformation> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitInformation) -> Value {
         let mut new:Value = self;
-        if self.v_information != None && self.v_information != Some(other) {
+        if self.v_information.is_some() && self.v_information != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[INFORMATION_INDEX] == 0 {
@@ -1855,7 +1855,7 @@ impl BitXor<UnitLuminousFlux> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitLuminousFlux) -> Value {
         let mut new:Value = self;
-        if self.v_luminous_flux != None && self.v_luminous_flux != Some(other) {
+        if self.v_luminous_flux.is_some() && self.v_luminous_flux != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[LUMINOUS_FLUX_INDEX] == 0 {
@@ -1923,7 +1923,7 @@ impl BitXor<UnitLuminousIntensity> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitLuminousIntensity) -> Value {
         let mut new:Value = self;
-        if self.v_luminous_flux_intensity != None && self.v_luminous_flux_intensity != Some(other) {
+        if self.v_luminous_flux_intensity.is_some() && self.v_luminous_flux_intensity != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
@@ -1991,7 +1991,7 @@ impl BitXor<UnitMagneticFlux> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitMagneticFlux) -> Value {
         let mut new:Value = self;
-        if self.v_magnetic_flux != None && self.v_magnetic_flux != Some(other) {
+        if self.v_magnetic_flux.is_some() && self.v_magnetic_flux != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MAGNETIC_FLUX_INDEX] == 0 {
@@ -2059,7 +2059,7 @@ impl BitXor<UnitMagneticFluxDensity> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitMagneticFluxDensity) -> Value {
         let mut new:Value = self;
-        if self.v_magnetic_flux_density != None && self.v_magnetic_flux_density != Some(other) {
+        if self.v_magnetic_flux_density.is_some() && self.v_magnetic_flux_density != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
@@ -2127,7 +2127,7 @@ impl BitXor<UnitMass> for Value {
     type Output = Value;
     fn bitxor(self, other:UnitMass) -> Value {
         let mut new:Value = self;
-        if self.v_mass != None && new.v_mass != Some(other) {
+        if self.v_mass.is_some() && new.v_mass != Some(other) {
             panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MASS_INDEX] == 0 {

@@ -1531,7 +1531,6 @@ impl MulAssign<Value> for Value {
         
         if other.is_radians() && !self.is_angle() {
             self.val *= other.val;
-            self.unit_map = self.unit_map;
             return;
         } else if self.is_radians() && !other.is_angle() {
             let t:f64 = self.val;
@@ -2064,7 +2063,6 @@ impl DivAssign<Value> for Value {
 
         if other.is_radians() && !self.is_angle() {
             self.val *= other.val;
-            self.unit_map = self.unit_map;
             return;
         } else if self.is_radians() && !other.is_angle() {
             let t:f64 = self.val;
