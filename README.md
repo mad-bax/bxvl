@@ -6,6 +6,12 @@ V3 is a scientific unit type library that allows variables to dynamically keep t
 
 - [V3](#v3)
   - [Table of Contents](#table-of-contents)
+  - [Examples](#examples)
+  - [Method Support](#method-support)
+  - [Derived Units](#derived-units)
+    - [Unit Checking](#unit-checking)
+  - [Conversions](#conversions)
+  - [Constants](#constants)
   - [Unit Support](#unit-support)
     - [Lengths](#lengths)
     - [Time](#time)
@@ -39,13 +45,175 @@ V3 is a scientific unit type library that allows variables to dynamically keep t
     - [Information](#information)
     - [Special Unit Keywords](#special-unit-keywords)
     - [Metric Prefix Identifiers](#metric-prefix-identifiers)
-  - [Examples](#examples)
-  - [Method Support](#method-support)
-  - [Derived Units](#derived-units)
-    - [Unit Checking](#unit-checking)
-  - [Conversions](#conversions)
-  - [Constants](#constants)
   - [Future Work](#future-work)
+
+## Examples
+
+Creating `Value`s:
+
+```rust
+use v3::value;
+use v3::values::Value;
+use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
+
+// Slowest
+let v1:Value = "22.3 kg*m/s^2".parse::<Value>().unwrap();
+
+// Slow
+let v2:Value = value!(22.3, "kg*m/s^2");
+
+// Average
+let v3:Value = Value::new(22.3, "kg*m/s^2").unwrap();
+
+// Fastest
+let v4:Value = 22.3
+  ^ UnitTime::Second(Metric::None)
+  ^ UnitTime::Second(Metric::None)
+  | UnitMass::Gram(Metric::Kilo)
+  | UnitLength::Meter(Metric::None);
+```
+
+Using `Values`:
+
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitTime, UnitLength};
+
+let time:Value = 3.4 | UnitTime::Second(Metric::None);
+let dist:Value = 10.3 | UnitLength::Meter(Metric::None);
+
+let speed:Value = dist/time;
+assert!(speed >= 3.0293);
+```
+
+## Method Support
+
+Values provide similar functionality to many functions that are available to other units such as i32, f32, f64 etc.
+
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitLength};
+
+let m:Value = Value::new(f64::NAN, "feet").unwrap();
+if m.is_nan() {
+  println!("Our value is not a number!");
+}
+
+let a:Value = 1.4 | UnitLength::Meter(Metric::None);
+let r:Value = a.sin(); // Value is in radians
+```
+
+## Derived Units
+
+Many of the SI units are derived from other base units. When using the values to conduct arithmetic operations, values can be explicitly asked to be 'complex' or 'reduced'.
+
+Making a complex value means combining different types into a new type.
+
+```rust
+use v3::values::Value;
+
+let m:Value = Value::new(2.5, "kg").unwrap();
+let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+
+let f1:Value = m*acc;
+let f2:Value = (m*acc).complex().unwrap();
+```
+
+Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
+
+Reducing a value means setting a value to its derived units.
+
+```rust
+use v3::values::Value;
+
+let mut f:Value = Value::new(24.525, "N").unwrap();
+
+f.reduce("kg*m/s^2").unwrap();
+```
+
+Variable `f` will be `24.525 kg*m/s^2`
+
+This behavior is explicit and must be called by the user.
+
+### Unit Checking
+
+V3 provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations, such as `.is_yank()` ([Force](#force)/[Time](#time)) and `.is_torque()` ([Force](#force)\*[Length](#lengths) *or* [Energy](#energy)/[Angle](#geometric-angle)) as two examples.
+
+## Conversions
+
+All `Value`s within their given measurement type will be able to be converted to each other. Values with multiple types, in most cases, can be converted to their compatible types.
+
+Example converting feet into meters:
+
+```rust
+use v3::values::Value;
+
+let mut m:Value = Value::new(3.2, "feet").unwrap();
+
+m.convert("m").unwrap();
+```
+
+There is also direct syntax for this feature:
+
+```rust
+use v3::values::Value;
+
+let mut m:Value = Value::new(5.9, "km/hr").unwrap();
+
+m >>= "m/s";
+```
+
+You can use other Values for conversion:
+
+```rust
+use v3::values::Value;
+
+let m:Value = Value::new(1.2, "yards").unwrap();
+let n:Value = Value::new(1.0, "m").unwrap();
+
+let k:Value = (m >> n).unwrap();
+```
+
+The types can also be directly used: (The fastest conversion method)
+
+```rust
+use v3::values::Value;
+use v3::units::{Metric, UnitLength, UnitTime};
+
+let mut m:Value = Value::new(5.9, "kph").unwrap();
+
+if m.is_velocity() {
+  m >>= UnitLength::Meter(Metric::None);
+  m >>= UnitTime::Second(Metric::None);
+} else {
+  panic!();
+}
+```
+
+Temperature cannot be converted to another unit if it has other units (like mass) within the value.
+
+Units cannot be converted between disparate types, although there are some exceptions. `ml` to `mm^3` is one such example of volume to a cubed length.
+
+## Constants
+
+Some constants are provided for ease of use:
+
+|Name|Numeric Value|Units|
+|---|---|---|
+|Absolute Zero|`0`|`K`|
+|Avogadro's Number|`6.02214076e23`|`mol^-1`|
+|Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
+|Atomic Mass Constant|`1.66053906660e-27`|`kg`|
+|Molar Gas Constant|`8.314_462_1`|`J/(K*mol)`|
+|Coulomb's Constant|`8.987_551`|`mol*-1`|
+|The Speed of Light|`299_792_458.0`|`m/s`|
+|Boltzmann Constant|`1.380649e-23`|`J/K`|
+|Earth's Average Gravitational Acceleration|`9.806_65`|`m/s^2`|
+|Newtonian Constant of Gravitation|`6.673015e-5`|`m^3/(kg*s^2)`|
+|Charge of an Electron|`1.602176634e_19`|`C`|
+|Rydberg Constant|`10_973_731.568_539`|`1/m`|
+|Plank's Constant|`6.62607015e-34`|`J/Hz`|
+|Vacuum Permittivity|`8.8541878128e-12`|`F/m`|
 
 ## Unit Support
 
@@ -300,174 +468,6 @@ The project supports all base SI units as listed by the National Institute of St
 |Yocto|`y`|
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
-
-## Examples
-
-Creating `Value`s:
-
-```rust
-use v3::value;
-use v3::values::Value;
-use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
-
-// Slowest
-let v1:Value = "22.3 kg*m/s^2".parse::<Value>().unwrap();
-
-// Slow
-let v2:Value = value!(22.3, "kg*m/s^2");
-
-// Average
-let v3:Value = Value::new(22.3, "kg*m/s^2").unwrap();
-
-// Fastest
-let v4:Value = 22.3
-  ^ UnitTime::Second(Metric::None)
-  ^ UnitTime::Second(Metric::None)
-  | UnitMass::Gram(Metric::Kilo)
-  | UnitLength::Meter(Metric::None);
-```
-
-Using `Values`:
-
-```rust
-use v3::values::Value;
-use v3::units::{Metric, UnitTime, UnitLength};
-
-let time:Value = 3.4 | UnitTime::Second(Metric::None);
-let dist:Value = 10.3 | UnitLength::Meter(Metric::None);
-
-let speed:Value = dist/time;
-assert!(speed >= 3.0293);
-```
-
-## Method Support
-
-Values provide similar functionality to many functions that are available to other units such as i32, f32, f64 etc.
-
-```rust
-use v3::values::Value;
-use v3::units::{Metric, UnitLength};
-
-let m:Value = Value::new(f64::NAN, "feet").unwrap();
-if m.is_nan() {
-  println!("Our value is not a number!");
-}
-
-let a:Value = 1.4 | UnitLength::Meter(Metric::None);
-let r:Value = a.sin(); // Value is in radians
-```
-
-## Derived Units
-
-Many of the SI units are derived from other base units. When using the values to conduct arithmetic operations, values can be explicitly asked to be 'complex' or 'reduced'.
-
-Making a complex value means combining different types into a new type.
-
-```rust
-use v3::values::Value;
-
-let m:Value = Value::new(2.5, "kg").unwrap();
-let acc:Value = Value::new(9.81, "m/s^2").unwrap();
-
-let f1:Value = m*acc;
-let f2:Value = (m*acc).complex().unwrap();
-```
-
-Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
-
-Reducing a value means setting a value to its derived units.
-
-```rust
-use v3::values::Value;
-
-let mut f:Value = Value::new(24.525, "N").unwrap();
-
-f.reduce("kg*m/s^2").unwrap();
-```
-
-Variable `f` will be `24.525 kg*m/s^2`
-
-This behavior is explicit and must be called by the user.
-
-### Unit Checking
-
-V3 provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations, such as `.is_yank()` ([Force](#force)/[Time](#time)) and `.is_torque()` ([Force](#force)\*[Length](#lengths) *or* [Energy](#energy)/[Angle](#geometric-angle)) as two examples.
-
-## Conversions
-
-All `Value`s within their given measurement type will be able to be converted to each other. Values with multiple types, in most cases, can be converted to their compatible types.
-
-Example converting feet into meters:
-
-```rust
-use v3::values::Value;
-
-let mut m:Value = Value::new(3.2, "feet").unwrap();
-
-m.convert("m").unwrap();
-```
-
-There is also direct syntax for this feature:
-
-```rust
-use v3::values::Value;
-
-let mut m:Value = Value::new(5.9, "km/hr").unwrap();
-
-m >>= "m/s";
-```
-
-You can use other Values for conversion:
-
-```rust
-use v3::values::Value;
-
-let m:Value = Value::new(1.2, "yards").unwrap();
-let n:Value = Value::new(1.0, "m").unwrap();
-
-let k:Value = (m >> n).unwrap();
-```
-
-The types can also be directly used: (The fastest conversion method)
-
-```rust
-use v3::values::Value;
-use v3::units::{Metric, UnitLength, UnitTime};
-
-let mut m:Value = Value::new(5.9, "kph").unwrap();
-
-if m.is_velocity() {
-  m >>= UnitLength::Meter(Metric::None);
-  m >>= UnitTime::Second(Metric::None);
-} else {
-  panic!();
-}
-```
-
-Temperature cannot be converted to another unit if it has other units (like mass) within the value.
-
-Units cannot be converted between disparate types, although there are some exceptions. `ml` to `mm^3` is one such example of volume to a cubed length.
-
-## Constants
-
-Some constants are provided for ease of use:
-
-|Name|Numeric Value|Units|
-|---|---|---|
-|Absolute Zero|`0`|`K`|
-|Avogadro's Number|`6.02214076e23`|`mol^-1`|
-|Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
-|Atomic Mass Constant|`1.66053906660e-27`|`kg`|
-|Molar Gas Constant|`8.314_462_1`|`J/(K*mol)`|
-|Coulomb's Constant|`8.987_551`|`mol*-1`|
-|The Speed of Light|`299_792_458.0`|`m/s`|
-|Boltzmann Constant|`1.380649e-23`|`J/K`|
-|Earth's Average Gravitational Acceleration|`9.806_65`|`m/s^2`|
-|Newtonian Constant of Gravitation|`6.673015e-5`|`m^3/(kg*s^2)`|
-|Charge of an Electron|`1.602176634e_19`|`C`|
-|Rydberg Constant|`10_973_731.568_539`|`1/m`|
-|Plank's Constant|`6.62607015e-34`|`J/Hz`|
-|Vacuum Permittivity|`8.8541878128e-12`|`F/m`|
 
 ## Future Work
 
