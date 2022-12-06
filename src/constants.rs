@@ -140,7 +140,7 @@ pub const VAL_RYDBERG:f64           = 10_973_731.568_539;
 /// Plank's constant
 pub const VAL_PLANKS:f64            = 6.62607015e-34;
 
-/// The vacuum electric permitivity constant 
+/// The vacuum electric permittivity constant 
 pub const VAL_VACUUM_ELECTRIC_PERMITTIVITY:f64 = 8.8541878128e-12;
 
 /* These are the unit indexes into the Value unit array. 
