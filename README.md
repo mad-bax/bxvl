@@ -440,7 +440,7 @@ The project supports all base SI units as listed by the National Institute of St
 |---|---|---|---|
 |Miles per hour||`mph`|`miles/hr`|
 |Kilometers per hour|&check;|`kph`|`km/hr`|
-|kilocalorie|&check;|**`C`**`al`|**`kc`**`al`|
+|kilocalorie|&check;|`Cal`|`kcal`|
 
 ### Metric Prefix Identifiers
 
