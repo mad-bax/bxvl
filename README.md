@@ -1,6 +1,6 @@
 # V3
 
-V3 is a scientific unit type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
+V3 is a scientific unit-type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
 
 ## Table of Contents
 
@@ -459,7 +459,7 @@ The project supports all base SI units as listed by the National Institute of St
 |Deci|`d`|
 |Centi|`c`|
 |Milli|`m`|
-|Micro|`u`<br/>`μ`|
+|Micro|`u`&nbsp;`μ`|
 |Nano|`n`|
 |Pico|`p`|
 |Femto|`f`|
