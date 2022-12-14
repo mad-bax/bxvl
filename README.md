@@ -480,6 +480,10 @@ V3 can and is intended to be improved with some of these goals in mind:
 - Numerator and Denominator numeric variables to ensure floating point accuracy
 - Significant digit considerations
 - Equation definitions, which can expect a specific `Value` type
-- More Imperial measurement support 🤢
+- More Imperial measurement support (US customary) 🤢
+  - Lengths : `chains`, `furlongs`, `leagues`, `fathoms`, `cable`, `nautical mile`
+  - Area : `acre`
+  - Volume : `gallon`, `pint`, `quart`
+  - Weight : `stone`, `ton`, `slug`
 - Expanded metric support for some units
 - speed speed speed
