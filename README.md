@@ -88,7 +88,7 @@ assert!(speed >= 3.0293);
 
 ## Method Support
 
-Values provide similar functionality to many functions that are available to other units such as i32, f32, f64 etc.
+Values provide similar functionality to many functions that are available to other units such as `i32`, `f32`, `f64` etc.
 
 ```rust
 use v3::values::Value;
@@ -200,7 +200,7 @@ Some constants are provided for ease of use:
 
 |Name|Numeric Value|Units|
 |---|---|---|
-|Absolute Zero|`0`|`K`|
+|Absolute Zero|`0.`|`K`|
 |Avogadro's Number|`6.02214076e23`|`mol^-1`|
 |Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
 |Atomic Mass Constant|`1.66053906660e-27`|`kg`|
@@ -229,8 +229,8 @@ The project supports all base SI units as listed by the National Institute of St
 |Yard||`yd`[`s`]<br/>`yard`[`s`]|
 |Mile||`mile`[`s`]|
 |Astronomical Unit||`AU`|
-|Parsec||`pc`|
-|Light Year||`lyr`<br/>`lightyear`[`s`]|
+|Parsec|**[Future Support]**|`pc`|
+|Light Year|**[Future Support]**|`lyr`<br/>`lightyear`[`s`]|
 |Ångström||`Å`<br/>`angstrom`[`s`]|
 
 ### Time
@@ -428,11 +428,14 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Information
 
+:warning: Metric scaling is in base **2**
+
+*i.e.* `kb` &rarr; `1024 bytes`, *not* `1000 bytes`
+
 |Unit|Metric|Unit string|
 |---|---|---|
-|Bit|base 2 metric : Kilo - Yotta|`bits`|
-|Byte|base 2 metric : Kilo - Yotta|`b`<br/>`byte`[`s`]|
-|Qubit|**[Future Support]**|**[Future Support]**|
+|Bit|Kilo - Yotta|`bits`|
+|Byte|Kilo - Yotta|`b`<br/>`byte`[`s`]|
 
 ### Special Unit Keywords
 
@@ -478,5 +481,5 @@ V3 can and is intended to be improved with some of these goals in mind:
 - Significant digit considerations
 - Equation definitions, which can expect a specific `Value` type
 - More Imperial measurement support 🤢
-- Qubit support
+- Expanded metric support for some units
 - speed speed speed
