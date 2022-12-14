@@ -459,7 +459,7 @@ The project supports all base SI units as listed by the National Institute of St
 |Deci|`d`|
 |Centi|`c`|
 |Milli|`m`|
-|Micro|`u`&nbsp;`μ`|
+|Micro|`u`<br/>`μ`|
 |Nano|`n`|
 |Pico|`p`|
 |Femto|`f`|
