@@ -263,7 +263,7 @@ impl Value {
         }
 
         if self.unit_map != other.unit_map {
-            return Err(V3Error::ValueConversionError("[_convert] Inequivalent unit types"));
+            return Err(V3Error::ValueConversionError("[_convert] Nonequivalent unit types"));
         }
 
         // check against temperature 
@@ -533,7 +533,7 @@ impl Value {
 
     /// Takes the square root of the Value
     /// 
-    /// Note: That if the unit exponents are not evenly dvisible by 2, the function will panic.
+    /// Note: That if the unit exponents are not evenly divisible by 2, the function will panic.
     /// 
     /// # Example
     /// ```rust
@@ -557,7 +557,7 @@ impl Value {
 
     /// Returns a new value to some arbitrary power.
     /// 
-    /// Note: This is faster than simply multiplying `v*v` to acheive a value to a power.
+    /// Note: This is faster than simply multiplying `v*v` to achieve a value to a power.
     /// 
     /// # Example
     /// ```rust
@@ -578,7 +578,7 @@ impl Value {
 
     /// Takes the cube root of the Value
     /// 
-    /// Note: That if the unit exponents are not evenly dvisible by 3, the function will panic.
+    /// Note: That if the unit exponents are not evenly divisible by 3, the function will panic.
     /// 
     /// # Example
     /// ```rust
@@ -620,7 +620,7 @@ impl Value {
         Value::_radians(self.val.asin())
     }
 
-    /// Returns the arcosine of a `Value` in radians
+    /// Returns the arccosine of a `Value` in radians
     pub fn acos(&self) -> Value {
         Value::_radians(self.val.acos())
     }
@@ -1000,8 +1000,8 @@ impl Value {
     /// ```
     /// `f` will now be equal to `3.0 kg*m/s^2`
     pub fn reduce(&mut self, other:&str) -> Result<(), V3Error> {
-        if !self.reducable() {
-            return Err(V3Error::UnitReductionError(format!("[reduce] Value {} is not reducable", self)));
+        if !self.reducible() {
+            return Err(V3Error::UnitReductionError(format!("[reduce] Value {} is not reducible", self)));
         }
         let temp:Value = match Value::new(1.0, other) {
             Ok(t) => t,
@@ -1013,8 +1013,8 @@ impl Value {
         Err(V3Error::UnitReductionError(format!("[reduce] Value {} cannot be reduced to {}", self, other)))
     }
 
-    /// Returns if a `Value`'s unit type is reducable.
-    pub fn reducable(&self) -> bool {
+    /// Returns if a `Value`'s unit type is reducible.
+    pub fn reducible(&self) -> bool {
 
         matches!(self.unit_map,
             FORCE_MAP |
@@ -1782,7 +1782,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of radiactivity
+    /// Returns `true` if a `Value` is a measurement of radioactivity
     /// 
     /// `radioactivity`
     pub fn is_radioactivity(&self) -> bool {
@@ -2332,7 +2332,7 @@ impl Value {
         } else if l == 3 {
             self._get_triple_letter(unit, exp, Metric::None)?;
         } else if l == 4 {
-            self._get_quadrouple_letter(unit, exp, Metric::None)?;
+            self._get_quadruple_letter(unit, exp, Metric::None)?;
         } else if l == 5 {
             self._get_pentuple_letter(unit, exp, Metric::None)?;
         } else {
@@ -2595,7 +2595,7 @@ impl Value {
     }
 
     /// Searches and assigns a unit type to a `Value` during string parsing and construction
-    fn _get_quadrouple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
+    fn _get_quadruple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
             return self._get_double_letter(da, exp, Metric::Deca);
@@ -2614,11 +2614,11 @@ impl Value {
             }
             _ => {
                 if m != Metric::None {
-                    return Err(V3Error::UnsupportedUnit(format!("[_get_quadrouple_letter] Unsupported unit: {}", unit)));
+                    return Err(V3Error::UnsupportedUnit(format!("[_get_quadruple_letter] Unsupported unit: {}", unit)));
                 }
                 match self._get_metric(match &unit.chars().next() {
                     Some(t) => t,
-                    None => return Err(V3Error::ParsingError("[_get_quadrouple_letter] Cannot get next metric char"))
+                    None => return Err(V3Error::ParsingError("[_get_quadruple_letter] Cannot get next metric char"))
                 }) {
                     Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m)?,
                     Err(e) => {
@@ -2644,7 +2644,7 @@ impl Value {
             Some(t) => t,
             None => return Err(V3Error::ParsingError("[_get_pentuple_letter] Cannot get next metric char"))
         }) {
-            Ok(new_m) => self._get_quadrouple_letter(&unit[1..], exp, new_m),
+            Ok(new_m) => self._get_quadruple_letter(&unit[1..], exp, new_m),
             Err(e) => {
                 Err(e)
             }
