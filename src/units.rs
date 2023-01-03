@@ -136,7 +136,7 @@ pub enum UnitLength {
     Mile,
     /// Astronomical
     AstronomicalUnit,
-    /// Atronomical
+    /// Astronomical
     Parsec,
     /// SI integrated 
     LightYear,
@@ -1855,7 +1855,7 @@ mod units_unit_test {
         assert!(UnitAbsorbedDose::Roentgen.base() >= 0.00877000656);
     }
 
-    /// Unit Equivalen Dose of Ionizing Radiation Comparison Base
+    /// Unit Equivalent Dose of Ionizing Radiation Comparison Base
     /// 
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]

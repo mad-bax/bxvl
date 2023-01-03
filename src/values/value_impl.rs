@@ -36,8 +36,7 @@ use crate::units::{
     UnitSolidAngle
 };
 
-impl Value {
-
+impl Default for Value {
     /// The default constructor for a `Value`
     /// 
     /// # Example
@@ -46,7 +45,7 @@ impl Value {
     /// let mut m:Value = Value::default();
     /// m.val = 1.3;
     /// ```
-    pub fn default() -> Value {
+    fn default() -> Value {
         Value {
             val:0.0,
             unit_map:0,
@@ -84,6 +83,9 @@ impl Value {
             v_solid_angle : None
         }
     }
+}
+
+impl Value {
 
     /// The main constructor for a `Value`
     /// 
@@ -521,7 +523,7 @@ impl Value {
         self.val.is_subnormal()
     }
 
-    /// Resturns if the `Value` numeric is sign positive
+    /// Returns if the `Value` numeric is sign positive
     pub fn is_sign_positive(&self) -> bool {
         self.val.is_sign_positive()
     }

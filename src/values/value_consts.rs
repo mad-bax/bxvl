@@ -98,8 +98,8 @@ pub const fn const_abs_zero() -> Value {
     ret
 }
 
-/// Returns a `Value` preset to be Avagadro's Number
-pub const fn const_avagadros_number() -> Value {
+/// Returns a `Value` preset to be Avogadro's Number
+pub const fn const_avogadros_number() -> Value {
     let mut ret:Value = Value {
         val:VAL_AVOGADROS,
         unit_map:SUBSTANCE_MAP,
@@ -568,8 +568,8 @@ pub const fn const_plank() -> Value {
     ret       
 }
 
-/// Returns a `Value` preset to be the Vacuum Electric Permitivity Constant
-pub const fn const_vacuum_permitivity() -> Value {
+/// Returns a `Value` preset to be the Vacuum Electric Permittivity Constant
+pub const fn const_vacuum_permittivity() -> Value {
     let mut ret:Value = Value {
         val:VAL_VACUUM_ELECTRIC_PERMITTIVITY,
         unit_map: LENGTH_MAP | CAPACITANCE_MAP,

@@ -201,19 +201,19 @@ Some constants are provided for ease of use:
 |Name|Numeric Value|Units|
 |---|---|---|
 |Absolute Zero|`0.`|`K`|
-|Avogadro's Number|`6.02214076e23`|`mol^-1`|
+|Avogadro's Number|`6.022_140_76e23`|`mol^-1`|
 |Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
-|Atomic Mass Constant|`1.66053906660e-27`|`kg`|
+|Atomic Mass Constant|`1.660_539_066_60e-27`|`kg`|
 |Molar Gas Constant|`8.314_462_1`|`J/(K*mol)`|
 |Coulomb's Constant|`8.987_551`|`mol*-1`|
 |The Speed of Light|`299_792_458.0`|`m/s`|
-|Boltzmann Constant|`1.380649e-23`|`J/K`|
+|Boltzmann Constant|`1.380_649e-23`|`J/K`|
 |Earth's Average Gravitational Acceleration|`9.806_65`|`m/s^2`|
-|Newtonian Constant of Gravitation|`6.673015e-5`|`m^3/(kg*s^2)`|
-|Charge of an Electron|`1.602176634e_19`|`C`|
+|Newtonian Constant of Gravitation|`6.673_015e-5`|`m^3/(kg*s^2)`|
+|Charge of an Electron|`1.602_176_634e_19`|`C`|
 |Rydberg Constant|`10_973_731.568_539`|`1/m`|
-|Plank's Constant|`6.62607015e-34`|`J/Hz`|
-|Vacuum Permittivity|`8.8541878128e-12`|`F/m`|
+|Plank's Constant|`6.626_070_15e-34`|`J/Hz`|
+|Vacuum Permittivity|`8.854_187_812_8e-12`|`F/m`|
 
 ## Unit Support
 
@@ -311,7 +311,7 @@ The project supports all base SI units as listed by the National Institute of St
 |---|---|---|
 |Celsius||`c`<br/>`°c`<br/>`°C`|
 |Fahrenheit||`f`<br/>`°f`<br/>`°F`|
-|Kelvin|**[Future support]**|`K`|
+|Kelvin|**[Future Support]**|`K`|
 
 ### Substance
 
@@ -384,7 +384,7 @@ The project supports all base SI units as listed by the National Institute of St
 |Joule|&check;|`J`|
 |Calorie|&check;|`cal`|
 |Foot pound||`ftlb`[`s`]<br/>`footpound`[`s`]|
-|Electron Volt||`eV`|
+|Electron Volt|**[Future Support]**|`eV`|
 
 ### Power
 
@@ -462,7 +462,7 @@ The project supports all base SI units as listed by the National Institute of St
 |Deci|`d`|
 |Centi|`c`|
 |Milli|`m`|
-|Micro|`u`<br/>`μ`|
+|Micro|`μ`<br/>`u`|
 |Nano|`n`|
 |Pico|`p`|
 |Femto|`f`|

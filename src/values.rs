@@ -92,7 +92,7 @@ pub struct Value {
     v_information :             Option<UnitInformation>,
     /// the length measure
     v_length :                  Option<UnitLength>,
-    /// the luminous flux mesasure
+    /// the luminous flux measure
     v_luminous_flux :           Option<UnitLuminousFlux>,
     /// the luminous intensity measure
     v_luminous_flux_intensity : Option<UnitLuminousIntensity>,
