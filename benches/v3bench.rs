@@ -20,8 +20,8 @@ fn criterion_benchmark(c:&mut Criterion) {
     c.bench_function("new (worst case)", |b| b.iter(|| Value::new(black_box(20.0), "damol/yrad")));
     c.bench_function("value! (best case)", |b| b.iter(|| value!(black_box(20.0), "m")));
     c.bench_function("value! (worst case)", |b| b.iter(|| value!(black_box(20.0), "damol/yrad")));
-    c.bench_function("new (static best)", |b| b.iter(|| 20.0 | UnitLength::Meter(Metric::Kilo)));
-    c.bench_function("new (static worst)", |b| b.iter(|| 20.0 | UnitSubstance::Mole(Metric::Deca) | UnitAngle::Radian(Metric::Yocto)));
+    c.bench_function("new (static best)", |b| b.iter(|| 20.0 * UnitLength::Meter(Metric::Kilo)));
+    c.bench_function("new (static worst)", |b| b.iter(|| 20.0 * UnitSubstance::Mole(Metric::Deca) * UnitAngle::Radian(Metric::Yocto)));
     c.bench_function("eq (true)", |b| b.iter(|| va3_1 == va3_2 ));
     c.bench_function("eq (false)", |b| b.iter(|| va3_1 == va1 ));
     c.bench_function("from_str", |b| b.iter(|| "10.0 ft/s".parse::<Value>()));

@@ -1,4 +1,4 @@
-use std::ops::{BitOr, BitXor};
+use std::ops::{Mul, Div};
 
 use crate::values::Value;
 use crate::constants::*;
@@ -36,9 +36,9 @@ use crate::units::{
     UnitSolidAngle, Metric
 };
 
-impl BitOr<UnitLength> for f64 {
+impl Mul<UnitLength> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitLength) -> Self::Output {
+    fn mul(self, other:UnitLength) -> Self::Output {
         let mut ret = Value {
             val:self,
             v_length:Some(other),
@@ -50,9 +50,9 @@ impl BitOr<UnitLength> for f64 {
     }
 }
 
-impl BitXor<UnitLength> for f64 {
+impl Div<UnitLength> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitLength) -> Self::Output {
+    fn div(self, other:UnitLength) -> Self::Output {
         let mut ret = Value {
             val:self,
             v_length:Some(other),
@@ -64,9 +64,9 @@ impl BitXor<UnitLength> for f64 {
     }
 }
 
-impl BitOr<UnitLength> for Value {
+impl Mul<UnitLength> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitLength) -> Self::Output {
+    fn mul(self, other:UnitLength) -> Self::Output {
         let mut new:Value = self;
         if self.exp[LENGTH_INDEX] == 0 {
             new.v_length = Some(other);
@@ -78,7 +78,7 @@ impl BitOr<UnitLength> for Value {
             new.unit_map ^= LENGTH_MAP;
         } else {
             if self.v_length != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_length.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_length.unwrap());
             }
             new.exp[LENGTH_INDEX] += 1;
         }
@@ -86,12 +86,12 @@ impl BitOr<UnitLength> for Value {
     }
 }
 
-impl BitXor<UnitLength> for Value {
+impl Div<UnitLength> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitLength) -> Value {
+    fn div(self, other:UnitLength) -> Value {
         let mut new:Value = self;
         if self.v_length.is_some() && self.v_length != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[LENGTH_INDEX] == 0 {
             new.v_length = Some(other);
@@ -108,9 +108,9 @@ impl BitXor<UnitLength> for Value {
     }
 }
 
-impl BitOr<UnitTime> for f64 {
+impl Mul<UnitTime> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitTime) -> Self::Output {
+    fn mul(self, other:UnitTime) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_time : Some(other),
@@ -122,9 +122,9 @@ impl BitOr<UnitTime> for f64 {
     }
 }
 
-impl BitXor<UnitTime> for f64 {
+impl Div<UnitTime> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitTime) -> Self::Output {
+    fn div(self, other:UnitTime) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_time : Some(other),
@@ -136,9 +136,9 @@ impl BitXor<UnitTime> for f64 {
     }
 }
 
-impl BitOr<UnitTime> for Value {
+impl Mul<UnitTime> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitTime) -> Self::Output {
+    fn mul(self, other:UnitTime) -> Self::Output {
         let mut new:Value = self;
         if self.exp[TIME_INDEX] == 0 {
             new.v_time = Some(other);
@@ -150,7 +150,7 @@ impl BitOr<UnitTime> for Value {
             new.unit_map ^= TIME_MAP;
         } else {
             if self.v_time != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_time.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_time.unwrap());
             }
             new.exp[TIME_INDEX] += 1;
         }
@@ -158,12 +158,12 @@ impl BitOr<UnitTime> for Value {
     }
 }
 
-impl BitXor<UnitTime> for Value {
+impl Div<UnitTime> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitTime) -> Value {
+    fn div(self, other:UnitTime) -> Value {
         let mut new:Value = self;
         if self.v_time.is_some() && self.v_time != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TIME_INDEX] == 0 {
             new.v_time = Some(other);
@@ -181,9 +181,9 @@ impl BitXor<UnitTime> for Value {
     }
 }
 
-impl BitOr<UnitAbsorbedDose> for f64 {
+impl Mul<UnitAbsorbedDose> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitAbsorbedDose) -> Self::Output {
+    fn mul(self, other:UnitAbsorbedDose) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_ab_dose : Some(other),
@@ -195,9 +195,9 @@ impl BitOr<UnitAbsorbedDose> for f64 {
     }
 }
 
-impl BitXor<UnitAbsorbedDose> for f64 {
+impl Div<UnitAbsorbedDose> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitAbsorbedDose) -> Self::Output {
+    fn div(self, other:UnitAbsorbedDose) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_ab_dose : Some(other),
@@ -209,9 +209,9 @@ impl BitXor<UnitAbsorbedDose> for f64 {
     }
 }
 
-impl BitOr<UnitAbsorbedDose> for Value {
+impl Mul<UnitAbsorbedDose> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitAbsorbedDose) -> Self::Output {
+    fn mul(self, other:UnitAbsorbedDose) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ABSORBED_DOSE_INDEX] == 0 {
             new.v_ab_dose = Some(other);
@@ -223,7 +223,7 @@ impl BitOr<UnitAbsorbedDose> for Value {
             new.unit_map ^= ABSORBED_DOSE_MAP;
         } else {
             if self.v_ab_dose != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_ab_dose.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_ab_dose.unwrap());
             }
             new.exp[ABSORBED_DOSE_INDEX] += 1;
         }
@@ -231,12 +231,12 @@ impl BitOr<UnitAbsorbedDose> for Value {
     }
 }
 
-impl BitXor<UnitAbsorbedDose> for Value {
+impl Div<UnitAbsorbedDose> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitAbsorbedDose) -> Value {
+    fn div(self, other:UnitAbsorbedDose) -> Value {
         let mut new:Value = self;
         if self.v_ab_dose.is_some() && self.v_ab_dose != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ABSORBED_DOSE_INDEX] == 0 {
             new.v_ab_dose = Some(other);
@@ -253,9 +253,9 @@ impl BitXor<UnitAbsorbedDose> for Value {
     }
 }
 
-impl BitOr<UnitAngle> for f64 {
+impl Mul<UnitAngle> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitAngle) -> Self::Output {
+    fn mul(self, other:UnitAngle) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_angle : Some(other),
@@ -267,9 +267,9 @@ impl BitOr<UnitAngle> for f64 {
     }
 }
 
-impl BitXor<UnitAngle> for f64 {
+impl Div<UnitAngle> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitAngle) -> Self::Output {
+    fn div(self, other:UnitAngle) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_angle : Some(other),
@@ -281,9 +281,9 @@ impl BitXor<UnitAngle> for f64 {
     }
 }
 
-impl BitOr<UnitAngle> for Value {
+impl Mul<UnitAngle> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitAngle) -> Self::Output {
+    fn mul(self, other:UnitAngle) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ANGLE_INDEX] == 0 {
             new.v_angle = Some(other);
@@ -295,7 +295,7 @@ impl BitOr<UnitAngle> for Value {
             new.unit_map ^= ANGLE_MAP;
         } else {
             if self.v_angle != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_angle.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_angle.unwrap());
             }
             new.exp[ANGLE_INDEX] += 1;
         }
@@ -303,12 +303,12 @@ impl BitOr<UnitAngle> for Value {
     }
 }
 
-impl BitXor<UnitAngle> for Value {
+impl Div<UnitAngle> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitAngle) -> Value {
+    fn div(self, other:UnitAngle) -> Value {
         let mut new:Value = self;
         if self.v_angle.is_some() && self.v_angle != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ANGLE_INDEX] == 0 {
             new.v_angle = Some(other);
@@ -325,9 +325,9 @@ impl BitXor<UnitAngle> for Value {
     }
 }
 
-impl BitOr<UnitCapacitance> for f64 {
+impl Mul<UnitCapacitance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitCapacitance) -> Self::Output {
+    fn mul(self, other:UnitCapacitance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_capacitance : Some(other),
@@ -339,9 +339,9 @@ impl BitOr<UnitCapacitance> for f64 {
     }
 }
 
-impl BitXor<UnitCapacitance> for f64 {
+impl Div<UnitCapacitance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitCapacitance) -> Self::Output {
+    fn div(self, other:UnitCapacitance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_capacitance : Some(other),
@@ -353,9 +353,9 @@ impl BitXor<UnitCapacitance> for f64 {
     }
 }
 
-impl BitOr<UnitCapacitance> for Value {
+impl Mul<UnitCapacitance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitCapacitance) -> Self::Output {
+    fn mul(self, other:UnitCapacitance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[CAPACITANCE_INDEX] == 0 {
             new.v_capacitance = Some(other);
@@ -367,7 +367,7 @@ impl BitOr<UnitCapacitance> for Value {
             new.unit_map ^= CAPACITANCE_MAP;
         } else {
             if self.v_capacitance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_capacitance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_capacitance.unwrap());
             }
             new.exp[CAPACITANCE_INDEX] += 1;
         }
@@ -375,12 +375,12 @@ impl BitOr<UnitCapacitance> for Value {
     }
 }
 
-impl BitXor<UnitCapacitance> for Value {
+impl Div<UnitCapacitance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitCapacitance) -> Value {
+    fn div(self, other:UnitCapacitance) -> Value {
         let mut new:Value = self;
         if self.v_capacitance.is_some() && self.v_capacitance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CAPACITANCE_INDEX] == 0 {
             new.v_capacitance = Some(other);
@@ -397,9 +397,9 @@ impl BitXor<UnitCapacitance> for Value {
     }
 }
 
-impl BitOr<UnitCatalyticActivity> for f64 {
+impl Mul<UnitCatalyticActivity> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitCatalyticActivity) -> Self::Output {
+    fn mul(self, other:UnitCatalyticActivity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_catalytic : Some(other),
@@ -411,9 +411,9 @@ impl BitOr<UnitCatalyticActivity> for f64 {
     }
 }
 
-impl BitXor<UnitCatalyticActivity> for f64 {
+impl Div<UnitCatalyticActivity> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitCatalyticActivity) -> Self::Output {
+    fn div(self, other:UnitCatalyticActivity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_catalytic : Some(other),
@@ -425,9 +425,9 @@ impl BitXor<UnitCatalyticActivity> for f64 {
     }
 }
 
-impl BitOr<UnitCatalyticActivity> for Value {
+impl Mul<UnitCatalyticActivity> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitCatalyticActivity) -> Self::Output {
+    fn mul(self, other:UnitCatalyticActivity) -> Self::Output {
         let mut new:Value = self;
         if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
             new.v_catalytic = Some(other);
@@ -439,7 +439,7 @@ impl BitOr<UnitCatalyticActivity> for Value {
             new.unit_map ^= CATALYTIC_ACTIVITY_MAP;
         } else {
             if self.v_catalytic != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_catalytic.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_catalytic.unwrap());
             }
             new.exp[CATALYTIC_ACTIVITY_INDEX] += 1;
         }
@@ -447,12 +447,12 @@ impl BitOr<UnitCatalyticActivity> for Value {
     }
 }
 
-impl BitXor<UnitCatalyticActivity> for Value {
+impl Div<UnitCatalyticActivity> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitCatalyticActivity) -> Value {
+    fn div(self, other:UnitCatalyticActivity) -> Value {
         let mut new:Value = self;
         if self.v_catalytic.is_some() && self.v_catalytic != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[CATALYTIC_ACTIVITY_INDEX] == 0 {
             new.v_catalytic = Some(other);
@@ -469,9 +469,9 @@ impl BitXor<UnitCatalyticActivity> for Value {
     }
 }
 
-impl BitOr<UnitElectricCharge> for f64 {
+impl Mul<UnitElectricCharge> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitElectricCharge) -> Self::Output {
+    fn mul(self, other:UnitElectricCharge) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_charge : Some(other),
@@ -483,9 +483,9 @@ impl BitOr<UnitElectricCharge> for f64 {
     }
 }
 
-impl BitXor<UnitElectricCharge> for f64 {
+impl Div<UnitElectricCharge> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricCharge) -> Self::Output {
+    fn div(self, other:UnitElectricCharge) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_charge : Some(other),
@@ -497,9 +497,9 @@ impl BitXor<UnitElectricCharge> for f64 {
     }
 }
 
-impl BitOr<UnitElectricCharge> for Value {
+impl Mul<UnitElectricCharge> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitElectricCharge) -> Self::Output {
+    fn mul(self, other:UnitElectricCharge) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
             new.v_electric_charge = Some(other);
@@ -511,7 +511,7 @@ impl BitOr<UnitElectricCharge> for Value {
             new.unit_map ^= ELECTRIC_CHARGE_MAP;
         } else {
             if self.v_electric_charge != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_charge.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_electric_charge.unwrap());
             }
             new.exp[ELECTRIC_CHARGE_INDEX] += 1;
         }
@@ -519,12 +519,12 @@ impl BitOr<UnitElectricCharge> for Value {
     }
 }
 
-impl BitXor<UnitElectricCharge> for Value {
+impl Div<UnitElectricCharge> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricCharge) -> Value {
+    fn div(self, other:UnitElectricCharge) -> Value {
         let mut new:Value = self;
         if self.v_electric_charge.is_some() && self.v_electric_charge != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CHARGE_INDEX] == 0 {
             new.v_electric_charge = Some(other);
@@ -541,9 +541,9 @@ impl BitXor<UnitElectricCharge> for Value {
     }
 }
 
-impl BitOr<UnitElectricConductance> for f64 {
+impl Mul<UnitElectricConductance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitElectricConductance) -> Self::Output {
+    fn mul(self, other:UnitElectricConductance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_conductance : Some(other),
@@ -555,9 +555,9 @@ impl BitOr<UnitElectricConductance> for f64 {
     }
 }
 
-impl BitXor<UnitElectricConductance> for f64 {
+impl Div<UnitElectricConductance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricConductance) -> Self::Output {
+    fn div(self, other:UnitElectricConductance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_conductance : Some(other),
@@ -569,9 +569,9 @@ impl BitXor<UnitElectricConductance> for f64 {
     }
 }
 
-impl BitOr<UnitElectricConductance> for Value {
+impl Mul<UnitElectricConductance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitElectricConductance) -> Self::Output {
+    fn mul(self, other:UnitElectricConductance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
             new.v_electric_conductance = Some(other);
@@ -583,7 +583,7 @@ impl BitOr<UnitElectricConductance> for Value {
             new.unit_map ^= ELECTRIC_CONDUCTANCE_MAP;
         } else {
             if self.v_electric_conductance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_conductance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_electric_conductance.unwrap());
             }
             new.exp[ELECTRIC_CONDUCTANCE_INDEX] += 1;
         }
@@ -591,12 +591,12 @@ impl BitOr<UnitElectricConductance> for Value {
     }
 }
 
-impl BitXor<UnitElectricConductance> for Value {
+impl Div<UnitElectricConductance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricConductance) -> Value {
+    fn div(self, other:UnitElectricConductance) -> Value {
         let mut new:Value = self;
         if self.v_electric_conductance.is_some() && self.v_electric_conductance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CONDUCTANCE_INDEX] == 0 {
             new.v_electric_conductance = Some(other);
@@ -613,9 +613,9 @@ impl BitXor<UnitElectricConductance> for Value {
     }
 }
 
-impl BitOr<UnitElectricCurrent> for f64 {
+impl Mul<UnitElectricCurrent> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitElectricCurrent) -> Self::Output {
+    fn mul(self, other:UnitElectricCurrent) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_current : Some(other),
@@ -627,9 +627,9 @@ impl BitOr<UnitElectricCurrent> for f64 {
     }
 }
 
-impl BitXor<UnitElectricCurrent> for f64 {
+impl Div<UnitElectricCurrent> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricCurrent) -> Self::Output {
+    fn div(self, other:UnitElectricCurrent) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_current : Some(other),
@@ -641,9 +641,9 @@ impl BitXor<UnitElectricCurrent> for f64 {
     }
 }
 
-impl BitOr<UnitElectricCurrent> for Value {
+impl Mul<UnitElectricCurrent> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitElectricCurrent) -> Self::Output {
+    fn mul(self, other:UnitElectricCurrent) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
             new.v_electric_current = Some(other);
@@ -655,7 +655,7 @@ impl BitOr<UnitElectricCurrent> for Value {
             new.unit_map ^= ELECTRIC_CURRENT_MAP;
         } else {
             if self.v_electric_current != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_current.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_electric_current.unwrap());
             }
             new.exp[ELECTRIC_CURRENT_INDEX] += 1;
         }
@@ -663,12 +663,12 @@ impl BitOr<UnitElectricCurrent> for Value {
     }
 }
 
-impl BitXor<UnitElectricCurrent> for Value {
+impl Div<UnitElectricCurrent> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricCurrent) -> Value {
+    fn div(self, other:UnitElectricCurrent) -> Value {
         let mut new:Value = self;
         if self.v_electric_current.is_some() && self.v_electric_current != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_CURRENT_INDEX] == 0 {
             new.v_electric_current = Some(other);
@@ -685,9 +685,9 @@ impl BitXor<UnitElectricCurrent> for Value {
     }
 }
 
-impl BitOr<UnitElectricPotential> for f64 {
+impl Mul<UnitElectricPotential> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitElectricPotential) -> Self::Output {
+    fn mul(self, other:UnitElectricPotential) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_potential : Some(other),
@@ -699,9 +699,9 @@ impl BitOr<UnitElectricPotential> for f64 {
     }
 }
 
-impl BitXor<UnitElectricPotential> for f64 {
+impl Div<UnitElectricPotential> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricPotential) -> Self::Output {
+    fn div(self, other:UnitElectricPotential) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_electric_potential : Some(other),
@@ -713,9 +713,9 @@ impl BitXor<UnitElectricPotential> for f64 {
     }
 }
 
-impl BitOr<UnitElectricPotential> for Value {
+impl Mul<UnitElectricPotential> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitElectricPotential) -> Self::Output {
+    fn mul(self, other:UnitElectricPotential) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
             new.v_electric_potential = Some(other);
@@ -727,7 +727,7 @@ impl BitOr<UnitElectricPotential> for Value {
             new.unit_map ^= ELECTRIC_POTENTIAL_MAP;
         } else {
             if self.v_electric_potential != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_electric_potential.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_electric_potential.unwrap());
             }
             new.exp[ELECTRIC_POTENTIAL_INDEX] += 1;
         }
@@ -735,12 +735,12 @@ impl BitOr<UnitElectricPotential> for Value {
     }
 }
 
-impl BitXor<UnitElectricPotential> for Value {
+impl Div<UnitElectricPotential> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitElectricPotential) -> Value {
+    fn div(self, other:UnitElectricPotential) -> Value {
         let mut new:Value = self;
         if self.v_electric_potential.is_some() && self.v_electric_potential != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ELECTRIC_POTENTIAL_INDEX] == 0 {
             new.v_electric_potential = Some(other);
@@ -757,9 +757,9 @@ impl BitXor<UnitElectricPotential> for Value {
     }
 }
 
-impl BitOr<UnitEnergy> for f64 {
+impl Mul<UnitEnergy> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitEnergy) -> Self::Output {
+    fn mul(self, other:UnitEnergy) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_energy : Some(other),
@@ -771,9 +771,9 @@ impl BitOr<UnitEnergy> for f64 {
     }
 }
 
-impl BitXor<UnitEnergy> for f64 {
+impl Div<UnitEnergy> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitEnergy) -> Self::Output {
+    fn div(self, other:UnitEnergy) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_energy : Some(other),
@@ -785,9 +785,9 @@ impl BitXor<UnitEnergy> for f64 {
     }
 }
 
-impl BitOr<UnitEnergy> for Value {
+impl Mul<UnitEnergy> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitEnergy) -> Self::Output {
+    fn mul(self, other:UnitEnergy) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ENERGY_INDEX] == 0 {
             new.v_energy = Some(other);
@@ -799,7 +799,7 @@ impl BitOr<UnitEnergy> for Value {
             new.unit_map ^= ENERGY_MAP;
         } else {
             if self.v_energy != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_energy.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_energy.unwrap());
             }
             new.exp[ENERGY_INDEX] += 1;
         }
@@ -807,12 +807,12 @@ impl BitOr<UnitEnergy> for Value {
     }
 }
 
-impl BitXor<UnitEnergy> for Value {
+impl Div<UnitEnergy> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitEnergy) -> Value {
+    fn div(self, other:UnitEnergy) -> Value {
         let mut new:Value = self;
         if self.v_energy.is_some() && self.v_energy != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ENERGY_INDEX] == 0 {
             new.v_energy = Some(other);
@@ -829,9 +829,9 @@ impl BitXor<UnitEnergy> for Value {
     }
 }
 
-impl BitOr<UnitForce> for f64 {
+impl Mul<UnitForce> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitForce) -> Self::Output {
+    fn mul(self, other:UnitForce) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_force : Some(other),
@@ -843,9 +843,9 @@ impl BitOr<UnitForce> for f64 {
     }
 }
 
-impl BitXor<UnitForce> for f64 {
+impl Div<UnitForce> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitForce) -> Self::Output {
+    fn div(self, other:UnitForce) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_force : Some(other),
@@ -857,9 +857,9 @@ impl BitXor<UnitForce> for f64 {
     }
 }
 
-impl BitOr<UnitForce> for Value {
+impl Mul<UnitForce> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitForce) -> Self::Output {
+    fn mul(self, other:UnitForce) -> Self::Output {
         let mut new:Value = self;
         if self.exp[FORCE_INDEX] == 0 {
             new.v_force = Some(other);
@@ -871,7 +871,7 @@ impl BitOr<UnitForce> for Value {
             new.unit_map ^= FORCE_MAP;
         } else {
             if self.v_force != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_force.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_force.unwrap());
             }
             new.exp[FORCE_INDEX] += 1;
         }
@@ -879,12 +879,12 @@ impl BitOr<UnitForce> for Value {
     }
 }
 
-impl BitXor<UnitForce> for Value {
+impl Div<UnitForce> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitForce) -> Value {
+    fn div(self, other:UnitForce) -> Value {
         let mut new:Value = self;
         if self.v_force.is_some() && self.v_force != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FORCE_INDEX] == 0 {
             new.v_force = Some(other);
@@ -901,9 +901,9 @@ impl BitXor<UnitForce> for Value {
     }
 }
 
-impl BitOr<UnitFrequency> for f64 {
+impl Mul<UnitFrequency> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitFrequency) -> Self::Output {
+    fn mul(self, other:UnitFrequency) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_frequency : Some(other),
@@ -915,9 +915,9 @@ impl BitOr<UnitFrequency> for f64 {
     }
 }
 
-impl BitXor<UnitFrequency> for f64 {
+impl Div<UnitFrequency> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitFrequency) -> Self::Output {
+    fn div(self, other:UnitFrequency) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_frequency : Some(other),
@@ -929,9 +929,9 @@ impl BitXor<UnitFrequency> for f64 {
     }
 }
 
-impl BitOr<UnitFrequency> for Value {
+impl Mul<UnitFrequency> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitFrequency) -> Self::Output {
+    fn mul(self, other:UnitFrequency) -> Self::Output {
         let mut new:Value = self;
         if self.exp[FREQUENCY_INDEX] == 0 {
             new.v_frequency = Some(other);
@@ -943,7 +943,7 @@ impl BitOr<UnitFrequency> for Value {
             new.unit_map ^= FREQUENCY_MAP;
         } else {
             if self.v_frequency != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_frequency.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_frequency.unwrap());
             }
             new.exp[FREQUENCY_INDEX] += 1;
         }
@@ -951,12 +951,12 @@ impl BitOr<UnitFrequency> for Value {
     }
 }
 
-impl BitXor<UnitFrequency> for Value {
+impl Div<UnitFrequency> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitFrequency) -> Value {
+    fn div(self, other:UnitFrequency) -> Value {
         let mut new:Value = self;
         if self.v_frequency.is_some() && self.v_frequency != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[FREQUENCY_INDEX] == 0 {
             new.v_frequency = Some(other);
@@ -973,9 +973,9 @@ impl BitXor<UnitFrequency> for Value {
     }
 }
 
-impl BitOr<UnitIlluminance> for f64 {
+impl Mul<UnitIlluminance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitIlluminance) -> Self::Output {
+    fn mul(self, other:UnitIlluminance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_illuminance : Some(other),
@@ -987,9 +987,9 @@ impl BitOr<UnitIlluminance> for f64 {
     }
 }
 
-impl BitXor<UnitIlluminance> for f64 {
+impl Div<UnitIlluminance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitIlluminance) -> Self::Output {
+    fn div(self, other:UnitIlluminance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_illuminance : Some(other),
@@ -1001,9 +1001,9 @@ impl BitXor<UnitIlluminance> for f64 {
     }
 }
 
-impl BitOr<UnitIlluminance> for Value {
+impl Mul<UnitIlluminance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitIlluminance) -> Self::Output {
+    fn mul(self, other:UnitIlluminance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[ILLUMINANCE_INDEX] == 0 {
             new.v_illuminance = Some(other);
@@ -1015,7 +1015,7 @@ impl BitOr<UnitIlluminance> for Value {
             new.unit_map ^= ILLUMINANCE_MAP;
         } else {
             if self.v_illuminance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_illuminance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_illuminance.unwrap());
             }
             new.exp[ILLUMINANCE_INDEX] += 1;
         }
@@ -1023,12 +1023,12 @@ impl BitOr<UnitIlluminance> for Value {
     }
 }
 
-impl BitXor<UnitIlluminance> for Value {
+impl Div<UnitIlluminance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitIlluminance) -> Value {
+    fn div(self, other:UnitIlluminance) -> Value {
         let mut new:Value = self;
         if self.v_illuminance.is_some() && self.v_illuminance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[ILLUMINANCE_INDEX] == 0 {
             new.v_illuminance = Some(other);
@@ -1045,9 +1045,9 @@ impl BitXor<UnitIlluminance> for Value {
     }
 }
 
-impl BitOr<UnitVolume> for f64 {
+impl Mul<UnitVolume> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitVolume) -> Self::Output {
+    fn mul(self, other:UnitVolume) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_volume : Some(other),
@@ -1059,9 +1059,9 @@ impl BitOr<UnitVolume> for f64 {
     }
 }
 
-impl BitXor<UnitVolume> for f64 {
+impl Div<UnitVolume> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitVolume) -> Self::Output {
+    fn div(self, other:UnitVolume) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_volume : Some(other),
@@ -1073,9 +1073,9 @@ impl BitXor<UnitVolume> for f64 {
     }
 }
 
-impl BitOr<UnitVolume> for Value {
+impl Mul<UnitVolume> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitVolume) -> Self::Output {
+    fn mul(self, other:UnitVolume) -> Self::Output {
         let mut new:Value = self;
         if self.exp[VOLUME_INDEX] == 0 {
             new.v_volume = Some(other);
@@ -1087,7 +1087,7 @@ impl BitOr<UnitVolume> for Value {
             new.unit_map ^= VOLUME_MAP;
         } else {
             if self.v_volume != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_volume.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_volume.unwrap());
             }
             new.exp[VOLUME_INDEX] += 1;
         }
@@ -1095,12 +1095,12 @@ impl BitOr<UnitVolume> for Value {
     }
 }
 
-impl BitXor<UnitVolume> for Value {
+impl Div<UnitVolume> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitVolume) -> Value {
+    fn div(self, other:UnitVolume) -> Value {
         let mut new:Value = self;
         if self.v_volume.is_some() && self.v_volume != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[VOLUME_INDEX] == 0 {
             new.v_volume = Some(other);
@@ -1117,9 +1117,9 @@ impl BitXor<UnitVolume> for Value {
     }
 }
 
-impl BitOr<UnitTemperature> for f64 {
+impl Mul<UnitTemperature> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitTemperature) -> Self::Output {
+    fn mul(self, other:UnitTemperature) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_temperature : Some(other),
@@ -1131,9 +1131,9 @@ impl BitOr<UnitTemperature> for f64 {
     }
 }
 
-impl BitXor<UnitTemperature> for f64 {
+impl Div<UnitTemperature> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitTemperature) -> Self::Output {
+    fn div(self, other:UnitTemperature) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_temperature : Some(other),
@@ -1145,9 +1145,9 @@ impl BitXor<UnitTemperature> for f64 {
     }
 }
 
-impl BitOr<UnitTemperature> for Value {
+impl Mul<UnitTemperature> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitTemperature) -> Self::Output {
+    fn mul(self, other:UnitTemperature) -> Self::Output {
         let mut new:Value = self;
         if self.exp[TEMPERATURE_INDEX] == 0 {
             new.v_temperature = Some(other);
@@ -1159,7 +1159,7 @@ impl BitOr<UnitTemperature> for Value {
             new.unit_map ^= TEMPERATURE_MAP;
         } else {
             if self.v_temperature != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_temperature.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_temperature.unwrap());
             }
             new.exp[TEMPERATURE_INDEX] += 1;
         }
@@ -1167,12 +1167,12 @@ impl BitOr<UnitTemperature> for Value {
     }
 }
 
-impl BitXor<UnitTemperature> for Value {
+impl Div<UnitTemperature> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitTemperature) -> Value {
+    fn div(self, other:UnitTemperature) -> Value {
         let mut new:Value = self;
         if self.v_temperature.is_some() && self.v_temperature != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[TEMPERATURE_INDEX] == 0 {
             new.v_temperature = Some(other);
@@ -1189,9 +1189,9 @@ impl BitXor<UnitTemperature> for Value {
     }
 }
 
-impl BitOr<UnitSubstance> for f64 {
+impl Mul<UnitSubstance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitSubstance) -> Self::Output {
+    fn mul(self, other:UnitSubstance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_substance : Some(other),
@@ -1203,9 +1203,9 @@ impl BitOr<UnitSubstance> for f64 {
     }
 }
 
-impl BitXor<UnitSubstance> for f64 {
+impl Div<UnitSubstance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitSubstance) -> Self::Output {
+    fn div(self, other:UnitSubstance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_substance : Some(other),
@@ -1217,9 +1217,9 @@ impl BitXor<UnitSubstance> for f64 {
     }
 }
 
-impl BitOr<UnitSubstance> for Value {
+impl Mul<UnitSubstance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitSubstance) -> Self::Output {
+    fn mul(self, other:UnitSubstance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[SUBSTANCE_INDEX] == 0 {
             new.v_substance = Some(other);
@@ -1231,7 +1231,7 @@ impl BitOr<UnitSubstance> for Value {
             new.unit_map ^= SUBSTANCE_MAP;
         } else {
             if self.v_substance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_substance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_substance.unwrap());
             }
             new.exp[SUBSTANCE_INDEX] += 1;
         }
@@ -1239,12 +1239,12 @@ impl BitOr<UnitSubstance> for Value {
     }
 }
 
-impl BitXor<UnitSubstance> for Value {
+impl Div<UnitSubstance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitSubstance) -> Value {
+    fn div(self, other:UnitSubstance) -> Value {
         let mut new:Value = self;
         if self.v_substance.is_some() && self.v_substance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if self.exp[SUBSTANCE_INDEX] == 0 {
             new.v_substance = Some(other);
@@ -1261,9 +1261,9 @@ impl BitXor<UnitSubstance> for Value {
     }
 }
 
-impl BitOr<UnitSound> for f64 {
+impl Mul<UnitSound> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitSound) -> Self::Output {
+    fn mul(self, other:UnitSound) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_sound : Some(other),
@@ -1275,9 +1275,9 @@ impl BitOr<UnitSound> for f64 {
     }
 }
 
-impl BitXor<UnitSound> for f64 {
+impl Div<UnitSound> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitSound) -> Self::Output {
+    fn div(self, other:UnitSound) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_sound : Some(other),
@@ -1289,9 +1289,9 @@ impl BitXor<UnitSound> for f64 {
     }
 }
 
-impl BitOr<UnitSound> for Value {
+impl Mul<UnitSound> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitSound) -> Self::Output {
+    fn mul(self, other:UnitSound) -> Self::Output {
         let mut new:Value = self;
         if self.exp[SOUND_INDEX] == 0 {
             new.v_sound = Some(other);
@@ -1303,7 +1303,7 @@ impl BitOr<UnitSound> for Value {
             new.unit_map ^= SOUND_MAP;
         } else {
             if self.v_sound != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_sound.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_sound.unwrap());
             }
             new.exp[SOUND_INDEX] += 1;
         }
@@ -1311,12 +1311,12 @@ impl BitOr<UnitSound> for Value {
     }
 }
 
-impl BitXor<UnitSound> for Value {
+impl Div<UnitSound> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitSound) -> Value {
+    fn div(self, other:UnitSound) -> Value {
         let mut new:Value = self;
         if self.v_sound.is_some() && self.v_sound != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[SOUND_INDEX] == 0 {
             new.v_sound = Some(other);
@@ -1333,9 +1333,9 @@ impl BitXor<UnitSound> for Value {
     }
 }
 
-impl BitOr<UnitSolidAngle> for f64 {
+impl Mul<UnitSolidAngle> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitSolidAngle) -> Self::Output {
+    fn mul(self, other:UnitSolidAngle) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_solid_angle : Some(other),
@@ -1347,9 +1347,9 @@ impl BitOr<UnitSolidAngle> for f64 {
     }
 }
 
-impl BitXor<UnitSolidAngle> for f64 {
+impl Div<UnitSolidAngle> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitSolidAngle) -> Self::Output {
+    fn div(self, other:UnitSolidAngle) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_solid_angle : Some(other),
@@ -1361,9 +1361,9 @@ impl BitXor<UnitSolidAngle> for f64 {
     }
 }
 
-impl BitOr<UnitSolidAngle> for Value {
+impl Mul<UnitSolidAngle> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitSolidAngle) -> Self::Output {
+    fn mul(self, other:UnitSolidAngle) -> Self::Output {
         let mut new:Value = self;
         if self.exp[SOLID_ANGLE_INDEX] == 0 {
             new.v_solid_angle = Some(other);
@@ -1375,7 +1375,7 @@ impl BitOr<UnitSolidAngle> for Value {
             new.unit_map ^= SOLID_ANGLE_MAP;
         } else {
             if self.v_solid_angle != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_solid_angle.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_solid_angle.unwrap());
             }
             new.exp[SOLID_ANGLE_INDEX] += 1;
         }
@@ -1383,12 +1383,12 @@ impl BitOr<UnitSolidAngle> for Value {
     }
 }
 
-impl BitXor<UnitSolidAngle> for Value {
+impl Div<UnitSolidAngle> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitSolidAngle) -> Value {
+    fn div(self, other:UnitSolidAngle) -> Value {
         let mut new:Value = self;
         if self.v_solid_angle.is_some() && self.v_solid_angle != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[SOLID_ANGLE_INDEX] == 0 {
             new.v_solid_angle = Some(other);
@@ -1405,9 +1405,9 @@ impl BitXor<UnitSolidAngle> for Value {
     }
 }
 
-impl BitOr<UnitResistance> for f64 {
+impl Mul<UnitResistance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitResistance) -> Self::Output {
+    fn mul(self, other:UnitResistance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_resistance : Some(other),
@@ -1419,9 +1419,9 @@ impl BitOr<UnitResistance> for f64 {
     }
 }
 
-impl BitXor<UnitResistance> for f64 {
+impl Div<UnitResistance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitResistance) -> Self::Output {
+    fn div(self, other:UnitResistance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_resistance : Some(other),
@@ -1433,9 +1433,9 @@ impl BitXor<UnitResistance> for f64 {
     }
 }
 
-impl BitOr<UnitResistance> for Value {
+impl Mul<UnitResistance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitResistance) -> Self::Output {
+    fn mul(self, other:UnitResistance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[RESISTANCE_INDEX] == 0 {
             new.v_resistance = Some(other);
@@ -1447,7 +1447,7 @@ impl BitOr<UnitResistance> for Value {
             new.unit_map ^= RESISTANCE_MAP;
         } else {
             if self.v_resistance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_resistance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_resistance.unwrap());
             }
             new.exp[RESISTANCE_INDEX] += 1;
         }
@@ -1455,12 +1455,12 @@ impl BitOr<UnitResistance> for Value {
     }
 }
 
-impl BitXor<UnitResistance> for Value {
+impl Div<UnitResistance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitResistance) -> Value {
+    fn div(self, other:UnitResistance) -> Value {
         let mut new:Value = self;
         if self.v_resistance.is_some() && self.v_resistance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RESISTANCE_INDEX] == 0 {
             new.v_resistance = Some(other);
@@ -1477,9 +1477,9 @@ impl BitXor<UnitResistance> for Value {
     }
 }
 
-impl BitOr<UnitRadioactivityExposure> for f64 {
+impl Mul<UnitRadioactivityExposure> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitRadioactivityExposure) -> Self::Output {
+    fn mul(self, other:UnitRadioactivityExposure) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_radioactivity_exposure : Some(other),
@@ -1491,9 +1491,9 @@ impl BitOr<UnitRadioactivityExposure> for f64 {
     }
 }
 
-impl BitXor<UnitRadioactivityExposure> for f64 {
+impl Div<UnitRadioactivityExposure> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitRadioactivityExposure) -> Self::Output {
+    fn div(self, other:UnitRadioactivityExposure) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_radioactivity_exposure : Some(other),
@@ -1505,9 +1505,9 @@ impl BitXor<UnitRadioactivityExposure> for f64 {
     }
 }
 
-impl BitOr<UnitRadioactivityExposure> for Value {
+impl Mul<UnitRadioactivityExposure> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitRadioactivityExposure) -> Self::Output {
+    fn mul(self, other:UnitRadioactivityExposure) -> Self::Output {
         let mut new:Value = self;
         if self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
             new.v_radioactivity_exposure = Some(other);
@@ -1519,7 +1519,7 @@ impl BitOr<UnitRadioactivityExposure> for Value {
             new.unit_map ^= RADIOACTIVITY_EXPOSURE_MAP;
         } else {
             if self.v_radioactivity_exposure != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity_exposure.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity_exposure.unwrap());
             }
             new.exp[RADIOACTIVITY_EXPOSURE_INDEX] += 1;
         }
@@ -1527,12 +1527,12 @@ impl BitOr<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl BitXor<UnitRadioactivityExposure> for Value {
+impl Div<UnitRadioactivityExposure> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitRadioactivityExposure) -> Value {
+    fn div(self, other:UnitRadioactivityExposure) -> Value {
         let mut new:Value = self;
         if self.v_radioactivity_exposure.is_some() && self.v_radioactivity_exposure != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 0 {
             new.v_radioactivity_exposure = Some(other);
@@ -1549,9 +1549,9 @@ impl BitXor<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl BitOr<UnitRadioactivity> for f64 {
+impl Mul<UnitRadioactivity> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitRadioactivity) -> Self::Output {
+    fn mul(self, other:UnitRadioactivity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_radioactivity : Some(other),
@@ -1563,9 +1563,9 @@ impl BitOr<UnitRadioactivity> for f64 {
     }
 }
 
-impl BitXor<UnitRadioactivity> for f64 {
+impl Div<UnitRadioactivity> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitRadioactivity) -> Self::Output {
+    fn div(self, other:UnitRadioactivity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_radioactivity : Some(other),
@@ -1577,9 +1577,9 @@ impl BitXor<UnitRadioactivity> for f64 {
     }
 }
 
-impl BitOr<UnitRadioactivity> for Value {
+impl Mul<UnitRadioactivity> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitRadioactivity) -> Self::Output {
+    fn mul(self, other:UnitRadioactivity) -> Self::Output {
         let mut new:Value = self;
         if self.exp[RADIOACTIVITY_INDEX] == 0 {
             new.v_radioactivity = Some(other);
@@ -1591,7 +1591,7 @@ impl BitOr<UnitRadioactivity> for Value {
             new.unit_map ^= RADIOACTIVITY_MAP;
         } else {
             if self.v_radioactivity != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_radioactivity.unwrap());
             }
             new.exp[RADIOACTIVITY_INDEX] += 1;
         }
@@ -1599,12 +1599,12 @@ impl BitOr<UnitRadioactivity> for Value {
     }
 }
 
-impl BitXor<UnitRadioactivity> for Value {
+impl Div<UnitRadioactivity> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitRadioactivity) -> Value {
+    fn div(self, other:UnitRadioactivity) -> Value {
         let mut new:Value = self;
         if self.v_radioactivity.is_some() && self.v_radioactivity != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[RADIOACTIVITY_INDEX] == 0 {
             new.v_radioactivity = Some(other);
@@ -1621,9 +1621,9 @@ impl BitXor<UnitRadioactivity> for Value {
     }
 }
 
-impl BitOr<UnitPressure> for f64 {
+impl Mul<UnitPressure> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitPressure) -> Self::Output {
+    fn mul(self, other:UnitPressure) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_pressure : Some(other),
@@ -1635,9 +1635,9 @@ impl BitOr<UnitPressure> for f64 {
     }
 }
 
-impl BitXor<UnitPressure> for f64 {
+impl Div<UnitPressure> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitPressure) -> Self::Output {
+    fn div(self, other:UnitPressure) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_pressure : Some(other),
@@ -1649,9 +1649,9 @@ impl BitXor<UnitPressure> for f64 {
     }
 }
 
-impl BitOr<UnitPressure> for Value {
+impl Mul<UnitPressure> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitPressure) -> Self::Output {
+    fn mul(self, other:UnitPressure) -> Self::Output {
         let mut new:Value = self;
         if self.exp[PRESSURE_INDEX] == 0 {
             new.v_pressure = Some(other);
@@ -1663,7 +1663,7 @@ impl BitOr<UnitPressure> for Value {
             new.unit_map ^= PRESSURE_MAP;
         } else {
             if self.v_pressure != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_pressure.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_pressure.unwrap());
             }
             new.exp[PRESSURE_INDEX] += 1;
         }
@@ -1671,12 +1671,12 @@ impl BitOr<UnitPressure> for Value {
     }
 }
 
-impl BitXor<UnitPressure> for Value {
+impl Div<UnitPressure> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitPressure) -> Value {
+    fn div(self, other:UnitPressure) -> Value {
         let mut new:Value = self;
         if self.v_pressure.is_some() && self.v_pressure != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[PRESSURE_INDEX] == 0 {
             new.v_pressure = Some(other);
@@ -1693,9 +1693,9 @@ impl BitXor<UnitPressure> for Value {
     }
 }
 
-impl BitOr<UnitPower> for f64 {
+impl Mul<UnitPower> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitPower) -> Self::Output {
+    fn mul(self, other:UnitPower) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_power : Some(other),
@@ -1707,9 +1707,9 @@ impl BitOr<UnitPower> for f64 {
     }
 }
 
-impl BitXor<UnitPower> for f64 {
+impl Div<UnitPower> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitPower) -> Self::Output {
+    fn div(self, other:UnitPower) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_power : Some(other),
@@ -1721,9 +1721,9 @@ impl BitXor<UnitPower> for f64 {
     }
 }
 
-impl BitOr<UnitPower> for Value {
+impl Mul<UnitPower> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitPower) -> Self::Output {
+    fn mul(self, other:UnitPower) -> Self::Output {
         let mut new:Value = self;
         if self.exp[POWER_INDEX] == 0 {
             new.v_power = Some(other);
@@ -1735,7 +1735,7 @@ impl BitOr<UnitPower> for Value {
             new.unit_map ^= POWER_MAP;
         } else {
             if self.v_power != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_power.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_power.unwrap());
             }
             new.exp[POWER_INDEX] += 1;
         }
@@ -1743,12 +1743,12 @@ impl BitOr<UnitPower> for Value {
     }
 }
 
-impl BitXor<UnitPower> for Value {
+impl Div<UnitPower> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitPower) -> Value {
+    fn div(self, other:UnitPower) -> Value {
         let mut new:Value = self;
         if self.v_power.is_some() && self.v_power != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[POWER_INDEX] == 0 {
             new.v_power = Some(other);
@@ -1765,9 +1765,9 @@ impl BitXor<UnitPower> for Value {
     }
 }
 
-impl BitOr<UnitInductance> for f64 {
+impl Mul<UnitInductance> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitInductance) -> Self::Output {
+    fn mul(self, other:UnitInductance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_inductance : Some(other),
@@ -1779,9 +1779,9 @@ impl BitOr<UnitInductance> for f64 {
     }
 }
 
-impl BitXor<UnitInductance> for f64 {
+impl Div<UnitInductance> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitInductance) -> Self::Output {
+    fn div(self, other:UnitInductance) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_inductance : Some(other),
@@ -1793,9 +1793,9 @@ impl BitXor<UnitInductance> for f64 {
     }
 }
 
-impl BitOr<UnitInductance> for Value {
+impl Mul<UnitInductance> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitInductance) -> Self::Output {
+    fn mul(self, other:UnitInductance) -> Self::Output {
         let mut new:Value = self;
         if self.exp[INDUCTANCE_INDEX] == 0 {
             new.v_inductance = Some(other);
@@ -1807,7 +1807,7 @@ impl BitOr<UnitInductance> for Value {
             new.unit_map ^= INDUCTANCE_MAP;
         } else {
             if self.v_inductance != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_inductance.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_inductance.unwrap());
             }
             new.exp[INDUCTANCE_INDEX] += 1;
         }
@@ -1815,12 +1815,12 @@ impl BitOr<UnitInductance> for Value {
     }
 }
 
-impl BitXor<UnitInductance> for Value {
+impl Div<UnitInductance> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitInductance) -> Value {
+    fn div(self, other:UnitInductance) -> Value {
         let mut new:Value = self;
         if self.v_inductance.is_some() && self.v_inductance != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[INDUCTANCE_INDEX] == 0 {
             new.v_inductance = Some(other);
@@ -1837,9 +1837,9 @@ impl BitXor<UnitInductance> for Value {
     }
 }
 
-impl BitOr<UnitInformation> for f64 {
+impl Mul<UnitInformation> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitInformation) -> Self::Output {
+    fn mul(self, other:UnitInformation) -> Self::Output {
 
         match other {
             UnitInformation::Bit(Metric::Hecto) => panic!("Unsupported information metric"),
@@ -1869,9 +1869,9 @@ impl BitOr<UnitInformation> for f64 {
     }
 }
 
-impl BitXor<UnitInformation> for f64 {
+impl Div<UnitInformation> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitInformation) -> Self::Output {
+    fn div(self, other:UnitInformation) -> Self::Output {
         match other {
             UnitInformation::Bit(Metric::Hecto) => panic!("Unsupported information metric"),
             UnitInformation::Bit(Metric::Deca) => panic!("Unsupported information metric"),
@@ -1900,9 +1900,9 @@ impl BitXor<UnitInformation> for f64 {
     }
 }
 
-impl BitOr<UnitInformation> for Value {
+impl Mul<UnitInformation> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitInformation) -> Self::Output {
+    fn mul(self, other:UnitInformation) -> Self::Output {
 
         match other {
             UnitInformation::Bit(Metric::Hecto) => panic!("Unsupported information metric"),
@@ -1932,7 +1932,7 @@ impl BitOr<UnitInformation> for Value {
             new.unit_map ^= INFORMATION_MAP;
         } else {
             if self.v_information != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_information.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_information.unwrap());
             }
             new.exp[INFORMATION_INDEX] += 1;
         }
@@ -1940,9 +1940,9 @@ impl BitOr<UnitInformation> for Value {
     }
 }
 
-impl BitXor<UnitInformation> for Value {
+impl Div<UnitInformation> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitInformation) -> Value {
+    fn div(self, other:UnitInformation) -> Value {
 
         match other {
             UnitInformation::Bit(Metric::Hecto) => panic!("Unsupported information metric"),
@@ -1963,7 +1963,7 @@ impl BitXor<UnitInformation> for Value {
 
         let mut new:Value = self;
         if self.v_information.is_some() && self.v_information != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[INFORMATION_INDEX] == 0 {
             new.v_information = Some(other);
@@ -1980,9 +1980,9 @@ impl BitXor<UnitInformation> for Value {
     }
 }
 
-impl BitOr<UnitLuminousFlux> for f64 {
+impl Mul<UnitLuminousFlux> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitLuminousFlux) -> Self::Output {
+    fn mul(self, other:UnitLuminousFlux) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_luminous_flux : Some(other),
@@ -1994,9 +1994,9 @@ impl BitOr<UnitLuminousFlux> for f64 {
     }
 }
 
-impl BitXor<UnitLuminousFlux> for f64 {
+impl Div<UnitLuminousFlux> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitLuminousFlux) -> Self::Output {
+    fn div(self, other:UnitLuminousFlux) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_luminous_flux : Some(other),
@@ -2008,9 +2008,9 @@ impl BitXor<UnitLuminousFlux> for f64 {
     }
 }
 
-impl BitOr<UnitLuminousFlux> for Value {
+impl Mul<UnitLuminousFlux> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitLuminousFlux) -> Self::Output {
+    fn mul(self, other:UnitLuminousFlux) -> Self::Output {
         let mut new:Value = self;
         if self.exp[LUMINOUS_FLUX_INDEX] == 0 {
             new.v_luminous_flux = Some(other);
@@ -2022,7 +2022,7 @@ impl BitOr<UnitLuminousFlux> for Value {
             new.unit_map ^= LUMINOUS_FLUX_MAP;
         } else {
             if self.v_luminous_flux != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux.unwrap());
             }
             new.exp[LUMINOUS_FLUX_INDEX] += 1;
         }
@@ -2030,12 +2030,12 @@ impl BitOr<UnitLuminousFlux> for Value {
     }
 }
 
-impl BitXor<UnitLuminousFlux> for Value {
+impl Div<UnitLuminousFlux> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitLuminousFlux) -> Value {
+    fn div(self, other:UnitLuminousFlux) -> Value {
         let mut new:Value = self;
         if self.v_luminous_flux.is_some() && self.v_luminous_flux != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[LUMINOUS_FLUX_INDEX] == 0 {
             new.v_luminous_flux = Some(other);
@@ -2052,9 +2052,9 @@ impl BitXor<UnitLuminousFlux> for Value {
     }
 }
 
-impl BitOr<UnitLuminousIntensity> for f64 {
+impl Mul<UnitLuminousIntensity> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitLuminousIntensity) -> Self::Output {
+    fn mul(self, other:UnitLuminousIntensity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_luminous_flux_intensity : Some(other),
@@ -2066,9 +2066,9 @@ impl BitOr<UnitLuminousIntensity> for f64 {
     }
 }
 
-impl BitXor<UnitLuminousIntensity> for f64 {
+impl Div<UnitLuminousIntensity> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitLuminousIntensity) -> Self::Output {
+    fn div(self, other:UnitLuminousIntensity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_luminous_flux_intensity : Some(other),
@@ -2080,9 +2080,9 @@ impl BitXor<UnitLuminousIntensity> for f64 {
     }
 }
 
-impl BitOr<UnitLuminousIntensity> for Value {
+impl Mul<UnitLuminousIntensity> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitLuminousIntensity) -> Self::Output {
+    fn mul(self, other:UnitLuminousIntensity) -> Self::Output {
         let mut new:Value = self;
         if self.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
             new.v_luminous_flux_intensity = Some(other);
@@ -2094,7 +2094,7 @@ impl BitOr<UnitLuminousIntensity> for Value {
             new.unit_map ^= LUMINOUS_INTENSITY_MAP;
         } else {
             if self.v_luminous_flux_intensity != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux_intensity.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_luminous_flux_intensity.unwrap());
             }
             new.exp[LUMINOUS_INTENSITY_INDEX] += 1;
         }
@@ -2102,12 +2102,12 @@ impl BitOr<UnitLuminousIntensity> for Value {
     }
 }
 
-impl BitXor<UnitLuminousIntensity> for Value {
+impl Div<UnitLuminousIntensity> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitLuminousIntensity) -> Value {
+    fn div(self, other:UnitLuminousIntensity) -> Value {
         let mut new:Value = self;
         if self.v_luminous_flux_intensity.is_some() && self.v_luminous_flux_intensity != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[LUMINOUS_INTENSITY_INDEX] == 0 {
             new.v_luminous_flux_intensity = Some(other);
@@ -2124,9 +2124,9 @@ impl BitXor<UnitLuminousIntensity> for Value {
     }
 }
 
-impl BitOr<UnitMagneticFlux> for f64 {
+impl Mul<UnitMagneticFlux> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitMagneticFlux) -> Self::Output {
+    fn mul(self, other:UnitMagneticFlux) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_magnetic_flux : Some(other),
@@ -2138,9 +2138,9 @@ impl BitOr<UnitMagneticFlux> for f64 {
     }
 }
 
-impl BitXor<UnitMagneticFlux> for f64 {
+impl Div<UnitMagneticFlux> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitMagneticFlux) -> Self::Output {
+    fn div(self, other:UnitMagneticFlux) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_magnetic_flux : Some(other),
@@ -2152,9 +2152,9 @@ impl BitXor<UnitMagneticFlux> for f64 {
     }
 }
 
-impl BitOr<UnitMagneticFlux> for Value {
+impl Mul<UnitMagneticFlux> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitMagneticFlux) -> Self::Output {
+    fn mul(self, other:UnitMagneticFlux) -> Self::Output {
         let mut new:Value = self;
         if self.exp[MAGNETIC_FLUX_INDEX] == 0 {
             new.v_magnetic_flux = Some(other);
@@ -2166,7 +2166,7 @@ impl BitOr<UnitMagneticFlux> for Value {
             new.unit_map ^= MAGNETIC_FLUX_MAP;
         } else {
             if self.v_magnetic_flux != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux.unwrap());
             }
             new.exp[MAGNETIC_FLUX_INDEX] += 1;
         }
@@ -2174,12 +2174,12 @@ impl BitOr<UnitMagneticFlux> for Value {
     }
 }
 
-impl BitXor<UnitMagneticFlux> for Value {
+impl Div<UnitMagneticFlux> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitMagneticFlux) -> Value {
+    fn div(self, other:UnitMagneticFlux) -> Value {
         let mut new:Value = self;
         if self.v_magnetic_flux.is_some() && self.v_magnetic_flux != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MAGNETIC_FLUX_INDEX] == 0 {
             new.v_magnetic_flux = Some(other);
@@ -2196,9 +2196,9 @@ impl BitXor<UnitMagneticFlux> for Value {
     }
 }
 
-impl BitOr<UnitMagneticFluxDensity> for f64 {
+impl Mul<UnitMagneticFluxDensity> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitMagneticFluxDensity) -> Self::Output {
+    fn mul(self, other:UnitMagneticFluxDensity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_magnetic_flux_density : Some(other),
@@ -2210,9 +2210,9 @@ impl BitOr<UnitMagneticFluxDensity> for f64 {
     }
 }
 
-impl BitXor<UnitMagneticFluxDensity> for f64 {
+impl Div<UnitMagneticFluxDensity> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitMagneticFluxDensity) -> Self::Output {
+    fn div(self, other:UnitMagneticFluxDensity) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_magnetic_flux_density : Some(other),
@@ -2224,9 +2224,9 @@ impl BitXor<UnitMagneticFluxDensity> for f64 {
     }
 }
 
-impl BitOr<UnitMagneticFluxDensity> for Value {
+impl Mul<UnitMagneticFluxDensity> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitMagneticFluxDensity) -> Self::Output {
+    fn mul(self, other:UnitMagneticFluxDensity) -> Self::Output {
         let mut new:Value = self;
         if self.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
             new.v_magnetic_flux_density = Some(other);
@@ -2238,7 +2238,7 @@ impl BitOr<UnitMagneticFluxDensity> for Value {
             new.unit_map ^= MAGNETIC_FLUX_DENSITY_MAP;
         } else {
             if self.v_magnetic_flux_density != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux_density.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_magnetic_flux_density.unwrap());
             }
             new.exp[MAGNETIC_FLUX_DENSITY_INDEX] += 1;
         }
@@ -2246,12 +2246,12 @@ impl BitOr<UnitMagneticFluxDensity> for Value {
     }
 }
 
-impl BitXor<UnitMagneticFluxDensity> for Value {
+impl Div<UnitMagneticFluxDensity> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitMagneticFluxDensity) -> Value {
+    fn div(self, other:UnitMagneticFluxDensity) -> Value {
         let mut new:Value = self;
         if self.v_magnetic_flux_density.is_some() && self.v_magnetic_flux_density != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MAGNETIC_FLUX_DENSITY_INDEX] == 0 {
             new.v_magnetic_flux_density = Some(other);
@@ -2268,9 +2268,9 @@ impl BitXor<UnitMagneticFluxDensity> for Value {
     }
 }
 
-impl BitOr<UnitMass> for f64 {
+impl Mul<UnitMass> for f64 {
     type Output = Value;
-    fn bitor(self, other:UnitMass) -> Self::Output {
+    fn mul(self, other:UnitMass) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_mass : Some(other),
@@ -2282,9 +2282,9 @@ impl BitOr<UnitMass> for f64 {
     }
 }
 
-impl BitXor<UnitMass> for f64 {
+impl Div<UnitMass> for f64 {
     type Output = Value;
-    fn bitxor(self, other:UnitMass) -> Self::Output {
+    fn div(self, other:UnitMass) -> Self::Output {
         let mut ret = Value {
             val : self,
             v_mass : Some(other),
@@ -2296,9 +2296,9 @@ impl BitXor<UnitMass> for f64 {
     }
 }
 
-impl BitOr<UnitMass> for Value {
+impl Mul<UnitMass> for Value {
     type Output = Value;
-    fn bitor(self, other:UnitMass) -> Self::Output {
+    fn mul(self, other:UnitMass) -> Self::Output {
         let mut new:Value = self;
         if self.exp[MASS_INDEX] == 0 {
             new.v_mass = Some(other);
@@ -2310,7 +2310,7 @@ impl BitOr<UnitMass> for Value {
             new.unit_map ^= MASS_MAP;
         } else {
             if self.v_mass != Some(other) {
-                panic!("[bitor] Cannot increment unit: {} while unit {} is present", other, self.v_mass.unwrap());
+                panic!("[mul] Cannot increment unit: {} while unit {} is present", other, self.v_mass.unwrap());
             }
             new.exp[MASS_INDEX] += 1;
         }
@@ -2318,12 +2318,12 @@ impl BitOr<UnitMass> for Value {
     }
 }
 
-impl BitXor<UnitMass> for Value {
+impl Div<UnitMass> for Value {
     type Output = Value;
-    fn bitxor(self, other:UnitMass) -> Value {
+    fn div(self, other:UnitMass) -> Value {
         let mut new:Value = self;
         if self.v_mass.is_some() && new.v_mass != Some(other) {
-            panic!("[bitxor] Cannot decrement unit: {} from Value {}", other, self);
+            panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
         }
         if new.exp[MASS_INDEX] == 0 {
             new.v_mass = Some(other);

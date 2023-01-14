@@ -67,10 +67,10 @@ let v3:Value = Value::new(22.3, "kg*m/s^2").unwrap();
 
 // Fastest
 let v4:Value = 22.3
-  ^ UnitTime::Second(Metric::None)
-  ^ UnitTime::Second(Metric::None)
-  | UnitMass::Gram(Metric::Kilo)
-  | UnitLength::Meter(Metric::None);
+  / UnitTime::Second(Metric::None)
+  / UnitTime::Second(Metric::None)
+  * UnitMass::Gram(Metric::Kilo)
+  * UnitLength::Meter(Metric::None);
 ```
 
 Using `Values`:
@@ -79,8 +79,8 @@ Using `Values`:
 use v3::values::Value;
 use v3::units::{Metric, UnitTime, UnitLength};
 
-let time:Value = 3.4 | UnitTime::Second(Metric::None);
-let dist:Value = 10.3 | UnitLength::Meter(Metric::None);
+let time:Value = 3.4 * UnitTime::Second(Metric::None);
+let dist:Value = 10.3 * UnitLength::Meter(Metric::None);
 
 let speed:Value = dist/time;
 assert!(speed >= 3.0293);
@@ -99,7 +99,7 @@ if m.is_nan() {
   println!("Our value is not a number!");
 }
 
-let a:Value = 1.4 | UnitLength::Meter(Metric::None);
+let a:Value = 1.4 * UnitLength::Meter(Metric::None);
 let r:Value = a.sin(); // Value is in radians
 ```
 

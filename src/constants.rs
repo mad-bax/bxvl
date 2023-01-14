@@ -93,7 +93,7 @@ pub const RADIO_C_TO_BQ:f64         = 37_000_000_000.0;
 
 /// Equivalent dose of ionizing radiation
 /// 
-/// The conversion numeric for REM to seivert
+/// The conversion numeric for REM to sievert
 pub const RADEX_REM_TO_SV:f64       = 0.01;
 
 /// Volume

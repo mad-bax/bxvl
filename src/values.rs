@@ -233,11 +233,11 @@ mod value_unit_tests {
 
     #[test]
     fn value_10(){
-        let v1:Value = 4.5 | UnitLength::Meter(Metric::None);
+        let v1:Value = 4.5 * UnitLength::Meter(Metric::None);
         let v2:Value = Value::new(4.5, "m").unwrap();
         assert_eq!(v1, v2);
 
-        let v3:Value = 4.5 | UnitLength::Meter(Metric::None) | UnitLength::Meter(Metric::None);
+        let v3:Value = 4.5 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
         let v4:Value = Value::new(4.5, "m^2").unwrap();
         assert_eq!(v3, v4);
     }

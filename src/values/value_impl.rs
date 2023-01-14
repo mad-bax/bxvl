@@ -455,7 +455,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::UnitLength;
-    /// let mut v:Value = 4.0 | UnitLength::Inch;
+    /// let mut v:Value = 4.0 * UnitLength::Inch;
     /// v.inv()
     /// ```
     /// `v` will now be equal to `0.25 1/in`
@@ -472,7 +472,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::UnitAngle;
-    /// let mut a:Value = 45.0 | UnitAngle::Degree;
+    /// let mut a:Value = 45.0 * UnitAngle::Degree;
     /// a.to_radians();
     /// ```
     pub fn to_radians(&mut self) {
@@ -488,7 +488,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::{UnitAngle, Metric};
-    /// let mut a:Value = (2.0/std::f64::consts::PI) | UnitAngle::Radian(Metric::None);
+    /// let mut a:Value = (2.0/std::f64::consts::PI) * UnitAngle::Radian(Metric::None);
     /// a.to_degrees();
     /// ```
     pub fn to_degrees(&mut self) {
@@ -541,7 +541,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::UnitLength;
-    /// let mut v:Value = 16.0 | UnitLength::Foot | UnitLength::Foot;
+    /// let mut v:Value = 16.0 * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.sqrt();
     /// ```
     /// `x` will be equal to `4.0 ft`
@@ -565,7 +565,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::UnitLength;
-    /// let v:Value = 4.0 | UnitLength::Foot;
+    /// let v:Value = 4.0 * UnitLength::Foot;
     /// let x:Value = v.powv(2);
     /// assert!(String::from("16 ft^2") == format!("{}", x));
     /// ```
@@ -586,7 +586,7 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::UnitLength;
-    /// let mut v:Value = 9.0 | UnitLength::Foot | UnitLength::Foot | UnitLength::Foot;
+    /// let mut v:Value = 9.0 * UnitLength::Foot * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.cbrt();
     /// ```
     /// `x` will be equal to `3.0 ft`
@@ -640,8 +640,8 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::{UnitTime, UnitAngle, Metric};
-    /// let a:Value = 10.0 | UnitTime::Second(Metric::None);
-    /// let b:Value = 0.3 | UnitAngle::Radian(Metric::None);
+    /// let a:Value = 10.0 * UnitTime::Second(Metric::None);
+    /// let b:Value = 0.3 * UnitAngle::Radian(Metric::None);
     /// let x:Value = a.atan2(&b);
     /// ```
     /// `x` will be approximately equal to `1.5408 radians`
@@ -668,8 +668,8 @@ impl Value {
     /// ```rust
     /// use v3::values::Value;
     /// use v3::units::{UnitLength, UnitMass, UnitTime, Metric};
-    /// let mass:Value = 4.5 | UnitMass::Gram(Metric::Kilo);
-    /// let acc:Value = 9.81 ^ UnitTime::Second(Metric::None) ^ UnitTime::Second(Metric::None) | UnitLength::Meter(Metric::None);
+    /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
+    /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
     /// let mut f:Value = match (mass*acc).complex() {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)
