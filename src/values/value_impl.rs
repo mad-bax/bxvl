@@ -617,6 +617,11 @@ impl Value {
         Value::_radians(self.val.tan())
     }
 
+    /// Returns the tangent-h of a `Value` in radians
+    pub fn tanh(&self) -> Value {
+        Value::_radians(self.val.tanh())
+    }
+
     /// Returns the arcsine of a `Value` in radians
     pub fn asin(&self) -> Value {
         Value::_radians(self.val.asin())
