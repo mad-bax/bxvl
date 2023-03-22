@@ -1656,7 +1656,6 @@ impl UnitInformation {
 #[cfg(test)]
 mod units_unit_test {
     use crate::units::Metric;
-    use crate::units::UnitCatalyticActivity;
     use crate::units::UnitInformation;
     use crate::units::UnitTime;
 
