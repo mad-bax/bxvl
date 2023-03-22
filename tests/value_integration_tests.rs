@@ -26,6 +26,15 @@ mod value_usage_tests {
     }
 
     #[test]
+    fn value_derived() {
+        let n:Value = 5.0 * UnitLength::Foot;
+        let y = n.clone();
+
+        assert_eq!(format!("{}", y), String::from("5 ft"));
+        assert!(format!("{:?}", y).len() > 0);
+    }
+
+    #[test]
     fn value_funcs() {
         let n:Value = Value::new(0.5, "rad").unwrap();
         assert_apr!(n.acos().val, 1.0471975511);

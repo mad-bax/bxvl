@@ -205,12 +205,12 @@ Some constants are provided for ease of use:
 |Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
 |Atomic Mass Constant|`1.660_539_066_60e-27`|`kg`|
 |Molar Gas Constant|`8.314_462_1`|`J/(K*mol)`|
-|Coulomb's Constant|`8.987_551`|`mol*-1`|
+|Coulomb's Constant|`8.987_551`|`mol^-1`|
 |The Speed of Light|`299_792_458.0`|`m/s`|
 |Boltzmann Constant|`1.380_649e-23`|`J/K`|
 |Earth's Average Gravitational Acceleration|`9.806_65`|`m/s^2`|
-|Newtonian Constant of Gravitation|`6.673_015e-5`|`m^3/(kg*s^2)`|
-|Charge of an Electron|`1.602_176_634e_19`|`C`|
+|Newtonian Constant of Gravitation|`6.673_015e-11`|`m^3/(kg*s^2)`|
+|Charge of an Electron|`1.602_176_634e-19`|`C`|
 |Rydberg Constant|`10_973_731.568_539`|`1/m`|
 |Plank's Constant|`6.626_070_15e-34`|`J/Hz`|
 |Vacuum Permittivity|`8.854_187_812_8e-12`|`F/m`|

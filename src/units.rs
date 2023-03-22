@@ -1656,7 +1656,9 @@ impl UnitInformation {
 #[cfg(test)]
 mod units_unit_test {
     use crate::units::Metric;
+    use crate::units::UnitCatalyticActivity;
     use crate::units::UnitInformation;
+    use crate::units::UnitTime;
 
     use super::UnitAbsorbedDose;
     use super::UnitAngle;
@@ -1675,7 +1677,8 @@ mod units_unit_test {
     fn metric_comparison() {
         assert_eq!(true, Metric::Yocto < Metric::Zepto);
         assert_eq!(true, Metric::Zepto < Metric::Atto);
-        assert_eq!(true, Metric::Atto < Metric::Pico);
+        assert_eq!(true, Metric::Atto < Metric::Femto);
+        assert_eq!(true, Metric::Femto < Metric::Pico);
         assert_eq!(true, Metric::Pico < Metric::Nano);
         assert_eq!(true, Metric::Nano < Metric::Micro);
         assert_eq!(true, Metric::Micro < Metric::Milli);
@@ -1701,7 +1704,8 @@ mod units_unit_test {
     fn metric_comparison_scale() {
         assert_eq!(true, Metric::Yocto.scale() < Metric::Zepto.scale());
         assert_eq!(true, Metric::Zepto.scale() < Metric::Atto.scale());
-        assert_eq!(true, Metric::Atto.scale() < Metric::Pico.scale());
+        assert_eq!(true, Metric::Atto.scale() < Metric::Femto.scale());
+        assert_eq!(true, Metric::Femto.scale() < Metric::Pico.scale());
         assert_eq!(true, Metric::Pico.scale() < Metric::Nano.scale());
         assert_eq!(true, Metric::Nano.scale() < Metric::Micro.scale());
         assert_eq!(true, Metric::Micro.scale() < Metric::Milli.scale());
@@ -1718,6 +1722,12 @@ mod units_unit_test {
         assert_eq!(true, Metric::Peta.scale() < Metric::Exa.scale());
         assert_eq!(true, Metric::Exa.scale() < Metric::Zetta.scale());
         assert_eq!(true, Metric::Zetta.scale() < Metric::Yotta.scale());
+    }
+
+    #[test]
+    fn unit_get_metric() {
+        let t = UnitPressure::Bar(Metric::Exa);
+        assert_eq!(t.get_metric(), Metric::Exa);
     }
 
     /// Unit Information Comparison Base
@@ -1864,5 +1874,16 @@ mod units_unit_test {
         assert!(UnitRadioactivityExposure::Sievert(Metric::None).base() == 1.0);
         // Rems
         assert!(UnitRadioactivityExposure::Rem.base() == 0.01);
+    }
+
+    /// Unit Time Comparison Base
+    /// 
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_time_base_comparison() {
+        assert_eq!(UnitTime::Second(Metric::None).base(), 1.0);
+        assert_eq!(UnitTime::Minute.base(), 1.0/60.0);
+        assert_eq!(UnitTime::Hour.base(), 1.0/3600.0);
+        assert_eq!(UnitTime::Day.base(), 1.0/86400.0);
     }
 }

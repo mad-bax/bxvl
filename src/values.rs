@@ -171,9 +171,7 @@ mod value_unit_tests {
         let expected:Value = Value::new(0.000000004656613, "Gb").unwrap();
         let _ = e1._convert(&e2).unwrap();
 
-        if f64::max(e1.val, expected.val) - f64::min(e1.val, expected.val) > 0.000001 {
-            panic!();
-        }
+        assert!(f64::max(e1.val, expected.val) - f64::min(e1.val, expected.val) <= 0.000001);
     }
 
     #[test]

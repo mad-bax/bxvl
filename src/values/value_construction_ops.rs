@@ -636,7 +636,7 @@ impl Div<UnitElectricCurrent> for f64 {
             unit_map : ELECTRIC_CURRENT_MAP,
             ..Default::default()
         };
-        ret.exp[ELECTRIC_CURRENT_INDEX] = 1;
+        ret.exp[ELECTRIC_CURRENT_INDEX] = -1;
         ret
     }
 }
@@ -1212,7 +1212,7 @@ impl Div<UnitSubstance> for f64 {
             unit_map : SUBSTANCE_MAP,
             ..Default::default()
         };
-        ret.exp[SUBSTANCE_INDEX] = 1;
+        ret.exp[SUBSTANCE_INDEX] = -1;
         ret
     }
 }

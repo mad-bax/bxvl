@@ -178,7 +178,7 @@ pub const fn const_faraday() -> Value {
         v_magnetic_flux_density : None,
         v_solid_angle : None
     };
-    ret.exp[ELECTRIC_CHARGE_MAP] = 1;
+    ret.exp[ELECTRIC_CHARGE_INDEX] = 1;
     ret.exp[SUBSTANCE_INDEX] = -1;
     ret
 }
