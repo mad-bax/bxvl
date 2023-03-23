@@ -48,16 +48,30 @@ mod value_constant_tests {
 #[cfg(test)]
 mod value_creation_tests {
 
-    use v3::units::{Metric, UnitLength, UnitTime, UnitTemperature, UnitPressure, UnitAngle, UnitEnergy};
+    use v3::units::{Metric, UnitLength, UnitTime, UnitTemperature, UnitPressure, UnitAngle, UnitEnergy, UnitRadioactivity, UnitRadioactivityExposure, UnitAbsorbedDose};
 
     const V1:f64 = 3.5;
     const V2:f64 = 0.5;
 
     const TEST_METRIC_UNITS:[&str;34] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", "Wb", "T", "mol", "cd", "lm", "lx", "bar", "Pa", "rad", "sr", "Hz", "N", "J", "cal", "W", "Bq", "Gy", "Sv", "kat", "B", "bits", "b"];
 
-    const TEST_IMPERIAL_LENGTH_UNITS:[&str;35] = ["in", "feet", "ft", "inch", "inches", "yards", "yard", "yds", "yd", "mile", "miles", "gr", "grains", "grain", "ounces", "oz", "ounce", "pound", "lb", "pounds", "lbs", "f", "°f", "psi", "inHg", "pounds force", "pound force", "poundsforce", "poundforce", "lbfr", "lbsfr", "footpounds", "foot pounds", "footpound", "foot pound"];
+    const TEST_IMPERIAL_LENGTH_UNITS:[(&str, UnitLength);11] = [
+        ("in", UnitLength::Inch),
+        ("feet", UnitLength::Foot),
+        ("ft", UnitLength::Foot),
+        ("inch", UnitLength::Inch),
+        ("inches", UnitLength::Inch),
+        ("yards", UnitLength::Yard),
+        ("yard", UnitLength::Yard),
+        ("yds", UnitLength::Yard),
+        ("yd", UnitLength::Yard),
+        ("mile", UnitLength::Mile),
+        ("miles", UnitLength::Mile)];
 
-    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);27] = [
+
+        "gr", "grains", "grain", "ounces", "oz", "ounce", "pound", "lb", "pounds", "lbs", "f", "°f", "psi", "inHg", "pounds force", "pound force", "poundsforce", "poundforce", "lbfr", "lbsfr", "footpounds", "foot pounds", "footpound", "foot pound"];
+
+    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);7] = [
         ("AU", UnitLength::AstronomicalUnit),
         ("pc", UnitLength::Parsec),
         ("lightyear", UnitLength::LightYear),
@@ -68,10 +82,10 @@ mod value_creation_tests {
 
     const TEST_OTHER_TIME_UNITS:[(&str, UnitTime);6] = [
         ("minutes", UnitTime::Minute),
-        ("min", UnitTIme::Minute),
+        ("min", UnitTime::Minute),
         ("hours", UnitTime::Hour),
         ("hr", UnitTime::Hour),
-        ("day", UnitTime::Day)
+        ("day", UnitTime::Day),
         ("days", UnitTime::Day)];
         
     const TEST_OTHER_TEMPERATURE_UNITS:[(&str, UnitTemperature);3] = [
@@ -92,7 +106,16 @@ mod value_creation_tests {
         ("Cal", UnitEnergy::GramCalorie(Metric::Kilo)),
         ("eV", UnitEnergy::ElectronVolt)];
         
-    "Ci", "R", "rads", "rem"];
+
+    const TEST_OTHER_RADIOACTIVITY_UNITS:[(&str, UnitRadioactivity);1] = [
+        ("Ci", UnitRadioactivity::Curie)];
+
+    const TEST_OTHER_RAD_EXPOSURE_UNITS:[(&str, UnitRadioactivityExposure);1] = [
+        ("Rem", UnitRadioactivityExposure::Rem)];
+    
+    const TEST_OTHER_ABSORBED_DOSE_UNITS:[(&str, UnitAbsorbedDose);2] = [
+        ("R", UnitAbsorbedDose::Roentgen),
+        ("rads", UnitAbsorbedDose::Rad)];
 
     const TEST_METRIC:[(Metric, &str);22] = [
         (Metric::Yotta, "Y"),
