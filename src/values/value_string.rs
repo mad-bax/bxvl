@@ -111,7 +111,7 @@ impl Display for Value {
                 }
             };
             if self.exp[i] < -1 {
-                denoms.push(format!("{}^{}", u, self.exp[i]*-1))
+                denoms.push(format!("{}^{}", u, -self.exp[i]))
             } else if self.exp[i] > 1 {
                 nums.push(format!("{}^{}", u, self.exp[i]))
             } else if self.exp[i] == 1 {

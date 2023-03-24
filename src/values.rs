@@ -224,7 +224,7 @@ mod value_unit_tests {
     fn value_9(){
         let v1:Value = value!(5, "ft/s^2");
         let v2:Value = value!(1.524, "m/s^2");
-        let v3:Value = value!(0.00042333333333333334, "m/min^2");
+        let v3:Value = value!(5486.4, "m/min^2");
         assert_eq!((v1 >> "m/s^2").unwrap(), v2);
         assert_eq!((v1 >> "m/min^2").unwrap(), v3);
     }

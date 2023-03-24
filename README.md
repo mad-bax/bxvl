@@ -350,7 +350,7 @@ The project supports all base SI units as listed by the National Institute of St
 |Pascal|&check;|`Pa`|
 |Bar|&check;|`bar`|
 |Torr||`torr`|
-|mmHg||`mmHg`|
+|mmHg|**[Future Support]**|`mmHg`|
 |inHg||`inHg`|
 |Atmospheres||`ATM`<br/>`atm`|
 |Pounds per square inch||`PSI`<br/>`psi`|

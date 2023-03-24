@@ -61,7 +61,27 @@ mod value_creation_tests {
         UnitRadioactivityExposure,
         UnitAbsorbedDose,
         UnitMass,
-        UnitForce, UnitVolume, UnitElectricCurrent, UnitElectricCharge, UnitElectricPotential, UnitElectricConductance, UnitCapacitance, UnitResistance, UnitInductance, UnitMagneticFlux, UnitMagneticFluxDensity, UnitSubstance, UnitLuminousIntensity, UnitLuminousFlux, UnitIlluminance, UnitSolidAngle, UnitFrequency, UnitPower, UnitCatalyticActivity, UnitSound, UnitInformation};
+        UnitForce,
+        UnitVolume,
+        UnitElectricCurrent,
+        UnitElectricCharge,
+        UnitElectricPotential,
+        UnitElectricConductance,
+        UnitCapacitance,
+        UnitResistance,
+        UnitInductance,
+        UnitMagneticFlux,
+        UnitMagneticFluxDensity,
+        UnitSubstance,
+        UnitLuminousIntensity,
+        UnitLuminousFlux,
+        UnitIlluminance,
+        UnitSolidAngle,
+        UnitFrequency,
+        UnitPower,
+        UnitCatalyticActivity,
+        UnitSound,
+        UnitInformation};
 
     const V1:f64 = 3.5;
     const V2:f64 = 0.5;
@@ -417,10 +437,224 @@ mod value_creation_tests {
 }
 
 #[cfg(test)]
-mod value_conversion_tests {}
+mod value_conversion_tests {
+    use v3::values::Value;
+    use v3::units::{Metric,
+        UnitMass,
+        UnitLength,
+        UnitEnergy,
+        UnitForce,
+        UnitPressure,
+        UnitRadioactivity,
+        UnitTime};
+
+    const TEST_METRIC:[(Metric, &str);22] = [
+        (Metric::Yotta, "Y"),
+        (Metric::Zetta, "Z"),
+        (Metric::Exa, "E"),
+        (Metric::Peta, "P"),
+        (Metric::Tera, "T"),
+        (Metric::Giga, "G"),
+        (Metric::Mega, "M"),
+        (Metric::Kilo, "k"),
+        (Metric::Hecto, "h"),
+        (Metric::Deca, "da"),
+        (Metric::None, ""),
+        (Metric::Deci, "d"),
+        (Metric::Centi, "c"),
+        (Metric::Milli, "m"),
+        (Metric::Micro, "μ"), 
+        (Metric::Micro, "u"), 
+        (Metric::Nano, "n"), 
+        (Metric::Pico, "p"),
+        (Metric::Femto, "f"),
+        (Metric::Atto, "a"),
+        (Metric::Zepto, "z"),
+        (Metric::Yocto, "y")];
+
+    #[test]
+    fn length_conversions() {
+        let mut t:Value = 1.5 * UnitLength::Meter(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitLength::Meter(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitLength::Meter(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 1.0 * UnitLength::Mile;
+        imp >>= UnitLength::Foot;
+        assert_apr!(imp.val, 5280.0);
+        assert_apr!((imp>>UnitLength::Meter(Metric::None)).unwrap().val, 1609.344);
+
+        imp >>= UnitLength::Yard;
+        assert_apr!(imp.val, 1760.0);
+        assert_apr!((imp>>UnitLength::Meter(Metric::None)).unwrap().val, 1609.344);
+
+        imp >>= UnitLength::Meter(Metric::None);
+        assert_apr!(imp.val, 1609.344);
+
+        assert_apr!((imp>>UnitLength::AstronomicalUnit).unwrap().val, 1.0757872089633223e-08);
+        assert_apr!((imp>>UnitLength::LightYear).unwrap().val, 1.7010779502325107e-13);
+        assert_apr!((imp>>UnitLength::Angstrom).unwrap().val, 16093440000000.002);
+        assert_apr!((imp>>UnitLength::Parsec).unwrap().val, 5.2227236183508554e-14);
+    }
+
+    #[test]
+    fn mass_conversions() {
+        let mut t:Value = 1.5 * UnitMass::Gram(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitMass::Gram(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitMass::Gram(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 1.0 * UnitMass::Pound;
+        imp >>= UnitMass::Ounce;
+        assert_apr!(imp.val, 16.0);
+        assert_apr!((imp>>UnitMass::Gram(Metric::Kilo)).unwrap().val, 0.45359237);
+        imp >>= UnitMass::Grain;
+        assert_apr!(imp.val, 7000.0);
+        assert_apr!((imp>>UnitMass::Gram(Metric::Kilo)).unwrap().val, 0.45359237);
+    }
+
+    #[test]
+    fn time_conversions() {
+        let mut t:Value = 1.5 * UnitTime::Second(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitTime::Second(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitTime::Second(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 1.0 * UnitTime::Day;
+        imp >>= UnitTime::Hour;
+        assert_apr!(imp.val, 24.0);
+        assert_apr!((imp>>UnitTime::Second(Metric::Kilo)).unwrap().val, 86.4);
+        imp >>= UnitTime::Minute;
+        assert_apr!(imp.val, 1440.0);
+        assert_apr!((imp>>UnitTime::Second(Metric::Kilo)).unwrap().val, 86.4);
+    }
+
+    #[test]
+    fn energy_conversions() {
+        let mut t:Value = 1.5 * UnitEnergy::Joule(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitEnergy::Joule(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitEnergy::Joule(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut t:Value = 1.5 * UnitEnergy::GramCalorie(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitEnergy::GramCalorie(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitEnergy::GramCalorie(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 10000.0 * UnitEnergy::FootPound;
+        assert_apr!((imp>>UnitEnergy::Joule(Metric::Kilo)).unwrap().val, 13.55818);
+        assert_apr!((imp>>UnitEnergy::GramCalorie(Metric::Kilo)).unwrap().val, 3.24048278158);
+        imp >>= UnitEnergy::ElectronVolt;
+        assert_apr!((imp>>UnitEnergy::Joule(Metric::Kilo)).unwrap().val, 13.55818);
+        assert_apr!((imp>>UnitEnergy::GramCalorie(Metric::Kilo)).unwrap().val, 3.24048278158);
+    }
+
+    #[test]
+    fn force_conversions() {
+        let mut t:Value = 1.5 * UnitForce::Newton(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitForce::Newton(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitForce::Newton(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let imp:Value = 1.0 * UnitForce::PoundForce;
+        assert_apr!((imp>>UnitForce::Newton(Metric::None)).unwrap().val, 4.4482216);
+    }
+
+    #[test]
+    fn pressure_conversions() {
+        let mut t:Value = 1.5 * UnitPressure::Pascal(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitPressure::Pascal(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitPressure::Pascal(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut t:Value = 1.5 * UnitPressure::Bar(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitPressure::Bar(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitPressure::Bar(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 1.0 * UnitPressure::Atm;
+        assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
+        assert_apr!((imp>>UnitPressure::Pascal(Metric::None)).unwrap().val, 101325.0);
+        imp >>= UnitPressure::Psi;
+        assert_apr!(imp.val, 14.695949);
+        assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
+        assert_apr!((imp>>UnitPressure::Pascal(Metric::None)).unwrap().val, 101325.0);
+        imp >>= UnitPressure::Hgin;
+        assert_apr!(imp.val, 29.92125534);
+        assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
+        assert_apr!((imp>>UnitPressure::Pascal(Metric::None)).unwrap().val, 101325.0);
+        imp >>= UnitPressure::Torr;
+        assert_apr!(imp.val, 760.0); // Yes, they are different
+        assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
+        assert_apr!((imp>>UnitPressure::Pascal(Metric::None)).unwrap().val, 101325.0);
+        imp >>= UnitPressure::Hgmm;
+        assert_apr!(imp.val, 759.9998917); // Yes, they are different
+        assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
+        assert_apr!((imp>>UnitPressure::Pascal(Metric::None)).unwrap().val, 101325.0);
+    }
+
+    #[test]
+    fn radioactivity_conversions() {
+        let mut t:Value = 1.5 * UnitRadioactivity::Becquerel(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitRadioactivity::Becquerel(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitRadioactivity::Becquerel(TEST_METRIC[m].0);
+        }
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+
+    }
+}
 
 #[cfg(test)]
 mod value_operation_tests {
+}
+
+#[cfg(test)]
+mod value_display_tests {
     use v3::values::Value;
     use v3::units::{Metric, UnitLength, UnitTime};
 
@@ -464,9 +698,6 @@ mod value_operation_tests {
         assert_eq!(t.to_string(), "1.5 ft^2/s^2");
     }
 }
-
-#[cfg(test)]
-mod value_display_tests {}
 
 #[cfg(test)]
 mod value_edge_cases {

@@ -250,9 +250,9 @@ impl UnitTime {
     fn base(&self) -> f64 {
         match self {
             Self::Second(_) => 1.0,
-            Self::Minute => 1.0 / 60.0,
-            Self::Hour => 1.0 / 3600.0,
-            Self::Day => 1.0 / 86400.0
+            Self::Minute => 60.0,
+            Self::Hour => 3600.0,
+            Self::Day => 86400.0
         }
     }
 
@@ -1881,8 +1881,8 @@ mod units_unit_test {
     #[test]
     fn unit_time_base_comparison() {
         assert_eq!(UnitTime::Second(Metric::None).base(), 1.0);
-        assert_eq!(UnitTime::Minute.base(), 1.0/60.0);
-        assert_eq!(UnitTime::Hour.base(), 1.0/3600.0);
-        assert_eq!(UnitTime::Day.base(), 1.0/86400.0);
+        assert_eq!(UnitTime::Minute.base(), 60.0);
+        assert_eq!(UnitTime::Hour.base(), 3600.0);
+        assert_eq!(UnitTime::Day.base(), 86400.0);
     }
 }
