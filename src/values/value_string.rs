@@ -107,11 +107,11 @@ impl Display for Value {
                     self.v_solid_angle.unwrap().to_string()
                 }
                 _ => {
-                    String::from("")
+                    panic!("[fmt] Unreachable");
                 }
             };
             if self.exp[i] < -1 {
-                denoms.push(format!("{}^{}", u, self.exp[i]))
+                denoms.push(format!("{}^{}", u, self.exp[i]*-1))
             } else if self.exp[i] > 1 {
                 nums.push(format!("{}^{}", u, self.exp[i]))
             } else if self.exp[i] == 1 {
@@ -144,7 +144,7 @@ impl PartialEq<&str> for Value {
     fn eq(&self, other: &&str) -> bool {
         let temp:Value = match Value::new(1.0, other) {
             Ok(t) => t,
-            Err(_) => return false // Report Error?
+            Err(_) => return false // TODO : Report Error?
         };
         self.__equal(&temp)
     }

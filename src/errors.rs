@@ -80,7 +80,7 @@ mod value_errors_testing {
     fn string_errors() {
         assert_eq!(format!("{}", V3Error::UnsupportedUnit(String::from("unit"))), "Unsupported unit: unit");
         assert_eq!(format!("{}", V3Error::UnsupportedMetric(String::from("metric"))), "Unsupported metric: metric");
-        assert_eq!(format!("{}", V3Error::UnitReductionError(String::from("reduc"))), "Unit Reduction error: reduc");
+        assert_eq!(format!("{}", V3Error::UnitReductionError(String::from("reduce"))), "Unit Reduction error: reduce");
     }
 
     #[test]

@@ -48,12 +48,23 @@ mod value_constant_tests {
 #[cfg(test)]
 mod value_creation_tests {
 
-    use v3::units::{Metric, UnitLength, UnitTime, UnitTemperature, UnitPressure, UnitAngle, UnitEnergy, UnitRadioactivity, UnitRadioactivityExposure, UnitAbsorbedDose};
+    use v3::values::Value;
+    use v3::units::{
+        Metric,
+        UnitLength,
+        UnitTime,
+        UnitTemperature,
+        UnitPressure,
+        UnitAngle,
+        UnitEnergy,
+        UnitRadioactivity,
+        UnitRadioactivityExposure,
+        UnitAbsorbedDose,
+        UnitMass,
+        UnitForce, UnitVolume, UnitElectricCurrent, UnitElectricCharge, UnitElectricPotential, UnitElectricConductance, UnitCapacitance, UnitResistance, UnitInductance, UnitMagneticFlux, UnitMagneticFluxDensity, UnitSubstance, UnitLuminousIntensity, UnitLuminousFlux, UnitIlluminance, UnitSolidAngle, UnitFrequency, UnitPower, UnitCatalyticActivity, UnitSound, UnitInformation};
 
     const V1:f64 = 3.5;
     const V2:f64 = 0.5;
-
-    const TEST_METRIC_UNITS:[&str;34] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", "Wb", "T", "mol", "cd", "lm", "lx", "bar", "Pa", "rad", "sr", "Hz", "N", "J", "cal", "W", "Bq", "Gy", "Sv", "kat", "B", "bits", "b"];
 
     const TEST_IMPERIAL_LENGTH_UNITS:[(&str, UnitLength);11] = [
         ("in", UnitLength::Inch),
@@ -68,11 +79,39 @@ mod value_creation_tests {
         ("mile", UnitLength::Mile),
         ("miles", UnitLength::Mile)];
 
+    const TEST_IMPERIAL_MASS_UNITS:[(&str, UnitMass);9] = [
+        ("gr", UnitMass::Grain),
+        ("grains", UnitMass::Grain),
+        ("grain", UnitMass::Grain),
+        ("ounces", UnitMass::Ounce),
+        ("oz", UnitMass::Ounce),
+        ("ounce", UnitMass::Ounce),
+        ("lb", UnitMass::Pound),
+        ("pounds", UnitMass::Pound),
+        ("lbs", UnitMass::Pound)];
+        
+    const TEST_IMPERIAL_TEMPERATURE_UNITS:[(&str, UnitTemperature);2] = [
+        ("f", UnitTemperature::Fahrenheit),
+        ("°f", UnitTemperature::Fahrenheit)];
+        
+    const TEST_IMPERIAL_PRESSURE_UNITS:[(&str, UnitPressure);2] = [
+        ("psi", UnitPressure::Psi),
+        ("inHg", UnitPressure::Hgin)];
 
-        "gr", "grains", "grain", "ounces", "oz", "ounce", "pound", "lb", "pounds", "lbs", "f", "°f", "psi", "inHg", "pounds force", "pound force", "poundsforce", "poundforce", "lbfr", "lbsfr", "footpounds", "foot pounds", "footpound", "foot pound"];
+    const TEST_IMPERIAL_FORCE_UNITS:[(&str, UnitForce);4] = [
+        ("poundsforce", UnitForce::PoundForce),
+        ("poundforce", UnitForce::PoundForce),
+        ("lbfr", UnitForce::PoundForce),
+        ("lbsfr", UnitForce::PoundForce)];
+        
+    const TEST_IMPERIAL_ENERGY_UNITS:[(&str, UnitEnergy);2] = [
+        ("footpounds", UnitEnergy::FootPound),
+        ("footpound", UnitEnergy::FootPound)];
 
-    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);7] = [
+
+    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);8] = [
         ("AU", UnitLength::AstronomicalUnit),
+        ("au", UnitLength::AstronomicalUnit),
         ("pc", UnitLength::Parsec),
         ("lightyear", UnitLength::LightYear),
         ("lyr", UnitLength::LightYear),
@@ -141,8 +180,239 @@ mod value_creation_tests {
         (Metric::Zepto, "z"),
         (Metric::Yocto, "y")];
 
+    const TEST_METRIC_UNITS:[&str;37] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", 
+                                         "Wb", "T", "mol", "cd", "lm", "lx", "bar", "Pa", "rad", "sr", 
+                                         "Hz", "N", "J", "cal", "W", "Bq", "Gy", "Sv", "kat", "B", 
+                                         "bits", "b", "byte", "bytes", "bit"];
+
     #[test]
-    fn string_creation() {
+    fn string_parse() {
+        // First test metric
+
+        for m in TEST_METRIC {
+            for u in TEST_METRIC_UNITS {
+                let t:Value = match u {
+                    "g" => V1 * UnitMass::Gram(m.0),
+                    "m" => V1 * UnitLength::Meter(m.0),
+                    "l" => V1 * UnitVolume::Liter(m.0),
+                    "s" => V1 * UnitTime::Second(m.0),
+                    "A" => V1 * UnitElectricCurrent::Ampere(m.0),
+                    "C" => V1 * UnitElectricCharge::Coulomb(m.0),
+                    "V" => V1 * UnitElectricPotential::Volt(m.0),
+                    "S" => V1 * UnitElectricConductance::Siemens(m.0),
+                    "F" => V1 * UnitCapacitance::Farad(m.0),
+                    "Ω" | "O" => V1 * UnitResistance::Ohm(m.0),
+                    "H" => V1 * UnitInductance::Henry(m.0),
+                    "Wb" => V1 * UnitMagneticFlux::Weber(m.0),
+                    "T" => V1 * UnitMagneticFluxDensity::Tesla(m.0),
+                    "mol" => V1 * UnitSubstance::Mole(m.0),
+                    "cd" => V1 * UnitLuminousIntensity::Candela(m.0),
+                    "lm" => V1 * UnitLuminousFlux::Lumen(m.0),
+                    "lx" => V1 * UnitIlluminance::Lux(m.0),
+                    "bar" => V1 * UnitPressure::Bar(m.0),
+                    "Pa" => V1 * UnitPressure::Pascal(m.0),
+                    "rad" => V1 * UnitAngle::Radian(m.0),
+                    "sr" => V1 * UnitSolidAngle::Steradian(m.0),
+                    "Hz" => V1 * UnitFrequency::Hertz(m.0),
+                    "N" => V1 * UnitForce::Newton(m.0),
+                    "J" => V1 * UnitEnergy::Joule(m.0),
+                    "cal" => V1 * UnitEnergy::GramCalorie(m.0),
+                    "W" => V1 * UnitPower::Watt(m.0),
+                    "Bq" => V1 * UnitRadioactivity::Becquerel(m.0),
+                    "Gy" => V1 * UnitAbsorbedDose::Gray(m.0),
+                    "Sv" => V1 * UnitRadioactivityExposure::Sievert(m.0),
+                    "kat" => V1 * UnitCatalyticActivity::Katal(m.0),
+
+                    "b" => {
+                        if m.0 < Metric::None {
+                            continue;
+                        } else if m.0 == Metric::Hecto {
+                            continue;
+                        } else if m.0 == Metric::Deca {
+                            continue;
+                        }
+                        V1 * UnitInformation::Byte(m.0)
+                    }
+                    "B" => V1 * UnitSound::Bel(m.0),
+                    "bits" | "bit" => {
+                        continue; // These are special
+                    }
+                    "byte" | "bytes" => {
+                        continue; // These are special
+                    }
+                    e => panic!("Malformed test [{}]!", e)
+                };
+                let string_val = format!("{} {}{}", V1, m.1, u).parse::<Value>().unwrap();
+                assert_eq!(string_val, t);
+                assert_eq!(string_val.to_string(), t.to_string());
+            }
+        }
+
+        for m in TEST_METRIC {
+            for u in TEST_METRIC_UNITS {
+                let t:Value = match u {
+                    "g" => V1 / UnitMass::Gram(m.0),
+                    "m" => V1 / UnitLength::Meter(m.0),
+                    "l" => V1 / UnitVolume::Liter(m.0),
+                    "s" => V1 / UnitTime::Second(m.0),
+                    "A" => V1 / UnitElectricCurrent::Ampere(m.0),
+                    "C" => V1 / UnitElectricCharge::Coulomb(m.0),
+                    "V" => V1 / UnitElectricPotential::Volt(m.0),
+                    "S" => V1 / UnitElectricConductance::Siemens(m.0),
+                    "F" => V1 / UnitCapacitance::Farad(m.0),
+                    "Ω" | "O" => V1 / UnitResistance::Ohm(m.0),
+                    "H" => V1 / UnitInductance::Henry(m.0),
+                    "Wb" => V1 / UnitMagneticFlux::Weber(m.0),
+                    "T" => V1 / UnitMagneticFluxDensity::Tesla(m.0),
+                    "mol" => V1 / UnitSubstance::Mole(m.0),
+                    "cd" => V1 / UnitLuminousIntensity::Candela(m.0),
+                    "lm" => V1 / UnitLuminousFlux::Lumen(m.0),
+                    "lx" => V1 / UnitIlluminance::Lux(m.0),
+                    "bar" => V1 / UnitPressure::Bar(m.0),
+                    "Pa" => V1 / UnitPressure::Pascal(m.0),
+                    "rad" => V1 / UnitAngle::Radian(m.0),
+                    "sr" => V1 / UnitSolidAngle::Steradian(m.0),
+                    "Hz" => V1 / UnitFrequency::Hertz(m.0),
+                    "N" => V1 / UnitForce::Newton(m.0),
+                    "J" => V1 / UnitEnergy::Joule(m.0),
+                    "cal" => V1 / UnitEnergy::GramCalorie(m.0),
+                    "W" => V1 / UnitPower::Watt(m.0),
+                    "Bq" => V1 / UnitRadioactivity::Becquerel(m.0),
+                    "Gy" => V1 / UnitAbsorbedDose::Gray(m.0),
+                    "Sv" => V1 / UnitRadioactivityExposure::Sievert(m.0),
+                    "kat" => V1 / UnitCatalyticActivity::Katal(m.0),
+
+                    "b" => {
+                        if m.0 < Metric::None {
+                            continue;
+                        } else if m.0 == Metric::Hecto {
+                            continue;
+                        } else if m.0 == Metric::Deca {
+                            continue;
+                        }
+                        V1 / UnitInformation::Byte(m.0)
+                    }
+                    "B" => V1 / UnitSound::Bel(m.0),
+                    "bits" | "bit" => {
+                        continue; // These are special
+                    }
+                    "byte" | "bytes" => {
+                        continue; // These are special
+                    }
+                    e => panic!("Malformed test [{}]!", e)
+                };
+                let string_val1 = format!("{} 1/{}{}", V1, m.1, u).parse::<Value>().unwrap();
+                let string_val2 = format!("{} {}{}^-1", V1, m.1, u).parse::<Value>().unwrap();
+                assert_eq!(string_val1, t);
+                assert_eq!(string_val2, t);
+                assert_eq!(string_val1.to_string(), t.to_string());
+                assert_eq!(string_val2.to_string(), t.to_string());
+            }
+        }
+
+        for u in TEST_IMPERIAL_ENERGY_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        for u in TEST_IMPERIAL_FORCE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        for u in TEST_IMPERIAL_LENGTH_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        for u in TEST_IMPERIAL_MASS_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        for u in TEST_IMPERIAL_PRESSURE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        for u in TEST_IMPERIAL_TEMPERATURE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_ABSORBED_DOSE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_ANGLE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_ENERGY_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_LENGTH_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_PRESSURE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_RADIOACTIVITY_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_RAD_EXPOSURE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_TEMPERATURE_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+        for u in TEST_OTHER_TIME_UNITS {
+            let string_val = format!("{} {}", V2, u.0).parse::<Value>().unwrap();
+            let temp = V2 * u.1;
+            assert_eq!(string_val, temp);
+            assert_eq!(string_val.to_string(), temp.to_string());
+        }
+
+        // Bad parsing
+    }
+
+    #[test]
+    #[should_panic]
+    fn bad_parse() {
+        "1.4 sdkf".parse::<Value>().unwrap();
     }
 }
 
@@ -150,7 +420,62 @@ mod value_creation_tests {
 mod value_conversion_tests {}
 
 #[cfg(test)]
-mod value_operation_tests {}
+mod value_operation_tests {
+    use v3::values::Value;
+    use v3::units::{Metric, UnitLength, UnitTime};
+
+    #[test]
+    fn value_debug() {
+        let t:Value = 1.5 * UnitLength::Mile;
+        assert!(format!("{:?}", t).chars().count() > format!("{}", t).chars().count());
+    }
+
+    #[test]
+    fn value_clone() {
+        let t_old:Value = 1.5 * UnitLength::Mile;
+        let t_new = t_old.clone();
+
+        assert_eq!(t_new, t_old);
+    }
+
+    #[test]
+    fn empty_value_display() {
+        let t = Value::default();
+        assert_eq!(t.to_string(), "0 ");
+    }
+
+    #[test]
+    fn value_num_denom_display() {
+        let t:Value = 1.5 * UnitLength::Foot / UnitTime::Second(Metric::None);
+        assert_eq!(t.to_string(), "1.5 ft/s");
+        assert!(t == "ft/s");
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_false_eq() {
+        let t:Value = 1.5 * UnitLength::Foot / UnitTime::Second(Metric::None);
+        assert!(t == "slkjf");
+    }
+
+    #[test]
+    fn value_exponents() {
+        let t:Value = 1.5 * UnitLength::Foot * UnitLength::Foot / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        assert_eq!(t.to_string(), "1.5 ft^2/s^2");
+    }
+}
 
 #[cfg(test)]
 mod value_display_tests {}
+
+#[cfg(test)]
+mod value_edge_cases {
+    use v3::values::Value;
+    use v3::units::{Metric, UnitLength};
+
+    #[test]
+    fn double_divisor() {
+        let t:Value = "1.5 1/m^-1".parse::<Value>().unwrap();
+        assert_eq!(t, 1.5 * UnitLength::Meter(Metric::None));
+    }
+}

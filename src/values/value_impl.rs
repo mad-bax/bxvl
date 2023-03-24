@@ -2015,7 +2015,7 @@ impl Value {
                     Err(_) => return Err(V3Error::ParsingError("[_create_unit_1] Cannot parse int"))
                 };
             }
-            self._parse_units(temp_split[0], expon)?;
+            self._parse_units(String::from(temp_split[0]), expon)?;
         }
 
         // now the denoms
@@ -2028,7 +2028,7 @@ impl Value {
                     Err(_) => return Err(V3Error::ParsingError("[_create_unit_2] Cannot parse int"))
                 };
             }
-            self._parse_units(temp_split[0], expon)?;
+            self._parse_units(String::from(temp_split[0]), expon)?;
         }
 
         Ok(())
@@ -2071,7 +2071,7 @@ impl Value {
                     if !found_divisor {
                         found_divisor = true;
                     } else {
-                        //return Err(V2Error::ParsingError("Too many divisors".to_string()));
+                        todo!("Too many divisors");
                     }
                     if !found_divisor && !constructor.is_empty() {
                         denom.push(constructor.clone());
@@ -2111,14 +2111,14 @@ impl Value {
     }
 
     /// Searches through the given string for a new `Value` to parse for units
-    fn _parse_units(&mut self, unit:&str, exp:i32) -> Result<(), V3Error> {
+    fn _parse_units(&mut self, unit:String, exp:i32) -> Result<(), V3Error> {
         let l:usize = unit.chars().count();
         if l == 0 {
             return Ok(());
         }
 
         // first match it against known unique strings
-        match unit {
+        match unit.as_str() {
             "mph" => {
                 if exp != 1 && exp != -1 {
                     return Err(V3Error::ParsingError("[_parse_units] MPH exponent"));
@@ -2333,15 +2333,15 @@ impl Value {
         }
 
         if l == 1 {
-            self._get_single_letter(unit, exp, Metric::None)?;
+            self._get_single_letter(unit.chars().next().unwrap(), exp, Metric::None)?;
         } else if l == 2 {
-            self._get_double_letter(unit, exp, Metric::None)?;
+            self._get_double_letter(&unit, exp, Metric::None)?;
         } else if l == 3 {
-            self._get_triple_letter(unit, exp, Metric::None)?;
+            self._get_triple_letter(&unit, exp, Metric::None)?;
         } else if l == 4 {
-            self._get_quadruple_letter(unit, exp, Metric::None)?;
+            self._get_quadruple_letter(&unit, exp, Metric::None)?;
         } else if l == 5 {
-            self._get_pentuple_letter(unit, exp, Metric::None)?;
+            self._get_pentuple_letter(&unit, exp, Metric::None)?;
         } else {
             return Err(V3Error::UnsupportedUnit(format!("[_parse_units] Unit {} exceeds parsing bounds", unit)));
         }
@@ -2349,106 +2349,109 @@ impl Value {
     }
 
     /// Searches and assigns a unit type to a `Value` during string parsing and construction
-    fn _get_single_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error>{
+    fn _get_single_letter(&mut self, unit:char, exp:i32, m:Metric) -> Result<(), V3Error>{
         match unit {
-            "m" => {
+            '1' => {
+                // This handles the case of 1/m as a given string to parse
+            }
+            'm' => {
                 self.v_length = Some(UnitLength::Meter(m));
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
             }
-            "g" => {
+            'g' => {
                 self.v_mass = Some(UnitMass::Gram(m));
                 self.exp[MASS_INDEX] = exp;
                 self.unit_map |= MASS_MAP;
             }
-            "s" => {
+            's' => {
                 self.v_time = Some(UnitTime::Second(m));
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
             }
-            "A" => {
+            'A' => {
                 self.v_electric_current = Some(UnitElectricCurrent::Ampere(m));
                 self.exp[ELECTRIC_CURRENT_INDEX] = exp;
                 self.unit_map |= ELECTRIC_CURRENT_MAP;
             }
-            "J" => {
+            'J' => {
                 self.v_energy = Some(UnitEnergy::Joule(m));
                 self.exp[ENERGY_INDEX] = exp;
                 self.unit_map |= ENERGY_MAP;
             }
-            "W" => {
+            'W' => {
                 self.v_power = Some(UnitPower::Watt(m));
                 self.exp[POWER_INDEX] = exp;
                 self.unit_map |= POWER_MAP;
             }
-            "C" => {
+            'C' => {
                 self.v_electric_charge = Some(UnitElectricCharge::Coulomb(m));
                 self.exp[ELECTRIC_CHARGE_INDEX] = exp;
                 self.unit_map |= ELECTRIC_CHARGE_MAP;
             }
-            "F" => {
+            'F' => {
                 self.v_capacitance = Some(UnitCapacitance::Farad(m));
                 self.exp[CAPACITANCE_INDEX] = exp;
                 self.unit_map |= CAPACITANCE_MAP;
             }
-            "Ω" | "O" => {
+            'Ω' | 'O' => {
                 self.v_resistance = Some(UnitResistance::Ohm(m));
                 self.exp[RESISTANCE_INDEX] = exp;
                 self.unit_map |= RESISTANCE_MAP;
             }
-            "S" => {
+            'S' => {
                 self.v_electric_conductance = Some(UnitElectricConductance::Siemens(m));
                 self.exp[ELECTRIC_CONDUCTANCE_INDEX] = exp;
                 self.unit_map |= ELECTRIC_CONDUCTANCE_MAP;
             }
-            "T" => {
+            'T' => {
                 self.v_magnetic_flux_density = Some(UnitMagneticFluxDensity::Tesla(m));
                 self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = exp;
                 self.unit_map |= MAGNETIC_FLUX_DENSITY_MAP;
             }
-            "N" => {
+            'N' => {
                 self.v_force = Some(UnitForce::Newton(m));
                 self.exp[FORCE_INDEX] = exp;
                 self.unit_map |= FORCE_MAP;
             }
-            "K" => {
+            'K' => {
                 // if m, error
                 // TODO add kelvin metric support
                 self.v_temperature = Some(UnitTemperature::Kelvin);
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
             }
-            "H" => {
+            'H' => {
                 self.v_inductance = Some(UnitInductance::Henry(m));
                 self.exp[INDUCTANCE_INDEX] = exp;
                 self.unit_map |= INDUCTANCE_MAP;
             }
-            "V" => {
+            'V' => {
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(m));
                 self.exp[ELECTRIC_POTENTIAL_INDEX] = exp;
                 self.unit_map |= ELECTRIC_POTENTIAL_MAP;
             }
-            "B" => {
+            'B' => {
                 self.v_sound = Some(UnitSound::Bel(m));
                 self.exp[SOUND_INDEX] = exp;
                 self.unit_map |= SOUND_MAP;
             }
-            "b" => {
+            'b' => {
                 self.v_information = Some(UnitInformation::Byte(m));
                 self.exp[INFORMATION_INDEX] = exp;
                 self.unit_map |= INFORMATION_MAP;
             }
-            "Å" => {
+            'Å' => {
                 self.v_length = Some(UnitLength::Angstrom);
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
             }
-            "R" => {
+            'R' => {
                 self.v_ab_dose = Some(UnitAbsorbedDose::Roentgen);
                 self.exp[ABSORBED_DOSE_INDEX] = exp;
                 self.unit_map |= ABSORBED_DOSE_MAP;
             }
-            "l" => {
+            'l' => {
                 self.v_volume = Some(UnitVolume::Liter(m));
                 self.exp[VOLUME_INDEX] = exp;
                 self.unit_map |= VOLUME_MAP;
@@ -2461,8 +2464,8 @@ impl Value {
     }
 
     /// Searches and assigns a unit type to a `Value` during string parsing and construction
-    fn _get_double_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
-        match unit {
+    fn _get_double_letter(&mut self, unit:&String, exp:i32, m:Metric) -> Result<(), V3Error> {
+        match unit.as_str() {
             "Hz" => {
                 self.v_frequency = Some(UnitFrequency::Hertz(m));
                 self.exp[FREQUENCY_INDEX] = exp;
@@ -2524,7 +2527,9 @@ impl Value {
                 self.unit_map |= ABSORBED_DOSE_MAP;
             }
             "sr" => {
-                self.v_solid_angle = Some(UnitSolidAngle::Steradian(m))
+                self.v_solid_angle = Some(UnitSolidAngle::Steradian(m));
+                self.exp[SOLID_ANGLE_INDEX] = exp;
+                self.unit_map |= SOLID_ANGLE_MAP;
             }
             _ => {
                 if m != Metric::None {
@@ -2534,7 +2539,7 @@ impl Value {
                     Some(t) => t,
                     None => return Err(V3Error::ParsingError("[_get_double_letter] Cannot get next metric char"))
                 }) {
-                    Ok(new_m) => self._get_single_letter(&unit[1..], exp, new_m)?,
+                    Ok(new_m) => self._get_single_letter(unit.chars().nth(1).unwrap(), exp, new_m)?,
                     Err(e) => {
                         return Err(e);
                     }
@@ -2545,13 +2550,13 @@ impl Value {
     }
 
     /// Searches and assigns a unit type to a `Value` during string parsing and construction
-    fn _get_triple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
+    fn _get_triple_letter(&mut self, unit:&String, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            return self._get_single_letter(da, exp, Metric::Deca);
+            return self._get_single_letter(da.chars().next().unwrap(), exp, Metric::Deca);
         }
 
-        match unit {
+        match unit.as_str() {
             "mol" => {
                 self.v_substance = Some(UnitSubstance::Mole(m));
                 self.exp[SUBSTANCE_INDEX] = exp;
@@ -2591,7 +2596,11 @@ impl Value {
                     Some(t) => t,
                     None => return Err(V3Error::ParsingError("[_get_triple_letter] Cannot get next metric char"))
                 }) {
-                    Ok(new_m) => self._get_double_letter(&unit[1..], exp, new_m)?,
+                    Ok(new_m) => {
+                        // Parsing strings is insane
+                        let t:Vec<char> = unit.chars().collect::<Vec<_>>();
+                        self._get_double_letter(&t[1..].iter().collect::<String>(), exp, new_m)?
+                    }
                     Err(e) => {
                         return Err(e);
                     }
@@ -2602,13 +2611,13 @@ impl Value {
     }
 
     /// Searches and assigns a unit type to a `Value` during string parsing and construction
-    fn _get_quadruple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
+    fn _get_quadruple_letter(&mut self, unit:&String, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            return self._get_double_letter(da, exp, Metric::Deca);
+            return self._get_double_letter(&da.to_string(), exp, Metric::Deca);
         }
 
-        match unit {
+        match unit.as_str() {
             "torr" => {
                 self.v_pressure = Some(UnitPressure::Torr);
                 self.exp[PRESSURE_INDEX] = exp;
@@ -2627,7 +2636,10 @@ impl Value {
                     Some(t) => t,
                     None => return Err(V3Error::ParsingError("[_get_quadruple_letter] Cannot get next metric char"))
                 }) {
-                    Ok(new_m) => self._get_triple_letter(&unit[1..], exp, new_m)?,
+                    Ok(new_m) => {
+                        let t:Vec<char> = unit.chars().collect::<Vec<_>>();
+                        self._get_triple_letter(&t[1..].iter().collect::<String>(), exp, new_m)?
+                    }
                     Err(e) => {
                         return Err(e);
                     }
@@ -2641,7 +2653,7 @@ impl Value {
     fn _get_pentuple_letter(&mut self, unit:&str, exp:i32, m:Metric) -> Result<(), V3Error> {
 
         if let Some(da) = unit.strip_prefix("da") {
-            return self._get_triple_letter(da, exp, Metric::Deca);
+            return self._get_triple_letter(&da.to_string(), exp, Metric::Deca);
         }
 
         if m != Metric::None {
@@ -2651,7 +2663,10 @@ impl Value {
             Some(t) => t,
             None => return Err(V3Error::ParsingError("[_get_pentuple_letter] Cannot get next metric char"))
         }) {
-            Ok(new_m) => self._get_quadruple_letter(&unit[1..], exp, new_m),
+            Ok(new_m) => {
+                let t:Vec<char> = unit.chars().collect::<Vec<_>>();
+                self._get_quadruple_letter(&t[1..].iter().collect::<String>(), exp, new_m)
+            }
             Err(e) => {
                 Err(e)
             }
