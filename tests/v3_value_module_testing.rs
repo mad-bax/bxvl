@@ -651,6 +651,168 @@ mod value_conversion_tests {
 
 #[cfg(test)]
 mod value_operation_tests {
+    use v3::values::Value;
+    use v3::units::{Metric, UnitLength};
+
+    #[test]
+    fn math_tests_f64() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1.0;
+        assert_eq!(t1, 5.0);
+        t1-=1.0;
+        assert_eq!(t1, 4.0);
+        t1*=2.0;
+        assert_eq!(t1, 8.0);
+        t1/=4.0;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1.0, 5.0);
+        assert_eq!(t2-1.0, 3.0);
+        assert_eq!(t2*2.0, 8.0);
+        assert_eq!(t2/2.0, 2.0);
+    }
+
+    #[test]
+    fn math_tests_f32() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1.0_f32;
+        assert_eq!(t1, 5.0);
+        t1-=1.0_f32;
+        assert_eq!(t1, 4.0);
+        t1*=2.0_f32;
+        assert_eq!(t1, 8.0);
+        t1/=4.0_f32;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1.0_f32, 5.0);
+        assert_eq!(t2-1.0_f32, 3.0);
+        assert_eq!(t2*2.0_f32, 8.0);
+        assert_eq!(t2/2.0_f32, 2.0);
+    }
+
+    #[test]
+    fn math_tests_usize() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_usize;
+        assert_eq!(t1, 5.0);
+        t1-=1_usize;
+        assert_eq!(t1, 4.0);
+        t1*=2_usize;
+        assert_eq!(t1, 8.0);
+        t1/=4_usize;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_usize, 5.0);
+        assert_eq!(t2-1_usize, 3.0);
+        assert_eq!(t2*2_usize, 8.0);
+        assert_eq!(t2/2_usize, 2.0);
+    }
+
+    #[test]
+    fn math_tests_isize() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_isize;
+        assert_eq!(t1, 5.0);
+        t1-=1_isize;
+        assert_eq!(t1, 4.0);
+        t1*=2_isize;
+        assert_eq!(t1, 8.0);
+        t1/=4_isize;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_isize, 5.0);
+        assert_eq!(t2-1_isize, 3.0);
+        assert_eq!(t2*2_isize, 8.0);
+        assert_eq!(t2/2_isize, 2.0);
+    }
+
+    #[test]
+    fn math_tests_u32() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_u32;
+        assert_eq!(t1, 5.0);
+        t1-=1_u32;
+        assert_eq!(t1, 4.0);
+        t1*=2_u32;
+        assert_eq!(t1, 8.0);
+        t1/=4_u32;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_u32, 5.0);
+        assert_eq!(t2-1_u32, 3.0);
+        assert_eq!(t2*2_u32, 8.0);
+        assert_eq!(t2/2_u32, 2.0);
+    }
+
+    #[test]
+    fn math_tests_i32() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_i32;
+        assert_eq!(t1, 5.0);
+        t1-=1_i32;
+        assert_eq!(t1, 4.0);
+        t1*=2_i32;
+        assert_eq!(t1, 8.0);
+        t1/=4_i32;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_i32, 5.0);
+        assert_eq!(t2-1_i32, 3.0);
+        assert_eq!(t2*2_i32, 8.0);
+        assert_eq!(t2/2_i32, 2.0);
+    }
+
+    #[test]
+    fn math_tests_u64() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_u64;
+        assert_eq!(t1, 5.0);
+        t1-=1_u64;
+        assert_eq!(t1, 4.0);
+        t1*=2_u64;
+        assert_eq!(t1, 8.0);
+        t1/=4_u64;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_u64, 5.0);
+        assert_eq!(t2-1_u64, 3.0);
+        assert_eq!(t2*2_u64, 8.0);
+        assert_eq!(t2/2_u64, 2.0);
+    }
+
+    #[test]
+    fn math_tests_i64() {
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 4.0 * UnitLength::Meter(Metric::None);
+
+        t1+=1_i64;
+        assert_eq!(t1, 5.0);
+        t1-=1_i64;
+        assert_eq!(t1, 4.0);
+        t1*=2_i64;
+        assert_eq!(t1, 8.0);
+        t1/=4_i64;
+        assert_eq!(t1, 2.0);
+
+        assert_eq!(t2+1_i64, 5.0);
+        assert_eq!(t2-1_i64, 3.0);
+        assert_eq!(t2*2_i64, 8.0);
+        assert_eq!(t2/2_i64, 2.0);
+    }
 }
 
 #[cfg(test)]
