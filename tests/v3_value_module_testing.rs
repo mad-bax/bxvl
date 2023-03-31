@@ -200,7 +200,7 @@ mod value_creation_tests {
         (Metric::Zepto, "z"),
         (Metric::Yocto, "y")];
 
-    const TEST_METRIC_UNITS:[&str;37] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", 
+    pub const TEST_METRIC_UNITS:[&str;37] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", 
                                          "Wb", "T", "mol", "cd", "lm", "lx", "bar", "Pa", "rad", "sr", 
                                          "Hz", "N", "J", "cal", "W", "Bq", "Gy", "Sv", "kat", "B", 
                                          "bits", "b", "byte", "bytes", "bit"];
@@ -652,7 +652,9 @@ mod value_conversion_tests {
 #[cfg(test)]
 mod value_operation_tests {
     use v3::values::Value;
-    use v3::units::{Metric, UnitLength};
+    use v3::units::{Metric, UnitInformation, UnitLength, UnitMass, UnitTime, UnitVolume, UnitElectricCurrent, UnitElectricPotential, UnitElectricCharge, UnitElectricConductance, UnitCapacitance, UnitResistance, UnitMagneticFlux, UnitPressure, UnitInductance, UnitMagneticFluxDensity, UnitSubstance, UnitLuminousIntensity, UnitIlluminance, UnitLuminousFlux, UnitAngle, UnitSolidAngle, UnitFrequency, UnitEnergy, UnitForce, UnitPower, UnitAbsorbedDose, UnitCatalyticActivity, UnitRadioactivityExposure, UnitRadioactivity, UnitSound};
+
+    use crate::value_creation_tests::TEST_METRIC_UNITS;
 
     #[test]
     fn math_tests_f64() {
@@ -812,6 +814,143 @@ mod value_operation_tests {
         assert_eq!(t2-1_i64, 3.0);
         assert_eq!(t2*2_i64, 8.0);
         assert_eq!(t2/2_i64, 2.0);
+    }
+
+    #[test]
+    fn math_tests_values() {
+
+        for u2 in TEST_METRIC_UNITS {
+            for u1 in TEST_METRIC_UNITS {
+                let t1:Value = match u1 {
+                    "g" => 4.0 * UnitMass::Gram(Metric::None),
+                    "m" => 4.0 * UnitLength::Meter(Metric::None),
+                    "l" => 4.0 * UnitVolume::Liter(Metric::None),
+                    "s" => 4.0 * UnitTime::Second(Metric::None),
+                    "A" => 4.0 * UnitElectricCurrent::Ampere(Metric::None),
+                    "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::None),
+                    "V" => 4.0 * UnitElectricPotential::Volt(Metric::None),
+                    "S" => 4.0 * UnitElectricConductance::Siemens(Metric::None),
+                    "F" => 4.0 * UnitCapacitance::Farad(Metric::None),
+                    "Ω" | "O" => 4.0 * UnitResistance::Ohm(Metric::None),
+                    "H" => 4.0 * UnitInductance::Henry(Metric::None),
+                    "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::None),
+                    "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None),
+                    "mol" => 4.0 * UnitSubstance::Mole(Metric::None),
+                    "cd" => 4.0 * UnitLuminousIntensity::Candela(Metric::None),
+                    "lm" => 4.0 * UnitLuminousFlux::Lumen(Metric::None),
+                    "lx" => 4.0 * UnitIlluminance::Lux(Metric::None),
+                    "bar" => 4.0 * UnitPressure::Bar(Metric::None),
+                    "Pa" => 4.0 * UnitPressure::Pascal(Metric::None),
+                    "rad" => 4.0 * UnitAngle::Radian(Metric::None),
+                    "sr" => 4.0 * UnitSolidAngle::Steradian(Metric::None),
+                    "Hz" => 4.0 * UnitFrequency::Hertz(Metric::None),
+                    "N" => 4.0 * UnitForce::Newton(Metric::None),
+                    "J" => 4.0 * UnitEnergy::Joule(Metric::None),
+                    "cal" => 4.0 * UnitEnergy::GramCalorie(Metric::None),
+                    "W" => 4.0 * UnitPower::Watt(Metric::None),
+                    "Bq" => 4.0 * UnitRadioactivity::Becquerel(Metric::None),
+                    "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::None),
+                    "Sv" => 4.0 * UnitRadioactivityExposure::Sievert(Metric::None),
+                    "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::None),
+
+                    "b" => {
+                        if Metric::None < Metric::None {
+                            continue;
+                        } else if Metric::None == Metric::Hecto {
+                            continue;
+                        } else if Metric::None == Metric::Deca {
+                            continue;
+                        }
+                        4.0 * UnitInformation::Byte(Metric::None)
+                    }
+                    "B" => 4.0 * UnitSound::Bel(Metric::None),
+                    "bits" | "bit" => {
+                        continue; // These are special
+                    }
+                    "byte" | "bytes" => {
+                        continue; // These are special
+                    }
+                    e => panic!("Malformed test [{}]!", e)
+                };
+
+                let t2:Value = match u2 {
+                    "g" => 4.0 * UnitMass::Gram(Metric::None),
+                    "m" => 4.0 * UnitLength::Meter(Metric::None),
+                    "l" => 4.0 * UnitVolume::Liter(Metric::None),
+                    "s" => 4.0 * UnitTime::Second(Metric::None),
+                    "A" => 4.0 * UnitElectricCurrent::Ampere(Metric::None),
+                    "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::None),
+                    "V" => 4.0 * UnitElectricPotential::Volt(Metric::None),
+                    "S" => 4.0 * UnitElectricConductance::Siemens(Metric::None),
+                    "F" => 4.0 * UnitCapacitance::Farad(Metric::None),
+                    "Ω" | "O" => 4.0 * UnitResistance::Ohm(Metric::None),
+                    "H" => 4.0 * UnitInductance::Henry(Metric::None),
+                    "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::None),
+                    "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None),
+                    "mol" => 4.0 * UnitSubstance::Mole(Metric::None),
+                    "cd" => 4.0 * UnitLuminousIntensity::Candela(Metric::None),
+                    "lm" => 4.0 * UnitLuminousFlux::Lumen(Metric::None),
+                    "lx" => 4.0 * UnitIlluminance::Lux(Metric::None),
+                    "bar" => 4.0 * UnitPressure::Bar(Metric::None),
+                    "Pa" => 4.0 * UnitPressure::Pascal(Metric::None),
+                    "rad" => 4.0 * UnitAngle::Radian(Metric::None),
+                    "sr" => 4.0 * UnitSolidAngle::Steradian(Metric::None),
+                    "Hz" => 4.0 * UnitFrequency::Hertz(Metric::None),
+                    "N" => 4.0 * UnitForce::Newton(Metric::None),
+                    "J" => 4.0 * UnitEnergy::Joule(Metric::None),
+                    "cal" => 4.0 * UnitEnergy::GramCalorie(Metric::None),
+                    "W" => 4.0 * UnitPower::Watt(Metric::None),
+                    "Bq" => 4.0 * UnitRadioactivity::Becquerel(Metric::None),
+                    "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::None),
+                    "Sv" => 4.0 * UnitRadioactivityExposure::Sievert(Metric::None),
+                    "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::None),
+
+                    "b" => {
+                        if Metric::None < Metric::None {
+                            continue;
+                        } else if Metric::None == Metric::Hecto {
+                            continue;
+                        } else if Metric::None == Metric::Deca {
+                            continue;
+                        }
+                        4.0 * UnitInformation::Byte(Metric::None)
+                    }
+                    "B" => 4.0 * UnitSound::Bel(Metric::None),
+                    "bits" | "bit" => {
+                        continue; // These are special
+                    }
+                    "byte" | "bytes" => {
+                        continue; // These are special
+                    }
+                    e => panic!("Malformed test [{}]!", e)
+                };
+
+                println!("t1 : {}\nt2 : {}\n", t1, t2);
+                assert_eq!(t1*t2, 16.0);
+                assert_eq!(t1/t2, 1.0);
+                if u1 == u2 {
+                    assert_eq!(t1+t2, 8.0);
+                    assert_eq!(t1-t2, 0.0);
+                }
+            }
+        }
+
+        let mut t1:Value = 4.0 * UnitLength::Meter(Metric::None);
+        let t2:Value = 2.0 * UnitLength::Meter(Metric::None);
+
+        t1 += t2;
+        assert_eq!(t1, 6.0 * UnitLength::Meter(Metric::None));
+        t1 -= t2;
+        assert_eq!(t1, 4.0 * UnitLength::Meter(Metric::None));
+        t1 *= t2;
+        assert_eq!(t1, 8.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None));
+        t1 /= t2;
+        assert_eq!(t1, 4.0 * UnitLength::Meter(Metric::None));
+        
+        assert_eq!(t2+t1, 6.0 * UnitLength::Meter(Metric::None));
+        assert_eq!(t2-t1, -2.0 * UnitLength::Meter(Metric::None));
+        assert_eq!(t2*t1, 8.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None));
+        assert_eq!(t2/t1, 0.5);
     }
 }
 

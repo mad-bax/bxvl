@@ -1798,11 +1798,11 @@ impl Div<Value> for Value {
         }
 
         if other.is_radians() && !self.is_angle() {
-            n.val *= other.val;
+            n.val /= other.val;
             n.unit_map = self.unit_map;
             return n;
         } else if self.is_radians() && !other.is_angle() {
-            n.val *= other.val;
+            n.val /= other.val;
             n.unit_map = other.unit_map;
             return n;
         }
@@ -2062,12 +2062,12 @@ impl DivAssign<Value> for Value {
         }
 
         if other.is_radians() && !self.is_angle() {
-            self.val *= other.val;
+            self.val /= other.val;
             return;
         } else if self.is_radians() && !other.is_angle() {
             let t:f64 = self.val;
             *self = other;
-            self.val *= t;
+            self.val *= 1.0/t; // TODO : How to divide radian by value?
             return;
         }
 

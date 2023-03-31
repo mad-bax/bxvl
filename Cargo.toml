@@ -5,7 +5,7 @@ edition = "2021"
 repository = ""
 authors = ["Bax"]
 readme = "README.md"
-license = ""
+license = "GPLv3"
 description = """
 A datatype library that allows for measurement unit association, conversion, and operations for values.
 """
