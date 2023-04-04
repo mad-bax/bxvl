@@ -1813,7 +1813,7 @@ impl Value {
     /// 
     /// `equivalent dose`
     pub fn is_equivalent_dose(&self) -> bool {
-        if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_MAP] == 1 {
+        if self.unit_map == RADIOACTIVITY_EXPOSURE_MAP && self.exp[RADIOACTIVITY_EXPOSURE_INDEX] == 1 {
             return true;
         }
         false
