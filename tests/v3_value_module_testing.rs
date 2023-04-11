@@ -446,7 +446,7 @@ mod value_conversion_tests {
         UnitForce,
         UnitPressure,
         UnitRadioactivity,
-        UnitTime};
+        UnitTime, UnitAbsorbedDose};
 
     const TEST_METRIC:[(Metric, &str);22] = [
         (Metric::Yotta, "Y"),
@@ -645,7 +645,29 @@ mod value_conversion_tests {
         assert_apr!(t.val, 1.5);
         drop(t);
 
+        let imp:Value = 0.000001 * UnitRadioactivity::Curie;
+        assert_apr!((imp>>UnitRadioactivity::Becquerel(Metric::None)).unwrap().val, 37000.0);
+    }
 
+    #[test]
+    fn absorbed_conversions() {
+        let mut t:Value = 1.5 * UnitAbsorbedDose::Gray(Metric::Yotta);
+        for m in TEST_METRIC {
+            t >>= UnitAbsorbedDose::Gray(m.0);
+        }
+        for m in (0..TEST_METRIC.len()).rev() {
+            t >>= UnitAbsorbedDose::Gray(TEST_METRIC[m].0);
+        }
+
+        assert_apr!(t.val, 1.5);
+        drop(t);
+
+        let mut imp:Value = 1.0 * UnitAbsorbedDose::Rad;
+        assert_apr!((imp>>UnitAbsorbedDose::Roentgen).unwrap().val, 1.14025);
+        assert_apr!((imp>>UnitAbsorbedDose::Gray(Metric::None)).unwrap().val, 0.01);
+        imp >>= UnitAbsorbedDose::Roentgen;
+        assert_apr!((imp>>UnitAbsorbedDose::Rad).unwrap().val, 1.0);
+        assert_apr!((imp>>UnitAbsorbedDose::Gray(Metric::None)).unwrap().val, 0.01);
     }
 }
 
