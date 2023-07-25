@@ -482,7 +482,6 @@ mod value_conversion_tests {
             t >>= UnitLength::Meter(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 1.0 * UnitLength::Mile;
         imp >>= UnitLength::Foot;
@@ -512,7 +511,6 @@ mod value_conversion_tests {
             t >>= UnitMass::Gram(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 1.0 * UnitMass::Pound;
         imp >>= UnitMass::Ounce;
@@ -533,7 +531,6 @@ mod value_conversion_tests {
             t >>= UnitTime::Second(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 1.0 * UnitTime::Day;
         imp >>= UnitTime::Hour;
@@ -554,7 +551,6 @@ mod value_conversion_tests {
             t >>= UnitEnergy::Joule(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut t:Value = 1.5 * UnitEnergy::GramCalorie(Metric::Yotta);
         for m in TEST_METRIC {
@@ -564,7 +560,6 @@ mod value_conversion_tests {
             t >>= UnitEnergy::GramCalorie(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 10000.0 * UnitEnergy::FootPound;
         assert_apr!((imp>>UnitEnergy::Joule(Metric::Kilo)).unwrap().val, 13.55818);
@@ -584,7 +579,6 @@ mod value_conversion_tests {
             t >>= UnitForce::Newton(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let imp:Value = 1.0 * UnitForce::PoundForce;
         assert_apr!((imp>>UnitForce::Newton(Metric::None)).unwrap().val, 4.4482216);
@@ -600,7 +594,6 @@ mod value_conversion_tests {
             t >>= UnitPressure::Pascal(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut t:Value = 1.5 * UnitPressure::Bar(Metric::Yotta);
         for m in TEST_METRIC {
@@ -610,7 +603,6 @@ mod value_conversion_tests {
             t >>= UnitPressure::Bar(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 1.0 * UnitPressure::Atm;
         assert_apr!((imp>>UnitPressure::Bar(Metric::None)).unwrap().val, 1.01325);
@@ -643,7 +635,6 @@ mod value_conversion_tests {
             t >>= UnitRadioactivity::Becquerel(TEST_METRIC[m].0);
         }
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let imp:Value = 0.000001 * UnitRadioactivity::Curie;
         assert_apr!((imp>>UnitRadioactivity::Becquerel(Metric::None)).unwrap().val, 37000.0);
@@ -660,7 +651,6 @@ mod value_conversion_tests {
         }
 
         assert_apr!(t.val, 1.5);
-        drop(t);
 
         let mut imp:Value = 1.0 * UnitAbsorbedDose::Rad;
         assert_apr!((imp>>UnitAbsorbedDose::Roentgen).unwrap().val, 1.14025);
