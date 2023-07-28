@@ -495,6 +495,10 @@ mod value_conversion_tests {
         imp >>= UnitLength::Meter(Metric::None);
         assert_apr!(imp.val, 1609.344);
 
+        let temp:Value = 1.0 * UnitLength::Inch;
+        
+        assert_apr!((temp>>UnitLength::Meter(Metric::Kilo)).unwrap().val, 0.0000254);
+        assert!((temp>>UnitLength::Meter(Metric::Kilo)).unwrap() < 1.0 * UnitLength::Meter(Metric::Kilo));
         assert_apr!((imp>>UnitLength::AstronomicalUnit).unwrap().val, 1.0757872089633223e-08);
         assert_apr!((imp>>UnitLength::LightYear).unwrap().val, 1.7010779502325107e-13);
         assert_apr!((imp>>UnitLength::Angstrom).unwrap().val, 16093440000000.002);

@@ -462,7 +462,13 @@ impl Shr<UnitVolume> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitVolume) -> Self::Output {
         let mut n:Value = self;
-        if self.unit_map & VOLUME_MAP == 0 {
+        if self.unit_map & LENGTH_MAP != 0 && self.exp[LENGTH_INDEX] == 3 {
+            n.val = self.val*self.v_length.unwrap().convert_liter(&other);
+            n.v_volume = Some(other);
+            n.unit_map = VOLUME_MAP;
+            n.exp[VOLUME_INDEX] = 1;
+            return Ok(n);
+        } else if self.unit_map & VOLUME_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
         }
         n.val *= n.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
@@ -809,9 +815,17 @@ impl ShrAssign<UnitTime> for Value {
 
 impl ShrAssign<UnitVolume> for Value {
     fn shr_assign(&mut self, other:UnitVolume) {
-        if self.unit_map & VOLUME_MAP == 0 {
+        if self.unit_map & LENGTH_MAP != 0 && self.exp[LENGTH_INDEX] == 3 {
+            self.val = self.val*self.v_length.unwrap().convert_liter(&other);
+            self.v_volume = Some(other);
+            self.unit_map = VOLUME_MAP;
+            self.exp[LENGTH_INDEX] = 0;
+            self.exp[VOLUME_INDEX] = 1;
+            return;
+        } else if self.unit_map & VOLUME_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
+
         self.val *= self.v_volume.unwrap().convert(&other).powi(self.exp[VOLUME_INDEX]);
         self.v_volume = Some(other);
     }

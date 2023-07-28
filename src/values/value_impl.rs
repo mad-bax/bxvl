@@ -215,7 +215,7 @@ impl Value {
 
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
             if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {
-                self.val *= self.v_volume.unwrap().convert_meter(&other.v_length.unwrap());
+                self.val = self.val*self.v_volume.unwrap().convert_meter(&other.v_length.unwrap())*self.v_volume.unwrap().convert_meter(&other.v_length.unwrap())*self.v_volume.unwrap().convert_meter(&other.v_length.unwrap());
                 self.exp[LENGTH_INDEX] = 3;
                 self.exp[VOLUME_INDEX] = 0;
                 self.unit_map = LENGTH_MAP;
