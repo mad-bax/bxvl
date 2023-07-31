@@ -3,6 +3,7 @@ extern crate v3;
 #[cfg(test)]
 mod unit_creation_tests {
     use v3::{units::{
+        Metric::Milli,
         Metric,
         UnitLength,
         UnitTime,
@@ -200,14 +201,13 @@ mod unit_creation_tests {
     #[test]
     fn liter_cubed_conversion() {
         let mut v1:Value = 2.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
-        v1 >>= UnitVolume::Liter(Metric::None);
-        println!("{:?}", v1);
-        assert!(v1==2000.0);
+        v1 >>= UnitVolume::Liter(Milli);
+        assert_eq!(v1, 2000000.0);
 
         let mut v1:Value = 3.0 * UnitVolume::Liter(Metric::None);
         v1 >>= 1.0 * UnitLength::Inch * UnitLength::Inch * UnitLength::Inch;
-        println!("{}", v1);
-        assert!(v1==183.07123228);
+        println!("{:?}", v1);
+        assert_eq!(v1, 183.07123228419687);
     }
 
 

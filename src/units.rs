@@ -938,8 +938,8 @@ impl UnitVolume {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_meter(&self, other:&UnitLength) -> f64 {
-        self.scale() * (constants::METER3_TO_LITER * other.convert(&UnitLength::Meter(Metric::None)))
+    pub fn convert_meter3(&self, other:&UnitLength) -> f64 {
+        self.scale() * (f64::powf(UnitLength::Meter(Metric::None).convert(other), 3.0) / constants::METER3_TO_LITER)
     }
 
     /// Returns the `Metric` prefix for the unit
