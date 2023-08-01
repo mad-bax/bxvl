@@ -192,28 +192,33 @@ if m.is_velocity() {
 
 Temperature cannot be converted to another unit if it has other units (like mass) within the value.
 
-Units cannot be converted between disparate types, although there are some exceptions. `ml` to `mm^3` is one such example of volume to a cubed length.
+Units cannot be converted between disparate types, although there are some exceptions. 
+
+|Exception|Unit 1              |Unit 2                |
+|---------|--------------------|----------------------|
+|Period   |Time period (`1/s`) |Frequency (`Hz`)      |
+|Volume   |Cubic length (`m^3`)|Specific volume (`ml`)|
 
 ## Constants
 
 Some constants are provided for ease of use:
 
-|Name|Numeric Value|Units|
-|---|---|---|
-|Absolute Zero|`0.`|`K`|
-|Avogadro's Number|`6.022_140_76e23`|`mol^-1`|
-|Faraday Constant|`96_485.332_123_310_01`|`C/mol`|
-|Atomic Mass Constant|`1.660_539_066_60e-27`|`kg`|
-|Molar Gas Constant|`8.314_462_1`|`J/(K*mol)`|
-|Coulomb's Constant|`8.987_551`|`mol^-1`|
-|The Speed of Light|`299_792_458.0`|`m/s`|
-|Boltzmann Constant|`1.380_649e-23`|`J/K`|
-|Earth's Average Gravitational Acceleration|`9.806_65`|`m/s^2`|
-|Newtonian Constant of Gravitation|`6.673_015e-11`|`m^3/(kg*s^2)`|
-|Charge of an Electron|`1.602_176_634e-19`|`C`|
-|Rydberg Constant|`10_973_731.568_539`|`1/m`|
-|Plank's Constant|`6.626_070_15e-34`|`J/Hz`|
-|Vacuum Permittivity|`8.854_187_812_8e-12`|`F/m`|
+|Name                                      |Numeric Value          |Units         |
+|------------------------------------------|-----------------------|--------------|
+|Absolute Zero                             |`0.`                   |`K`           |
+|Avogadro's Number                         |`6.022_140_76e23`      |`mol^-1`      |
+|Faraday Constant                          |`96_485.332_123_310_01`|`C/mol`       |
+|Atomic Mass Constant                      |`1.660_539_066_60e-27` |`kg`          |
+|Molar Gas Constant                        |`8.314_462_1`          |`J/(K*mol)`   |
+|Coulomb's Constant                        |`8.987_551`            |`mol^-1`      |
+|The Speed of Light                        |`299_792_458.0`        |`m/s`         |
+|Boltzmann Constant                        |`1.380_649e-23`        |`J/K`         |
+|Earth's Average Gravitational Acceleration|`9.806_65`             |`m/s^2`       |
+|Newtonian Constant of Gravitation         |`6.673_015e-11`        |`m^3/(kg*s^2)`|
+|Charge of an Electron                     |`1.602_176_634e-19`    |`C`           |
+|Rydberg Constant                          |`10_973_731.568_539`   |`1/m`         |
+|Plank's Constant                          |`6.626_070_15e-34`     |`J/Hz`        |
+|Vacuum Permittivity                       |`8.854_187_812_8e-12`  |`F/m`         |
 
 ## Unit Support
 

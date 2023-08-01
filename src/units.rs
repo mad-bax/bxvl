@@ -263,7 +263,8 @@ impl UnitTime {
 
     /// Returns the `f64` multiplier to convert a `Value`
     pub fn convert_freq(&self, other:&UnitFrequency) -> f64 {
-        (self.scale() / other.scale()) * self.base()
+        println!("{} {} {}", self.base(), self.scale(), other.scale());
+        1.0 / (self.base() * self.scale() * other.scale())
     }
 
     /// Returns the `Metric` prefix for the unit

@@ -225,7 +225,15 @@ impl Shr<UnitFrequency> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other:UnitFrequency) -> Self::Output {
         let mut n:Value = self;
-        if self.unit_map & FREQUENCY_MAP == 0 {
+        if n.unit_map & TIME_MAP != 0 && n.exp[TIME_INDEX] == -1 {
+            n.val *= self.v_time.unwrap().convert_freq(&other);
+            n.v_time = None;
+            n.v_frequency = Some(other);
+            n.exp[TIME_INDEX] = 0;
+            n.exp[FREQUENCY_INDEX] = 1;
+            n.unit_map = FREQUENCY_MAP;
+            return Ok(n);
+        } else if self.unit_map & FREQUENCY_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
         }
         n.val *= n.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
@@ -466,7 +474,8 @@ impl Shr<UnitVolume> for Value {
             n.val = self.val*self.v_length.unwrap().convert_liter(&other);
             n.v_volume = Some(other);
             n.unit_map = VOLUME_MAP;
-            n.exp[VOLUME_INDEX] = 1;
+            n.exp[VOLUME_INDEX] += 1;
+            n.exp[LENGTH_INDEX] -= 3;
             return Ok(n);
         } else if self.unit_map & VOLUME_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
@@ -632,7 +641,15 @@ impl ShrAssign<UnitForce> for Value {
 
 impl ShrAssign<UnitFrequency> for Value {
     fn shr_assign(&mut self, other:UnitFrequency) {
-        if self.unit_map & FREQUENCY_MAP == 0 {
+        if self.unit_map & TIME_MAP != 0 && self.exp[TIME_INDEX] == -1 {
+            self.val *= self.v_time.unwrap().convert_freq(&other);
+            self.v_time = None;
+            self.v_frequency = Some(other);
+            self.exp[TIME_INDEX] = 0;
+            self.exp[FREQUENCY_INDEX] = 1;
+            self.unit_map = FREQUENCY_MAP;
+            return;
+        } else if self.unit_map & FREQUENCY_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
         self.val *= self.v_frequency.unwrap().convert(&other).powi(self.exp[FREQUENCY_INDEX]);
@@ -805,7 +822,15 @@ impl ShrAssign<UnitTemperature> for Value {
 
 impl ShrAssign<UnitTime> for Value {
     fn shr_assign(&mut self, other:UnitTime) {
-        if self.unit_map & TIME_MAP == 0 {
+        if self.unit_map & FREQUENCY_MAP != 0 && self.exp[FREQUENCY_INDEX] == 1 {
+            self.val *= self.v_frequency.unwrap().convert_time(&other);
+            self.v_frequency = None;
+            self.v_time = Some(other);
+            self.unit_map = TIME_MAP;
+            self.exp[TIME_INDEX] = -1;
+            self.exp[FREQUENCY_INDEX] = 0;
+            return;
+        } else if self.unit_map & TIME_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
         self.val *= self.v_time.unwrap().convert(&other).powi(self.exp[TIME_INDEX]);
@@ -816,10 +841,9 @@ impl ShrAssign<UnitTime> for Value {
 impl ShrAssign<UnitVolume> for Value {
     fn shr_assign(&mut self, other:UnitVolume) {
         if self.unit_map & LENGTH_MAP != 0 && self.exp[LENGTH_INDEX] == 3 {
-            self.val = self.val*self.v_length.unwrap().convert_liter(&other);
+            self.val *= self.v_length.unwrap().convert_liter(&other);
             self.v_volume = Some(other);
             self.unit_map = VOLUME_MAP;
-            self.exp[LENGTH_INDEX] = 0;
             self.exp[VOLUME_INDEX] = 1;
             return;
         } else if self.unit_map & VOLUME_MAP == 0 {

@@ -1,5 +1,14 @@
 extern crate v3;
 
+macro_rules! assert_apr {
+    ($x:expr, $y:expr, $d:expr) => {
+        if f64::max($x, $y) - f64::min($x, $y) > $d {panic!("{:?} {:?}", $x, $y);}
+    };
+    ($x:expr, $y:expr) => {
+        if f64::max($x, $y) - f64::min($x, $y) > 0.000001 {panic!("{:?} {:?}", $x, $y);}
+    }
+}
+
 #[cfg(test)]
 mod unit_creation_tests {
     use v3::{units::{
@@ -204,11 +213,28 @@ mod unit_creation_tests {
         v1 >>= UnitVolume::Liter(Milli);
         assert_eq!(v1, 2000000.0);
 
-        let mut v1:Value = 3.0 * UnitVolume::Liter(Metric::None);
-        v1 >>= 1.0 * UnitLength::Inch * UnitLength::Inch * UnitLength::Inch;
-        println!("{:?}", v1);
-        assert_eq!(v1, 183.07123228419687);
+        let v1:Value = 3.0 * UnitVolume::Liter(Metric::None);
+        let v2 = (v1 >> 1.0 * UnitLength::Inch * UnitLength::Inch * UnitLength::Inch).unwrap();
+        println!("{:?}", v2);
+        assert_apr!(v2.val, 183.07123228);
     }
 
+    #[test]
+    fn frequency_conversions() {
+        let mut v1:Value = 2.0 / UnitTime::Hour;
+        v1 >>= UnitFrequency::Hertz(Metric::None);
+        assert_apr!(v1.val, 0.000555);
 
+        let v1:Value = 2.0 / UnitTime::Hour;
+        let v2 = (v1 >> UnitFrequency::Hertz(Metric::Kilo)).unwrap();
+        assert_apr!(v2.val, 0.0000005555555);
+
+        let mut v1:Value = 2.0 * UnitFrequency::Hertz(Metric::Kilo);
+        v1 >>= UnitTime::Second(Metric::None);
+        assert_apr!(v1.val, 2000.0);
+
+        let v1:Value = 2.0 * UnitFrequency::Hertz(Metric::None);
+        let v2 = (v1 >> UnitTime::Second(Metric::None)).unwrap();
+        assert_apr!(v2.val, 2000.0);
+    }
 }
