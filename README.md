@@ -84,6 +84,7 @@ let dist:Value = 10.3 * UnitLength::Meter(Metric::None);
 
 let speed:Value = dist/time;
 assert!(speed >= 3.0293);
+assert!(speed.is_velocity());
 ```
 
 ## Method Support
@@ -100,7 +101,8 @@ if m.is_nan() {
 }
 
 let a:Value = 1.4 * UnitLength::Meter(Metric::None);
-let r:Value = a.sin(); // Value is in radians
+let r:Value = a.sin();
+assert!(r.is_radians());
 ```
 
 ## Derived Units
@@ -117,6 +119,8 @@ let acc:Value = Value::new(9.81, "m/s^2").unwrap();
 
 let f1:Value = m*acc;
 let f2:Value = (m*acc).complex().unwrap();
+assert!(f1.is_force() && f2.is_force());
+assert!(f1.val == f2.val);
 ```
 
 Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
@@ -128,7 +132,9 @@ use v3::values::Value;
 
 let mut f:Value = Value::new(24.525, "N").unwrap();
 
+assert!(f.is_force());
 f.reduce("kg*m/s^2").unwrap();
+assert!(f.is_force());
 ```
 
 Variable `f` will be `24.525 kg*m/s^2`
