@@ -38,8 +38,8 @@ V3 is a scientific unit-type library that allows variables to dynamically keep t
     - [Energy](#energy)
     - [Power](#power)
     - [Radioactivity](#radioactivity)
-    - [**Absorbed** Dosage of Ionizing Radiation](#absorbed-dosage-of-ionizing-radiation)
-    - [**Equivalent** Dosage of Ionizing Radiation](#equivalent-dosage-of-ionizing-radiation)
+    - [*Absorbed* Dosage of Ionizing Radiation](#absorbed-dosage-of-ionizing-radiation)
+    - [*Equivalent* Dosage of Ionizing Radiation](#equivalent-dosage-of-ionizing-radiation)
     - [Catalytic Activity](#catalytic-activity)
     - [Sound Intensity](#sound-intensity)
     - [Information](#information)
@@ -192,12 +192,14 @@ if m.is_velocity() {
 
 Temperature cannot be converted to another unit if it has other units (like mass) within the value.
 
-Units cannot be converted between disparate types, although there are some exceptions. 
+Units cannot be converted between disparate types, although there are some exceptions.
 
-|Exception|Unit 1              |Unit 2                |
-|---------|--------------------|----------------------|
-|Period   |Time period (`1/s`) |Frequency (`Hz`)      |
-|Volume   |Cubic length (`m^3`)|Specific volume (`ml`)|
+|Exceptions|                    |                      |
+|----------|--------------------|----------------------|
+|Period    |Time period (`1/s`) |Frequency (`Hz`)      |
+|Volume    |Cubic length (`m^3`)|Specific volume (`ml`)|
+
+These exceptions are valid conversion so long as they are the *only* units within a `Value`. This is to avoid conversion scenarios where `Value`s produce (or are created with) neutralizing units, e.g. `mm^3/ml`, which is 'unitless'. Therefore, `m/s` cannot be converted to `m*kHz` and `m^3/N` cannot be converted to `l/N`.
 
 ## Constants
 
@@ -226,210 +228,210 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Lengths
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Meter|&check;|`m`|
-|Inch||`in`<br/>`inch`[`es`]|
-|Foot||`ft`<br/>`feet`<br/>`foot`|
-|Yard||`yd`[`s`]<br/>`yard`[`s`]|
-|Mile||`mile`[`s`]|
-|Astronomical Unit||`AU`|
-|Parsec|**[Future Support]**|`pc`|
-|Light Year|**[Future Support]**|`lyr`<br/>`lightyear`[`s`]|
-|Ångström||`Å`<br/>`angstrom`[`s`]|
+|Unit               |Metric              |Unit string                |
+|-------------------|--------------------|---------------------------|
+|Meter              |&check;             |`m`                        |
+|Inch               |                    |`in`<br/>`inch`[`es`]      |
+|Foot               |                    |`ft`<br/>`feet`<br/>`foot` |
+|Yard               |                    |`yd`[`s`]<br/>`yard`[`s`]  |
+|Mile               |                    |`mile`[`s`]                |
+|Astronomical Unit  |                    |`AU`                       |
+|Parsec             |**[Future Support]**|`pc`                       |
+|Light Year         |**[Future Support]**|`lyr`<br/>`lightyear`[`s`] |
+|Ångström           |                    |`Å`<br/>`angstrom`[`s`]    |
 
 ### Time
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Second|&check;|`s`|
-|Minute||`min`<br/>`minute`[`s`]|
-|Hour||`h`[`r`]<br/>`hour`[`s`]|
-|Day||`d`<br/>`day`[`s`]|
+|Unit  |Metric |Unit string             |
+|------|-------|------------------------|
+|Second|&check;|`s`                     |
+|Minute|       |`min`<br/>`minute`[`s`] |
+|Hour  |       |`h`[`r`]<br/>`hour`[`s`]|
+|Day   |       |`d`<br/>`day`[`s`]      |
 
 ### Mass
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Gram|&check;|`g`|
-|Grain||`gr`<br/>`grain`[`s`]|
-|Ounce||`oz`<br/>`ounce`[`s`]|
-|Pound||`lb`[`s`]<br/>`pounds`|
+|Unit |Metric |Unit string           |
+|-----|-------|----------------------|
+|Gram |&check;|`g`                   |
+|Grain|       |`gr`<br/>`grain`[`s`] |
+|Ounce|       |`oz`<br/>`ounce`[`s`] |
+|Pound|       |`lb`[`s`]<br/>`pounds`|
 
 ### Electric Current
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Ampere|&check;|`A`|
+|Unit  |Metric |Unit string|
+|------|-------|-----------|
+|Ampere|&check;|`A`        |
 
 ### Electric Charge
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Coulomb|&check;|`C`|
+|Unit   |Metric |Unit string|
+|-------|-------|-----------|
+|Coulomb|&check;|`C`        |
 
 ### Electric Potential
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Volt|&check;|`V`|
+|Unit|Metric |Unit string|
+|----|-------|-----------|
+|Volt|&check;|`V`        |
 
 ### Electric Conductance
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Siemens|&check;|`S`|
+|Unit   |Metric |Unit string|
+|-------|-------|-----------|
+|Siemens|&check;|`S`        |
 
 ### Electric Capacitance
 
-|Unit|Metric|Unit string|
-|---|---|---|
+|Unit |Metric |Unit string         |
+|-----|-------|--------------------|
 |Farad|&check;|`F`<br/>`farad`[`s`]|
 
 ### Electric Resistance
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Ohm|&check;|`Ω`<br/>`O`|
+|Unit|Metric |Unit string |
+|----|-------|------------|
+|Ohm |&check;|`Ω`<br/>`O` |
 
 ### Electric Inductance
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Henry|&check;|`H`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Henry|&check;|`H`        |
 
 ### Magnetic Flux
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Weber|&check;|`Wb`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Weber|&check;|`Wb`       |
 
 ### Magnetic Flux Density
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Tesla|&check;|`T`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Tesla|&check;|`T`        |
 
 ### Thermal Temperature
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Celsius||`c`<br/>`°c`<br/>`°C`|
-|Fahrenheit||`f`<br/>`°f`<br/>`°F`|
-|Kelvin|**[Future Support]**|`K`|
+|Unit      |Metric              |Unit string            |
+|----------|--------------------|-----------------------|
+|Celsius   |                    |`c`<br/>`°c`<br/>`°C`  |
+|Fahrenheit|                    |`f`<br/>`°f`<br/>`°F`  |
+|Kelvin    |**[Future Support]**|`K`                    |
 
 ### Substance
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Mole|&check;|`mol`|
+|Unit|Metric |Unit string|
+|----|-------|-----------|
+|Mole|&check;|`mol`      |
 
 ### Luminous Intensity
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Candela|&check;|`cd`|
+|Unit   |Metric |Unit string|
+|-------|-------|-----------|
+|Candela|&check;|`cd`       |
 
 ### Luminous Flux
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Lumen|&check;|`lm`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Lumen|&check;|`lm`       |
 
 ### Illuminance
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Lux|&check;|`lx`|
+|Unit|Metric |Unit string|
+|----|-------|-----------|
+|Lux |&check;|`lx`       |
 
 ### Spatial Volume
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Liter|&check;|`l`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Liter|&check;|`l`        |
 
 ### Pressure
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Pascal|&check;|`Pa`|
-|Bar|&check;|`bar`|
-|Torr||`torr`|
-|mmHg|**[Future Support]**|`mmHg`|
-|inHg||`inHg`|
-|Atmospheres||`ATM`<br/>`atm`|
-|Pounds per square inch||`PSI`<br/>`psi`|
+|Unit                  |Metric              |Unit string    |
+|----------------------|--------------------|---------------|
+|Pascal                |&check;             |`Pa`           |
+|Bar                   |&check;             |`bar`          |
+|Torr                  |                    |`torr`         |
+|mmHg                  |**[Future Support]**|`mmHg`         |
+|inHg                  |                    |`inHg`         |
+|Atmospheres           |                    |`ATM`<br/>`atm`|
+|Pounds per square inch|                    |`PSI`<br/>`psi`|
 
 ### Geometric Angle
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Degree||`°`<br/>`degree`[`s`]|
-|Radian|&check;|`rad`<br/>`radian`[`s`]|
-|Milliradian|&check;|`mil`[`s`]<br/>`MIL`|
-|Minute of Angle||`moa`<br/>`MOA`|
+|Unit           |Metric |Unit string            |
+|---------------|-------|-----------------------|
+|Degree         |       |`°`<br/>`degree`[`s`]  |
+|Radian         |&check;|`rad`<br/>`radian`[`s`]|
+|Milliradian    |&check;|`mil`[`s`]<br/>`MIL`   |
+|Minute of Angle|       |`moa`<br/>`MOA`        |
 
 ### Frequency
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Hertz|&check;|`Hz`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Hertz|&check;|`Hz`       |
 
 ### Force
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Newton|&check;|`N`|
-|Pound Force||`lbfr`<br/>`lbsfr`<br/>`poundforce`<br/>`poundsforce`|
+|Unit       |Metric |Unit string                                          |
+|-----------|-------|-----------------------------------------------------|
+|Newton     |&check;|`N`                                                  |
+|Pound Force|       |`lbfr`<br/>`lbsfr`<br/>`poundforce`<br/>`poundsforce`|
 
 ### Energy
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Joule|&check;|`J`|
-|Calorie|&check;|`cal`|
-|Foot pound||`ftlb`[`s`]<br/>`footpound`[`s`]|
-|Electron Volt|**[Future Support]**|`eV`|
+|Unit         |Metric              |Unit string                     |
+|-------------|--------------------|--------------------------------|
+|Joule        |&check;             |`J`                             |
+|Calorie      |&check;             |`cal`                           |
+|Foot pound   |                    |`ftlb`[`s`]<br/>`footpound`[`s`]|
+|Electron Volt|**[Future Support]**|`eV`                            |
 
 ### Power
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Watt|&check;|`W`|
+|Unit|Metric |Unit string|
+|----|-------|-----------|
+|Watt|&check;|`W`        |
 
 ### Radioactivity
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Becquerel|&check;|`Bq`|
-|Curie||`Ci`|
+|Unit     |Metric |Unit string|
+|---------|-------|-----------|
+|Becquerel|&check;|`Bq`       |
+|Curie    |       |`Ci`       |
 
-### **Absorbed** Dosage of Ionizing Radiation
+### *Absorbed* Dosage of Ionizing Radiation
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Gray|&check;|`Gy`|
-|Röntgen||`R`|
-|Rad||`rads`<br/>`Rads`|
+|Unit    |Metric |Unit string      |
+|--------|-------|-----------------|
+|Gray    |&check;|`Gy`             |
+|Röntgen |       |`R`              |
+|Rad     |       |`rads`<br/>`Rads`|
 
-### **Equivalent** Dosage of Ionizing Radiation
+### *Equivalent* Dosage of Ionizing Radiation
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Sievert|&check;|`Sv`|
-|Rem||`rem`<br/>`Rem`|
+|Unit   |Metric |Unit string    |
+|-------|-------|---------------|
+|Sievert|&check;|`Sv`           |
+|Rem    |       |`rem`<br/>`Rem`|
 
 ### Catalytic Activity
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Katal|&check;|`kat`|
+|Unit |Metric |Unit string|
+|-----|-------|-----------|
+|Katal|&check;|`kat`      |
 
 ### Sound Intensity
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Bel| &check; |`B`|
+|Unit|Metric   |Unit string|
+|----|---------|-----------|
+|Bel | &check; |`B`        |
 
 ### Information
 
@@ -437,43 +439,43 @@ The project supports all base SI units as listed by the National Institute of St
 
 *i.e.* `kb` &rarr; `1024 bytes`, *not* `1000 bytes`
 
-|Unit|Metric|Unit string|
-|---|---|---|
-|Bit|Kilo - Yotta|`bits`|
+|Unit|Metric      |Unit string        |
+|----|------------|-------------------|
+|Bit |Kilo - Yotta|`bits`             |
 |Byte|Kilo - Yotta|`b`<br/>`byte`[`s`]|
 
 ### Special Unit Keywords
 
-|Unit|Metric|Unit string|Equivalent|
-|---|---|---|---|
-|Miles per hour||`mph`|`miles/hr`|
-|Kilometers per hour|&check;|`kph`|`km/hr`|
-|kilocalorie|&check;|`Cal`|`kcal`|
+|Unit               |Metric |Unit string|Equivalent|
+|-------------------|-------|-----------|----------|
+|Miles per hour     |       |`mph`      |`miles/hr`|
+|Kilometers per hour|&check;|`kph`      |`km/hr`   |
+|kilocalorie        |&check;|`Cal`      |`kcal`    |
 
 ### Metric Prefix Identifiers
 
 |Metric name|Prefix string|
-|---|---|
-|Yotta|`Y`|
-|Zetta|`Z`|
-|Exa|`E`|
-|Peta|`P`|
-|Tera|`T`|
-|Giga|`G`|
-|Mega|`M`|
-|Kilo|`k`|
-|Hecto|`h`|
-|Deca|`da`|
-|Deci|`d`|
-|Centi|`c`|
-|Milli|`m`|
-|Micro|`μ`<br/>`u`|
-|Nano|`n`|
-|Pico|`p`|
-|Femto|`f`|
-|Atto|`a`|
-|Zepto|`z`|
-|Yocto|`y`|
+|-----------|-------------|
+|Yotta      |`Y`          |
+|Zetta      |`Z`          |
+|Exa        |`E`          |
+|Peta       |`P`          |
+|Tera       |`T`          |
+|Giga       |`G`          |
+|Mega       |`M`          |
+|Kilo       |`k`          |
+|Hecto      |`h`          |
+|Deca       |`da`         |
+|Deci       |`d`          |
+|Centi      |`c`          |
+|Milli      |`m`          |
+|Micro      |`μ`<br/>`u`  |
+|Nano       |`n`          |
+|Pico       |`p`          |
+|Femto      |`f`          |
+|Atto       |`a`          |
+|Zepto      |`z`          |
+|Yocto      |`y`          |
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
 
