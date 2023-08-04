@@ -343,8 +343,12 @@ mod unit_creation_tests {
         assert_apr!(v1.val, 80.6);
 
         let mut v1:Value = 27.0 * UnitTemperature::Celsius;
-        v1 >>= UnitTemperature::Kelvin;
+        v1 >>= UnitTemperature::Kelvin(Metric::None);
         assert_apr!(v1.val, 300.15);
+
+        let mut v1:Value = 27.0 * UnitTemperature::Celsius;
+        v1 >>= UnitTemperature::Kelvin(Metric::Nano);
+        assert_apr!(v1.val, 300149999999.99994);
 
         let mut v1:Value = 27.0 * UnitTemperature::Celsius;
         v1 >>= UnitTemperature::Celsius;
@@ -355,24 +359,37 @@ mod unit_creation_tests {
         assert_apr!(v1.val, -2.777777);
 
         let mut v1:Value = 27.0 * UnitTemperature::Fahrenheit;
-        v1 >>= UnitTemperature::Kelvin;
+        v1 >>= UnitTemperature::Kelvin(Metric::None);
         assert_apr!(v1.val, 270.372222);
+
+
+        let mut v1:Value = 27.0 * UnitTemperature::Fahrenheit;
+        v1 >>= UnitTemperature::Kelvin(Metric::Kilo);
+        assert_apr!(v1.val, 0.270372222);
 
         let mut v1:Value = 27.0 * UnitTemperature::Fahrenheit;
         v1 >>= UnitTemperature::Fahrenheit;
         assert_apr!(v1.val, 27.0);
 
-        let mut v1:Value = 335.0 * UnitTemperature::Kelvin;
+        let mut v1:Value = 335.0 * UnitTemperature::Kelvin(Metric::None);
         v1 >>= UnitTemperature::Celsius;
         assert_apr!(v1.val, 61.85);
 
-        let mut v1:Value = 335.0 * UnitTemperature::Kelvin;
+        let mut v1:Value = 335.0 * UnitTemperature::Kelvin(Metric::None);
         v1 >>= UnitTemperature::Fahrenheit;
         assert_apr!(v1.val, 143.330000);
 
-        let mut v1:Value = 335.0 * UnitTemperature::Kelvin;
-        v1 >>= UnitTemperature::Kelvin;
+        let mut v1:Value = 335.0 * UnitTemperature::Kelvin(Metric::None);
+        v1 >>= UnitTemperature::Kelvin(Metric::None);
         assert_apr!(v1.val, 335.0);
+
+        let mut v1:Value = 335.0 * UnitTemperature::Kelvin(Metric::None);
+        v1 >>= UnitTemperature::Kelvin(Metric::Micro);
+        assert_apr!(v1.val, 335000000.0);
+
+        let mut v1:Value = 335.0 * UnitTemperature::Kelvin(Metric::None);
+        v1 >>= UnitTemperature::Kelvin(Metric::Mega);
+        assert_apr!(v1.val, 0.000335);
     }
 
     #[test]

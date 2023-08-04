@@ -700,7 +700,7 @@ pub enum UnitTemperature {
     /// Imperial
     Fahrenheit,
     /// SI unit 
-    Kelvin
+    Kelvin(Metric)
 }
 
 impl Display for UnitTemperature {
@@ -708,7 +708,7 @@ impl Display for UnitTemperature {
         let mut ret:String = String::new();
         match self {
             Self::Celsius => ret.push_str("°c"),
-            Self::Kelvin => ret.push('K'),
+            Self::Kelvin(m) => {ret.push_str(m.as_str()); ret.push('K')},
             Self::Fahrenheit => ret.push_str("°f")
         }
         write!(f, "{}", ret)
@@ -728,21 +728,21 @@ impl UnitTemperature {
                 match other {
                     Self::Celsius => val,
                     Self::Fahrenheit => (val*1.8)+32.0,
-                    Self::Kelvin => f64::max(val + 273.15, 0.0),
+                    Self::Kelvin(m) => f64::max(val + 273.15, 0.0) / m.scale(),
                 }
             }
             Self::Fahrenheit => {
                 match other {
                     Self::Celsius => (val-32.0)/1.8,
                     Self::Fahrenheit => val,
-                    Self::Kelvin => f64::max(((val-32.0)/1.8)+273.15, 0.0)
+                    Self::Kelvin(m) => f64::max(((val-32.0)/1.8)+273.15, 0.0) / m.scale()
                 }
             }
-            Self::Kelvin => {
+            Self::Kelvin(old_m) => {
                 match other {
                     Self::Celsius => val-273.15,
                     Self::Fahrenheit => ((val-273.15)*1.8)+32.0,
-                    Self::Kelvin => val
+                    Self::Kelvin(new_m) => val * (old_m.scale() / new_m.scale())
                 }
             }
         }

@@ -498,5 +498,6 @@ V3 can and is intended to be improved with some of these goals in mind:
   - Area : `acre`
   - Volume : `gallon`, `pint`, `quart`
   - Weight : `stone`, `ton`, `slug`
-- Expanded metric support for some units
+- Metric support for `parsec` and `lightyears`
+- ~~Metric support for `Kelvin`~~
 - speed speed speed
