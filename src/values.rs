@@ -239,4 +239,11 @@ mod value_unit_tests {
         let v4:Value = Value::new(4.5, "m^2").unwrap();
         assert_eq!(v3, v4);
     }
+
+    #[test]
+    fn value_11() {
+        let v1:Value = Value::new(356.27, "μK").unwrap();
+        assert_eq!(v1.to_string(), "356.27 μK");
+        assert_eq!(v1.val, 356.27);
+    }
 }

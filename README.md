@@ -320,11 +320,11 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Thermal Temperature
 
-|Unit      |Metric              |Unit string            |
-|----------|--------------------|-----------------------|
-|Celsius   |                    |`c`<br/>`°c`<br/>`°C`  |
-|Fahrenheit|                    |`f`<br/>`°f`<br/>`°F`  |
-|Kelvin    |**[Future Support]**|`K`                    |
+|Unit      |Metric |Unit string            |
+|----------|-------|-----------------------|
+|Celsius   |       |`c`<br/>`°c`<br/>`°C`  |
+|Fahrenheit|       |`f`<br/>`°f`<br/>`°F`  |
+|Kelvin    |&check;|`K`                    |
 
 ### Substance
 
@@ -499,5 +499,7 @@ V3 can and is intended to be improved with some of these goals in mind:
   - Volume : `gallon`, `pint`, `quart`
   - Weight : `stone`, `ton`, `slug`
 - Metric support for `parsec` and `lightyears`
+- Metric support for `mmHg`
+- Metric support for `electronVolt`
 - ~~Metric support for `Kelvin`~~
 - speed speed speed
