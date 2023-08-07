@@ -55,7 +55,7 @@ use crate::units::{
 
 /// The `Value` struct definition
 #[derive(Debug, Clone, Copy)]
-pub struct Value {
+pub struct Value<T> {
     /// The numerical value for the `Value` struct
     pub val:f64,
     /// The unit map which specifies which units are present in the `Value`
