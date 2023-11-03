@@ -15,7 +15,7 @@ fn criterion_benchmark(c:&mut Criterion) {
     let u2 = black_box(UnitLength::Mile);
     let u3 = black_box(UnitLength::Meter(Metric::Milli));
     let u4 = black_box(UnitLength::Angstrom);
-    let u5 = black_box(UnitLength::Parsec);
+    let u5 = black_box(UnitLength::Parsec(Metric::None));
     c.bench_function("new (best case)", |b| b.iter(|| Value::new(black_box(20.0), "m")));
     c.bench_function("new (worst case)", |b| b.iter(|| Value::new(black_box(20.0), "damol/yrad")));
     c.bench_function("value! (best case)", |b| b.iter(|| value!(black_box(20.0), "m")));

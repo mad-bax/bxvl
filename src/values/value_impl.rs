@@ -2285,12 +2285,6 @@ impl Value {
                 self.unit_map |= ANGLE_MAP;
                 return Ok(());
             }
-            "lyr" | "lightyear" | "lightyears" => {
-                self.v_length = Some(UnitLength::LightYear);
-                self.exp[LENGTH_INDEX] = exp;
-                self.unit_map |= LENGTH_MAP;
-                return Ok(());
-            }
             "farad" | "farads" => {
                 self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
                 self.exp[CAPACITANCE_INDEX] = exp;
@@ -2319,12 +2313,6 @@ impl Value {
                 self.v_time = Some(UnitTime::Day);
                 self.exp[TIME_INDEX] = exp;
                 self.unit_map |= TIME_MAP;
-                return Ok(());
-            }
-            "eV" => {
-                self.v_energy = Some(UnitEnergy::ElectronVolt);
-                self.exp[ENERGY_INDEX] = exp;
-                self.unit_map |= ENERGY_MAP;
                 return Ok(());
             }
             _ => {
@@ -2512,7 +2500,7 @@ impl Value {
                 self.unit_map |= LENGTH_MAP;
             }
             "pc" => {
-                self.v_length = Some(UnitLength::Parsec);
+                self.v_length = Some(UnitLength::Parsec(m));
                 self.exp[LENGTH_INDEX] = exp;
                 self.unit_map |= LENGTH_MAP;
             }
@@ -2530,6 +2518,12 @@ impl Value {
                 self.v_solid_angle = Some(UnitSolidAngle::Steradian(m));
                 self.exp[SOLID_ANGLE_INDEX] = exp;
                 self.unit_map |= SOLID_ANGLE_MAP;
+            }
+            "eV" => {
+                self.v_energy = Some(UnitEnergy::ElectronVolt(m));
+                self.exp[ENERGY_INDEX] = exp;
+                self.unit_map |= ENERGY_MAP;
+                return Ok(());
             }
             _ => {
                 if m != Metric::None {
@@ -2587,6 +2581,12 @@ impl Value {
                 self.v_energy = Some(UnitEnergy::GramCalorie(m));
                 self.exp[ENERGY_INDEX] = exp;
                 self.unit_map |= ENERGY_MAP;
+            }
+            "lyr" => {
+                self.v_length = Some(UnitLength::LightYear(m));
+                self.exp[LENGTH_INDEX] = exp;
+                self.unit_map |= LENGTH_MAP;
+                return Ok(());
             }
             _ => {
                 if m != Metric::None {

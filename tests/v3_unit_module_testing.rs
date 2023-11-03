@@ -420,9 +420,9 @@ mod unit_creation_tests {
         assert_apr!((temp>>UnitLength::Meter(Metric::Kilo)).unwrap().val, 0.0000254);
         assert!((temp>>UnitLength::Meter(Metric::Kilo)).unwrap() < 1.0 * UnitLength::Meter(Metric::Kilo));
         assert_apr!((imp>>UnitLength::AstronomicalUnit).unwrap().val, 1.0757872089633223e-08);
-        assert_apr!((imp>>UnitLength::LightYear).unwrap().val, 1.7010779502325107e-13);
+        assert_apr!((imp>>UnitLength::LightYear(Metric::None)).unwrap().val, 1.7010779502325107e-13);
         assert_apr!((imp>>UnitLength::Angstrom).unwrap().val, 16093440000000.002);
-        assert_apr!((imp>>UnitLength::Parsec).unwrap().val, 5.2227236183508554e-14);
+        assert_apr!((imp>>UnitLength::Parsec(Metric::None)).unwrap().val, 5.2227236183508554e-14);
     }
 
     #[test]
@@ -488,7 +488,7 @@ mod unit_creation_tests {
         let mut imp:Value = 10000.0 * UnitEnergy::FootPound;
         assert_apr!((imp>>UnitEnergy::Joule(Metric::Kilo)).unwrap().val, 13.55818);
         assert_apr!((imp>>UnitEnergy::GramCalorie(Metric::Kilo)).unwrap().val, 3.24048278158);
-        imp >>= UnitEnergy::ElectronVolt;
+        imp >>= UnitEnergy::ElectronVolt(Metric::None);
         assert_apr!((imp>>UnitEnergy::Joule(Metric::Kilo)).unwrap().val, 13.55818);
         assert_apr!((imp>>UnitEnergy::GramCalorie(Metric::Kilo)).unwrap().val, 3.24048278158);
     }

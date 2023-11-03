@@ -120,12 +120,11 @@ mod value_creation_tests {
         ("footpound", UnitEnergy::FootPound)];
 
 
-    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);8] = [
+    const TEST_OTHER_LENGTH_UNITS:[(&str, UnitLength);7] = [
         ("AU", UnitLength::AstronomicalUnit),
         ("au", UnitLength::AstronomicalUnit),
-        ("pc", UnitLength::Parsec),
-        ("lightyear", UnitLength::LightYear),
-        ("lyr", UnitLength::LightYear),
+        ("pc", UnitLength::Parsec(Metric::None)),
+        ("lyr", UnitLength::LightYear(Metric::None)),
         ("microns", UnitLength::Meter(Metric::Micro)), 
         ("micron", UnitLength::Meter(Metric::Micro)),
         ("Å", UnitLength::Angstrom)];
@@ -154,7 +153,7 @@ mod value_creation_tests {
         
     const TEST_OTHER_ENERGY_UNITS:[(&str, UnitEnergy);2] = [
         ("Cal", UnitEnergy::GramCalorie(Metric::Kilo)),
-        ("eV", UnitEnergy::ElectronVolt)];
+        ("eV", UnitEnergy::ElectronVolt(Metric::None))];
         
 
     const TEST_OTHER_RADIOACTIVITY_UNITS:[(&str, UnitRadioactivity);1] = [
@@ -191,10 +190,10 @@ mod value_creation_tests {
         (Metric::Zepto, "z"),
         (Metric::Yocto, "y")];
 
-    pub const TEST_METRIC_UNITS:[&str;37] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", 
+    pub const TEST_METRIC_UNITS:[&str;40] = ["g", "m", "l", "s", "A", "V", "C", "S", "F", "Ω", "O", "H", 
                                          "Wb", "T", "mol", "cd", "lm", "lx", "bar", "Pa", "rad", "sr", 
                                          "Hz", "N", "J", "cal", "W", "Bq", "Gy", "Sv", "kat", "B", 
-                                         "bits", "b", "byte", "bytes", "bit"];
+                                         "bits", "b", "byte", "bytes", "bit", "lyr", "pc", "eV"];
 
     #[test]
     fn string_parse() {
@@ -233,6 +232,9 @@ mod value_creation_tests {
                     "Gy" => V1 * UnitAbsorbedDose::Gray(m.0),
                     "Sv" => V1 * UnitRadioactivityExposure::Sievert(m.0),
                     "kat" => V1 * UnitCatalyticActivity::Katal(m.0),
+                    "lyr" => V1 * UnitLength::LightYear(m.0),
+                    "pc" => V1 * UnitLength::Parsec(m.0),
+                    "eV" => V1 * UnitEnergy::ElectronVolt(m.0),
 
                     "b" => {
                         if m.0 < Metric::None {
@@ -292,6 +294,9 @@ mod value_creation_tests {
                     "Gy" => V1 / UnitAbsorbedDose::Gray(m.0),
                     "Sv" => V1 / UnitRadioactivityExposure::Sievert(m.0),
                     "kat" => V1 / UnitCatalyticActivity::Katal(m.0),
+                    "lyr" => V1 / UnitLength::LightYear(m.0),
+                    "pc" => V1 / UnitLength::Parsec(m.0),
+                    "eV" => V1 / UnitEnergy::ElectronVolt(m.0),
 
                     "b" => {
                         if m.0 < Metric::None {
@@ -648,6 +653,9 @@ mod value_operation_tests {
                     "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::None),
                     "Sv" => 4.0 * UnitRadioactivityExposure::Sievert(Metric::None),
                     "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::None),
+                    "lyr" => continue, // skip this for now
+                    "pc" => continue, // skip this for now
+                    "eV" => continue, // skip this for now
 
                     "b" => {
                         if Metric::None < Metric::None {
@@ -701,6 +709,9 @@ mod value_operation_tests {
                     "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::Kilo),
                     "Sv" if !t1.is_equivalent_dose() => 4.0 * UnitRadioactivityExposure::Sievert(Metric::Kilo),
                     "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::Kilo),
+                    "lyr" => continue, // skip this for now
+                    "pc" => continue, // skip this for now
+                    "eV" => continue, // skip this for now
 
                     "b" if !t1.is_information() => {
                         if Metric::None < Metric::None {
@@ -769,6 +780,9 @@ mod value_operation_tests {
                     "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::None),
                     "Sv" => 4.0 * UnitRadioactivityExposure::Sievert(Metric::None),
                     "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::None),
+                    "lyr" => continue, // skip this for now
+                    "pc" => continue, // skip this for now
+                    "eV" => continue, // skip this for now
 
                     "b" => {
                         if Metric::None < Metric::None {
@@ -822,6 +836,9 @@ mod value_operation_tests {
                     "Gy" => 4.0 * UnitAbsorbedDose::Gray(Metric::Kilo),
                     "Sv" if !t1.is_equivalent_dose() => 4.0 * UnitRadioactivityExposure::Sievert(Metric::Kilo),
                     "kat" => 4.0 * UnitCatalyticActivity::Katal(Metric::Kilo),
+                    "lyr" => continue, // skip this for now
+                    "pc" => continue, // skip this for now
+                    "eV" => continue, // skip this for now
 
                     "b" if !t1.is_information() => {
                         if Metric::None < Metric::None {

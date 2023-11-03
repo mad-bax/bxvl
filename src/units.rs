@@ -137,9 +137,9 @@ pub enum UnitLength {
     /// Astronomical
     AstronomicalUnit,
     /// Astronomical
-    Parsec,
+    Parsec(Metric),
     /// SI integrated 
-    LightYear,
+    LightYear(Metric),
     /// Legacy
     Angstrom
 }
@@ -157,8 +157,14 @@ impl Display for UnitLength {
             Self::Yard => ret.push_str("yds"),
             Self::Mile => ret.push_str("miles"),
             Self::AstronomicalUnit => ret.push_str("AU"),
-            Self::Parsec => ret.push_str("pc"),
-            Self::LightYear => ret.push_str("lyr"),
+            Self::Parsec(m) => {
+                ret.push_str(m.as_str());
+                ret.push_str("pc")
+            }
+            Self::LightYear(m) => {
+                ret.push_str(m.as_str());
+                ret.push_str("lyr")
+            }
             Self::Angstrom => ret.push('Å')
         }
         write!(f, "{}", ret)
@@ -183,8 +189,8 @@ impl UnitLength {
             Self::Yard => constants::LENGTH_YD_TO_METER,
             Self::Mile => constants::LENGTH_MILE_TO_METER,
             Self::AstronomicalUnit => constants::LENGTH_AU_TO_METER,
-            Self::Parsec => constants::LENGTH_PC_TO_METER,
-            Self::LightYear => constants::LENGTH_LYR_TO_METER,
+            Self::Parsec(_) => constants::LENGTH_PC_TO_METER,
+            Self::LightYear(_) => constants::LENGTH_LYR_TO_METER,
             Self::Angstrom => constants::LENGTH_A_TO_METER
         }
     }
@@ -1248,7 +1254,7 @@ pub enum UnitEnergy {
     /// Imperial
     FootPound,
     /// SI integrated
-    ElectronVolt
+    ElectronVolt(Metric)
 }
 
 impl Display for UnitEnergy {
@@ -1265,7 +1271,10 @@ impl Display for UnitEnergy {
                 ret.push_str("cal");
             }
             Self::FootPound => ret.push_str("ftlb"),
-            Self::ElectronVolt => ret.push_str("eV")
+            Self::ElectronVolt(m) => {
+                ret.push_str(m.as_str());
+                ret.push_str("eV")
+            }
         }
         write!(f, "{}", ret)
     }
@@ -1277,6 +1286,7 @@ impl UnitEnergy {
         match self {
             Self::Joule(m) => m.scale(),
             Self::GramCalorie(m) => m.scale(),
+            Self::ElectronVolt(m) => m.scale(),
             _ => 1.0
         }
     }
@@ -1287,7 +1297,7 @@ impl UnitEnergy {
             Self::Joule(_) => 1.0,
             Self::GramCalorie(_) => constants::EN_CAL_TO_J,
             Self::FootPound => constants::EN_FTLB_TO_J,
-            Self::ElectronVolt => constants::EN_EV_TO_J
+            Self::ElectronVolt(_) => constants::EN_EV_TO_J
         }
     }
 
@@ -1762,11 +1772,11 @@ mod units_unit_test {
         // Astronomical Unit
         assert!(UnitLength::AstronomicalUnit.base() == 149_597_870_700.0);
         // Lightyear
-        assert!(UnitLength::LightYear.base() == 9_460_730_472_580_800.0);
+        assert!(UnitLength::LightYear(Metric::None).base() == 9_460_730_472_580_800.0);
         // Ångström
         assert!(UnitLength::Angstrom.base() == 0.000_000_000_1);
         // Parsec
-        assert!(UnitLength::Parsec.base() >= 3.085_677_581_491e16);
+        assert!(UnitLength::Parsec(Metric::None).base() >= 3.085_677_581_491e16);
     }
 
     /// Unit Mass Comparison Base
@@ -1809,7 +1819,7 @@ mod units_unit_test {
         // Footpounds
         assert!(UnitEnergy::FootPound.base() == 1.355818);
         // Electron Volts
-        assert!(UnitEnergy::ElectronVolt.base() >= 1.602_176_633e-19);
+        assert!(UnitEnergy::ElectronVolt(Metric::None).base() >= 1.602_176_633e-19);
     }
 
     /// Unit Force Comparison Base
