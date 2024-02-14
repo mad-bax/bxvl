@@ -19,6 +19,8 @@ mod value_std_ops;
 /// `Value` conversion definitions
 mod value_conversion_ops;
 
+use serde::{Deserialize, Serialize};
+
 use crate::units::{
     UnitAbsorbedDose,
     UnitAngle,
@@ -54,7 +56,7 @@ use crate::units::{
 };
 
 /// The `Value` struct definition
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Value {
     /// The numerical value for the `Value` struct
     pub val:f64,

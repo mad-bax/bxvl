@@ -14,6 +14,9 @@ A datatype library that allows for measurement unit association, conversion, and
 name = "v3"
 path = "src/lib.rs"
 
+[dependencies]
+serde = "1.0.196"
+
 [dev-dependencies]
 criterion = "0.5.1"
 
