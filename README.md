@@ -200,10 +200,10 @@ Temperature cannot be converted to another unit if it has other units (like mass
 
 Units cannot be converted between disparate types, although there are some exceptions.
 
-|Exceptions|                    |                      |
-|----------|--------------------|----------------------|
-|Period    |Time period (`1/s`) |Frequency (`Hz`)      |
-|Volume    |Cubic length (`m^3`)|Specific volume (`ml`)|
+| Exceptions |                      |                        |
+| ---------- | -------------------- | ---------------------- |
+| Period     | Time period (`1/s`)  | Frequency (`Hz`)       |
+| Volume     | Cubic length (`m^3`) | Specific volume (`ml`) |
 
 These exceptions are valid conversion so long as they are the *only* units within a `Value`. This is to avoid conversion scenarios where `Value`s produce (or are created with) neutralizing units, e.g. `mm^3/ml`, which is 'unitless'. Therefore, `m/s` cannot be converted to `m*kHz` and `m^3/N` cannot be converted to `l/N`.
 
@@ -211,22 +211,22 @@ These exceptions are valid conversion so long as they are the *only* units withi
 
 Some constants are provided for ease of use:
 
-|Name                                      |Numeric Value          |Units         |
-|------------------------------------------|-----------------------|--------------|
-|Absolute Zero                             |`0.`                   |`K`           |
-|Avogadro's Number                         |`6.022_140_76e23`      |`mol^-1`      |
-|Faraday Constant                          |`96_485.332_123_310_01`|`C/mol`       |
-|Atomic Mass Constant                      |`1.660_539_066_60e-27` |`kg`          |
-|Molar Gas Constant                        |`8.314_462_1`          |`J/(K*mol)`   |
-|Coulomb's Constant                        |`8.987_551`            |`mol^-1`      |
-|The Speed of Light                        |`299_792_458.0`        |`m/s`         |
-|Boltzmann Constant                        |`1.380_649e-23`        |`J/K`         |
-|Earth's Average Gravitational Acceleration|`9.806_65`             |`m/s^2`       |
-|Newtonian Constant of Gravitation         |`6.673_015e-11`        |`m^3/(kg*s^2)`|
-|Charge of an Electron                     |`1.602_176_634e-19`    |`C`           |
-|Rydberg Constant                          |`10_973_731.568_539`   |`1/m`         |
-|Plank's Constant                          |`6.626_070_15e-34`     |`J/Hz`        |
-|Vacuum Permittivity                       |`8.854_187_812_8e-12`  |`F/m`         |
+| Name                                       | Numeric Value           | Units          |
+| ------------------------------------------ | ----------------------- | -------------- |
+| Absolute Zero                              | `0.`                    | `K`            |
+| Avogadro's Number                          | `6.022_140_76e23`       | `mol^-1`       |
+| Faraday Constant                           | `96_485.332_123_310_01` | `C/mol`        |
+| Atomic Mass Constant                       | `1.660_539_066_60e-27`  | `kg`           |
+| Molar Gas Constant                         | `8.314_462_1`           | `J/(K*mol)`    |
+| Coulomb's Constant                         | `8.987_551`             | `mol^-1`       |
+| The Speed of Light                         | `299_792_458.0`         | `m/s`          |
+| Boltzmann Constant                         | `1.380_649e-23`         | `J/K`          |
+| Earth's Average Gravitational Acceleration | `9.806_65`              | `m/s^2`        |
+| Newtonian Constant of Gravitation          | `6.673_015e-11`         | `m^3/(kg*s^2)` |
+| Charge of an Electron                      | `1.602_176_634e-19`     | `C`            |
+| Rydberg Constant                           | `10_973_731.568_539`    | `1/m`          |
+| Plank's Constant                           | `6.626_070_15e-34`      | `J/Hz`         |
+| Vacuum Permittivity                        | `8.854_187_812_8e-12`   | `F/m`          |
 
 ## Unit Support
 
@@ -234,26 +234,26 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Lengths
 
-|Unit               |Metric Prefixing Support|Base Conversion Factor             |Unit string               |
-|-------------------|------------------------|-----------------------------------|--------------------------|
-|Meter              |&check;                 |`1.0 m`                            |`m`                       |
-|Inch               |                        |`0.025_4 m`                        |`in`<br/>`inch`[`es`]     |
-|Foot               |                        |`0.304_8 m`                        |`ft`<br/>`feet`<br/>`foot`|
-|Yard               |                        |`0.914_4 m`                        |`yd`[`s`]<br/>`yard`[`s`] |
-|Mile               |                        |`1_609.344 m`                      |`mile`[`s`]               |
-|Astronomical Unit  |                        |`149_569_870_700.0 m`              |`AU`                      |
-|Parsec             |&check;                 |`(648_000.0/π)*149_569_870_700.0 m`|`pc`                      |
-|Light Year         |&check;                 |`9_460_730_472_580_800.0 m`        |`lyr`                     |
-|Ångström           |                        |`0.000_000_000_1 m`                |`Å`<br/>`angstrom`[`s`]   |
+| Unit              | Metric Prefixing Support | Base Conversion Factor              | Unit string                |
+| ----------------- | ------------------------ | ----------------------------------- | -------------------------- |
+| Meter             | &check;                  | `1.0 m`                             | `m`                        |
+| Inch              |                          | `0.025_4 m`                         | `in`<br/>`inch`[`es`]      |
+| Foot              |                          | `0.304_8 m`                         | `ft`<br/>`feet`<br/>`foot` |
+| Yard              |                          | `0.914_4 m`                         | `yd`[`s`]<br/>`yard`[`s`]  |
+| Mile              |                          | `1_609.344 m`                       | `mile`[`s`]                |
+| Astronomical Unit |                          | `149_569_870_700.0 m`               | `AU`                       |
+| Parsec            | &check;                  | `(648_000.0/π)*149_569_870_700.0 m` | `pc`                       |
+| Light Year        | &check;                  | `9_460_730_472_580_800.0 m`         | `lyr`                      |
+| Ångström          |                          | `0.000_000_000_1 m`                 | `Å`<br/>`angstrom`[`s`]    |
 
 ### Time
 
-|Unit  |Metric Prefixing Support|Base Conversion Factor|Unit string             |
-|------|------------------------|----------------------|------------------------|
-|Second|&check;                 |`1.0 s`               |`s`                     |
-|Minute|                        |`60.0 s`              |`min`<br/>`minute`[`s`] |
-|Hour  |                        |`3_600.0 s`           |`h`[`r`]<br/>`hour`[`s`]|
-|Day   |                        |`86_400.0 s`          |`d`<br/>`day`[`s`]      |
+| Unit   | Metric Prefixing Support | Base Conversion Factor | Unit string              |
+| ------ | ------------------------ | ---------------------- | ------------------------ |
+| Second | &check;                  | `1.0 s`                | `s`                      |
+| Minute |                          | `60.0 s`               | `min`<br/>`minute`[`s`]  |
+| Hour   |                          | `3_600.0 s`            | `h`[`r`]<br/>`hour`[`s`] |
+| Day    |                          | `86_400.0 s`           | `d`<br/>`day`[`s`]       |
 
 ### Mass
 
@@ -266,178 +266,178 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Electric Current
 
-|Unit  |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|------|------------------------|----------------------|-----------|
-|Ampere|&check;                 |`1.0 A`               |`A`        |
+| Unit   | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ------ | ------------------------ | ---------------------- | ----------- |
+| Ampere | &check;                  | `1.0 A`                | `A`         |
 
 ### Electric Charge
 
-|Unit   |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-------|------------------------|----------------------|-----------|
-|Coulomb|&check;                 |`1.0 C`               |`C`        |
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ------- | ------------------------ | ---------------------- | ----------- |
+| Coulomb | &check;                  | `1.0 C`                | `C`         |
 
 ### Electric Potential
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string|
-|----|------------------------|----------------------|-----------|
-|Volt|&check;                 |`1.0 V`               |`V`        |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Volt | &check;                  | `1.0 V`                | `V`         |
 
 ### Electric Conductance
 
-|Unit   |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-------|------------------------|----------------------|-----------|
-|Siemens|&check;                 |`1.0 S`               |`S`        |
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ------- | ------------------------ | ---------------------- | ----------- |
+| Siemens | &check;                  | `1.0 S`                | `S`         |
 
 ### Electric Capacitance
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string         |
-|-----|------------------------|----------------------|--------------------|
-|Farad|&check;                 |`1.0 F`               |`F`<br/>`farad`[`s`]|
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string          |
+| ----- | ------------------------ | ---------------------- | -------------------- |
+| Farad | &check;                  | `1.0 F`                | `F`<br/>`farad`[`s`] |
 
 ### Electric Resistance
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string |
-|----|------------------------|----------------------|------------|
-|Ohm |&check;                 |`1.0 Ω`               |`Ω`<br/>`O` |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Ohm  | &check;                  | `1.0 Ω`                | `Ω`<br/>`O` |
 
 ### Electric Inductance
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Henry|&check;                 |`1.0 H`               |`H`        |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Henry | &check;                  | `1.0 H`                | `H`         |
 
 ### Magnetic Flux
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Weber|&check;                 |`1.0 Wb`              |`Wb`       |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Weber | &check;                  | `1.0 Wb`               | `Wb`        |
 
 ### Magnetic Flux Density
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Tesla|&check;                 |`1.0 T`               |`T`        |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Tesla | &check;                  | `1.0 T`                | `T`         |
 
 ### Thermal Temperature
 
-|Unit      |Metric Prefixing Support|Base Conversion Factor|Unit string            |
-|----------|------------------------|----------------------|-----------------------|
-|Celsius   |**[Future Support]**    |`c-273.15 K`          |`c`<br/>`°c`<br/>`°C`  |
-|Fahrenheit|                        |`(f-32.0)/1.8 c`      |`f`<br/>`°f`<br/>`°F`  |
-|Kelvin    |&check;                 |`1.0 K`               |`K`                    |
+| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string           |
+| ---------- | ------------------------ | ---------------------- | --------------------- |
+| Celsius    | **[Future Support]**     | `c-273.15 K`           | `c`<br/>`°c`<br/>`°C` |
+| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`<br/>`°f`<br/>`°F` |
+| Kelvin     | &check;                  | `1.0 K`                | `K`                   |
 
 ### Substance
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string|
-|----|------------------------|----------------------|-----------|
-|Mole|&check;                 |`1.0 mol`             |`mol`      |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Mole | &check;                  | `1.0 mol`              | `mol`       |
 
 ### Luminous Intensity
 
-|Unit   |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-------|------------------------|----------------------|-----------|
-|Candela|&check;                 |`1.0 cd`              |`cd`       |
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ------- | ------------------------ | ---------------------- | ----------- |
+| Candela | &check;                  | `1.0 cd`               | `cd`        |
 
 ### Luminous Flux
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Lumen|&check;                 |`1.0 lm`              |`lm`       |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Lumen | &check;                  | `1.0 lm`               | `lm`        |
 
 ### Illuminance
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string|
-|----|------------------------|----------------------|-----------|
-|Lux |&check;                 |`1.0 lx`              |`lx`       |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Lux  | &check;                  | `1.0 lx`               | `lx`        |
 
 ### Spatial Volume
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Liter|&check;                 |`1.0 l`               |`l`        |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Liter | &check;                  | `1.0 l`                | `l`         |
 
 ### Pressure
 
-|Unit                  |Metric Prefixing Support|Base Conversion Factor|Unit string    |
-|----------------------|------------------------|----------------------|---------------|
-|Pascal                |&check;                 |`1.0 Pa`              |`Pa`           |
-|Bar                   |&check;                 |`100_000.0 Pa`        |`bar`          |
-|Torr                  |                        |`101_325.0/760.0 Pa`  |`torr`         |
-|mmHg                  |                        |`133.322_387_415 Pa`  |`mmHg`         |
-|inHg                  |                        |`3_386.388_666_6 Pa`  |`inHg`         |
-|Atmospheres           |                        |`101_325.0 Pa`        |`ATM`<br/>`atm`|
-|Pounds per square inch|                        |`6894.757 Pa`         |`PSI`<br/>`psi`|
+| Unit                   | Metric Prefixing Support | Base Conversion Factor | Unit string     |
+| ---------------------- | ------------------------ | ---------------------- | --------------- |
+| Pascal                 | &check;                  | `1.0 Pa`               | `Pa`            |
+| Bar                    | &check;                  | `100_000.0 Pa`         | `bar`           |
+| Torr                   |                          | `101_325.0/760.0 Pa`   | `torr`          |
+| mmHg                   |                          | `133.322_387_415 Pa`   | `mmHg`          |
+| inHg                   |                          | `3_386.388_666_6 Pa`   | `inHg`          |
+| Atmospheres            |                          | `101_325.0 Pa`         | `ATM`<br/>`atm` |
+| Pounds per square inch |                          | `6894.757 Pa`          | `PSI`<br/>`psi` |
 
 ### Geometric Angle
 
-|Unit           |Metric Prefixing Support|Base Conversion Factor|Unit string            |
-|---------------|------------------------|----------------------|-----------------------|
-|Degree         |                        |`π/180.0 rad`         |`°`<br/>`degree`[`s`]  |
-|Radian         |&check;                 |`1.0 rad`             |`rad`<br/>`radian`[`s`]|
-|Milliradian    |&check;                 |`1_000.0 rad`         |`mil`[`s`]<br/>`MIL`   |
-|Minute of Angle|                        |`π/10_800.0 rad`      |`moa`<br/>`MOA`        |
+| Unit            | Metric Prefixing Support | Base Conversion Factor | Unit string             |
+| --------------- | ------------------------ | ---------------------- | ----------------------- |
+| Degree          |                          | `π/180.0 rad`          | `°`<br/>`degree`[`s`]   |
+| Radian          | &check;                  | `1.0 rad`              | `rad`<br/>`radian`[`s`] |
+| Milliradian     | &check;                  | `1_000.0 rad`          | `mil`[`s`]<br/>`MIL`    |
+| Minute of Angle |                          | `π/10_800.0 rad`       | `moa`<br/>`MOA`         |
 
 ### Frequency
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Hertz|&check;                 |`1.0 Hz`              |`Hz`       |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Hertz | &check;                  | `1.0 Hz`               | `Hz`        |
 
 ### Force
 
-|Unit       |Metric Prefixing Support|Base Conversion Factor |Unit string                                          |
-|-----------|------------------------|-----------------------|-----------------------------------------------------|
-|Newton     |&check;                 |`1.0 N`                |`N`                                                  |
-|Pound Force|                        |`4.448_221_615_260_5 N`|`lbfr`<br/>`lbsfr`<br/>`poundforce`<br/>`poundsforce`|
+| Unit        | Metric Prefixing Support | Base Conversion Factor  | Unit string                                           |
+| ----------- | ------------------------ | ----------------------- | ----------------------------------------------------- |
+| Newton      | &check;                  | `1.0 N`                 | `N`                                                   |
+| Pound Force |                          | `4.448_221_615_260_5 N` | `lbfr`<br/>`lbsfr`<br/>`poundforce`<br/>`poundsforce` |
 
 ### Energy
 
-|Unit         |Metric Prefixing Support|Base Conversion Factor|Unit string                     |
-|-------------|------------------------|----------------------|--------------------------------|
-|Joule        |&check;                 |`1.0 J`               |`J`                             |
-|Calorie      |&check;                 |`4.184 J`             |`cal`                           |
-|Foot pound   |                        |`1.355_818 J`         |`ftlb`[`s`]<br/>`footpound`[`s`]|
-|Electron Volt|&check;                 |`1.6021_766_34e-19 J` |`eV`                            |
+| Unit          | Metric Prefixing Support | Base Conversion Factor | Unit string                      |
+| ------------- | ------------------------ | ---------------------- | -------------------------------- |
+| Joule         | &check;                  | `1.0 J`                | `J`                              |
+| Calorie       | &check;                  | `4.184 J`              | `cal`                            |
+| Foot pound    |                          | `1.355_818 J`          | `ftlb`[`s`]<br/>`footpound`[`s`] |
+| Electron Volt | &check;                  | `1.6021_766_34e-19 J`  | `eV`                             |
 
 ### Power
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string|
-|----|------------------------|----------------------|-----------|
-|Watt|&check;                 |`1.0 W`               |`W`        |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Watt | &check;                  | `1.0 W`                | `W`         |
 
 ### Radioactivity
 
-|Unit     |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|---------|------------------------|----------------------|-----------|
-|Becquerel|&check;                 |`1.0 Bq`              |`Bq`       |
-|Curie    |                        |`37_000_000_000.0 Bq` |`Ci`       |
+| Unit      | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| --------- | ------------------------ | ---------------------- | ----------- |
+| Becquerel | &check;                  | `1.0 Bq`               | `Bq`        |
+| Curie     |                          | `37_000_000_000.0 Bq`  | `Ci`        |
 
 ### *Absorbed* Dosage of Ionizing Radiation
 
-|Unit    |Metric Prefixing Support|Base Conversion Factor|Unit string      |
-|--------|------------------------|----------------------|-----------------|
-|Gray    |&check;                 |`1.0 Gy`              |`Gy`             |
-|Röntgen |                        |`0.01 Gy`             |`R`              |
-|Rad     |                        |`1.0/114.025 Gy`      |`rads`<br/>`Rads`|
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string       |
+| ------- | ------------------------ | ---------------------- | ----------------- |
+| Gray    | &check;                  | `1.0 Gy`               | `Gy`              |
+| Röntgen |                          | `0.01 Gy`              | `R`               |
+| Rad     |                          | `1.0/114.025 Gy`       | `rads`<br/>`Rads` |
 
 ### *Equivalent* Dosage of Ionizing Radiation
 
-|Unit   |Metric Prefixing Support|Base Conversion Factor|Unit string    |
-|-------|------------------------|----------------------|---------------|
-|Sievert|&check;                 |`1.0 Sv`              |`Sv`           |
-|Rem    |                        |`0.01 Sv`             |`rem`<br/>`Rem`|
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string     |
+| ------- | ------------------------ | ---------------------- | --------------- |
+| Sievert | &check;                  | `1.0 Sv`               | `Sv`            |
+| Rem     |                          | `0.01 Sv`              | `rem`<br/>`Rem` |
 
 ### Catalytic Activity
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string|
-|-----|------------------------|----------------------|-----------|
-|Katal|&check;                 |`1.0 kat`             |`kat`      |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ----- | ------------------------ | ---------------------- | ----------- |
+| Katal | &check;                  | `1.0 kat`              | `kat`       |
 
 ### Sound Intensity
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string|
-|----|------------------------|----------------------|-----------|
-|Bel |&check;                 |`1.0 B`               |`B`        |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---- | ------------------------ | ---------------------- | ----------- |
+| Bel  | &check;                  | `1.0 B`                | `B`         |
 
 ### Information
 
@@ -445,43 +445,43 @@ The project supports all base SI units as listed by the National Institute of St
 
 *i.e.* `kb` &rarr; `1024 bytes`, *not* `1000 bytes`
 
-|Unit|Metric Prefixing Support|Base Conversion Factor|Unit string        |
-|----|------------------------|----------------------|-------------------|
-|Bit |`Kilo` - `Yotta`        |`8.0 bits == 1.0 byte`|`bits`             |
-|Byte|`Kilo` - `Yotta`        |`1.0 bytes`           |`b`<br/>`byte`[`s`]|
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string         |
+| ---- | ------------------------ | ---------------------- | ------------------- |
+| Bit  | `Kilo` - `Yotta`         | `8.0 bits == 1.0 byte` | `bits`              |
+| Byte | `Kilo` - `Yotta`         | `1.0 bytes`            | `b`<br/>`byte`[`s`] |
 
 ### Special Unit Keywords
 
-|Unit               |Metric |Unit string|Equivalent|
-|-------------------|-------|-----------|----------|
-|Miles per hour     |       |`mph`      |`miles/hr`|
-|Kilometers per hour|&check;|`kph`      |`km/hr`   |
-|kilocalorie        |&check;|`Cal`      |`kcal`    |
+| Unit                | Metric  | Unit string | Equivalent |
+| ------------------- | ------- | ----------- | ---------- |
+| Miles per hour      |         | `mph`       | `miles/hr` |
+| Kilometers per hour | &check; | `kph`       | `km/hr`    |
+| kilocalorie         | &check; | `Cal`       | `kcal`     |
 
 ### Metric Prefix Identifiers
 
-|Metric name|Prefix string|
-|-----------|-------------|
-|Yotta      |`Y`          |
-|Zetta      |`Z`          |
-|Exa        |`E`          |
-|Peta       |`P`          |
-|Tera       |`T`          |
-|Giga       |`G`          |
-|Mega       |`M`          |
-|Kilo       |`k`          |
-|Hecto      |`h`          |
-|Deca       |`da`         |
-|Deci       |`d`          |
-|Centi      |`c`          |
-|Milli      |`m`          |
-|Micro      |`μ`<br/>`u`  |
-|Nano       |`n`          |
-|Pico       |`p`          |
-|Femto      |`f`          |
-|Atto       |`a`          |
-|Zepto      |`z`          |
-|Yocto      |`y`          |
+| Metric name | Prefix string |
+| ----------- | ------------- |
+| Yotta       | `Y`           |
+| Zetta       | `Z`           |
+| Exa         | `E`           |
+| Peta        | `P`           |
+| Tera        | `T`           |
+| Giga        | `G`           |
+| Mega        | `M`           |
+| Kilo        | `k`           |
+| Hecto       | `h`           |
+| Deca        | `da`          |
+| Deci        | `d`           |
+| Centi       | `c`           |
+| Milli       | `m`           |
+| Micro       | `μ`<br/>`u`   |
+| Nano        | `n`           |
+| Pico        | `p`           |
+| Femto       | `f`           |
+| Atto        | `a`           |
+| Zepto       | `z`           |
+| Yocto       | `y`           |
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
 
