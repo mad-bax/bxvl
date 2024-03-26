@@ -214,7 +214,7 @@ Some constants are provided for ease of use:
 
 | Name                                       | Numeric Value           | Units          |
 | ------------------------------------------ | ----------------------- | -------------- |
-| Absolute Zero                              | `0.`                    | `K`            |
+| Absolute Zero                              | `0.`                    | $K$            |
 | Avogadro's Number                          | `6.022_140_76e23`       | `mol^-1`       |
 | Faraday Constant                           | `96_485.332_123_310_01` | `C/mol`        |
 | Atomic Mass Constant                       | `1.660_539_066_60e-27`  | `kg`           |
