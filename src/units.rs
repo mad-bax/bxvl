@@ -4,20 +4,30 @@
  * Version :> 0.0.1
  * Details :>
  */
-
-//pub mod unit_worker;
-//mod unit_parsing;
-
 use std::fmt::Display;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
 /// Trait that can be used and called by all of the unit types
 trait Convert<T1> {
     /// The function template for a unit type
-    fn convert(&self, other:&T1) -> f64;
+    fn convert(&self, other: &T1) -> f64;
+}
+
+trait BaseUnit<T> {
+    /// Returns the metric scaler of an SI unit
+    fn scale(&self) -> f64;
+
+    /// Returns the base unit conversion in relation to the standard SI unit
+    fn base(&self) -> f64;
+
+    /// Returns the `f64` multiplier to convert a `Value`
+    fn convert(&self, other: &T) -> f64;
+
+    /// Returns the `Metric` prefix for the unit
+    fn get_metric(&self) -> Metric;
 }
 
 /// The Metric scale names
@@ -44,7 +54,8 @@ pub enum Metric {
     /// Deci
     Deci,
     /// None (default)
-    #[default] None,
+    #[default]
+    None,
     /// Deca
     Deca,
     /// Hecto
@@ -64,7 +75,7 @@ pub enum Metric {
     /// Zetta
     Zetta,
     /// Yotta
-    Yotta
+    Yotta,
 }
 
 impl Metric {
@@ -73,25 +84,25 @@ impl Metric {
         match self {
             Metric::Yotta => 1000000000000000000000000.0,
             Metric::Zetta => 1000000000000000000000.0,
-            Metric::Exa   => 1000000000000000000.0,
-            Metric::Peta  => 1000000000000000.0,
-            Metric::Tera  => 1000000000000.0,
-            Metric::Giga  => 1000000000.0,
-            Metric::Mega  => 1000000.0,
-            Metric::Kilo  => 1000.0,
+            Metric::Exa => 1000000000000000000.0,
+            Metric::Peta => 1000000000000000.0,
+            Metric::Tera => 1000000000000.0,
+            Metric::Giga => 1000000000.0,
+            Metric::Mega => 1000000.0,
+            Metric::Kilo => 1000.0,
             Metric::Hecto => 100.0,
-            Metric::Deca  => 10.0,
-            Metric::None  => 1.0,
-            Metric::Deci  => 0.1,
+            Metric::Deca => 10.0,
+            Metric::None => 1.0,
+            Metric::Deci => 0.1,
             Metric::Centi => 0.01,
             Metric::Milli => 0.001,
             Metric::Micro => 0.000001,
-            Metric::Nano  => 0.000000001,
-            Metric::Pico  => 0.000000000001,
+            Metric::Nano => 0.000000001,
+            Metric::Pico => 0.000000000001,
             Metric::Femto => 0.000000000000001,
-            Metric::Atto  => 0.000000000000000001,
+            Metric::Atto => 0.000000000000000001,
             Metric::Zepto => 0.000000000000000000001,
-            Metric::Yocto => 0.000000000000000000000001
+            Metric::Yocto => 0.000000000000000000000001,
         }
     }
 
@@ -100,26 +111,64 @@ impl Metric {
         match self {
             Metric::Yotta => "Y",
             Metric::Zetta => "Z",
-            Metric::Exa   => "E",
-            Metric::Peta  => "P",
-            Metric::Tera  => "T",
-            Metric::Giga  => "G",
-            Metric::Mega  => "M",
-            Metric::Kilo  => "k",
+            Metric::Exa => "E",
+            Metric::Peta => "P",
+            Metric::Tera => "T",
+            Metric::Giga => "G",
+            Metric::Mega => "M",
+            Metric::Kilo => "k",
             Metric::Hecto => "h",
-            Metric::Deca  => "da",
-            Metric::None  => "",
-            Metric::Deci  => "d",
+            Metric::Deca => "da",
+            Metric::None => "",
+            Metric::Deci => "d",
             Metric::Centi => "c",
             Metric::Milli => "m",
             Metric::Micro => "μ",
-            Metric::Nano  => "n",
-            Metric::Pico  => "p",
+            Metric::Nano => "n",
+            Metric::Pico => "p",
             Metric::Femto => "f",
-            Metric::Atto  => "a",
+            Metric::Atto => "a",
             Metric::Zepto => "z",
-            Metric::Yocto => "y"
+            Metric::Yocto => "y",
         }
+    }
+}
+
+/// 'Empty' units
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
+pub enum UnitNone {
+    /// To describe a `Value` representing a percentage
+    Percentage,
+}
+
+impl Display for UnitNone {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut ret: String = String::new();
+        match self {
+            Self::Percentage => {
+                ret.push_str("%");
+            }
+        }
+
+        write!(f, "{}", ret)
+    }
+}
+
+impl BaseUnit<UnitNone> for UnitNone {
+    fn scale(&self) -> f64 {
+        1.0
+    }
+
+    fn base(&self) -> f64 {
+        1.0
+    }
+
+    fn convert(&self, other: &UnitNone) -> f64 {
+        (self.scale() / other.scale()) * (self.base() / other.base())
+    }
+
+    fn get_metric(&self) -> Metric {
+        Metric::None
     }
 }
 
@@ -140,15 +189,15 @@ pub enum UnitLength {
     AstronomicalUnit,
     /// Astronomical
     Parsec(Metric),
-    /// SI integrated 
+    /// SI integrated
     LightYear(Metric),
     /// Legacy
-    Angstrom
+    Angstrom,
 }
 
 impl Display for UnitLength {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Meter(m) => {
                 ret.push_str(m.as_str());
@@ -167,7 +216,7 @@ impl Display for UnitLength {
                 ret.push_str(m.as_str());
                 ret.push_str("lyr")
             }
-            Self::Angstrom => ret.push('Å')
+            Self::Angstrom => ret.push('Å'),
         }
         write!(f, "{}", ret)
     }
@@ -178,7 +227,7 @@ impl UnitLength {
     fn scale(&self) -> f64 {
         match self {
             Self::Meter(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -193,28 +242,28 @@ impl UnitLength {
             Self::AstronomicalUnit => constants::LENGTH_AU_TO_METER,
             Self::Parsec(_) => constants::LENGTH_PC_TO_METER,
             Self::LightYear(_) => constants::LENGTH_LYR_TO_METER,
-            Self::Angstrom => constants::LENGTH_A_TO_METER
+            Self::Angstrom => constants::LENGTH_A_TO_METER,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitLength) -> f64 {
+    pub fn convert(&self, other: &UnitLength) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_liter(&self, other:&UnitVolume) -> f64 {
+    pub fn convert_liter(&self, other: &UnitVolume) -> f64 {
         self.scale() / // get current metric scale if present
             (f64::powf(UnitLength::Meter(Metric::None).convert(self), 3.0) / // Convert ourselves to meters
             constants::METER3_TO_LITER) *   // meters to liters
-            UnitVolume::Liter(Metric::None).convert(other)  // convert to correct volume
+            UnitVolume::Liter(Metric::None).convert(other) // convert to correct volume
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Meter(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -229,12 +278,12 @@ pub enum UnitTime {
     /// Non - SI
     Hour,
     /// Non - SI
-    Day
+    Day,
 }
 
 impl Display for UnitTime {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Second(m) => {
                 ret.push_str(m.as_str());
@@ -242,7 +291,7 @@ impl Display for UnitTime {
             }
             Self::Minute => ret.push_str("min"),
             Self::Hour => ret.push_str("hr"),
-            Self::Day => ret.push_str("day")
+            Self::Day => ret.push_str("day"),
         }
         write!(f, "{}", ret)
     }
@@ -253,7 +302,7 @@ impl UnitTime {
     fn scale(&self) -> f64 {
         match self {
             Self::Second(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -263,17 +312,17 @@ impl UnitTime {
             Self::Second(_) => 1.0,
             Self::Minute => 60.0,
             Self::Hour => 3600.0,
-            Self::Day => 86400.0
+            Self::Day => 86400.0,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitTime) -> f64 {
+    pub fn convert(&self, other: &UnitTime) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_freq(&self, other:&UnitFrequency) -> f64 {
+    pub fn convert_freq(&self, other: &UnitFrequency) -> f64 {
         println!("{} {} {}", self.base(), self.scale(), other.scale());
         1.0 / (self.base() * self.scale() * other.scale())
     }
@@ -282,7 +331,7 @@ impl UnitTime {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Second(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -302,7 +351,7 @@ pub enum UnitMass {
 
 impl Display for UnitMass {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Gram(m) => {
                 ret.push_str(m.as_str());
@@ -310,7 +359,7 @@ impl Display for UnitMass {
             }
             Self::Grain => ret.push_str("gr"),
             Self::Ounce => ret.push_str("oz"),
-            Self::Pound => ret.push_str("lb")
+            Self::Pound => ret.push_str("lb"),
         }
         write!(f, "{}", ret)
     }
@@ -321,7 +370,7 @@ impl UnitMass {
     fn scale(&self) -> f64 {
         match self {
             Self::Gram(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -331,12 +380,12 @@ impl UnitMass {
             Self::Gram(_) => 1.0,
             Self::Grain => constants::MASS_GR_TO_G,
             Self::Ounce => constants::MASS_OZ_TO_G,
-            Self::Pound => constants::MASS_LB_TO_G
+            Self::Pound => constants::MASS_LB_TO_G,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitMass) -> f64 {
+    pub fn convert(&self, other: &UnitMass) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -344,7 +393,7 @@ impl UnitMass {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Gram(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -353,14 +402,14 @@ impl UnitMass {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitElectricCurrent {
     /// SI unit
-    Ampere(Metric)
+    Ampere(Metric),
 }
 
 impl Display for UnitElectricCurrent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Ampere(m) => ret.push_str(m.as_str())
+            Self::Ampere(m) => ret.push_str(m.as_str()),
         }
         ret.push('A');
         write!(f, "{}", ret)
@@ -376,14 +425,14 @@ impl UnitElectricCurrent {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitElectricCurrent) -> f64 {
+    pub fn convert(&self, other: &UnitElectricCurrent) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Ampere(m) => *m
+            Self::Ampere(m) => *m,
         }
     }
 }
@@ -392,14 +441,14 @@ impl UnitElectricCurrent {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitElectricCharge {
     /// SI unit
-    Coulomb(Metric)
+    Coulomb(Metric),
 }
 
 impl Display for UnitElectricCharge {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Coulomb(m) => ret.push_str(m.as_str())
+            Self::Coulomb(m) => ret.push_str(m.as_str()),
         }
         ret.push('C');
         write!(f, "{}", ret)
@@ -415,14 +464,14 @@ impl UnitElectricCharge {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitElectricCharge) -> f64 {
+    pub fn convert(&self, other: &UnitElectricCharge) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Coulomb(m) => *m
+            Self::Coulomb(m) => *m,
         }
     }
 }
@@ -431,14 +480,14 @@ impl UnitElectricCharge {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitElectricPotential {
     /// SI unit
-    Volt(Metric)
+    Volt(Metric),
 }
 
 impl Display for UnitElectricPotential {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Volt(m) => ret.push_str(m.as_str())
+            Self::Volt(m) => ret.push_str(m.as_str()),
         }
         ret.push('V');
         write!(f, "{}", ret)
@@ -454,14 +503,14 @@ impl UnitElectricPotential {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitElectricPotential) -> f64 {
+    pub fn convert(&self, other: &UnitElectricPotential) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Volt(m) => *m
+            Self::Volt(m) => *m,
         }
     }
 }
@@ -470,14 +519,14 @@ impl UnitElectricPotential {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitElectricConductance {
     /// SI unit
-    Siemens(Metric)
+    Siemens(Metric),
 }
 
 impl Display for UnitElectricConductance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Siemens(m) => ret.push_str(m.as_str())
+            Self::Siemens(m) => ret.push_str(m.as_str()),
         }
         ret.push('S');
         write!(f, "{}", ret)
@@ -493,14 +542,14 @@ impl UnitElectricConductance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitElectricConductance) -> f64 {
+    pub fn convert(&self, other: &UnitElectricConductance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Siemens(m) => *m
+            Self::Siemens(m) => *m,
         }
     }
 }
@@ -509,14 +558,14 @@ impl UnitElectricConductance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitCapacitance {
     /// SI unit
-    Farad(Metric)
+    Farad(Metric),
 }
 
 impl Display for UnitCapacitance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Farad(m) => ret.push_str(m.as_str())
+            Self::Farad(m) => ret.push_str(m.as_str()),
         }
         ret.push('F');
         write!(f, "{}", ret)
@@ -532,14 +581,14 @@ impl UnitCapacitance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitCapacitance) -> f64 {
+    pub fn convert(&self, other: &UnitCapacitance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Farad(m) => *m
+            Self::Farad(m) => *m,
         }
     }
 }
@@ -548,14 +597,14 @@ impl UnitCapacitance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitResistance {
     /// SI unit
-    Ohm(Metric)
+    Ohm(Metric),
 }
 
 impl Display for UnitResistance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Ohm(m) => ret.push_str(m.as_str())
+            Self::Ohm(m) => ret.push_str(m.as_str()),
         }
         ret.push('Ω');
         write!(f, "{}", ret)
@@ -571,14 +620,14 @@ impl UnitResistance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitResistance) -> f64 {
+    pub fn convert(&self, other: &UnitResistance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Ohm(m) => *m
+            Self::Ohm(m) => *m,
         }
     }
 }
@@ -587,14 +636,14 @@ impl UnitResistance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitInductance {
     /// SI unit
-    Henry(Metric)
+    Henry(Metric),
 }
 
 impl Display for UnitInductance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Henry(m) => ret.push_str(m.as_str())
+            Self::Henry(m) => ret.push_str(m.as_str()),
         }
         ret.push('H');
         write!(f, "{}", ret)
@@ -610,14 +659,14 @@ impl UnitInductance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitInductance) -> f64 {
+    pub fn convert(&self, other: &UnitInductance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Henry(m) => *m
+            Self::Henry(m) => *m,
         }
     }
 }
@@ -626,14 +675,14 @@ impl UnitInductance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitMagneticFlux {
     /// SI unit
-    Weber(Metric)
+    Weber(Metric),
 }
 
 impl Display for UnitMagneticFlux {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Weber(m) => ret.push_str(m.as_str())
+            Self::Weber(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("Wb");
         write!(f, "{}", ret)
@@ -649,14 +698,14 @@ impl UnitMagneticFlux {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitMagneticFlux) -> f64 {
+    pub fn convert(&self, other: &UnitMagneticFlux) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Weber(m) => *m
+            Self::Weber(m) => *m,
         }
     }
 }
@@ -665,14 +714,14 @@ impl UnitMagneticFlux {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitMagneticFluxDensity {
     /// SI unit
-    Tesla(Metric)
+    Tesla(Metric),
 }
 
 impl Display for UnitMagneticFluxDensity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Tesla(m) => ret.push_str(m.as_str())
+            Self::Tesla(m) => ret.push_str(m.as_str()),
         }
         ret.push('T');
         write!(f, "{}", ret)
@@ -688,14 +737,14 @@ impl UnitMagneticFluxDensity {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitMagneticFluxDensity) -> f64 {
+    pub fn convert(&self, other: &UnitMagneticFluxDensity) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Tesla(m) => *m
+            Self::Tesla(m) => *m,
         }
     }
 }
@@ -707,52 +756,48 @@ pub enum UnitTemperature {
     Celsius,
     /// Imperial
     Fahrenheit,
-    /// SI unit 
-    Kelvin(Metric)
+    /// SI unit
+    Kelvin(Metric),
 }
 
 impl Display for UnitTemperature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Celsius => ret.push_str("°c"),
-            Self::Kelvin(m) => {ret.push_str(m.as_str()); ret.push('K')},
-            Self::Fahrenheit => ret.push_str("°f")
+            Self::Kelvin(m) => {
+                ret.push_str(m.as_str());
+                ret.push('K')
+            }
+            Self::Fahrenheit => ret.push_str("°f"),
         }
         write!(f, "{}", ret)
     }
 }
 
 impl UnitTemperature {
-
     /// Returns a `f64` to assign to a `Value`
-    pub fn convert(&self, other:&UnitTemperature, val:f64) -> f64 {
+    pub fn convert(&self, other: &UnitTemperature, val: f64) -> f64 {
         if self == other {
             return val;
         }
 
         match self {
-            Self::Celsius => {
-                match other {
-                    Self::Celsius => val,
-                    Self::Fahrenheit => (val*1.8)+32.0,
-                    Self::Kelvin(m) => f64::max(val + 273.15, 0.0) / m.scale(),
-                }
-            }
-            Self::Fahrenheit => {
-                match other {
-                    Self::Celsius => (val-32.0)/1.8,
-                    Self::Fahrenheit => val,
-                    Self::Kelvin(m) => f64::max(((val-32.0)/1.8)+273.15, 0.0) / m.scale()
-                }
-            }
-            Self::Kelvin(old_m) => {
-                match other {
-                    Self::Celsius => val-273.15,
-                    Self::Fahrenheit => ((val-273.15)*1.8)+32.0,
-                    Self::Kelvin(new_m) => val * (old_m.scale() / new_m.scale())
-                }
-            }
+            Self::Celsius => match other {
+                Self::Celsius => val,
+                Self::Fahrenheit => (val * 1.8) + 32.0,
+                Self::Kelvin(m) => f64::max(val + 273.15, 0.0) / m.scale(),
+            },
+            Self::Fahrenheit => match other {
+                Self::Celsius => (val - 32.0) / 1.8,
+                Self::Fahrenheit => val,
+                Self::Kelvin(m) => f64::max(((val - 32.0) / 1.8) + 273.15, 0.0) / m.scale(),
+            },
+            Self::Kelvin(old_m) => match other {
+                Self::Celsius => val - 273.15,
+                Self::Fahrenheit => ((val - 273.15) * 1.8) + 32.0,
+                Self::Kelvin(new_m) => val * (old_m.scale() / new_m.scale()),
+            },
         }
     }
 
@@ -766,14 +811,14 @@ impl UnitTemperature {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitSubstance {
     /// SI unit
-    Mole(Metric)
+    Mole(Metric),
 }
 
 impl Display for UnitSubstance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Mole(m) => ret.push_str(m.as_str())
+            Self::Mole(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("mol");
         write!(f, "{}", ret)
@@ -789,14 +834,14 @@ impl UnitSubstance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitSubstance) -> f64 {
+    pub fn convert(&self, other: &UnitSubstance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Mole(m) => *m
+            Self::Mole(m) => *m,
         }
     }
 }
@@ -805,14 +850,14 @@ impl UnitSubstance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitLuminousIntensity {
     /// SI unit
-    Candela(Metric)
+    Candela(Metric),
 }
 
 impl Display for UnitLuminousIntensity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Candela(m) => ret.push_str(m.as_str())
+            Self::Candela(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("cd");
         write!(f, "{}", ret)
@@ -828,14 +873,14 @@ impl UnitLuminousIntensity {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitLuminousIntensity) -> f64 {
+    pub fn convert(&self, other: &UnitLuminousIntensity) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Candela(m) => *m
+            Self::Candela(m) => *m,
         }
     }
 }
@@ -844,14 +889,14 @@ impl UnitLuminousIntensity {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitLuminousFlux {
     /// SI unit
-    Lumen(Metric)
+    Lumen(Metric),
 }
 
 impl Display for UnitLuminousFlux {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Lumen(m) => ret.push_str(m.as_str())
+            Self::Lumen(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("lm");
         write!(f, "{}", ret)
@@ -867,14 +912,14 @@ impl UnitLuminousFlux {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitLuminousFlux) -> f64 {
+    pub fn convert(&self, other: &UnitLuminousFlux) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Lumen(m) => *m
+            Self::Lumen(m) => *m,
         }
     }
 }
@@ -883,14 +928,14 @@ impl UnitLuminousFlux {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitIlluminance {
     /// SI unit
-    Lux(Metric)
+    Lux(Metric),
 }
 
 impl Display for UnitIlluminance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Lux(m) => ret.push_str(m.as_str())
+            Self::Lux(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("lx");
         write!(f, "{}", ret)
@@ -906,14 +951,14 @@ impl UnitIlluminance {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitIlluminance) -> f64 {
+    pub fn convert(&self, other: &UnitIlluminance) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Lux(m) => *m
+            Self::Lux(m) => *m,
         }
     }
 }
@@ -922,14 +967,14 @@ impl UnitIlluminance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitVolume {
     /// SI unit
-    Liter(Metric)
+    Liter(Metric),
 }
 
 impl Display for UnitVolume {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Liter(m) => ret.push_str(m.as_str())
+            Self::Liter(m) => ret.push_str(m.as_str()),
         }
         ret.push('l');
         write!(f, "{}", ret)
@@ -945,19 +990,21 @@ impl UnitVolume {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitVolume) -> f64 {
+    pub fn convert(&self, other: &UnitVolume) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_meter3(&self, other:&UnitLength) -> f64 {
-        self.scale() * (f64::powf(UnitLength::Meter(Metric::None).convert(other), 3.0) / constants::METER3_TO_LITER)
+    pub fn convert_meter3(&self, other: &UnitLength) -> f64 {
+        self.scale()
+            * (f64::powf(UnitLength::Meter(Metric::None).convert(other), 3.0)
+                / constants::METER3_TO_LITER)
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Liter(m) => *m
+            Self::Liter(m) => *m,
         }
     }
 }
@@ -971,19 +1018,19 @@ pub enum UnitPressure {
     Bar(Metric),
     /// Common Standard
     Torr,
-    /// SI integrated 
+    /// SI integrated
     Hgmm,
     /// Imperial
     Hgin,
     /// Common Standard
     Atm,
     /// Imperial
-    Psi
+    Psi,
 }
 
 impl Display for UnitPressure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Pascal(m) => {
                 ret.push_str(m.as_str());
@@ -997,7 +1044,7 @@ impl Display for UnitPressure {
             Self::Hgmm => ret.push_str("mmHg"),
             Self::Hgin => ret.push_str("inHg"),
             Self::Atm => ret.push_str("atm"),
-            Self::Psi => ret.push_str("psi")
+            Self::Psi => ret.push_str("psi"),
         }
         write!(f, "{}", ret)
     }
@@ -1009,7 +1056,7 @@ impl UnitPressure {
         match self {
             Self::Pascal(m) => m.scale(),
             Self::Bar(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1022,12 +1069,12 @@ impl UnitPressure {
             Self::Hgmm => constants::PR_MM_TO_P,
             Self::Hgin => constants::PR_IN_TO_P,
             Self::Atm => constants::PR_ATM_TO_P,
-            Self::Psi => constants::PR_PSI_TO_P
+            Self::Psi => constants::PR_PSI_TO_P,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitPressure) -> f64 {
+    pub fn convert(&self, other: &UnitPressure) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1036,7 +1083,7 @@ impl UnitPressure {
         match self {
             Self::Pascal(m) => *m,
             Self::Bar(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1049,12 +1096,12 @@ pub enum UnitAngle {
     /// SI unit
     Radian(Metric),
     /// Common Standard
-    Moa
+    Moa,
 }
 
 impl Display for UnitAngle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Radian(Metric::Milli) => ret.push_str("mil"),
             Self::Radian(m) => {
@@ -1062,7 +1109,7 @@ impl Display for UnitAngle {
                 ret.push_str("rad")
             }
             Self::Degree => ret.push('°'),
-            Self::Moa => ret.push_str("moa")
+            Self::Moa => ret.push_str("moa"),
         }
         write!(f, "{}", ret)
     }
@@ -1073,7 +1120,7 @@ impl UnitAngle {
     fn scale(&self) -> f64 {
         match self {
             Self::Radian(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1087,7 +1134,7 @@ impl UnitAngle {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitAngle) -> f64 {
+    pub fn convert(&self, other: &UnitAngle) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1095,7 +1142,7 @@ impl UnitAngle {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Radian(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1104,12 +1151,12 @@ impl UnitAngle {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitSolidAngle {
     /// SI unit
-    Steradian(Metric)
+    Steradian(Metric),
 }
 
 impl Display for UnitSolidAngle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Steradian(m) => {
                 ret.push_str(m.as_str());
@@ -1124,26 +1171,26 @@ impl UnitSolidAngle {
     /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
-            Self::Steradian(m) => m.scale()
+            Self::Steradian(m) => m.scale(),
         }
     }
 
     /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64 {
         match self {
-            Self::Steradian(_) => 1.0
+            Self::Steradian(_) => 1.0,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitSolidAngle) -> f64 {
+    pub fn convert(&self, other: &UnitSolidAngle) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Steradian(m) => *m
+            Self::Steradian(m) => *m,
         }
     }
 }
@@ -1152,14 +1199,14 @@ impl UnitSolidAngle {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitFrequency {
     /// SI unit
-    Hertz(Metric)
+    Hertz(Metric),
 }
 
 impl Display for UnitFrequency {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Hertz(m) => ret.push_str(m.as_str())
+            Self::Hertz(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("Hz");
         write!(f, "{}", ret)
@@ -1175,19 +1222,19 @@ impl UnitFrequency {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitFrequency) -> f64 {
+    pub fn convert(&self, other: &UnitFrequency) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_time(&self, other:&UnitTime) -> f64 {
+    pub fn convert_time(&self, other: &UnitTime) -> f64 {
         (self.scale() / other.scale()) * (other.convert(&UnitTime::Second(Metric::None)))
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Hertz(m) => *m
+            Self::Hertz(m) => *m,
         }
     }
 }
@@ -1198,18 +1245,18 @@ pub enum UnitForce {
     /// SI unit
     Newton(Metric),
     /// Imperial
-    PoundForce
+    PoundForce,
 }
 
 impl Display for UnitForce {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Newton(m) => {
                 ret.push_str(m.as_str());
                 ret.push('N');
             }
-            Self::PoundForce => ret.push_str("lbfr")
+            Self::PoundForce => ret.push_str("lbfr"),
         }
         write!(f, "{}", ret)
     }
@@ -1220,20 +1267,20 @@ impl UnitForce {
     fn scale(&self) -> f64 {
         match self {
             Self::Newton(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
     /// Returns the base unit conversion in relation to the standard SI unit
-    fn base(&self) -> f64 { 
+    fn base(&self) -> f64 {
         match self {
             Self::Newton(_) => 1.0,
-            Self::PoundForce => constants::FC_LBF_TO_N
+            Self::PoundForce => constants::FC_LBF_TO_N,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitForce) -> f64 {
+    pub fn convert(&self, other: &UnitForce) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1241,7 +1288,7 @@ impl UnitForce {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Newton(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1256,12 +1303,12 @@ pub enum UnitEnergy {
     /// Imperial
     FootPound,
     /// SI integrated
-    ElectronVolt(Metric)
+    ElectronVolt(Metric),
 }
 
 impl Display for UnitEnergy {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Joule(m) => {
                 ret.push_str(m.as_str());
@@ -1289,7 +1336,7 @@ impl UnitEnergy {
             Self::Joule(m) => m.scale(),
             Self::GramCalorie(m) => m.scale(),
             Self::ElectronVolt(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1299,12 +1346,12 @@ impl UnitEnergy {
             Self::Joule(_) => 1.0,
             Self::GramCalorie(_) => constants::EN_CAL_TO_J,
             Self::FootPound => constants::EN_FTLB_TO_J,
-            Self::ElectronVolt(_) => constants::EN_EV_TO_J
+            Self::ElectronVolt(_) => constants::EN_EV_TO_J,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitEnergy) -> f64 {
+    pub fn convert(&self, other: &UnitEnergy) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1313,7 +1360,7 @@ impl UnitEnergy {
         match self {
             Self::Joule(m) => *m,
             Self::GramCalorie(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1322,14 +1369,14 @@ impl UnitEnergy {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitPower {
     /// SI unit
-    Watt(Metric)
+    Watt(Metric),
 }
 
 impl Display for UnitPower {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Watt(m) => ret.push_str(m.as_str())
+            Self::Watt(m) => ret.push_str(m.as_str()),
         }
         ret.push('W');
         write!(f, "{}", ret)
@@ -1345,14 +1392,14 @@ impl UnitPower {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitPower) -> f64 {
+    pub fn convert(&self, other: &UnitPower) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Watt(m) => *m
+            Self::Watt(m) => *m,
         }
     }
 }
@@ -1363,18 +1410,18 @@ pub enum UnitRadioactivity {
     /// SI unit
     Becquerel(Metric),
     /// Legacy
-    Curie
+    Curie,
 }
 
 impl Display for UnitRadioactivity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Becquerel(m) => {
                 ret.push_str(m.as_str());
                 ret.push_str("Bq");
             }
-            Self::Curie => ret.push_str("Ci")
+            Self::Curie => ret.push_str("Ci"),
         }
         write!(f, "{}", ret)
     }
@@ -1385,7 +1432,7 @@ impl UnitRadioactivity {
     fn scale(&self) -> f64 {
         match self {
             Self::Becquerel(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1393,12 +1440,12 @@ impl UnitRadioactivity {
     fn base(&self) -> f64 {
         match self {
             Self::Becquerel(_) => 1.0,
-            Self::Curie => constants::RADIO_C_TO_BQ
+            Self::Curie => constants::RADIO_C_TO_BQ,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitRadioactivity) -> f64 {
+    pub fn convert(&self, other: &UnitRadioactivity) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1406,7 +1453,7 @@ impl UnitRadioactivity {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Becquerel(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1419,19 +1466,19 @@ pub enum UnitAbsorbedDose {
     /// Legacy
     Roentgen,
     /// Legacy
-    Rad
+    Rad,
 }
 
 impl Display for UnitAbsorbedDose {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Gray(m) => {
                 ret.push_str(m.as_str());
                 ret.push_str("Gy");
             }
             Self::Roentgen => ret.push('R'),
-            Self::Rad => ret.push_str("rads")
+            Self::Rad => ret.push_str("rads"),
         }
         write!(f, "{}", ret)
     }
@@ -1442,7 +1489,7 @@ impl UnitAbsorbedDose {
     fn scale(&self) -> f64 {
         match self {
             Self::Gray(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1451,12 +1498,12 @@ impl UnitAbsorbedDose {
         match self {
             Self::Gray(_) => 1.0,
             Self::Roentgen => constants::AB_ROE_TO_GY,
-            Self::Rad => constants::AB_RAD_TO_GY
+            Self::Rad => constants::AB_RAD_TO_GY,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitAbsorbedDose) -> f64 {
+    pub fn convert(&self, other: &UnitAbsorbedDose) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1464,7 +1511,7 @@ impl UnitAbsorbedDose {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Gray(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1475,18 +1522,18 @@ pub enum UnitRadioactivityExposure {
     /// SI unit
     Sievert(Metric),
     /// Legacy
-    Rem
+    Rem,
 }
 
 impl Display for UnitRadioactivityExposure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Sievert(m) => {
                 ret.push_str(m.as_str());
                 ret.push_str("Sv");
             }
-            Self::Rem => ret.push_str("rem")
+            Self::Rem => ret.push_str("rem"),
         }
         write!(f, "{}", ret)
     }
@@ -1497,7 +1544,7 @@ impl UnitRadioactivityExposure {
     fn scale(&self) -> f64 {
         match self {
             Self::Sievert(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -1505,12 +1552,12 @@ impl UnitRadioactivityExposure {
     fn base(&self) -> f64 {
         match self {
             Self::Sievert(_) => 1.0,
-            Self::Rem => constants::RADEX_REM_TO_SV
+            Self::Rem => constants::RADEX_REM_TO_SV,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitRadioactivityExposure) -> f64 {
+    pub fn convert(&self, other: &UnitRadioactivityExposure) -> f64 {
         (self.scale() / self.scale()) * (self.base() / other.base())
     }
 
@@ -1518,7 +1565,7 @@ impl UnitRadioactivityExposure {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Sievert(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 }
@@ -1527,14 +1574,14 @@ impl UnitRadioactivityExposure {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitCatalyticActivity {
     /// SI unit
-    Katal(Metric)
+    Katal(Metric),
 }
 
 impl Display for UnitCatalyticActivity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Katal(m) => ret.push_str(m.as_str())
+            Self::Katal(m) => ret.push_str(m.as_str()),
         }
         ret.push_str("kat");
         write!(f, "{}", ret)
@@ -1550,14 +1597,14 @@ impl UnitCatalyticActivity {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitCatalyticActivity) -> f64 {
+    pub fn convert(&self, other: &UnitCatalyticActivity) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Katal(m) => *m
+            Self::Katal(m) => *m,
         }
     }
 }
@@ -1566,14 +1613,14 @@ impl UnitCatalyticActivity {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitSound {
     /// SI unit
-    Bel(Metric)
+    Bel(Metric),
 }
 
 impl Display for UnitSound {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
-            Self::Bel(m) => ret.push_str(m.as_str())
+            Self::Bel(m) => ret.push_str(m.as_str()),
         }
         ret.push('B');
         write!(f, "{}", ret)
@@ -1589,14 +1636,14 @@ impl UnitSound {
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitSound) -> f64 {
+    pub fn convert(&self, other: &UnitSound) -> f64 {
         self.scale() / other.scale()
     }
 
     /// Returns the `Metric` prefix for the unit
     pub fn get_metric(&self) -> Metric {
         match self {
-            Self::Bel(m) => *m
+            Self::Bel(m) => *m,
         }
     }
 }
@@ -1607,12 +1654,12 @@ pub enum UnitInformation {
     /// Not SI but uses metric prefixing
     Bit(Metric),
     /// Not SI but uses metric prefixing
-    Byte(Metric)
+    Byte(Metric),
 }
 
 impl Display for UnitInformation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret:String = String::new();
+        let mut ret: String = String::new();
         match self {
             Self::Bit(m) => {
                 ret.push_str(m.as_str());
@@ -1631,19 +1678,18 @@ impl UnitInformation {
     /// Returns the metric scaler of an SI unit
     fn scale(&self) -> f64 {
         match self {
-            UnitInformation::Bit(m) | UnitInformation::Byte(m) => {
-            match m {
+            UnitInformation::Bit(m) | UnitInformation::Byte(m) => match m {
                 Metric::Yotta => 1208925819614629174706176.0,
                 Metric::Zetta => 1180591620717411303424.0,
-                Metric::Exa   => 1152921504606846976.0,
-                Metric::Peta  => 1125899906842624.0,
-                Metric::Tera  => 1099511627776.0,
-                Metric::Giga  => 1073741824.0,
-                Metric::Mega  => 1048576.0,
-                Metric::Kilo  => 1024.0,
-                Metric::None  => 1.0,
-                _ => 1.0
-            }}
+                Metric::Exa => 1152921504606846976.0,
+                Metric::Peta => 1125899906842624.0,
+                Metric::Tera => 1099511627776.0,
+                Metric::Giga => 1073741824.0,
+                Metric::Mega => 1048576.0,
+                Metric::Kilo => 1024.0,
+                Metric::None => 1.0,
+                _ => 1.0,
+            },
         }
     }
 
@@ -1651,12 +1697,12 @@ impl UnitInformation {
     fn base(&self) -> f64 {
         match self {
             Self::Byte(_) => 1.0,
-            Self::Bit(_) => 0.125
+            Self::Bit(_) => 0.125,
         }
     }
 
     /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other:&UnitInformation) -> f64 {
+    pub fn convert(&self, other: &UnitInformation) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }
 
@@ -1664,7 +1710,7 @@ impl UnitInformation {
     pub fn get_metric(&self) -> Metric {
         match self {
             Self::Bit(m) => *m,
-            Self::Byte(m) => *m
+            Self::Byte(m) => *m,
         }
     }
 }
@@ -1686,7 +1732,7 @@ mod units_unit_test {
     use super::UnitRadioactivityExposure;
 
     /// # Metric Comparison
-    /// 
+    ///
     /// All of the metric prefixes are in the right order
     #[test]
     fn metric_comparison() {
@@ -1713,7 +1759,7 @@ mod units_unit_test {
     }
 
     /// # Metric Comparison Scale
-    /// 
+    ///
     /// All of the metric scale values are in the right order
     #[test]
     fn metric_comparison_scale() {
@@ -1746,7 +1792,7 @@ mod units_unit_test {
     }
 
     /// Unit Information Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_information_base_comparison() {
@@ -1757,7 +1803,7 @@ mod units_unit_test {
     }
 
     /// Unit Length Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_length_base_comparison() {
@@ -1782,7 +1828,7 @@ mod units_unit_test {
     }
 
     /// Unit Mass Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_mass_base_comparison() {
@@ -1797,7 +1843,7 @@ mod units_unit_test {
     }
 
     /// Unit Angle Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_angle_base_comparison() {
@@ -1810,7 +1856,7 @@ mod units_unit_test {
     }
 
     /// Unit Energy Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_energy_base_comparison() {
@@ -1825,7 +1871,7 @@ mod units_unit_test {
     }
 
     /// Unit Force Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_force_base_comparison() {
@@ -1836,7 +1882,7 @@ mod units_unit_test {
     }
 
     /// Unit Pressure Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_pressure_base_comparison() {
@@ -1857,7 +1903,7 @@ mod units_unit_test {
     }
 
     /// Unit Radioactivity Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_radioactivity_base_comparison() {
@@ -1868,7 +1914,7 @@ mod units_unit_test {
     }
 
     /// Unit Absorbed Dose of Ionizing Radiation Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_absorbed_base_comparison() {
@@ -1881,7 +1927,7 @@ mod units_unit_test {
     }
 
     /// Unit Equivalent Dose of Ionizing Radiation Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_equivalent_base_comparison() {
@@ -1892,7 +1938,7 @@ mod units_unit_test {
     }
 
     /// Unit Time Comparison Base
-    /// 
+    ///
     /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_time_base_comparison() {

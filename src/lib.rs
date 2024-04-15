@@ -1,4 +1,4 @@
-#![crate_type="lib"]
+#![crate_type = "lib"]
 #![deny(missing_docs)]
 #![deny(clippy::missing_docs_in_private_items)]
 

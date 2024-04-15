@@ -1,7 +1,7 @@
-use crate::{values::Value, constants::*};
+use crate::{constants::*, values::Value};
 
 impl PartialEq<Value> for Value {
-    fn eq(&self, other:&Value) -> bool {
+    fn eq(&self, other: &Value) -> bool {
         if !self.__equal(other) {
             return false;
         }
@@ -11,7 +11,7 @@ impl PartialEq<Value> for Value {
 }
 
 impl PartialEq<&mut Value> for Value {
-    fn eq(&self, other:&&mut Value) -> bool {
+    fn eq(&self, other: &&mut Value) -> bool {
         if !self.__equal(other) {
             return false;
         }
@@ -21,24 +21,27 @@ impl PartialEq<&mut Value> for Value {
 }
 
 impl PartialOrd for Value {
-    fn partial_cmp(&self, other:&Value) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Value) -> Option<std::cmp::Ordering> {
         if self.unit_map != other.unit_map {
             return None;
         }
 
         // special case to check if temperature is already the correct unit
-        if self.unit_map & TEMPERATURE_MAP != 0 && self.unit_map != TEMPERATURE_MAP && self.v_temperature != other.v_temperature {
+        if self.unit_map & TEMPERATURE_MAP != 0
+            && self.unit_map != TEMPERATURE_MAP
+            && self.v_temperature != other.v_temperature
+        {
             // Error cannot convert as part of larger unit
         }
 
-        let mut cmp_val:f64 = other.val;
+        let mut cmp_val: f64 = other.val;
 
         for i in 0..31_usize {
             if self.exp[i] != other.exp[i] {
                 return None;
             }
 
-            let region:usize = 1<<i;
+            let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 match region {
                     LENGTH_MAP => {
@@ -58,72 +61,114 @@ impl PartialOrd for Value {
                     }
                     ELECTRIC_CURRENT_MAP => {
                         if self.v_electric_current != other.v_electric_current {
-                            cmp_val *= other.v_electric_current.unwrap().convert(&self.v_electric_current.unwrap());
+                            cmp_val *= other
+                                .v_electric_current
+                                .unwrap()
+                                .convert(&self.v_electric_current.unwrap());
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
                         if self.v_electric_charge != other.v_electric_charge {
-                            cmp_val *= other.v_electric_charge.unwrap().convert(&self.v_electric_charge.unwrap());
+                            cmp_val *= other
+                                .v_electric_charge
+                                .unwrap()
+                                .convert(&self.v_electric_charge.unwrap());
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
                         if self.v_electric_potential != other.v_electric_potential {
-                            cmp_val *= other.v_electric_potential.unwrap().convert(&self.v_electric_potential.unwrap());
+                            cmp_val *= other
+                                .v_electric_potential
+                                .unwrap()
+                                .convert(&self.v_electric_potential.unwrap());
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
                         if self.v_electric_conductance != other.v_electric_conductance {
-                            cmp_val *= other.v_electric_conductance.unwrap().convert(&self.v_electric_conductance.unwrap());
+                            cmp_val *= other
+                                .v_electric_conductance
+                                .unwrap()
+                                .convert(&self.v_electric_conductance.unwrap());
                         }
                     }
                     CAPACITANCE_MAP => {
                         if self.v_capacitance != other.v_capacitance {
-                            cmp_val *= other.v_capacitance.unwrap().convert(&self.v_capacitance.unwrap());
+                            cmp_val *= other
+                                .v_capacitance
+                                .unwrap()
+                                .convert(&self.v_capacitance.unwrap());
                         }
                     }
                     RESISTANCE_MAP => {
                         if self.v_resistance != other.v_resistance {
-                            cmp_val *= other.v_resistance.unwrap().convert(&self.v_resistance.unwrap());
+                            cmp_val *= other
+                                .v_resistance
+                                .unwrap()
+                                .convert(&self.v_resistance.unwrap());
                         }
                     }
                     INDUCTANCE_MAP => {
-                        if self.v_inductance != other.v_inductance { 
-                            cmp_val *= other.v_inductance.unwrap().convert(&self.v_inductance.unwrap());
+                        if self.v_inductance != other.v_inductance {
+                            cmp_val *= other
+                                .v_inductance
+                                .unwrap()
+                                .convert(&self.v_inductance.unwrap());
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
                         if self.v_magnetic_flux != other.v_magnetic_flux {
-                            cmp_val *= other.v_magnetic_flux.unwrap().convert(&self.v_magnetic_flux.unwrap());
+                            cmp_val *= other
+                                .v_magnetic_flux
+                                .unwrap()
+                                .convert(&self.v_magnetic_flux.unwrap());
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
                         if self.v_magnetic_flux_density != other.v_magnetic_flux_density {
-                            cmp_val *= other.v_magnetic_flux_density.unwrap().convert(&self.v_magnetic_flux_density.unwrap());
+                            cmp_val *= other
+                                .v_magnetic_flux_density
+                                .unwrap()
+                                .convert(&self.v_magnetic_flux_density.unwrap());
                         }
                     }
                     TEMPERATURE_MAP => {
                         if self.v_temperature != other.v_temperature {
-                            cmp_val = other.v_temperature.unwrap().convert(&self.v_temperature.unwrap(), cmp_val);
+                            cmp_val = other
+                                .v_temperature
+                                .unwrap()
+                                .convert(&self.v_temperature.unwrap(), cmp_val);
                         }
                     }
                     SUBSTANCE_MAP => {
                         if self.v_substance != other.v_substance {
-                            cmp_val *= other.v_substance.unwrap().convert(&self.v_substance.unwrap());
+                            cmp_val *= other
+                                .v_substance
+                                .unwrap()
+                                .convert(&self.v_substance.unwrap());
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
                         if self.v_luminous_flux_intensity != other.v_luminous_flux_intensity {
-                            cmp_val *= other.v_luminous_flux_intensity.unwrap().convert(&self.v_luminous_flux_intensity.unwrap());
+                            cmp_val *= other
+                                .v_luminous_flux_intensity
+                                .unwrap()
+                                .convert(&self.v_luminous_flux_intensity.unwrap());
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
                         if self.v_luminous_flux != other.v_luminous_flux {
-                            cmp_val *= other.v_luminous_flux.unwrap().convert(&self.v_luminous_flux.unwrap());
+                            cmp_val *= other
+                                .v_luminous_flux
+                                .unwrap()
+                                .convert(&self.v_luminous_flux.unwrap());
                         }
                     }
                     ILLUMINANCE_MAP => {
                         if self.v_illuminance != other.v_illuminance {
-                            cmp_val *= other.v_illuminance.unwrap().convert(&self.v_illuminance.unwrap());
+                            cmp_val *= other
+                                .v_illuminance
+                                .unwrap()
+                                .convert(&self.v_illuminance.unwrap());
                         }
                     }
                     VOLUME_MAP => {
@@ -143,7 +188,10 @@ impl PartialOrd for Value {
                     }
                     FREQUENCY_MAP => {
                         if self.v_frequency != other.v_frequency {
-                            cmp_val *= other.v_frequency.unwrap().convert(&self.v_frequency.unwrap());
+                            cmp_val *= other
+                                .v_frequency
+                                .unwrap()
+                                .convert(&self.v_frequency.unwrap());
                         }
                     }
                     FORCE_MAP => {
@@ -163,7 +211,10 @@ impl PartialOrd for Value {
                     }
                     RADIOACTIVITY_MAP => {
                         if self.v_radioactivity != other.v_radioactivity {
-                            cmp_val *= other.v_radioactivity.unwrap().convert(&self.v_radioactivity.unwrap());
+                            cmp_val *= other
+                                .v_radioactivity
+                                .unwrap()
+                                .convert(&self.v_radioactivity.unwrap());
                         }
                     }
                     ABSORBED_DOSE_MAP => {
@@ -173,12 +224,18 @@ impl PartialOrd for Value {
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
                         if self.v_radioactivity_exposure != other.v_radioactivity_exposure {
-                            cmp_val *= other.v_radioactivity_exposure.unwrap().convert(&self.v_radioactivity_exposure.unwrap());
+                            cmp_val *= other
+                                .v_radioactivity_exposure
+                                .unwrap()
+                                .convert(&self.v_radioactivity_exposure.unwrap());
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
                         if self.v_catalytic != other.v_catalytic {
-                            cmp_val *= other.v_catalytic.unwrap().convert(&self.v_catalytic.unwrap());
+                            cmp_val *= other
+                                .v_catalytic
+                                .unwrap()
+                                .convert(&self.v_catalytic.unwrap());
                         }
                     }
                     SOUND_MAP => {
@@ -188,12 +245,18 @@ impl PartialOrd for Value {
                     }
                     INFORMATION_MAP => {
                         if self.v_information != other.v_information {
-                            cmp_val *= other.v_information.unwrap().convert(&self.v_information.unwrap());
+                            cmp_val *= other
+                                .v_information
+                                .unwrap()
+                                .convert(&self.v_information.unwrap());
                         }
                     }
                     SOLID_ANGLE_MAP => {
                         if self.v_solid_angle != other.v_solid_angle {
-                            cmp_val *= other.v_solid_angle.unwrap().convert(&self.v_solid_angle.unwrap());
+                            cmp_val *= other
+                                .v_solid_angle
+                                .unwrap()
+                                .convert(&self.v_solid_angle.unwrap());
                         }
                     }
                     _ => {
@@ -209,13 +272,13 @@ impl PartialOrd for Value {
 }
 
 impl PartialEq<f64> for Value {
-    fn eq(&self, other:&f64) -> bool {
+    fn eq(&self, other: &f64) -> bool {
         self.val == *other
     }
 }
 
 impl PartialOrd<f64> for Value {
-    fn partial_cmp(&self, other:&f64) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &f64) -> Option<std::cmp::Ordering> {
         self.val.partial_cmp(other)
     }
 }
