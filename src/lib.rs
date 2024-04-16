@@ -1,5 +1,5 @@
 #![crate_type = "lib"]
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 #![deny(clippy::missing_docs_in_private_items)]
 
 //! The V3 library crate

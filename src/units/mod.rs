@@ -4,11 +4,46 @@
  * Version :> 0.0.1
  * Details :>
  */
+
+pub mod metric;
+pub mod angle;
+pub mod catalytic_activity;
+pub mod electrical_capacitance;
+pub mod electrical_charge;
+pub mod electrical_conductance;
+pub mod electrical_current;
+pub mod electrical_potential;
+pub mod electrical_resistance;
+pub mod energy;
+pub mod force;
+pub mod frequency;
+pub mod illuminance;
+pub mod length;
+pub mod luminous_flux;
+pub mod luminous_flux_intensity;
+pub mod magnetic_flux;
+pub mod magnetic_flux_density;
+pub mod mass;
+pub mod power;
+pub mod pressure;
+pub mod rad_absorbed_dose;
+pub mod rad_equiv_dose;
+pub mod radioactivity;
+pub mod solid_angle;
+pub mod sound;
+pub mod substance;
+pub mod temperature;
+pub mod time;
+pub mod unitless;
+pub mod volume;
+
 use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
 use crate::constants;
+
+use self::{length::UnitLength, metric::Metric};
 
 /// Trait that can be used and called by all of the unit types
 trait Convert<T1> {
@@ -16,256 +51,18 @@ trait Convert<T1> {
     fn convert(&self, other: &T1) -> f64;
 }
 
-trait BaseUnit<T> {
+trait BaseUnit<T1, T2> {
     /// Returns the metric scaler of an SI unit
-    fn scale(&self) -> f64;
+    fn scale(&self) -> T2;
 
     /// Returns the base unit conversion in relation to the standard SI unit
-    fn base(&self) -> f64;
+    fn base(&self) -> T2;
 
     /// Returns the `f64` multiplier to convert a `Value`
-    fn convert(&self, other: &T) -> f64;
+    fn convert(&self, other: &T1) -> T2;
 
     /// Returns the `Metric` prefix for the unit
     fn get_metric(&self) -> Metric;
-}
-
-/// The Metric scale names
-#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone, Default, Serialize, Deserialize)]
-pub enum Metric {
-    /// Yocto
-    Yocto,
-    /// Zepto
-    Zepto,
-    /// Atto
-    Atto,
-    /// Femto
-    Femto,
-    /// Pico
-    Pico,
-    /// Nano
-    Nano,
-    /// Micro
-    Micro,
-    /// Milli
-    Milli,
-    /// Centi
-    Centi,
-    /// Deci
-    Deci,
-    /// None (default)
-    #[default]
-    None,
-    /// Deca
-    Deca,
-    /// Hecto
-    Hecto,
-    /// Kilo
-    Kilo,
-    /// Mega
-    Mega,
-    /// Giga
-    Giga,
-    /// Tera
-    Tera,
-    /// Peta
-    Peta,
-    /// Exa
-    Exa,
-    /// Zetta
-    Zetta,
-    /// Yotta
-    Yotta,
-}
-
-impl Metric {
-    /// Returns the numeric scaling of a given metric prefix
-    pub fn scale(&self) -> f64 {
-        match self {
-            Metric::Yotta => 1000000000000000000000000.0,
-            Metric::Zetta => 1000000000000000000000.0,
-            Metric::Exa => 1000000000000000000.0,
-            Metric::Peta => 1000000000000000.0,
-            Metric::Tera => 1000000000000.0,
-            Metric::Giga => 1000000000.0,
-            Metric::Mega => 1000000.0,
-            Metric::Kilo => 1000.0,
-            Metric::Hecto => 100.0,
-            Metric::Deca => 10.0,
-            Metric::None => 1.0,
-            Metric::Deci => 0.1,
-            Metric::Centi => 0.01,
-            Metric::Milli => 0.001,
-            Metric::Micro => 0.000001,
-            Metric::Nano => 0.000000001,
-            Metric::Pico => 0.000000000001,
-            Metric::Femto => 0.000000000000001,
-            Metric::Atto => 0.000000000000000001,
-            Metric::Zepto => 0.000000000000000000001,
-            Metric::Yocto => 0.000000000000000000000001,
-        }
-    }
-
-    /// Returns the string representation of the metric prefix
-    pub fn as_str(&self) -> &str {
-        match self {
-            Metric::Yotta => "Y",
-            Metric::Zetta => "Z",
-            Metric::Exa => "E",
-            Metric::Peta => "P",
-            Metric::Tera => "T",
-            Metric::Giga => "G",
-            Metric::Mega => "M",
-            Metric::Kilo => "k",
-            Metric::Hecto => "h",
-            Metric::Deca => "da",
-            Metric::None => "",
-            Metric::Deci => "d",
-            Metric::Centi => "c",
-            Metric::Milli => "m",
-            Metric::Micro => "μ",
-            Metric::Nano => "n",
-            Metric::Pico => "p",
-            Metric::Femto => "f",
-            Metric::Atto => "a",
-            Metric::Zepto => "z",
-            Metric::Yocto => "y",
-        }
-    }
-}
-
-/// 'Empty' units
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitNone {
-    /// To describe a `Value` representing a percentage
-    Percentage,
-}
-
-impl Display for UnitNone {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret: String = String::new();
-        match self {
-            Self::Percentage => {
-                ret.push_str("%");
-            }
-        }
-
-        write!(f, "{}", ret)
-    }
-}
-
-impl BaseUnit<UnitNone> for UnitNone {
-    fn scale(&self) -> f64 {
-        1.0
-    }
-
-    fn base(&self) -> f64 {
-        1.0
-    }
-
-    fn convert(&self, other: &UnitNone) -> f64 {
-        (self.scale() / other.scale()) * (self.base() / other.base())
-    }
-
-    fn get_metric(&self) -> Metric {
-        Metric::None
-    }
-}
-
-/// The unit types for length
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitLength {
-    /// SI unit
-    Meter(Metric),
-    /// Imperial
-    Inch,
-    /// Imperial
-    Foot,
-    /// Imperial
-    Yard,
-    /// Imperial
-    Mile,
-    /// Astronomical
-    AstronomicalUnit,
-    /// Astronomical
-    Parsec(Metric),
-    /// SI integrated
-    LightYear(Metric),
-    /// Legacy
-    Angstrom,
-}
-
-impl Display for UnitLength {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret: String = String::new();
-        match self {
-            Self::Meter(m) => {
-                ret.push_str(m.as_str());
-                ret.push('m');
-            }
-            Self::Inch => ret.push_str("in"),
-            Self::Foot => ret.push_str("ft"),
-            Self::Yard => ret.push_str("yds"),
-            Self::Mile => ret.push_str("miles"),
-            Self::AstronomicalUnit => ret.push_str("AU"),
-            Self::Parsec(m) => {
-                ret.push_str(m.as_str());
-                ret.push_str("pc")
-            }
-            Self::LightYear(m) => {
-                ret.push_str(m.as_str());
-                ret.push_str("lyr")
-            }
-            Self::Angstrom => ret.push('Å'),
-        }
-        write!(f, "{}", ret)
-    }
-}
-
-impl UnitLength {
-    /// Returns the metric scaler of an SI unit
-    fn scale(&self) -> f64 {
-        match self {
-            Self::Meter(m) => m.scale(),
-            _ => 1.0,
-        }
-    }
-
-    /// Returns the base unit conversion in relation to the standard SI unit
-    fn base(&self) -> f64 {
-        match self {
-            Self::Meter(_) => 1.0,
-            Self::Inch => constants::LENGTH_IN_TO_METER,
-            Self::Foot => constants::LENGTH_FT_TO_METER,
-            Self::Yard => constants::LENGTH_YD_TO_METER,
-            Self::Mile => constants::LENGTH_MILE_TO_METER,
-            Self::AstronomicalUnit => constants::LENGTH_AU_TO_METER,
-            Self::Parsec(_) => constants::LENGTH_PC_TO_METER,
-            Self::LightYear(_) => constants::LENGTH_LYR_TO_METER,
-            Self::Angstrom => constants::LENGTH_A_TO_METER,
-        }
-    }
-
-    /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert(&self, other: &UnitLength) -> f64 {
-        (self.scale() / other.scale()) * (self.base() / other.base())
-    }
-
-    /// Returns the `f64` multiplier to convert a `Value`
-    pub fn convert_liter(&self, other: &UnitVolume) -> f64 {
-        self.scale() / // get current metric scale if present
-            (f64::powf(UnitLength::Meter(Metric::None).convert(self), 3.0) / // Convert ourselves to meters
-            constants::METER3_TO_LITER) *   // meters to liters
-            UnitVolume::Liter(Metric::None).convert(other) // convert to correct volume
-    }
-
-    /// Returns the `Metric` prefix for the unit
-    pub fn get_metric(&self) -> Metric {
-        match self {
-            Self::Meter(m) => *m,
-            _ => Metric::None,
-        }
-    }
 }
 
 /// The unit types for time
@@ -1717,6 +1514,7 @@ impl UnitInformation {
 
 #[cfg(test)]
 mod units_unit_test {
+    use crate::units::length::UnitLength;
     use crate::units::Metric;
     use crate::units::UnitInformation;
     use crate::units::UnitTime;
@@ -1725,7 +1523,6 @@ mod units_unit_test {
     use super::UnitAngle;
     use super::UnitEnergy;
     use super::UnitForce;
-    use super::UnitLength;
     use super::UnitMass;
     use super::UnitPressure;
     use super::UnitRadioactivity;

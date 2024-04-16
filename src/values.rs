@@ -24,7 +24,7 @@ use serde::{Deserialize, Serialize};
 use crate::units::{
     UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge,
     UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce,
-    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLength, UnitLuminousFlux,
+    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, length::UnitLength, UnitLuminousFlux,
     UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower,
     UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle,
     UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume,
@@ -116,8 +116,8 @@ mod value_unit_tests {
 
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
-    use crate::units::Metric;
-    use crate::units::UnitLength;
+    use crate::units::length::UnitLength;
+    use crate::units::metric::Metric;
     use crate::units::UnitMass;
     use crate::units::UnitSubstance;
     use crate::value;
