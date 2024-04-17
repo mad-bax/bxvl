@@ -21,14 +21,9 @@ mod value_conversion_ops;
 
 use serde::{Deserialize, Serialize};
 
-use crate::units::{
-    UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge,
-    UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce,
-    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, length::UnitLength, UnitLuminousFlux,
-    UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower,
-    UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle,
-    UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume,
-};
+use crate::units::{angle::UnitAngle, angle_solid::UnitSolidAngle, catalytic_activity::UnitCatalyticActivity, electrical_capacitance::UnitElectricCapacitance, electrical_charge::UnitElectricCharge, electrical_conductance::UnitElectricConductance, electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance, electrical_potential::UnitElectricPotential, electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce, frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation, length::UnitLength, luminous_flux::UnitLuminousFlux, luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux, magnetic_flux_density::UnitMagneticFluxDensity, mass::UnitMass, power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose, radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity, sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime, volume::UnitVolume};
+
+
 
 /// The `Value` struct definition
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -38,13 +33,13 @@ pub struct Value {
     /// The unit map which specifies which units are present in the `Value`
     unit_map: usize,
     /// The exponent storage of all the units within a `Value`
-    exp: [i32; 31],
+    exp: [i8; 31],
     /// the absorbed dose of ionizing radiation measure
     v_ab_dose: Option<UnitAbsorbedDose>,
     /// the angle measure
     v_angle: Option<UnitAngle>,
     /// the capacitance measure
-    v_capacitance: Option<UnitCapacitance>,
+    v_capacitance: Option<UnitElectricCapacitance>,
     /// the catalytic activity measure
     v_catalytic: Option<UnitCatalyticActivity>,
     /// the electric charge measure
@@ -64,7 +59,7 @@ pub struct Value {
     /// the illuminance measure
     v_illuminance: Option<UnitIlluminance>,
     /// the inductance measure
-    v_inductance: Option<UnitInductance>,
+    v_inductance: Option<UnitElectricInductance>,
     /// the information measure
     v_information: Option<UnitInformation>,
     /// the length measure
@@ -84,7 +79,7 @@ pub struct Value {
     /// the equivalent dose measure
     v_radioactivity_exposure: Option<UnitRadioactivityExposure>,
     /// the resistance measure
-    v_resistance: Option<UnitResistance>,
+    v_resistance: Option<UnitElectricResistance>,
     /// the sound measure
     v_sound: Option<UnitSound>,
     /// the substance measure
@@ -118,8 +113,8 @@ mod value_unit_tests {
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
     use crate::units::length::UnitLength;
     use crate::units::metric::Metric;
-    use crate::units::UnitMass;
-    use crate::units::UnitSubstance;
+    use crate::values::UnitMass;
+    use crate::values::UnitSubstance;
     use crate::value;
     use crate::values::Value;
 

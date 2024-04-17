@@ -96,6 +96,11 @@ pub const RADIO_C_TO_BQ: f64 = 37_000_000_000.0;
 /// The conversion numeric for REM to sievert
 pub const RADEX_REM_TO_SV: f64 = 0.01;
 
+/// Temperature
+/// 
+/// The conversion numeric for Kelvin to Celsius
+pub const KELVIN_TO_CELSIUS: f64 = 273.15;
+
 /// Volume
 ///
 /// The conversion numeric for meters cubed to liters

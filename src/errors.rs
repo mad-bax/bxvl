@@ -12,7 +12,7 @@ pub enum V3Error {
     /// Declared when a metric prefix is not supported
     UnsupportedMetric(String),
     /// Declared when a given string cannot be parsed as expected
-    ParsingError(&'static str),
+    ParsingError(String),
     /// Declared when there is an error when reducing a `Value`
     UnitReductionError(String),
     /// For any other error case
@@ -26,7 +26,7 @@ impl fmt::Display for V3Error {
             V3Error::ValueConversionError(s) => write!(f, "Value Conversion Error: {}", s),
             V3Error::UnsupportedUnit(ref s) => write!(f, "Unsupported unit: {}", s),
             V3Error::UnsupportedMetric(ref s) => write!(f, "Unsupported metric: {}", s),
-            V3Error::ParsingError(s) => write!(f, "Parsing error: {}", s),
+            V3Error::ParsingError(ref s) => write!(f, "Parsing error: {}", s),
             V3Error::UnitReductionError(ref s) => write!(f, "Unit Reduction error: {}", s),
             V3Error::UnknownError(s) => write!(f, "Unknown Error: {}", s),
         }
@@ -48,7 +48,7 @@ mod value_errors_testing {
     #[test]
     fn str_errors() {
         assert_eq!(
-            format!("{}", V3Error::ParsingError("parse")),
+            format!("{}", V3Error::ParsingError("parse".into())),
             "Parsing error: parse"
         );
         assert_eq!(
@@ -80,8 +80,8 @@ mod value_errors_testing {
     #[test]
     fn debug_string() {
         assert!(
-            format!("{:?}", V3Error::ParsingError("t1")).chars().count()
-                > format!("{}", V3Error::ParsingError("t1")).chars().count()
+            format!("{:?}", V3Error::ParsingError("t1".into())).chars().count()
+                > format!("{}", V3Error::ParsingError("t1".into())).chars().count()
         );
     }
 }

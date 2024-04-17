@@ -5,10 +5,10 @@ use crate::errors::V3Error;
 use crate::units::{
     UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge,
     UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce,
-    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, UnitLength, UnitLuminousFlux,
+    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, length::UnitLength, UnitLuminousFlux,
     UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower,
     UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle,
-    UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume,
+    UnitSound, UnitSubstance, UnitTemperature, time::UnitTime, UnitVolume,
 };
 use crate::values::Value;
 

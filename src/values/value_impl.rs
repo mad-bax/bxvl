@@ -1,12 +1,12 @@
 use crate::constants::*;
 use crate::errors::V3Error;
 use crate::units::{
-    Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
+    metric::Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
     UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential,
     UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation,
-    UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
+    length::UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
     UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
-    UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime,
+    UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, time::UnitTime,
     UnitVolume,
 };
 use crate::values::Value;

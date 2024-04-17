@@ -1,7 +1,7 @@
 use crate::constants::*;
 use crate::units::{
-    Metric, UnitCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency, UnitLength, UnitMass,
-    UnitSubstance, UnitTemperature, UnitTime,
+    metric::Metric, UnitCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency, length::UnitLength, UnitMass,
+    UnitSubstance, UnitTemperature, time::UnitTime,
 };
 use crate::values::Value;
 
