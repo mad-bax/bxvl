@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants::KELVIN_TO_CELSIUS;
 
-use super::{Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit};
 
 /// The unit types for temperature
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]

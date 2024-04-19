@@ -19,7 +19,6 @@ pub enum UnitAbsorbedDose {
 
 impl Display for UnitAbsorbedDose {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ret: String = String::new();
         write!(
             f,
             "{}",
