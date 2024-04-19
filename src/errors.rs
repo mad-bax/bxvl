@@ -80,8 +80,12 @@ mod value_errors_testing {
     #[test]
     fn debug_string() {
         assert!(
-            format!("{:?}", V3Error::ParsingError("t1".into())).chars().count()
-                > format!("{}", V3Error::ParsingError("t1".into())).chars().count()
+            format!("{:?}", V3Error::ParsingError("t1".into()))
+                .chars()
+                .count()
+                > format!("{}", V3Error::ParsingError("t1".into()))
+                    .chars()
+                    .count()
         );
     }
 }

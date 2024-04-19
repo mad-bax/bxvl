@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types for catalytic activity
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitCatalyticActivity {
-    /// SI unit
-    Katal(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitCatalyticActivity};
 
 impl Display for UnitCatalyticActivity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

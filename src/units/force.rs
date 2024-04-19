@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types of force
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -17,10 +17,14 @@ pub enum UnitForce {
 
 impl Display for UnitForce {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Newton(m) => format!("{}N", m.as_str()),
-            Self::PoundForce => "lbfr".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Newton(m) => format!("{}N", m.as_str()),
+                Self::PoundForce => "lbfr".into(),
+            }
+        )
     }
 }
 
@@ -65,7 +69,7 @@ impl BaseUnit for UnitForce {
 
 #[cfg(test)]
 mod force_testing {
-    use crate::units::{force::UnitForce, metric::Metric};
+    use crate::units::{force::UnitForce, Metric, BaseUnit};
 
     /// Unit Force Comparison Base
     ///

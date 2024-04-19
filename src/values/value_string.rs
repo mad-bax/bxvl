@@ -95,7 +95,7 @@ impl FromStr for Value {
             let val: Value = match s.parse::<f64>() {
                 Ok(t) => Value::new(t, "").unwrap(),
                 Err(_) => {
-                    return Err(V3Error::ParsingError("[from_str] float conversion"));
+                    return Err(V3Error::ParsingError("[from_str] float conversion".into()));
                 }
             };
             return Ok(val);
@@ -104,7 +104,7 @@ impl FromStr for Value {
         let v: f64 = match temp[0].parse::<f64>() {
             Ok(t) => t,
             Err(_) => {
-                return Err(V3Error::ParsingError("[from_str] float conversion"));
+                return Err(V3Error::ParsingError("[from_str] float conversion".into()));
             }
         };
         Value::new(v, temp[1])

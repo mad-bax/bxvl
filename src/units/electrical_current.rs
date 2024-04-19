@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for electric current
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -44,7 +44,7 @@ impl BaseUnit for UnitElectricCurrent {
             Self::Ampere(m) => *m,
         }
     }
-    
+
     fn base(&self) -> f64 {
         1.0
     }

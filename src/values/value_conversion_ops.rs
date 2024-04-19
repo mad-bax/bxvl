@@ -2,14 +2,38 @@ use std::ops::{Shr, ShrAssign};
 
 use crate::constants::*;
 use crate::errors::V3Error;
-use crate::units::{
-    UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity, UnitElectricCharge,
-    UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitEnergy, UnitForce,
-    UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation, length::UnitLength, UnitLuminousFlux,
-    UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower,
-    UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitResistance, UnitSolidAngle,
-    UnitSound, UnitSubstance, UnitTemperature, time::UnitTime, UnitVolume,
-};
+use crate::units::UnitAngle;
+use crate::units::UnitSolidAngle;
+use crate::units::UnitCatalyticActivity;
+use crate::units::UnitElectricCapacitance;
+use crate::units::UnitElectricCharge;
+use crate::units::UnitElectricConductance;
+use crate::units::electrical_current::UnitElectricCurrent;
+use crate::units::electrical_inductance::UnitElectricInductance;
+use crate::units::electrical_potential::UnitElectricPotential;
+use crate::units::electrical_resistance::UnitElectricResistance;
+use crate::units::energy::UnitEnergy;
+use crate::units::force::UnitForce;
+use crate::units::frequency::UnitFrequency;
+use crate::units::illuminance::UnitIlluminance;
+use crate::units::information::UnitInformation;
+use crate::units::length::UnitLength;
+use crate::units::luminous_flux::UnitLuminousFlux;
+use crate::units::luminous_intensity::UnitLuminousIntensity;
+use crate::units::magnetic_flux::UnitMagneticFlux;
+use crate::units::magnetic_flux_density::UnitMagneticFluxDensity;
+use crate::units::UnitMass;
+use crate::units::power::UnitPower;
+use crate::units::pressure::UnitPressure;
+use crate::units::radiation_absorbed_dose::UnitAbsorbedDose;
+use crate::units::radiation_equivalent_dose::UnitRadioactivityExposure;
+use crate::units::radioactivity::UnitRadioactivity;
+use crate::units::sound::UnitSound;
+use crate::units::substance::UnitSubstance;
+use crate::units::temperature::UnitTemperature;
+use crate::units::time::UnitTime;
+use crate::units::volume::UnitVolume;
+use crate::units::Convert;
 use crate::values::Value;
 
 impl Shr<Value> for Value {
@@ -45,7 +69,7 @@ impl Shr<UnitLength> for Value {
     fn shr(self, other: UnitLength) -> Self::Output {
         let mut n: Value = self;
         if n.unit_map & VOLUME_MAP == VOLUME_MAP && n.exp[VOLUME_INDEX] == 1 {
-            n.val *= n.v_volume.unwrap().convert_meter3(&other);
+            n.val *= n.v_volume.unwrap().convert(&other);
             n.v_volume = None;
             n.v_length = Some(other);
             n.unit_map = LENGTH_MAP;
@@ -116,9 +140,9 @@ impl Shr<UnitSolidAngle> for Value {
     }
 }
 
-impl Shr<UnitCapacitance> for Value {
+impl Shr<UnitElectricCapacitance> for Value {
     type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitCapacitance) -> Self::Output {
+    fn shr(self, other: UnitElectricCapacitance) -> Self::Output {
         let mut n: Value = self;
         if self.unit_map & CAPACITANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
@@ -257,7 +281,7 @@ impl Shr<UnitFrequency> for Value {
     fn shr(self, other: UnitFrequency) -> Self::Output {
         let mut n: Value = self;
         if n.unit_map & TIME_MAP == TIME_MAP && n.exp[TIME_INDEX] == -1 {
-            n.val *= self.v_time.unwrap().convert_freq(&other);
+            n.val *= self.v_time.unwrap().convert(&other);
             n.v_time = None;
             n.v_frequency = Some(other);
             n.exp[TIME_INDEX] = 0;
@@ -294,9 +318,9 @@ impl Shr<UnitIlluminance> for Value {
     }
 }
 
-impl Shr<UnitInductance> for Value {
+impl Shr<UnitElectricInductance> for Value {
     type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitInductance) -> Self::Output {
+    fn shr(self, other: UnitElectricInductance) -> Self::Output {
         let mut n: Value = self;
         if self.unit_map & INDUCTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
@@ -477,9 +501,9 @@ impl Shr<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl Shr<UnitResistance> for Value {
+impl Shr<UnitElectricResistance> for Value {
     type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitResistance) -> Self::Output {
+    fn shr(self, other: UnitElectricResistance) -> Self::Output {
         let mut n: Value = self;
         if self.unit_map & RESISTANCE_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
@@ -553,7 +577,7 @@ impl Shr<UnitTime> for Value {
     fn shr(self, other: UnitTime) -> Self::Output {
         let mut n: Value = self;
         if n.unit_map & FREQUENCY_MAP == FREQUENCY_MAP && n.exp[FREQUENCY_INDEX] == 1 {
-            n.val *= n.v_frequency.unwrap().convert_time(&other);
+            n.val *= n.v_frequency.unwrap().convert(&other);
             n.v_frequency = None;
             n.v_time = Some(other);
             n.unit_map = TIME_MAP;
@@ -574,7 +598,7 @@ impl Shr<UnitVolume> for Value {
     fn shr(self, other: UnitVolume) -> Self::Output {
         let mut n: Value = self;
         if self.unit_map & LENGTH_MAP == LENGTH_MAP && self.exp[LENGTH_INDEX] == 3 {
-            n.val = self.val * self.v_length.unwrap().convert_liter(&other);
+            n.val = self.val * self.v_length.unwrap().convert(&other);
             n.v_volume = Some(other);
             n.v_length = None;
             n.unit_map = VOLUME_MAP;
@@ -630,7 +654,7 @@ impl ShrAssign<String> for Value {
 impl ShrAssign<UnitLength> for Value {
     fn shr_assign(&mut self, other: UnitLength) {
         if self.unit_map & VOLUME_MAP == VOLUME_MAP && self.exp[VOLUME_INDEX] == 1 {
-            self.val *= self.v_volume.unwrap().convert_meter3(&other);
+            self.val *= self.v_volume.unwrap().convert(&other);
             self.v_volume = None;
             self.v_length = Some(other);
             self.unit_map = LENGTH_MAP;
@@ -691,8 +715,8 @@ impl ShrAssign<UnitSolidAngle> for Value {
     }
 }
 
-impl ShrAssign<UnitCapacitance> for Value {
-    fn shr_assign(&mut self, other: UnitCapacitance) {
+impl ShrAssign<UnitElectricCapacitance> for Value {
+    fn shr_assign(&mut self, other: UnitElectricCapacitance) {
         if self.unit_map & CAPACITANCE_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
@@ -806,7 +830,7 @@ impl ShrAssign<UnitForce> for Value {
 impl ShrAssign<UnitFrequency> for Value {
     fn shr_assign(&mut self, other: UnitFrequency) {
         if self.unit_map & TIME_MAP == TIME_MAP && self.exp[TIME_INDEX] == -1 {
-            self.val *= self.v_time.unwrap().convert_freq(&other);
+            self.val *= self.v_time.unwrap().convert(&other);
             self.v_time = None;
             self.v_frequency = Some(other);
             self.exp[TIME_INDEX] = 0;
@@ -839,8 +863,8 @@ impl ShrAssign<UnitIlluminance> for Value {
     }
 }
 
-impl ShrAssign<UnitInductance> for Value {
-    fn shr_assign(&mut self, other: UnitInductance) {
+impl ShrAssign<UnitElectricInductance> for Value {
+    fn shr_assign(&mut self, other: UnitElectricInductance) {
         if self.unit_map & INDUCTANCE_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
@@ -993,8 +1017,8 @@ impl ShrAssign<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl ShrAssign<UnitResistance> for Value {
-    fn shr_assign(&mut self, other: UnitResistance) {
+impl ShrAssign<UnitElectricResistance> for Value {
+    fn shr_assign(&mut self, other: UnitElectricResistance) {
         if self.unit_map & RESISTANCE_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
@@ -1055,7 +1079,7 @@ impl ShrAssign<UnitTemperature> for Value {
 impl ShrAssign<UnitTime> for Value {
     fn shr_assign(&mut self, other: UnitTime) {
         if self.unit_map & FREQUENCY_MAP == FREQUENCY_MAP && self.exp[FREQUENCY_INDEX] == 1 {
-            self.val *= self.v_frequency.unwrap().convert_time(&other);
+            self.val *= self.v_frequency.unwrap().convert(&other);
             self.v_frequency = None;
             self.v_time = Some(other);
             self.unit_map = TIME_MAP;
@@ -1077,7 +1101,7 @@ impl ShrAssign<UnitTime> for Value {
 impl ShrAssign<UnitVolume> for Value {
     fn shr_assign(&mut self, other: UnitVolume) {
         if self.unit_map & LENGTH_MAP == LENGTH_MAP && self.exp[LENGTH_INDEX] == 3 {
-            self.val *= self.v_length.unwrap().convert_liter(&other);
+            self.val *= self.v_length.unwrap().convert(&other);
             self.v_volume = Some(other);
             self.v_length = None;
             self.unit_map = VOLUME_MAP;

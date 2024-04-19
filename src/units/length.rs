@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, volume::UnitVolume, BaseUnit, Convert};
+use super::{Metric, volume::UnitVolume, BaseUnit, Convert};
 
 /// The unit types for length
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -31,17 +31,21 @@ pub enum UnitLength {
 
 impl Display for UnitLength {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            UnitLength::Meter(m) => format!("{}{}", m.as_str(), "m"),
-            UnitLength::Inch => "in".into(),
-            UnitLength::Foot => "ft".into(),
-            UnitLength::Yard => "yd".into(),
-            UnitLength::Mile => "miles".into(),
-            UnitLength::AstronomicalUnit => "AU".into(),
-            UnitLength::Parsec(m) => format!("{}{}", m.as_str(), "pc"),
-            UnitLength::LightYear(m) => format!("{}{}", m.as_str(), "lyr"),
-            UnitLength::Angstrom => "Å".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                UnitLength::Meter(m) => format!("{}{}", m.as_str(), "m"),
+                UnitLength::Inch => "in".into(),
+                UnitLength::Foot => "ft".into(),
+                UnitLength::Yard => "yd".into(),
+                UnitLength::Mile => "miles".into(),
+                UnitLength::AstronomicalUnit => "AU".into(),
+                UnitLength::Parsec(m) => format!("{}{}", m.as_str(), "pc"),
+                UnitLength::LightYear(m) => format!("{}{}", m.as_str(), "lyr"),
+                UnitLength::Angstrom => "Å".into(),
+            }
+        )
     }
 }
 
@@ -98,7 +102,7 @@ impl BaseUnit for UnitLength {
 
 #[cfg(test)]
 mod length_testing {
-    use crate::units::{length::UnitLength, metric::Metric};
+    use crate::units::{length::UnitLength, Metric, BaseUnit};
 
     /// Unit Length Comparison Base
     ///

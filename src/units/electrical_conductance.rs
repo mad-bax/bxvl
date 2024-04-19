@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types for electric conductance
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricConductance {
-    /// SI unit
-    Siemens(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricConductance};
 
 impl Display for UnitElectricConductance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

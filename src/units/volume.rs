@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{length::UnitLength, metric::Metric, BaseUnit, Convert};
+use super::{length::UnitLength, Metric, BaseUnit, Convert};
 
 /// The unit types for volume
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types of energy
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -21,13 +21,17 @@ pub enum UnitEnergy {
 
 impl Display for UnitEnergy {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Joule(m) => format!("{}J", m.as_str()),
-            Self::GramCalorie(Metric::Kilo) => "Cal".into(),
-            Self::GramCalorie(m) => format!("{}cal", m.as_str()),
-            Self::FootPound => "ftlb".into(),
-            Self::ElectronVolt(m) => format!("{}eV", m.as_str())
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Joule(m) => format!("{}J", m.as_str()),
+                Self::GramCalorie(Metric::Kilo) => "Cal".into(),
+                Self::GramCalorie(m) => format!("{}cal", m.as_str()),
+                Self::FootPound => "ftlb".into(),
+                Self::ElectronVolt(m) => format!("{}eV", m.as_str()),
+            }
+        )
     }
 }
 
@@ -77,7 +81,7 @@ impl BaseUnit for UnitEnergy {
 
 #[cfg(test)]
 mod energy_testing {
-    use crate::units::{energy::UnitEnergy, metric::Metric};
+    use crate::units::{energy::UnitEnergy, Metric, BaseUnit};
 
     /// Unit Energy Comparison Base
     ///

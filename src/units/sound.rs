@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types of a measurement of sound
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -44,7 +44,7 @@ impl BaseUnit for UnitSound {
             Self::Bel(m) => *m,
         }
     }
-    
+
     fn base(&self) -> f64 {
         1.0
     }

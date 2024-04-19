@@ -1,54 +1,6 @@
-use serde::{Deserialize, Serialize};
-
 use crate::errors::V3Error;
 
-/// The Metric scale names
-#[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone, Default, Serialize, Deserialize)]
-pub enum Metric {
-    /// Yocto
-    Yocto,
-    /// Zepto
-    Zepto,
-    /// Atto
-    Atto,
-    /// Femto
-    Femto,
-    /// Pico
-    Pico,
-    /// Nano
-    Nano,
-    /// Micro
-    Micro,
-    /// Milli
-    Milli,
-    /// Centi
-    Centi,
-    /// Deci
-    Deci,
-    /// None (default)
-    #[default]
-    None,
-    /// Deca
-    Deca,
-    /// Hecto
-    Hecto,
-    /// Kilo
-    Kilo,
-    /// Mega
-    Mega,
-    /// Giga
-    Giga,
-    /// Tera
-    Tera,
-    /// Peta
-    Peta,
-    /// Exa
-    Exa,
-    /// Zetta
-    Zetta,
-    /// Yotta
-    Yotta,
-}
+use super::Metric;
 
 impl Metric {
     /// Returns the numeric scaling of a given metric prefix
@@ -146,7 +98,7 @@ impl TryFrom<&str> for Metric {
 
 #[cfg(test)]
 mod metric_testing {
-    use crate::units::metric::Metric;
+    use crate::units::Metric;
 
     #[test]
     fn metric_comparison() {
@@ -172,9 +124,6 @@ mod metric_testing {
         assert_eq!(true, Metric::Zetta < Metric::Yotta);
     }
 
-    /// # Metric Comparison Scale
-    ///
-    /// All of the metric scale values are in the right order
     #[test]
     fn metric_comparison_scale() {
         assert_eq!(true, Metric::Yocto.scale() < Metric::Zepto.scale());

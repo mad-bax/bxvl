@@ -2,8 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
-
+use super::{Metric, BaseUnit, Convert};
 
 /// 'Empty' units
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -17,10 +16,14 @@ pub enum UnitNone {
 
 impl Display for UnitNone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::None => "",
-            Self::Percentage => "%"
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::None => "",
+                Self::Percentage => "%",
+            }
+        )
     }
 }
 
@@ -30,7 +33,10 @@ impl Into<String> for UnitNone {
     }
 }
 
-impl<T> Convert<T> for UnitNone where T:BaseUnit {
+impl<T> Convert<T> for UnitNone
+where
+    T: BaseUnit,
+{
     fn convert(&self, other: &T) -> f64 {
         (self.scale() / other.scale()) * (self.base() / other.base())
     }

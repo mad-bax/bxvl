@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types of radioactivity
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -17,10 +17,14 @@ pub enum UnitRadioactivity {
 
 impl Display for UnitRadioactivity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Becquerel(m) => format!("{}Bq", m.as_str()),
-            Self::Curie => "Ci".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Becquerel(m) => format!("{}Bq", m.as_str()),
+                Self::Curie => "Ci".into(),
+            }
+        )
     }
 }
 
@@ -65,7 +69,7 @@ impl BaseUnit for UnitRadioactivity {
 
 #[cfg(test)]
 mod radioactivity_testing {
-    use crate::units::{metric::Metric, radioactivity::UnitRadioactivity};
+    use crate::units::{Metric, radioactivity::UnitRadioactivity, BaseUnit};
 
     /// Unit Radioactivity Comparison Base
     ///

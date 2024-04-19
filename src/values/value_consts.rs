@@ -1,8 +1,14 @@
 use crate::constants::*;
-use crate::units::{
-    metric::Metric, UnitCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency, length::UnitLength, UnitMass,
-    UnitSubstance, UnitTemperature, time::UnitTime,
-};
+use crate::units::UnitElectricCapacitance;
+use crate::units::UnitElectricCharge;
+use crate::units::energy::UnitEnergy;
+use crate::units::frequency::UnitFrequency;
+use crate::units::length::UnitLength;
+use crate::units::UnitMass;
+use crate::units::Metric;
+use crate::units::substance::UnitSubstance;
+use crate::units::temperature::UnitTemperature;
+use crate::units::time::UnitTime;
 use crate::values::Value;
 
 /// Returns a `Value` preset to the value of Earth's gravitational acceleration
@@ -568,7 +574,7 @@ pub const fn const_vacuum_permittivity() -> Value {
         exp: [0; 31],
         v_ab_dose: None,
         v_angle: None,
-        v_capacitance: Some(UnitCapacitance::Farad(Metric::None)),
+        v_capacitance: Some(UnitElectricCapacitance::Farad(Metric::None)),
         v_catalytic: None,
         v_electric_charge: None,
         v_electric_conductance: None,

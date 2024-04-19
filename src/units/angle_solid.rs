@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types of solid angles
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitSolidAngle {
-    /// SI unit
-    Steradian(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitSolidAngle};
 
 impl Display for UnitSolidAngle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

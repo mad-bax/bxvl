@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types of equaivalent dose of ionizing radiation
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -17,10 +17,14 @@ pub enum UnitRadioactivityExposure {
 
 impl Display for UnitRadioactivityExposure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Sievert(m) => format!("{}Sv", m.as_str()),
-            Self::Rem => "rem".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Sievert(m) => format!("{}Sv", m.as_str()),
+                Self::Rem => "rem".into(),
+            }
+        )
     }
 }
 
@@ -65,7 +69,9 @@ impl BaseUnit for UnitRadioactivityExposure {
 
 #[cfg(test)]
 mod equivalent_dose_testing {
-    use crate::units::{metric::Metric, radiation_equivalent_dose::UnitRadioactivityExposure};
+    use crate::units::{
+        Metric, radiation_equivalent_dose::UnitRadioactivityExposure, BaseUnit,
+    };
 
     /// Unit Equivalent Dose of Ionizing Radiation Comparison Base
     ///

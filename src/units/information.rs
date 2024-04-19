@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for a measurement of information
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -15,10 +15,14 @@ pub enum UnitInformation {
 
 impl Display for UnitInformation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Bit(m) => format!("{}bits", m.as_str()),
-            Self::Byte(m) => format!("{}b", m.as_str()),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Bit(m) => format!("{}bits", m.as_str()),
+                Self::Byte(m) => format!("{}b", m.as_str()),
+            }
+        )
     }
 }
 
@@ -73,7 +77,7 @@ impl BaseUnit for UnitInformation {
 
 #[cfg(test)]
 mod information_testing {
-    use crate::units::{information::UnitInformation, metric::Metric};
+    use crate::units::{information::UnitInformation, Metric, BaseUnit};
 
     /// Unit Information Comparison Base
     ///

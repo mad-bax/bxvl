@@ -1,15 +1,38 @@
 use std::ops::{Div, Mul};
 
 use crate::constants::*;
-use crate::units::{
-    metric::Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
-    UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential,
-    UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation,
-    length::UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
-    UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
-    UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, time::UnitTime,
-    UnitVolume,
-};
+use crate::units::UnitAngle;
+use crate::units::UnitSolidAngle;
+use crate::units::UnitCatalyticActivity;
+use crate::units::UnitElectricCapacitance;
+use crate::units::UnitElectricCharge;
+use crate::units::UnitElectricConductance;
+use crate::units::electrical_current::UnitElectricCurrent;
+use crate::units::electrical_inductance::UnitElectricInductance;
+use crate::units::electrical_potential::UnitElectricPotential;
+use crate::units::electrical_resistance::UnitElectricResistance;
+use crate::units::energy::UnitEnergy;
+use crate::units::force::UnitForce;
+use crate::units::frequency::UnitFrequency;
+use crate::units::illuminance::UnitIlluminance;
+use crate::units::information::UnitInformation;
+use crate::units::length::UnitLength;
+use crate::units::luminous_flux::UnitLuminousFlux;
+use crate::units::luminous_intensity::UnitLuminousIntensity;
+use crate::units::magnetic_flux::UnitMagneticFlux;
+use crate::units::magnetic_flux_density::UnitMagneticFluxDensity;
+use crate::units::UnitMass;
+use crate::units::Metric;
+use crate::units::power::UnitPower;
+use crate::units::pressure::UnitPressure;
+use crate::units::radiation_absorbed_dose::UnitAbsorbedDose;
+use crate::units::radiation_equivalent_dose::UnitRadioactivityExposure;
+use crate::units::radioactivity::UnitRadioactivity;
+use crate::units::sound::UnitSound;
+use crate::units::substance::UnitSubstance;
+use crate::units::temperature::UnitTemperature;
+use crate::units::time::UnitTime;
+use crate::units::volume::UnitVolume;
 use crate::values::Value;
 
 impl Mul<UnitLength> for f64 {
@@ -316,9 +339,9 @@ impl Div<UnitAngle> for Value {
     }
 }
 
-impl Mul<UnitCapacitance> for f64 {
+impl Mul<UnitElectricCapacitance> for f64 {
     type Output = Value;
-    fn mul(self, other: UnitCapacitance) -> Self::Output {
+    fn mul(self, other: UnitElectricCapacitance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_capacitance: Some(other),
@@ -330,9 +353,9 @@ impl Mul<UnitCapacitance> for f64 {
     }
 }
 
-impl Div<UnitCapacitance> for f64 {
+impl Div<UnitElectricCapacitance> for f64 {
     type Output = Value;
-    fn div(self, other: UnitCapacitance) -> Self::Output {
+    fn div(self, other: UnitElectricCapacitance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_capacitance: Some(other),
@@ -344,9 +367,9 @@ impl Div<UnitCapacitance> for f64 {
     }
 }
 
-impl Mul<UnitCapacitance> for Value {
+impl Mul<UnitElectricCapacitance> for Value {
     type Output = Value;
-    fn mul(self, other: UnitCapacitance) -> Self::Output {
+    fn mul(self, other: UnitElectricCapacitance) -> Self::Output {
         let mut new: Value = self;
         if self.exp[CAPACITANCE_INDEX] == 0 {
             new.v_capacitance = Some(other);
@@ -370,9 +393,9 @@ impl Mul<UnitCapacitance> for Value {
     }
 }
 
-impl Div<UnitCapacitance> for Value {
+impl Div<UnitElectricCapacitance> for Value {
     type Output = Value;
-    fn div(self, other: UnitCapacitance) -> Value {
+    fn div(self, other: UnitElectricCapacitance) -> Value {
         let mut new: Value = self;
         if self.v_capacitance.is_some() && self.v_capacitance != Some(other) {
             panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
@@ -1456,9 +1479,9 @@ impl Div<UnitSolidAngle> for Value {
     }
 }
 
-impl Mul<UnitResistance> for f64 {
+impl Mul<UnitElectricResistance> for f64 {
     type Output = Value;
-    fn mul(self, other: UnitResistance) -> Self::Output {
+    fn mul(self, other: UnitElectricResistance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_resistance: Some(other),
@@ -1470,9 +1493,9 @@ impl Mul<UnitResistance> for f64 {
     }
 }
 
-impl Div<UnitResistance> for f64 {
+impl Div<UnitElectricResistance> for f64 {
     type Output = Value;
-    fn div(self, other: UnitResistance) -> Self::Output {
+    fn div(self, other: UnitElectricResistance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_resistance: Some(other),
@@ -1484,9 +1507,9 @@ impl Div<UnitResistance> for f64 {
     }
 }
 
-impl Mul<UnitResistance> for Value {
+impl Mul<UnitElectricResistance> for Value {
     type Output = Value;
-    fn mul(self, other: UnitResistance) -> Self::Output {
+    fn mul(self, other: UnitElectricResistance) -> Self::Output {
         let mut new: Value = self;
         if self.exp[RESISTANCE_INDEX] == 0 {
             new.v_resistance = Some(other);
@@ -1510,9 +1533,9 @@ impl Mul<UnitResistance> for Value {
     }
 }
 
-impl Div<UnitResistance> for Value {
+impl Div<UnitElectricResistance> for Value {
     type Output = Value;
-    fn div(self, other: UnitResistance) -> Value {
+    fn div(self, other: UnitElectricResistance) -> Value {
         let mut new: Value = self;
         if self.v_resistance.is_some() && self.v_resistance != Some(other) {
             panic!("[div] Cannot decrement unit: {} from Value {}", other, self);
@@ -1836,9 +1859,9 @@ impl Div<UnitPower> for Value {
     }
 }
 
-impl Mul<UnitInductance> for f64 {
+impl Mul<UnitElectricInductance> for f64 {
     type Output = Value;
-    fn mul(self, other: UnitInductance) -> Self::Output {
+    fn mul(self, other: UnitElectricInductance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_inductance: Some(other),
@@ -1850,9 +1873,9 @@ impl Mul<UnitInductance> for f64 {
     }
 }
 
-impl Div<UnitInductance> for f64 {
+impl Div<UnitElectricInductance> for f64 {
     type Output = Value;
-    fn div(self, other: UnitInductance) -> Self::Output {
+    fn div(self, other: UnitElectricInductance) -> Self::Output {
         let mut ret = Value {
             val: self,
             v_inductance: Some(other),
@@ -1864,9 +1887,9 @@ impl Div<UnitInductance> for f64 {
     }
 }
 
-impl Mul<UnitInductance> for Value {
+impl Mul<UnitElectricInductance> for Value {
     type Output = Value;
-    fn mul(self, other: UnitInductance) -> Self::Output {
+    fn mul(self, other: UnitElectricInductance) -> Self::Output {
         let mut new: Value = self;
         if self.exp[INDUCTANCE_INDEX] == 0 {
             new.v_inductance = Some(other);
@@ -1890,9 +1913,9 @@ impl Mul<UnitInductance> for Value {
     }
 }
 
-impl Div<UnitInductance> for Value {
+impl Div<UnitElectricInductance> for Value {
     type Output = Value;
-    fn div(self, other: UnitInductance) -> Value {
+    fn div(self, other: UnitElectricInductance) -> Value {
         let mut new: Value = self;
         if self.v_inductance.is_some() && self.v_inductance != Some(other) {
             panic!("[div] Cannot decrement unit: {} from Value {}", other, self);

@@ -4,8 +4,9 @@ extern crate v3;
 mod value_constant_tests {
     use v3::{
         units::{
-            Metric, UnitCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency, UnitLength,
-            UnitMass, UnitSubstance, UnitTemperature, UnitTime,
+            electrical_capacitance::UnitElectricCapacitance, electrical_charge::UnitElectricCharge,
+            energy::UnitEnergy, frequency::UnitFrequency, length::UnitLength, UnitMass,
+            metric::Metric, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime,
         },
         values::value_consts,
     };
@@ -69,7 +70,7 @@ mod value_constant_tests {
         );
         assert_eq!(
             value_consts::const_vacuum_permittivity(),
-            8.8541878128e-12 * UnitCapacitance::Farad(Metric::None)
+            8.8541878128e-12 * UnitElectricCapacitance::Farad(Metric::None)
                 / UnitLength::Meter(Metric::None)
         );
         assert_eq!(
@@ -86,16 +87,26 @@ mod value_constant_tests {
 #[cfg(test)]
 mod value_creation_tests {
 
-    use v3::units::{
-        Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
-        UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential,
-        UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation,
-        UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux,
-        UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity,
-        UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance,
-        UnitTemperature, UnitTime, UnitVolume,
+    use v3::{
+        units::{
+            angle::UnitAngle, angle_solid::UnitSolidAngle,
+            catalytic_activity::UnitCatalyticActivity,
+            electrical_capacitance::UnitElectricCapacitance, electrical_charge::UnitElectricCharge,
+            electrical_conductance::UnitElectricConductance,
+            electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance,
+            electrical_potential::UnitElectricPotential,
+            electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce,
+            frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation,
+            length::UnitLength, luminous_flux::UnitLuminousFlux,
+            luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux,
+            magnetic_flux_density::UnitMagneticFluxDensity, UnitMass, metric::Metric,
+            power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose,
+            radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity,
+            sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature,
+            time::UnitTime, volume::UnitVolume,
+        },
+        values::Value,
     };
-    use v3::values::Value;
 
     const V1: f64 = 3.5;
     const V2: f64 = 0.5;
@@ -242,9 +253,9 @@ mod value_creation_tests {
                     "C" => V1 * UnitElectricCharge::Coulomb(m.0),
                     "V" => V1 * UnitElectricPotential::Volt(m.0),
                     "S" => V1 * UnitElectricConductance::Siemens(m.0),
-                    "F" => V1 * UnitCapacitance::Farad(m.0),
-                    "Ω" | "O" => V1 * UnitResistance::Ohm(m.0),
-                    "H" => V1 * UnitInductance::Henry(m.0),
+                    "F" => V1 * UnitElectricCapacitance::Farad(m.0),
+                    "Ω" | "O" => V1 * UnitElectricResistance::Ohm(m.0),
+                    "H" => V1 * UnitElectricInductance::Henry(m.0),
                     "Wb" => V1 * UnitMagneticFlux::Weber(m.0),
                     "T" => V1 * UnitMagneticFluxDensity::Tesla(m.0),
                     "mol" => V1 * UnitSubstance::Mole(m.0),
@@ -304,9 +315,9 @@ mod value_creation_tests {
                     "C" => V1 / UnitElectricCharge::Coulomb(m.0),
                     "V" => V1 / UnitElectricPotential::Volt(m.0),
                     "S" => V1 / UnitElectricConductance::Siemens(m.0),
-                    "F" => V1 / UnitCapacitance::Farad(m.0),
-                    "Ω" | "O" => V1 / UnitResistance::Ohm(m.0),
-                    "H" => V1 / UnitInductance::Henry(m.0),
+                    "F" => V1 / UnitElectricCapacitance::Farad(m.0),
+                    "Ω" | "O" => V1 / UnitElectricResistance::Ohm(m.0),
+                    "H" => V1 / UnitElectricInductance::Henry(m.0),
                     "Wb" => V1 / UnitMagneticFlux::Weber(m.0),
                     "T" => V1 / UnitMagneticFluxDensity::Tesla(m.0),
                     "mol" => V1 / UnitSubstance::Mole(m.0),
@@ -483,18 +494,26 @@ mod value_creation_tests {
 
 #[cfg(test)]
 mod value_operation_tests {
-    use v3::units::{
-        Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
-        UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential,
-        UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation,
-        UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux,
-        UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity,
-        UnitRadioactivityExposure, UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance,
-        UnitTime, UnitVolume,
-    };
-    use v3::values::Value;
-
     use crate::value_creation_tests::TEST_METRIC_UNITS;
+    use v3::{
+        units::{
+            angle::UnitAngle, angle_solid::UnitSolidAngle,
+            catalytic_activity::UnitCatalyticActivity,
+            electrical_capacitance::UnitElectricCapacitance, electrical_charge::UnitElectricCharge,
+            electrical_conductance::UnitElectricConductance,
+            electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance,
+            electrical_potential::UnitElectricPotential,
+            electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce,
+            frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation,
+            length::UnitLength, luminous_flux::UnitLuminousFlux,
+            luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux,
+            magnetic_flux_density::UnitMagneticFluxDensity, UnitMass, metric::Metric,
+            power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose,
+            radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity,
+            sound::UnitSound, substance::UnitSubstance, time::UnitTime, volume::UnitVolume,
+        },
+        values::Value,
+    };
 
     #[test]
     fn math_tests_f64() {
@@ -669,10 +688,10 @@ mod value_operation_tests {
                     "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::None),
                     "V" => 4.0 * UnitElectricPotential::Volt(Metric::None),
                     "S" => 4.0 * UnitElectricConductance::Siemens(Metric::None),
-                    "F" => 4.0 * UnitCapacitance::Farad(Metric::None),
-                    "Ω" => 4.0 * UnitResistance::Ohm(Metric::None),
+                    "F" => 4.0 * UnitElectricCapacitance::Farad(Metric::None),
+                    "Ω" => 4.0 * UnitElectricResistance::Ohm(Metric::None),
                     "O" => continue,
-                    "H" => 4.0 * UnitInductance::Henry(Metric::None),
+                    "H" => 4.0 * UnitElectricInductance::Henry(Metric::None),
                     "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::None),
                     "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None),
                     "mol" => 4.0 * UnitSubstance::Mole(Metric::None),
@@ -725,10 +744,10 @@ mod value_operation_tests {
                     "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::Kilo),
                     "V" => 4.0 * UnitElectricPotential::Volt(Metric::Kilo),
                     "S" => 4.0 * UnitElectricConductance::Siemens(Metric::Kilo),
-                    "F" => 4.0 * UnitCapacitance::Farad(Metric::Kilo),
-                    "Ω" => 4.0 * UnitResistance::Ohm(Metric::Kilo),
-                    "O" if !t1.is_resistance() => 4.0 * UnitResistance::Ohm(Metric::Kilo),
-                    "H" => 4.0 * UnitInductance::Henry(Metric::Kilo),
+                    "F" => 4.0 * UnitElectricCapacitance::Farad(Metric::Kilo),
+                    "Ω" => 4.0 * UnitElectricResistance::Ohm(Metric::Kilo),
+                    "O" if !t1.is_resistance() => 4.0 * UnitElectricResistance::Ohm(Metric::Kilo),
+                    "H" => 4.0 * UnitElectricInductance::Henry(Metric::Kilo),
                     "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::Kilo),
                     "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::Kilo),
                     "mol" => 4.0 * UnitSubstance::Mole(Metric::Kilo),
@@ -798,10 +817,10 @@ mod value_operation_tests {
                     "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::None),
                     "V" => 4.0 * UnitElectricPotential::Volt(Metric::None),
                     "S" => 4.0 * UnitElectricConductance::Siemens(Metric::None),
-                    "F" => 4.0 * UnitCapacitance::Farad(Metric::None),
-                    "Ω" => 4.0 * UnitResistance::Ohm(Metric::None),
+                    "F" => 4.0 * UnitElectricCapacitance::Farad(Metric::None),
+                    "Ω" => 4.0 * UnitElectricResistance::Ohm(Metric::None),
                     "O" => continue,
-                    "H" => 4.0 * UnitInductance::Henry(Metric::None),
+                    "H" => 4.0 * UnitElectricInductance::Henry(Metric::None),
                     "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::None),
                     "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None),
                     "mol" => 4.0 * UnitSubstance::Mole(Metric::None),
@@ -854,10 +873,10 @@ mod value_operation_tests {
                     "C" => 4.0 * UnitElectricCharge::Coulomb(Metric::Kilo),
                     "V" => 4.0 * UnitElectricPotential::Volt(Metric::Kilo),
                     "S" => 4.0 * UnitElectricConductance::Siemens(Metric::Kilo),
-                    "F" => 4.0 * UnitCapacitance::Farad(Metric::Kilo),
-                    "Ω" => 4.0 * UnitResistance::Ohm(Metric::Kilo),
-                    "O" if !t1.is_resistance() => 4.0 * UnitResistance::Ohm(Metric::Kilo),
-                    "H" => 4.0 * UnitInductance::Henry(Metric::Kilo),
+                    "F" => 4.0 * UnitElectricCapacitance::Farad(Metric::Kilo),
+                    "Ω" => 4.0 * UnitElectricResistance::Ohm(Metric::Kilo),
+                    "O" if !t1.is_resistance() => 4.0 * UnitElectricResistance::Ohm(Metric::Kilo),
+                    "H" => 4.0 * UnitElectricInductance::Henry(Metric::Kilo),
                     "Wb" => 4.0 * UnitMagneticFlux::Weber(Metric::Kilo),
                     "T" => 4.0 * UnitMagneticFluxDensity::Tesla(Metric::Kilo),
                     "mol" => 4.0 * UnitSubstance::Mole(Metric::Kilo),
@@ -953,7 +972,7 @@ mod value_operation_tests {
 
 #[cfg(test)]
 mod value_display_tests {
-    use v3::units::{Metric, UnitLength, UnitTime};
+    use v3::units::{length::UnitLength, metric::Metric, time::UnitTime};
     use v3::values::Value;
 
     #[test]
@@ -1001,7 +1020,7 @@ mod value_display_tests {
 
 #[cfg(test)]
 mod value_edge_cases {
-    use v3::units::{Metric, UnitLength};
+    use v3::units::{length::UnitLength, metric::Metric};
     use v3::values::Value;
 
     #[test]

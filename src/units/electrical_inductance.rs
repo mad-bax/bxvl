@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for electric inductance
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -27,7 +27,7 @@ impl Convert<UnitElectricInductance> for UnitElectricInductance {
     /// Returns the `f64` multiplier to convert a `Value`
     fn convert(&self, other: &UnitElectricInductance) -> f64 {
         self.scale() / other.scale()
-    }   
+    }
 }
 
 impl BaseUnit for UnitElectricInductance {

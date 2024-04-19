@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for substance
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]

@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types for electric capacitance
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricCapacitance {
-    /// SI unit
-    Farad(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricCapacitance};
 
 impl Display for UnitElectricCapacitance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

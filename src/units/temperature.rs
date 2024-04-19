@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants::KELVIN_TO_CELSIUS;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for temperature
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -19,11 +19,15 @@ pub enum UnitTemperature {
 
 impl Display for UnitTemperature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Celsius => "°c".into(),
-            Self::Kelvin(m) => format!("{}K", m.as_str()),
-            Self::Fahrenheit => "°f".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Celsius => "°c".into(),
+                Self::Kelvin(m) => format!("{}K", m.as_str()),
+                Self::Fahrenheit => "°f".into(),
+            }
+        )
     }
 }
 
@@ -33,9 +37,9 @@ impl Into<String> for UnitTemperature {
     }
 }
 
-impl Convert<UnitTemperature> for UnitTemperature {
+impl UnitTemperature {
     /// Returns a `f64` to assign to a `Value`
-    fn convert(&self, other: &UnitTemperature, val: f64) -> f64 {
+    pub fn convert(&self, other: &UnitTemperature, val: f64) -> f64 {
         if self == other {
             return val;
         }
@@ -49,7 +53,9 @@ impl Convert<UnitTemperature> for UnitTemperature {
             Self::Fahrenheit => match other {
                 Self::Celsius => (val - 32.0) / 1.8,
                 Self::Fahrenheit => val,
-                Self::Kelvin(m) => f64::max(((val - 32.0) / 1.8) + KELVIN_TO_CELSIUS, 0.0) / m.scale(),
+                Self::Kelvin(m) => {
+                    f64::max(((val - 32.0) / 1.8) + KELVIN_TO_CELSIUS, 0.0) / m.scale()
+                }
             },
             Self::Kelvin(old_m) => match other {
                 Self::Celsius => val - KELVIN_TO_CELSIUS,
@@ -61,17 +67,15 @@ impl Convert<UnitTemperature> for UnitTemperature {
 }
 
 impl BaseUnit for UnitTemperature {
-
-
     /// Returns the `Metric` prefix for the unit
     fn get_metric(&self) -> Metric {
         Metric::None
     }
-    
+
     fn scale(&self) -> f64 {
         1.0
     }
-    
+
     fn base(&self) -> f64 {
         1.0
     }

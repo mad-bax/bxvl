@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types for electric charge
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricCharge {
-    /// SI unit
-    Coulomb(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricCharge};
 
 impl Display for UnitElectricCharge {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -44,7 +35,7 @@ impl BaseUnit for UnitElectricCharge {
             Self::Coulomb(m) => *m,
         }
     }
-    
+
     fn base(&self) -> f64 {
         1.0
     }

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
+use super::{Metric, BaseUnit, Convert};
 
 /// The unit types for pressure
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -27,15 +27,19 @@ pub enum UnitPressure {
 
 impl Display for UnitPressure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Pascal(m) => format!("{}Pa", m.as_str()),
-            Self::Bar(m) => format!("{}bar", m.as_str()),
-            Self::Torr => "torr".into(),
-            Self::Hgmm => "mmHg".into(),
-            Self::Hgin => "inHg".into(),
-            Self::Atm => "atm".into(),
-            Self::Psi => "psi".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Pascal(m) => format!("{}Pa", m.as_str()),
+                Self::Bar(m) => format!("{}bar", m.as_str()),
+                Self::Torr => "torr".into(),
+                Self::Hgmm => "mmHg".into(),
+                Self::Hgin => "inHg".into(),
+                Self::Atm => "atm".into(),
+                Self::Psi => "psi".into(),
+            }
+        )
     }
 }
 
@@ -87,7 +91,7 @@ impl BaseUnit for UnitPressure {
 
 #[cfg(test)]
 mod pressure_testing {
-    use crate::units::{metric::Metric, pressure::UnitPressure};
+    use crate::units::{Metric, pressure::UnitPressure, BaseUnit};
 
     /// Unit Pressure Comparison Base
     ///

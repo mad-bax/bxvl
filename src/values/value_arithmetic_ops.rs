@@ -1,6 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use crate::constants::*;
+use crate::units::Convert;
 use crate::values::Value;
 
 impl Add<f64> for Value {

@@ -1,14 +1,38 @@
 use crate::constants::*;
 use crate::errors::V3Error;
-use crate::units::{
-    metric::Metric, UnitAbsorbedDose, UnitAngle, UnitCapacitance, UnitCatalyticActivity,
-    UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential,
-    UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInductance, UnitInformation,
-    length::UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
-    UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
-    UnitResistance, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, time::UnitTime,
-    UnitVolume,
-};
+use crate::units::UnitAngle;
+use crate::units::UnitSolidAngle;
+use crate::units::UnitCatalyticActivity;
+use crate::units::UnitElectricCapacitance;
+use crate::units::UnitElectricCharge;
+use crate::units::UnitElectricConductance;
+use crate::units::electrical_current::UnitElectricCurrent;
+use crate::units::electrical_inductance::UnitElectricInductance;
+use crate::units::electrical_potential::UnitElectricPotential;
+use crate::units::electrical_resistance::UnitElectricResistance;
+use crate::units::energy::UnitEnergy;
+use crate::units::force::UnitForce;
+use crate::units::frequency::UnitFrequency;
+use crate::units::illuminance::UnitIlluminance;
+use crate::units::information::UnitInformation;
+use crate::units::length::UnitLength;
+use crate::units::luminous_flux::UnitLuminousFlux;
+use crate::units::luminous_intensity::UnitLuminousIntensity;
+use crate::units::magnetic_flux::UnitMagneticFlux;
+use crate::units::magnetic_flux_density::UnitMagneticFluxDensity;
+use crate::units::UnitMass;
+use crate::units::Metric;
+use crate::units::power::UnitPower;
+use crate::units::pressure::UnitPressure;
+use crate::units::radiation_absorbed_dose::UnitAbsorbedDose;
+use crate::units::radiation_equivalent_dose::UnitRadioactivityExposure;
+use crate::units::radioactivity::UnitRadioactivity;
+use crate::units::sound::UnitSound;
+use crate::units::substance::UnitSubstance;
+use crate::units::temperature::UnitTemperature;
+use crate::units::time::UnitTime;
+use crate::units::volume::UnitVolume;
+use crate::units::Convert;
 use crate::values::Value;
 
 impl Default for Value {
@@ -188,10 +212,7 @@ impl Value {
     pub(in crate::values) fn _convert(&mut self, other: &Value) -> Result<(), V3Error> {
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
             if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {
-                self.val *= self
-                    .v_volume
-                    .unwrap()
-                    .convert_meter3(&other.v_length.unwrap());
+                self.val *= self.v_volume.unwrap().convert(&other.v_length.unwrap());
                 self.exp[LENGTH_INDEX] = 3;
                 self.exp[VOLUME_INDEX] = 0;
                 self.unit_map = LENGTH_MAP;
@@ -210,10 +231,7 @@ impl Value {
                         .convert(&UnitLength::Meter(Metric::None)),
                     3.0,
                 );
-                self.val *= self
-                    .v_length
-                    .unwrap()
-                    .convert_liter(&other.v_volume.unwrap());
+                self.val *= self.v_length.unwrap().convert(&other.v_volume.unwrap());
                 self.exp[LENGTH_INDEX] = 0;
                 self.exp[VOLUME_INDEX] = 1;
                 self.unit_map = VOLUME_MAP;
@@ -242,10 +260,7 @@ impl Value {
             self.exp[FREQUENCY_INDEX] = 0;
             self.exp[TIME_INDEX] = -1;
             self.unit_map = TIME_MAP;
-            self.val *= self
-                .v_frequency
-                .unwrap()
-                .convert_time(&other.v_time.unwrap());
+            self.val *= self.v_frequency.unwrap().convert(&other.v_time.unwrap());
             self.v_frequency = None;
             self.v_time = other.v_time;
             return Ok(());
@@ -257,10 +272,7 @@ impl Value {
             self.exp[FREQUENCY_INDEX] = 1;
             self.exp[TIME_INDEX] = 0;
             self.unit_map = FREQUENCY_MAP;
-            self.val *= self
-                .v_time
-                .unwrap()
-                .convert_freq(&other.v_frequency.unwrap());
+            self.val *= self.v_time.unwrap().convert(&other.v_frequency.unwrap());
             self.v_frequency = other.v_frequency;
             self.v_time = None;
             return Ok(());
@@ -525,7 +537,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::UnitLength;
+    /// use v3::units::length::UnitLength;
     /// let mut v:Value = 4.0 * UnitLength::Inch;
     /// v.inv()
     /// ```
@@ -614,7 +626,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::UnitLength;
+    /// use v3::units::length::UnitLength;
     /// let mut v:Value = 16.0 * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.sqrt();
     /// ```
@@ -638,7 +650,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::UnitLength;
+    /// use v3::units::length::UnitLength;
     /// let v:Value = 4.0 * UnitLength::Foot;
     /// let x:Value = v.powv(2);
     /// assert!(String::from("16 ft^2") == format!("{}", x));
@@ -659,7 +671,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::UnitLength;
+    /// use v3::units::length::UnitLength;
     /// let mut v:Value = 9.0 * UnitLength::Foot * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.cbrt();
     /// ```
@@ -718,7 +730,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::{UnitTime, UnitAngle, Metric};
+    /// use v3::units::{time::UnitTime, UnitAngle, Metric};
     /// let a:Value = 10.0 * UnitTime::Second(Metric::None);
     /// let b:Value = 0.3 * UnitAngle::Radian(Metric::None);
     /// let x:Value = a.atan2(&b);
@@ -750,7 +762,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::{UnitLength, UnitMass, UnitTime, Metric};
+    /// use v3::units::{length::UnitLength, mass::UnitMass, time::UnitTime, Metric};
     /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
     /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
     /// let mut f:Value = match (mass*acc).complex() {
@@ -842,7 +854,7 @@ impl Value {
                 ret.v_time = None;
                 ret.v_electric_current = None;
             } else if ret.unit_map & CAPACITANCE_MAP == CAPACITANCE_MAP {
-                (ret >>= UnitCapacitance::Farad(Metric::None));
+                (ret >>= UnitElectricCapacitance::Farad(Metric::None));
                 (ret >>= UnitElectricPotential::Volt(Metric::None));
                 ret.exp[CAPACITANCE_INDEX] = 0;
                 ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
@@ -885,7 +897,7 @@ impl Value {
                 ret.v_electric_charge = None;
             } else if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
                 (ret >>= UnitTime::Second(Metric::None));
-                (ret >>= UnitResistance::Ohm(Metric::None));
+                (ret >>= UnitElectricResistance::Ohm(Metric::None));
                 ret.exp[TIME_INDEX] = 0;
                 ret.exp[RESISTANCE_INDEX] = 0;
                 ret.v_time = None;
@@ -896,7 +908,7 @@ impl Value {
 
             ret.unit_map = CAPACITANCE_MAP;
             ret.exp[CAPACITANCE_INDEX] = 1;
-            ret.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+            ret.v_capacitance = Some(UnitElectricCapacitance::Farad(Metric::None));
         } else if ret.is_resistance() && self.unit_map != RESISTANCE_MAP {
             if ret.unit_map & ELECTRIC_CONDUCTANCE_MAP == ELECTRIC_CONDUCTANCE_MAP {
                 (ret >>= UnitElectricConductance::Siemens(Metric::None));
@@ -915,10 +927,10 @@ impl Value {
 
             ret.unit_map = RESISTANCE_MAP;
             ret.exp[RESISTANCE_INDEX] = 1;
-            ret.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+            ret.v_resistance = Some(UnitElectricResistance::Ohm(Metric::None));
         } else if ret.is_conductance() && self.unit_map != ELECTRIC_CONDUCTANCE_MAP {
             if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                (ret >>= UnitResistance::Ohm(Metric::None));
+                (ret >>= UnitElectricResistance::Ohm(Metric::None));
                 ret.exp[RESISTANCE_INDEX] = 0;
                 ret.v_resistance = None;
             } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
@@ -1011,7 +1023,7 @@ impl Value {
                 ret.v_time = None;
                 ret.v_electric_current = None;
             } else if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                ret >>= UnitResistance::Ohm(Metric::None);
+                ret >>= UnitElectricResistance::Ohm(Metric::None);
                 ret >>= UnitTime::Second(Metric::None);
                 ret.exp[RESISTANCE_INDEX] = 0;
                 ret.exp[TIME_INDEX] = 0;
@@ -1030,7 +1042,7 @@ impl Value {
 
             ret.unit_map = INDUCTANCE_MAP;
             ret.exp[INDUCTANCE_INDEX] = 1;
-            ret.v_inductance = Some(UnitInductance::Henry(Metric::None));
+            ret.v_inductance = Some(UnitElectricInductance::Henry(Metric::None));
         } else if ret.is_luminous_flux() && self.unit_map != LUMINOUS_FLUX_MAP {
             ret >>= UnitLuminousIntensity::Candela(Metric::None);
             ret >>= UnitSolidAngle::Steradian(Metric::None);
@@ -1263,7 +1275,7 @@ impl Value {
                 return true;
             } else if other.unit_map & ELECTRIC_CONDUCTANCE_MAP > 0 {
                 *self >>= UnitElectricCharge::Coulomb(Metric::None);
-                self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+                self.v_capacitance = Some(UnitElectricCapacitance::Farad(Metric::None));
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
                 self.v_electric_charge = None;
                 self.exp[CAPACITANCE_INDEX] = 1;
@@ -1299,7 +1311,7 @@ impl Value {
             }
         } else if self.unit_map == CAPACITANCE_MAP && other.is_capacitance() {
             if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
-                *self >>= UnitCapacitance::Farad(Metric::None);
+                *self >>= UnitElectricCapacitance::Farad(Metric::None);
                 self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
                 self.v_capacitance = None;
@@ -1310,7 +1322,7 @@ impl Value {
                 *self >>= *other;
                 return true;
             } else if other.unit_map & ENERGY_MAP > 0 {
-                *self >>= UnitCapacitance::Farad(Metric::None);
+                *self >>= UnitElectricCapacitance::Farad(Metric::None);
                 self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
                 self.v_energy = Some(UnitEnergy::Joule(Metric::None));
                 self.v_capacitance = None;
@@ -1323,7 +1335,7 @@ impl Value {
             }
         } else if self.unit_map == RESISTANCE_MAP && other.is_resistance() {
             if other.unit_map & ELECTRIC_CONDUCTANCE_MAP > 0 {
-                *self >>= UnitResistance::Ohm(Metric::None);
+                *self >>= UnitElectricResistance::Ohm(Metric::None);
                 self.v_electric_conductance = Some(UnitElectricConductance::Siemens(Metric::None));
                 self.v_resistance = None;
                 self.exp[ELECTRIC_CONDUCTANCE_INDEX] = -1;
@@ -1332,7 +1344,7 @@ impl Value {
                 *self >>= *other;
                 return true;
             } else if other.unit_map & ELECTRIC_CURRENT_MAP > 0 {
-                *self >>= UnitResistance::Ohm(Metric::None);
+                *self >>= UnitElectricResistance::Ohm(Metric::None);
                 self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
                 self.v_resistance = None;
@@ -1346,7 +1358,7 @@ impl Value {
         } else if self.unit_map == ELECTRIC_CONDUCTANCE_MAP && other.is_conductance() {
             if other.unit_map & RESISTANCE_MAP > 0 {
                 *self >>= UnitElectricConductance::Siemens(Metric::None);
-                self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+                self.v_resistance = Some(UnitElectricResistance::Ohm(Metric::None));
                 self.v_electric_conductance = None;
                 self.exp[RESISTANCE_INDEX] = -1;
                 self.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
@@ -1437,7 +1449,7 @@ impl Value {
             }
         } else if self.unit_map == INDUCTANCE_MAP && other.is_inductance() {
             if other.unit_map & ELECTRIC_POTENTIAL_MAP > 0 {
-                *self >>= UnitInductance::Henry(Metric::None);
+                *self >>= UnitElectricInductance::Henry(Metric::None);
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
                 self.v_time = Some(UnitTime::Second(Metric::None));
                 self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
@@ -1450,9 +1462,9 @@ impl Value {
                 *self >>= *other;
                 return true;
             } else if other.unit_map & RESISTANCE_MAP > 0 {
-                *self >>= UnitInductance::Henry(Metric::None);
+                *self >>= UnitElectricInductance::Henry(Metric::None);
                 self.v_inductance = None;
-                self.v_resistance = Some(UnitResistance::Ohm(Metric::None));
+                self.v_resistance = Some(UnitElectricResistance::Ohm(Metric::None));
                 self.v_time = Some(UnitTime::Second(Metric::None));
                 self.exp[RESISTANCE_INDEX] = 1;
                 self.exp[TIME_INDEX] = 1;
@@ -1461,7 +1473,7 @@ impl Value {
                 *self >>= *other;
                 return true;
             } else if other.unit_map & MAGNETIC_FLUX_MAP > 0 {
-                *self >>= UnitInductance::Henry(Metric::None);
+                *self >>= UnitElectricInductance::Henry(Metric::None);
                 self.v_magnetic_flux = Some(UnitMagneticFlux::Weber(Metric::None));
                 self.v_electric_current = Some(UnitElectricCurrent::Ampere(Metric::None));
                 self.v_inductance = None;
@@ -2229,7 +2241,9 @@ impl Value {
                 expon = match temp_split[1].parse::<i32>() {
                     Ok(t) => t,
                     Err(_) => {
-                        return Err(V3Error::ParsingError("[_create_unit_1] Cannot parse int"))
+                        return Err(V3Error::ParsingError(
+                            "[_create_unit_1] Cannot parse int".into(),
+                        ))
                     }
                 };
             }
@@ -2244,7 +2258,9 @@ impl Value {
                 expon *= match temp_split[1].parse::<i32>() {
                     Ok(t) => t,
                     Err(_) => {
-                        return Err(V3Error::ParsingError("[_create_unit_2] Cannot parse int"))
+                        return Err(V3Error::ParsingError(
+                            "[_create_unit_2] Cannot parse int".into(),
+                        ))
                     }
                 };
             }
@@ -2269,7 +2285,7 @@ impl Value {
         for index in 0..block.chars().count() {
             let c: char = match block.chars().nth(index) {
                 Some(t) => t,
-                None => return Err(V3Error::ParsingError("[_get_tokens] Index error")),
+                None => return Err(V3Error::ParsingError("[_get_tokens] Index error".into())),
             };
             match c {
                 '(' => {
@@ -2342,7 +2358,7 @@ impl Value {
         match unit.as_str() {
             "mph" => {
                 if exp != 1 && exp != -1 {
-                    return Err(V3Error::ParsingError("[_parse_units] MPH exponent"));
+                    return Err(V3Error::ParsingError("[_parse_units] MPH exponent".into()));
                 }
                 self.v_length = Some(UnitLength::Mile);
                 self.exp[LENGTH_INDEX] = exp;
@@ -2353,7 +2369,7 @@ impl Value {
             }
             "kph" => {
                 if exp != 1 && exp != -1 {
-                    return Err(V3Error::ParsingError("[_parse_units] KPH exponent"));
+                    return Err(V3Error::ParsingError("[_parse_units] KPH exponent".into()));
                 }
                 self.v_length = Some(UnitLength::Meter(Metric::Kilo));
                 self.exp[LENGTH_INDEX] = exp;
@@ -2507,7 +2523,7 @@ impl Value {
                 return Ok(());
             }
             "farad" | "farads" => {
-                self.v_capacitance = Some(UnitCapacitance::Farad(Metric::None));
+                self.v_capacitance = Some(UnitElectricCapacitance::Farad(Metric::None));
                 self.exp[CAPACITANCE_INDEX] = exp;
                 self.unit_map |= CAPACITANCE_MAP;
                 return Ok(());
@@ -2602,12 +2618,12 @@ impl Value {
                 self.unit_map |= ELECTRIC_CHARGE_MAP;
             }
             'F' => {
-                self.v_capacitance = Some(UnitCapacitance::Farad(m));
+                self.v_capacitance = Some(UnitElectricCapacitance::Farad(m));
                 self.exp[CAPACITANCE_INDEX] = exp;
                 self.unit_map |= CAPACITANCE_MAP;
             }
             'Ω' | 'O' => {
-                self.v_resistance = Some(UnitResistance::Ohm(m));
+                self.v_resistance = Some(UnitElectricResistance::Ohm(m));
                 self.exp[RESISTANCE_INDEX] = exp;
                 self.unit_map |= RESISTANCE_MAP;
             }
@@ -2634,7 +2650,7 @@ impl Value {
                 self.unit_map |= TEMPERATURE_MAP;
             }
             'H' => {
-                self.v_inductance = Some(UnitInductance::Henry(m));
+                self.v_inductance = Some(UnitElectricInductance::Henry(m));
                 self.exp[INDUCTANCE_INDEX] = exp;
                 self.unit_map |= INDUCTANCE_MAP;
             }
@@ -2763,7 +2779,7 @@ impl Value {
                     Some(t) => t,
                     None => {
                         return Err(V3Error::ParsingError(
-                            "[_get_double_letter] Cannot get next metric char",
+                            "[_get_double_letter] Cannot get next metric char".into(),
                         ))
                     }
                 }) {
@@ -2834,7 +2850,7 @@ impl Value {
                     Some(t) => t,
                     None => {
                         return Err(V3Error::ParsingError(
-                            "[_get_triple_letter] Cannot get next metric char",
+                            "[_get_triple_letter] Cannot get next metric char".into(),
                         ))
                     }
                 }) {
@@ -2880,7 +2896,7 @@ impl Value {
                     Some(t) => t,
                     None => {
                         return Err(V3Error::ParsingError(
-                            "[_get_quadruple_letter] Cannot get next metric char",
+                            "[_get_quadruple_letter] Cannot get next metric char".into(),
                         ))
                     }
                 }) {
@@ -2913,7 +2929,7 @@ impl Value {
             Some(t) => t,
             None => {
                 return Err(V3Error::ParsingError(
-                    "[_get_pentuple_letter] Cannot get next metric char",
+                    "[_get_pentuple_letter] Cannot get next metric char".into(),
                 ))
             }
         }) {

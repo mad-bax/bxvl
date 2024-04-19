@@ -97,7 +97,7 @@ pub const RADIO_C_TO_BQ: f64 = 37_000_000_000.0;
 pub const RADEX_REM_TO_SV: f64 = 0.01;
 
 /// Temperature
-/// 
+///
 /// The conversion numeric for Kelvin to Celsius
 pub const KELVIN_TO_CELSIUS: f64 = 273.15;
 

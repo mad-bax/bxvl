@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, time::UnitTime, BaseUnit, Convert};
+use super::{Metric, time::UnitTime, BaseUnit, Convert};
 
 /// The unit types of frequency
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]

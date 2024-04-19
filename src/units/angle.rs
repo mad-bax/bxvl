@@ -1,30 +1,21 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{metric::Metric, BaseUnit, Convert};
-
-/// The unit types for angles
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitAngle {
-    /// Common Standard
-    Degree,
-    /// SI unit
-    Radian(Metric),
-    /// Common Standard
-    Moa,
-}
+use super::{BaseUnit, Convert, Metric, UnitAngle};
 
 impl Display for UnitAngle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Radian(Metric::Milli) => "mil".into(),
-            Self::Radian(m) => format!("{}rad", self.get_metric().as_str()),
-            Self::Degree => "°".into(),
-            Self::Moa => "moa".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Radian(Metric::Milli) => "mil".into(),
+                Self::Radian(m) => format!("{}rad", m.as_str()),
+                Self::Degree => "°".into(),
+                Self::Moa => "moa".into(),
+            }
+        )
     }
 }
 
@@ -70,7 +61,7 @@ impl BaseUnit for UnitAngle {
 
 #[cfg(test)]
 mod angle_testing {
-    use crate::units::{angle::UnitAngle, metric::Metric};
+    use crate::units::{UnitAngle, Metric, BaseUnit};
 
     /// Unit Angle Comparison Base
     ///

@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use super::{metric::Metric, BaseUnit, Convert, frequency::UnitFrequency};
+use super::{frequency::UnitFrequency, Metric, BaseUnit, Convert};
 
 /// The unit types for time
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -19,12 +19,16 @@ pub enum UnitTime {
 
 impl Display for UnitTime {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            UnitTime::Second(m) => format!("{}s", m.as_str()),
-            UnitTime::Minute => "min".into(),
-            UnitTime::Hour => "hr".into(),
-            UnitTime::Day => "day".into(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                UnitTime::Second(m) => format!("{}s", m.as_str()),
+                UnitTime::Minute => "min".into(),
+                UnitTime::Hour => "hr".into(),
+                UnitTime::Day => "day".into(),
+            }
+        )
     }
 }
 
@@ -76,7 +80,7 @@ impl BaseUnit for UnitTime {
 
 #[cfg(test)]
 mod time_testing {
-    use crate::units::{metric::Metric, time::UnitTime};
+    use crate::units::{Metric, time::UnitTime, BaseUnit};
 
     /// Unit Time Comparison Base
     ///
