@@ -16,24 +16,7 @@ macro_rules! assert_apr {
 #[cfg(test)]
 mod unit_creation_tests {
     use v3::{
-        units::{
-            angle::UnitAngle, angle_solid::UnitSolidAngle,
-            catalytic_activity::UnitCatalyticActivity,
-            electrical_capacitance::UnitElectricCapacitance, electrical_charge::UnitElectricCharge,
-            electrical_conductance::UnitElectricConductance,
-            electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance,
-            electrical_potential::UnitElectricPotential,
-            electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce,
-            frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation,
-            length::UnitLength, luminous_flux::UnitLuminousFlux,
-            luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux,
-            magnetic_flux_density::UnitMagneticFluxDensity, UnitMass, metric::Metric,
-            power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose,
-            radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity,
-            sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature,
-            time::UnitTime, volume::UnitVolume, BaseUnit,
-        },
-        values::Value,
+        units::{electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance, electrical_potential::UnitElectricPotential, electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce, frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation, length::UnitLength, luminous_flux::UnitLuminousFlux, luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux, magnetic_flux_density::UnitMagneticFluxDensity, power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose, radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity, sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime, volume::UnitVolume, BaseUnit, Metric, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitMass, UnitSolidAngle}, values::Value
     };
 
     const TEST_METRIC: [(Metric, &str); 22] = [

@@ -147,14 +147,15 @@ pub trait Convert<T> {
     fn convert(&self, other: &T) -> f64;
 }
 
+/// Provides the function definitions required for unit conversions.
 pub trait BaseUnit {
-    /// Returns the metric scaler of an SI unit
+    /// Returns the [`Metric`] scaler of an SI unit
     fn scale(&self) -> f64;
 
     /// Returns the base unit conversion in relation to the standard SI unit
     fn base(&self) -> f64;
 
-    /// Returns the `Metric` prefix for the unit
+    /// Returns the [`Metric`] prefix for the unit
     fn get_metric(&self) -> Metric;
 }
 
