@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for luminous flux
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitLuminousFlux {
-    /// SI unit
-    Lumen(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitLuminousFlux};
 
 impl Display for UnitLuminousFlux {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

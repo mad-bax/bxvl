@@ -55,7 +55,7 @@ Creating `Value`s:
 ```rust
 use v3::value;
 use v3::values::Value;
-use v3::units::{Metric, time::UnitTime, UnitMass, length::UnitLength};
+use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
 
 // Slowest
 let v1:Value = "22.3 kg*m/s^2".parse::<Value>().unwrap();
@@ -78,7 +78,7 @@ Using `Values`:
 
 ```rust
 use v3::values::Value;
-use v3::units::{Metric, time::UnitTime, length::UnitLength};
+use v3::units::{Metric, UnitTime, UnitLength};
 
 let time:Value = 3.4 * UnitTime::Second(Metric::None);
 let dist:Value = 10.3 * UnitLength::Meter(Metric::None);
@@ -94,7 +94,7 @@ Values provide similar functionality to many functions that are available to oth
 
 ```rust
 use v3::values::Value;
-use v3::units::{Metric, length::UnitLength};
+use v3::units::{Metric, UnitLength};
 
 let m:Value = Value::new(f64::NAN, "feet").unwrap();
 if m.is_nan() {
@@ -185,7 +185,7 @@ The types can also be directly used: (The fastest conversion method)
 
 ```rust
 use v3::values::Value;
-use v3::units::{Metric, length::UnitLength, time::UnitTime};
+use v3::units::{Metric, UnitLength, UnitTime};
 
 let mut m:Value = Value::new(5.9, "kph").unwrap();
 

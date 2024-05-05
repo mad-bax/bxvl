@@ -1,38 +1,38 @@
 use crate::constants::*;
 use crate::errors::V3Error;
+use crate::units::Convert;
+use crate::units::Metric;
+use crate::units::UnitAbsorbedDose;
 use crate::units::UnitAngle;
-use crate::units::UnitSolidAngle;
 use crate::units::UnitCatalyticActivity;
 use crate::units::UnitElectricCapacitance;
 use crate::units::UnitElectricCharge;
 use crate::units::UnitElectricConductance;
-use crate::units::electrical_current::UnitElectricCurrent;
-use crate::units::electrical_inductance::UnitElectricInductance;
-use crate::units::electrical_potential::UnitElectricPotential;
-use crate::units::electrical_resistance::UnitElectricResistance;
-use crate::units::energy::UnitEnergy;
-use crate::units::force::UnitForce;
-use crate::units::frequency::UnitFrequency;
-use crate::units::illuminance::UnitIlluminance;
-use crate::units::information::UnitInformation;
-use crate::units::length::UnitLength;
-use crate::units::luminous_flux::UnitLuminousFlux;
-use crate::units::luminous_intensity::UnitLuminousIntensity;
-use crate::units::magnetic_flux::UnitMagneticFlux;
-use crate::units::magnetic_flux_density::UnitMagneticFluxDensity;
+use crate::units::UnitElectricCurrent;
+use crate::units::UnitElectricInductance;
+use crate::units::UnitElectricPotential;
+use crate::units::UnitElectricResistance;
+use crate::units::UnitEnergy;
+use crate::units::UnitForce;
+use crate::units::UnitFrequency;
+use crate::units::UnitIlluminance;
+use crate::units::UnitInformation;
+use crate::units::UnitLength;
+use crate::units::UnitLuminousFlux;
+use crate::units::UnitLuminousIntensity;
+use crate::units::UnitMagneticFlux;
+use crate::units::UnitMagneticFluxDensity;
 use crate::units::UnitMass;
-use crate::units::Metric;
-use crate::units::power::UnitPower;
-use crate::units::pressure::UnitPressure;
-use crate::units::radiation_absorbed_dose::UnitAbsorbedDose;
-use crate::units::radiation_equivalent_dose::UnitRadioactivityExposure;
-use crate::units::radioactivity::UnitRadioactivity;
-use crate::units::sound::UnitSound;
-use crate::units::substance::UnitSubstance;
-use crate::units::temperature::UnitTemperature;
-use crate::units::time::UnitTime;
-use crate::units::volume::UnitVolume;
-use crate::units::Convert;
+use crate::units::UnitPower;
+use crate::units::UnitPressure;
+use crate::units::UnitRadioactivity;
+use crate::units::UnitRadioactivityExposure;
+use crate::units::UnitSolidAngle;
+use crate::units::UnitSound;
+use crate::units::UnitSubstance;
+use crate::units::UnitTemperature;
+use crate::units::UnitTime;
+use crate::units::UnitVolume;
 use crate::values::Value;
 
 impl Default for Value {
@@ -537,7 +537,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::length::UnitLength;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 4.0 * UnitLength::Inch;
     /// v.inv()
     /// ```
@@ -626,7 +626,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::length::UnitLength;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 16.0 * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.sqrt();
     /// ```
@@ -650,7 +650,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::length::UnitLength;
+    /// use v3::units::UnitLength;
     /// let v:Value = 4.0 * UnitLength::Foot;
     /// let x:Value = v.powv(2);
     /// assert!(String::from("16 ft^2") == format!("{}", x));
@@ -671,7 +671,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::length::UnitLength;
+    /// use v3::units::UnitLength;
     /// let mut v:Value = 9.0 * UnitLength::Foot * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.cbrt();
     /// ```
@@ -730,7 +730,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::{time::UnitTime, UnitAngle, Metric};
+    /// use v3::units::{UnitTime, UnitAngle, Metric};
     /// let a:Value = 10.0 * UnitTime::Second(Metric::None);
     /// let b:Value = 0.3 * UnitAngle::Radian(Metric::None);
     /// let x:Value = a.atan2(&b);
@@ -762,7 +762,7 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::{length::UnitLength, mass::UnitMass, time::UnitTime, Metric};
+    /// use v3::units::{UnitLength, UnitMass, UnitTime, Metric};
     /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
     /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
     /// let mut f:Value = match (mass*acc).complex() {

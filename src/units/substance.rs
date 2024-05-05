@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for substance
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitSubstance {
-    /// SI unit
-    Mole(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitSubstance};
 
 impl Display for UnitSubstance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

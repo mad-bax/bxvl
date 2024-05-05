@@ -1,19 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types of radioactivity
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitRadioactivity {
-    /// SI unit
-    Becquerel(Metric),
-    /// Legacy
-    Curie,
-}
+use super::{BaseUnit, Convert, Metric, UnitRadioactivity};
 
 impl Display for UnitRadioactivity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -69,7 +58,7 @@ impl BaseUnit for UnitRadioactivity {
 
 #[cfg(test)]
 mod radioactivity_testing {
-    use crate::units::{Metric, radioactivity::UnitRadioactivity, BaseUnit};
+    use crate::units::{radioactivity::UnitRadioactivity, BaseUnit, Metric};
 
     /// Unit Radioactivity Comparison Base
     ///

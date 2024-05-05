@@ -1,21 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants::KELVIN_TO_CELSIUS;
 
-use super::{Metric, BaseUnit};
-
-/// The unit types for temperature
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitTemperature {
-    /// SI Unit
-    Celsius,
-    /// Imperial
-    Fahrenheit,
-    /// SI unit
-    Kelvin(Metric),
-}
+use super::{BaseUnit, Metric, UnitTemperature};
 
 impl Display for UnitTemperature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

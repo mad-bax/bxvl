@@ -4,9 +4,16 @@ extern crate v3;
 mod value_constant_tests {
     use v3::{
         units::{
-            UnitElectricCapacitance, UnitElectricCharge,
-            energy::UnitEnergy, frequency::UnitFrequency, length::UnitLength, UnitMass,
-            Metric, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime,
+            UnitEnergy,
+            UnitFrequency,
+            UnitLength,
+            UnitSubstance,
+            UnitTemperature,
+            UnitTime,
+            Metric,
+            UnitElectricCapacitance,
+            UnitElectricCharge,
+            UnitMass,
         },
         values::value_consts,
     };
@@ -88,7 +95,41 @@ mod value_constant_tests {
 mod value_creation_tests {
 
     use v3::{
-        units::{electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance, electrical_potential::UnitElectricPotential, electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce, frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation, length::UnitLength, luminous_flux::UnitLuminousFlux, luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux, magnetic_flux_density::UnitMagneticFluxDensity, power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose, radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity, sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime, volume::UnitVolume, BaseUnit, Metric, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitMass, UnitSolidAngle}, values::Value
+        units::{
+            UnitElectricCurrent,
+            UnitElectricInductance,
+            UnitElectricPotential,
+            UnitElectricResistance,
+            UnitEnergy,
+            UnitForce,
+            UnitFrequency,
+            UnitIlluminance,
+            UnitInformation,
+            UnitLength,
+            UnitLuminousFlux,
+            UnitLuminousIntensity,
+            UnitMagneticFlux,
+            UnitMagneticFluxDensity,
+            UnitPower,
+            UnitPressure,
+            UnitAbsorbedDose,
+            UnitRadioactivityExposure,
+            UnitRadioactivity,
+            UnitSound,
+            UnitSubstance,
+            UnitTemperature,
+            UnitTime,
+            UnitVolume,
+            Metric,
+            UnitAngle,
+            UnitCatalyticActivity,
+            UnitElectricCapacitance,
+            UnitElectricCharge,
+            UnitElectricConductance,
+            UnitMass,
+            UnitSolidAngle,
+        },
+        values::Value,
     };
 
     const V1: f64 = 3.5;
@@ -479,7 +520,40 @@ mod value_creation_tests {
 mod value_operation_tests {
     use crate::value_creation_tests::TEST_METRIC_UNITS;
     use v3::{
-        units::{electrical_current::UnitElectricCurrent, electrical_inductance::UnitElectricInductance, electrical_potential::UnitElectricPotential, electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce, frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation, length::UnitLength, luminous_flux::UnitLuminousFlux, luminous_intensity::UnitLuminousIntensity, magnetic_flux::UnitMagneticFlux, magnetic_flux_density::UnitMagneticFluxDensity, power::UnitPower, pressure::UnitPressure, radiation_absorbed_dose::UnitAbsorbedDose, radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity, sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime, volume::UnitVolume, BaseUnit, Metric, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitMass, UnitSolidAngle}, values::Value
+        units::{
+            UnitElectricCurrent,
+            UnitElectricInductance,
+            UnitElectricPotential,
+            UnitElectricResistance,
+            UnitEnergy,
+            UnitForce,
+            UnitFrequency,
+            UnitIlluminance,
+            UnitInformation,
+            UnitLength,
+            UnitLuminousFlux,
+            UnitLuminousIntensity,
+            UnitMagneticFlux,
+            UnitMagneticFluxDensity,
+            UnitPower,
+            UnitPressure,
+            UnitAbsorbedDose,
+            UnitRadioactivityExposure,
+            UnitRadioactivity,
+            UnitSound,
+            UnitSubstance,
+            UnitTime,
+            UnitVolume,
+            Metric,
+            UnitAngle,
+            UnitCatalyticActivity,
+            UnitElectricCapacitance,
+            UnitElectricCharge,
+            UnitElectricConductance,
+            UnitMass,
+            UnitSolidAngle,
+        },
+        values::Value,
     };
 
     #[test]
@@ -939,7 +1013,7 @@ mod value_operation_tests {
 
 #[cfg(test)]
 mod value_display_tests {
-    use v3::units::{length::UnitLength, metric::Metric, time::UnitTime};
+    use v3::units::{UnitLength, UnitTime, Metric};
     use v3::values::Value;
 
     #[test]
@@ -987,7 +1061,7 @@ mod value_display_tests {
 
 #[cfg(test)]
 mod value_edge_cases {
-    use v3::units::{length::UnitLength, Metric};
+    use v3::units::{UnitLength, Metric};
     use v3::values::Value;
 
     #[test]

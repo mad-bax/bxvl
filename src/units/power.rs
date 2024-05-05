@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types of power
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitPower {
-    /// SI unit
-    Watt(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitPower};
 
 impl Display for UnitPower {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

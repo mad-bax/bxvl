@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, time::UnitTime, BaseUnit, Convert};
-
-/// The unit types of frequency
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitFrequency {
-    /// SI unit
-    Hertz(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitFrequency, UnitTime};
 
 impl Display for UnitFrequency {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

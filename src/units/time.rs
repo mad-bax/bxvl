@@ -1,21 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{frequency::UnitFrequency, Metric, BaseUnit, Convert};
-
-/// The unit types for time
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitTime {
-    /// SI unit
-    Second(Metric),
-    /// Non - SI
-    Minute,
-    /// Non - SI
-    Hour,
-    /// Non - SI
-    Day,
-}
+use super::{BaseUnit, Convert, Metric, UnitFrequency, UnitTime};
 
 impl Display for UnitTime {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -80,7 +65,7 @@ impl BaseUnit for UnitTime {
 
 #[cfg(test)]
 mod time_testing {
-    use crate::units::{Metric, time::UnitTime, BaseUnit};
+    use crate::units::{time::UnitTime, BaseUnit, Metric};
 
     /// Unit Time Comparison Base
     ///

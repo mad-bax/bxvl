@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for illuminance
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitIlluminance {
-    /// SI unit
-    Lux(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitIlluminance};
 
 impl Display for UnitIlluminance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

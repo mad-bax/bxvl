@@ -1,33 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{Metric, volume::UnitVolume, BaseUnit, Convert};
-
-/// The unit types for length
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitLength {
-    /// SI unit
-    Meter(Metric),
-    /// Imperial
-    Inch,
-    /// Imperial
-    Foot,
-    /// Imperial
-    Yard,
-    /// Imperial
-    Mile,
-    /// Astronomical
-    AstronomicalUnit,
-    /// Astronomical
-    Parsec(Metric),
-    /// SI integrated
-    LightYear(Metric),
-    /// Legacy
-    Angstrom,
-}
+use super::{BaseUnit, Convert, Metric, UnitLength, UnitVolume};
 
 impl Display for UnitLength {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -102,7 +77,7 @@ impl BaseUnit for UnitLength {
 
 #[cfg(test)]
 mod length_testing {
-    use crate::units::{length::UnitLength, Metric, BaseUnit};
+    use crate::units::{length::UnitLength, BaseUnit, Metric};
 
     /// Unit Length Comparison Base
     ///

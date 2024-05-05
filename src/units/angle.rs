@@ -61,7 +61,7 @@ impl BaseUnit for UnitAngle {
 
 #[cfg(test)]
 mod angle_testing {
-    use crate::units::{UnitAngle, Metric, BaseUnit};
+    use crate::units::{BaseUnit, Metric, UnitAngle};
 
     /// Unit Angle Comparison Base
     ///

@@ -1,23 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types of energy
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitEnergy {
-    /// SI unit
-    Joule(Metric),
-    /// SI integrated
-    GramCalorie(Metric),
-    /// Imperial
-    FootPound,
-    /// SI integrated
-    ElectronVolt(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitEnergy};
 
 impl Display for UnitEnergy {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -81,7 +66,7 @@ impl BaseUnit for UnitEnergy {
 
 #[cfg(test)]
 mod energy_testing {
-    use crate::units::{energy::UnitEnergy, Metric, BaseUnit};
+    use crate::units::{energy::UnitEnergy, BaseUnit, Metric};
 
     /// Unit Energy Comparison Base
     ///

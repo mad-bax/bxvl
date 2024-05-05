@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for electric current
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricCurrent {
-    /// SI unit
-    Ampere(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricCurrent};
 
 impl Display for UnitElectricCurrent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

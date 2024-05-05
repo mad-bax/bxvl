@@ -22,19 +22,37 @@ mod value_conversion_ops;
 use serde::{Deserialize, Serialize};
 
 use crate::units::{
-    UnitAngle, UnitSolidAngle, UnitCatalyticActivity,
-    UnitElectricCapacitance, UnitElectricCharge,
-    UnitElectricConductance, electrical_current::UnitElectricCurrent,
-    electrical_inductance::UnitElectricInductance, electrical_potential::UnitElectricPotential,
-    electrical_resistance::UnitElectricResistance, energy::UnitEnergy, force::UnitForce,
-    frequency::UnitFrequency, illuminance::UnitIlluminance, information::UnitInformation,
-    length::UnitLength, luminous_flux::UnitLuminousFlux, luminous_intensity::UnitLuminousIntensity,
-    magnetic_flux::UnitMagneticFlux, magnetic_flux_density::UnitMagneticFluxDensity,
-    UnitMass, power::UnitPower, pressure::UnitPressure,
-    radiation_absorbed_dose::UnitAbsorbedDose,
-    radiation_equivalent_dose::UnitRadioactivityExposure, radioactivity::UnitRadioactivity,
-    sound::UnitSound, substance::UnitSubstance, temperature::UnitTemperature, time::UnitTime,
-    volume::UnitVolume,
+    UnitElectricCurrent,
+    UnitElectricInductance,
+    UnitElectricPotential,
+    UnitElectricResistance,
+    UnitEnergy,
+    UnitForce,
+    UnitFrequency,
+    UnitIlluminance,
+    UnitInformation,
+    UnitLength,
+    UnitLuminousFlux,
+    UnitLuminousIntensity,
+    UnitMagneticFlux,
+    UnitMagneticFluxDensity,
+    UnitPower,
+    UnitPressure,
+    UnitAbsorbedDose,
+    UnitRadioactivityExposure,
+    UnitRadioactivity,
+    UnitSound,
+    UnitSubstance,
+    UnitTemperature,
+    UnitTime,
+    UnitVolume,
+    UnitAngle,
+    UnitCatalyticActivity,
+    UnitElectricCapacitance,
+    UnitElectricCharge,
+    UnitElectricConductance,
+    UnitMass,
+    UnitSolidAngle,
 };
 
 /// The `Value` struct definition
@@ -123,7 +141,7 @@ mod value_unit_tests {
 
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
-    use crate::units::length::UnitLength;
+    use crate::units::UnitLength;
     use crate::units::Metric;
     use crate::value;
     use crate::values::UnitMass;

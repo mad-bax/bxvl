@@ -1,19 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types of force
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitForce {
-    /// SI unit
-    Newton(Metric),
-    /// Imperial
-    PoundForce,
-}
+use super::{BaseUnit, Convert, Metric, UnitForce};
 
 impl Display for UnitForce {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -69,7 +58,7 @@ impl BaseUnit for UnitForce {
 
 #[cfg(test)]
 mod force_testing {
-    use crate::units::{force::UnitForce, Metric, BaseUnit};
+    use crate::units::{force::UnitForce, BaseUnit, Metric};
 
     /// Unit Force Comparison Base
     ///

@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for electric resistance
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricResistance {
-    /// SI unit
-    Ohm(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricResistance};
 
 impl Display for UnitElectricResistance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

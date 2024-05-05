@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for electric potential
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitElectricPotential {
-    /// SI unit
-    Volt(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitElectricPotential};
 
 impl Display for UnitElectricPotential {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

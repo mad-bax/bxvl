@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for luminous intensity
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitLuminousIntensity {
-    /// SI unit
-    Candela(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitLuminousIntensity};
 
 impl Display for UnitLuminousIntensity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

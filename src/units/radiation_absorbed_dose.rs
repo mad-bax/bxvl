@@ -1,21 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types of absorbed dose of ionizing radiation
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitAbsorbedDose {
-    /// SI unit
-    Gray(Metric),
-    /// Legacy
-    Roentgen,
-    /// Legacy
-    Rad,
-}
+use super::{BaseUnit, Convert, Metric, UnitAbsorbedDose};
 
 impl Display for UnitAbsorbedDose {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -73,7 +60,7 @@ impl BaseUnit for UnitAbsorbedDose {
 
 #[cfg(test)]
 mod absorbed_dose_testing {
-    use crate::units::{Metric, radiation_absorbed_dose::UnitAbsorbedDose, BaseUnit};
+    use crate::units::{radiation_absorbed_dose::UnitAbsorbedDose, BaseUnit, Metric};
 
     /// Unit Absorbed Dose of Ionizing Radiation Comparison Base
     ///

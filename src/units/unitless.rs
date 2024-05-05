@@ -1,18 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// 'Empty' units
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitNone {
-    /// To describe a `Value` representing a percentage
-    Percentage,
-
-    /// Literally just a number
-    None,
-}
+use super::{BaseUnit, Convert, Metric, UnitNone};
 
 impl Display for UnitNone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

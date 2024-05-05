@@ -1,17 +1,8 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
 use crate::constants;
 
-use super::{length::UnitLength, Metric, BaseUnit, Convert};
-
-/// The unit types for volume
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitVolume {
-    /// SI unit
-    Liter(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitLength, UnitVolume};
 
 impl Display for UnitVolume {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

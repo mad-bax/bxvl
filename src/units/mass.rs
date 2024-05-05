@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use crate::constants;
 
-use super::{Metric, BaseUnit, Convert, UnitMass};
+use super::{BaseUnit, Convert, Metric, UnitMass};
 
 impl Display for UnitMass {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -62,7 +62,7 @@ impl BaseUnit for UnitMass {
 
 #[cfg(test)]
 mod mass_testing {
-    use crate::units::{Metric, BaseUnit, Convert, UnitMass};
+    use crate::units::{BaseUnit, Convert, Metric, UnitMass};
 
     #[test]
     fn unit_mass_to_string() {
@@ -93,7 +93,7 @@ mod mass_testing {
             (UnitMass::Gram(Metric::Zetta), "Zg"),
         ] {
             assert_eq!(&i.0.to_string(), i.1);
-            let t:String = i.0.into();
+            let t: String = i.0.into();
             assert_eq!(t, i.1.to_string());
         }
     }
@@ -129,7 +129,10 @@ mod mass_testing {
 
     #[test]
     fn unit_mass_convert() {
-        assert_eq!(0.1, UnitMass::Gram(Metric::None).convert(&UnitMass::Gram(Metric::Deca)));
+        assert_eq!(
+            0.1,
+            UnitMass::Gram(Metric::None).convert(&UnitMass::Gram(Metric::Deca))
+        );
     }
 
     #[test]

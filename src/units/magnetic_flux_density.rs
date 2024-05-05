@@ -1,15 +1,6 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
-
-use super::{Metric, BaseUnit, Convert};
-
-/// The unit types for magnetic flux density
-#[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-pub enum UnitMagneticFluxDensity {
-    /// SI unit
-    Tesla(Metric),
-}
+use super::{BaseUnit, Convert, Metric, UnitMagneticFluxDensity};
 
 impl Display for UnitMagneticFluxDensity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
