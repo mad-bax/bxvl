@@ -100,16 +100,6 @@ pub mod volume;
 
 use serde::{Deserialize, Serialize};
 
-macro_rules! units {
-    ($u:expr, $count:expr) => {
-        * u * units!(u, count-1)
-    };
-
-    ($u:expr, 0) => {
-        * u
-    }
-}
-
 /// The Metric scale names
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone, Default, Serialize, Deserialize)]
 pub enum Metric {
