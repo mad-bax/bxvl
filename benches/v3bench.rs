@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 extern crate v3;
 
 use v3::{
-    units::{length::UnitLength, substance::UnitSubstance, Convert, Metric, UnitAngle},
+    units::{UnitLength, UnitSubstance, Convert, Metric, UnitAngle},
     value,
     values::Value,
 };

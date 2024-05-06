@@ -96,40 +96,8 @@ mod value_creation_tests {
 
     use v3::{
         units::{
-            UnitElectricCurrent,
-            UnitElectricInductance,
-            UnitElectricPotential,
-            UnitElectricResistance,
-            UnitEnergy,
-            UnitForce,
-            UnitFrequency,
-            UnitIlluminance,
-            UnitInformation,
-            UnitLength,
-            UnitLuminousFlux,
-            UnitLuminousIntensity,
-            UnitMagneticFlux,
-            UnitMagneticFluxDensity,
-            UnitPower,
-            UnitPressure,
-            UnitAbsorbedDose,
-            UnitRadioactivityExposure,
-            UnitRadioactivity,
-            UnitSound,
-            UnitSubstance,
-            UnitTemperature,
-            UnitTime,
-            UnitVolume,
-            Metric,
-            UnitAngle,
-            UnitCatalyticActivity,
-            UnitElectricCapacitance,
-            UnitElectricCharge,
-            UnitElectricConductance,
-            UnitMass,
-            UnitSolidAngle,
-        },
-        values::Value,
+            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume
+        }, values::Value,
     };
 
     const V1: f64 = 3.5;
