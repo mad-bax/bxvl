@@ -68,9 +68,6 @@ impl BaseUnit for UnitEnergy {
 mod energy_testing {
     use crate::units::{energy::UnitEnergy, BaseUnit, Metric};
 
-    /// Unit Energy Comparison Base
-    ///
-    /// All units must return the 'base' value relative to the standard SI unit
     #[test]
     fn unit_energy_base_comparison() {
         // Joules are the base SI unit
@@ -82,5 +79,36 @@ mod energy_testing {
         // Electron Volts
         assert!(UnitEnergy::ElectronVolt(Metric::None).base() >= 1.602_176_634e-19);
         assert!(UnitEnergy::ElectronVolt(Metric::None).base() < 1.602_176_635e-19);
+    }
+
+    #[test]
+    fn unit_energy_to_string() {
+        for i in [
+            (UnitEnergy::Joule(Metric::Atto), "aHz"),
+            (UnitEnergy::Joule(Metric::Centi), "cHz"),
+            (UnitEnergy::Joule(Metric::Deca), "daHz"),
+            (UnitEnergy::Joule(Metric::Deci), "dHz"),
+            (UnitEnergy::Joule(Metric::Exa), "EHz"),
+            (UnitEnergy::Joule(Metric::Femto), "fHz"),
+            (UnitEnergy::Joule(Metric::Giga), "GHz"),
+            (UnitEnergy::Joule(Metric::Hecto), "hHz"),
+            (UnitEnergy::Joule(Metric::Kilo), "kHz"),
+            (UnitEnergy::Joule(Metric::Mega), "MHz"),
+            (UnitEnergy::Joule(Metric::Micro), "μHz"),
+            (UnitEnergy::Joule(Metric::Milli), "mHz"),
+            (UnitEnergy::Joule(Metric::Nano), "nHz"),
+            (UnitEnergy::Joule(Metric::None), "Hz"),
+            (UnitEnergy::Joule(Metric::Peta), "PHz"),
+            (UnitEnergy::Joule(Metric::Pico), "pHz"),
+            (UnitEnergy::Joule(Metric::Tera), "THz"),
+            (UnitEnergy::Joule(Metric::Yocto), "yHz"),
+            (UnitEnergy::Joule(Metric::Yotta), "YHz"),
+            (UnitEnergy::Joule(Metric::Zepto), "zHz"),
+            (UnitEnergy::Joule(Metric::Zetta), "ZHz"),
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
     }
 }
