@@ -40,3 +40,126 @@ impl BaseUnit for UnitElectricCapacitance {
         1.0
     }
 }
+
+#[cfg(test)]
+mod electrical_capacitance_testing {
+    use crate::units::{BaseUnit, Metric, UnitElectricCapacitance};
+
+    #[test]
+    fn unit_angle_base_comparison() {
+        assert!(UnitElectricCapacitance::Farad(Metric::None).base() == 1.0);
+    }
+
+    #[test]
+    fn unit_angle_to_string() {
+        for i in [
+            (UnitElectricCapacitance::Farad(Metric::Atto), "aF"),
+            (UnitElectricCapacitance::Farad(Metric::Centi), "cF"),
+            (UnitElectricCapacitance::Farad(Metric::Deca), "daF"),
+            (UnitElectricCapacitance::Farad(Metric::Deci), "dF"),
+            (UnitElectricCapacitance::Farad(Metric::Exa), "EF"),
+            (UnitElectricCapacitance::Farad(Metric::Femto), "fF"),
+            (UnitElectricCapacitance::Farad(Metric::Giga), "GF"),
+            (UnitElectricCapacitance::Farad(Metric::Hecto), "hF"),
+            (UnitElectricCapacitance::Farad(Metric::Kilo), "kF"),
+            (UnitElectricCapacitance::Farad(Metric::Mega), "MF"),
+            (UnitElectricCapacitance::Farad(Metric::Micro), "μF"),
+            (UnitElectricCapacitance::Farad(Metric::Milli), "mF"),
+            (UnitElectricCapacitance::Farad(Metric::Nano), "nF"),
+            (UnitElectricCapacitance::Farad(Metric::None), "F"),
+            (UnitElectricCapacitance::Farad(Metric::Peta), "PF"),
+            (UnitElectricCapacitance::Farad(Metric::Pico), "pF"),
+            (UnitElectricCapacitance::Farad(Metric::Tera), "TF"),
+            (UnitElectricCapacitance::Farad(Metric::Yocto), "yF"),
+            (UnitElectricCapacitance::Farad(Metric::Yotta), "YF"),
+            (UnitElectricCapacitance::Farad(Metric::Zepto), "zF"),
+            (UnitElectricCapacitance::Farad(Metric::Zetta), "ZF"),
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_angle_scale() {
+        for i in [
+            (UnitElectricCapacitance::Farad(Metric::Atto), Metric::Atto),
+            (UnitElectricCapacitance::Farad(Metric::Centi), Metric::Centi),
+            (UnitElectricCapacitance::Farad(Metric::Deca), Metric::Deca),
+            (UnitElectricCapacitance::Farad(Metric::Deci), Metric::Deci),
+            (UnitElectricCapacitance::Farad(Metric::Exa), Metric::Exa),
+            (UnitElectricCapacitance::Farad(Metric::Femto), Metric::Femto),
+            (UnitElectricCapacitance::Farad(Metric::Giga), Metric::Giga),
+            (UnitElectricCapacitance::Farad(Metric::Hecto), Metric::Hecto),
+            (UnitElectricCapacitance::Farad(Metric::Kilo), Metric::Kilo),
+            (UnitElectricCapacitance::Farad(Metric::Mega), Metric::Mega),
+            (UnitElectricCapacitance::Farad(Metric::Micro), Metric::Micro),
+            (UnitElectricCapacitance::Farad(Metric::Milli), Metric::Milli),
+            (UnitElectricCapacitance::Farad(Metric::Nano), Metric::Nano),
+            (UnitElectricCapacitance::Farad(Metric::None), Metric::None),
+            (UnitElectricCapacitance::Farad(Metric::Peta), Metric::Peta),
+            (UnitElectricCapacitance::Farad(Metric::Pico), Metric::Pico),
+            (UnitElectricCapacitance::Farad(Metric::Tera), Metric::Tera),
+            (UnitElectricCapacitance::Farad(Metric::Yocto), Metric::Yocto),
+            (UnitElectricCapacitance::Farad(Metric::Yotta), Metric::Yotta),
+            (UnitElectricCapacitance::Farad(Metric::Zepto), Metric::Zepto),
+            (UnitElectricCapacitance::Farad(Metric::Zetta), Metric::Zetta),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+
+        for i in [
+            (
+                UnitElectricCapacitance::Farad(Metric::Atto),
+                0.000000000000000001,
+            ),
+            (UnitElectricCapacitance::Farad(Metric::Centi), 0.01),
+            (UnitElectricCapacitance::Farad(Metric::Deca), 10.0),
+            (UnitElectricCapacitance::Farad(Metric::Deci), 0.1),
+            (
+                UnitElectricCapacitance::Farad(Metric::Exa),
+                1000000000000000000.0,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Femto),
+                0.000000000000001,
+            ),
+            (UnitElectricCapacitance::Farad(Metric::Giga), 1000000000.0),
+            (UnitElectricCapacitance::Farad(Metric::Hecto), 100.0),
+            (UnitElectricCapacitance::Farad(Metric::Kilo), 1000.0),
+            (UnitElectricCapacitance::Farad(Metric::Mega), 1000000.0),
+            (UnitElectricCapacitance::Farad(Metric::Micro), 0.000001),
+            (UnitElectricCapacitance::Farad(Metric::Milli), 0.001),
+            (UnitElectricCapacitance::Farad(Metric::Nano), 0.000000001),
+            (UnitElectricCapacitance::Farad(Metric::None), 1.0),
+            (
+                UnitElectricCapacitance::Farad(Metric::Peta),
+                1000000000000000.0,
+            ),
+            (UnitElectricCapacitance::Farad(Metric::Pico), 0.000000000001),
+            (
+                UnitElectricCapacitance::Farad(Metric::Tera),
+                1000000000000.0,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Zepto),
+                0.000000000000000000001,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
+    }
+}

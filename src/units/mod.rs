@@ -1,4 +1,3 @@
-
 /// Unit module for [`UnitAngle`].
 pub mod angle;
 

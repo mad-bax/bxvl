@@ -106,7 +106,6 @@ mod information_testing {
             (UnitInformation::Byte(Metric::Yotta), "Yb"),
             (UnitInformation::Byte(Metric::Zepto), "zb"),
             (UnitInformation::Byte(Metric::Zetta), "Zb"),
-        
             (UnitInformation::Bit(Metric::Atto), "abits"),
             (UnitInformation::Bit(Metric::Centi), "cbits"),
             (UnitInformation::Bit(Metric::Deca), "dabits"),
@@ -136,7 +135,7 @@ mod information_testing {
     }
 
     /// Unit information metric scaling
-    /// 
+    ///
     /// All units must return the metric 'scaler' value.
     #[test]
     fn unit_information_scale() {
@@ -162,7 +161,6 @@ mod information_testing {
             (UnitInformation::Byte(Metric::Yotta), Metric::Yotta),
             (UnitInformation::Byte(Metric::Zepto), Metric::Zepto),
             (UnitInformation::Byte(Metric::Zetta), Metric::Zetta),
-
             (UnitInformation::Bit(Metric::Atto), Metric::Atto),
             (UnitInformation::Bit(Metric::Centi), Metric::Centi),
             (UnitInformation::Bit(Metric::Deca), Metric::Deca),
@@ -194,22 +192,33 @@ mod information_testing {
             (UnitInformation::Byte(Metric::Mega), 1048576.0),
             (UnitInformation::Byte(Metric::None), 1.0),
             (UnitInformation::Byte(Metric::Peta), 1125899906842624.0),
-            (UnitInformation::Byte(Metric::Tera),  1099511627776.0),
-            (UnitInformation::Byte(Metric::Yotta), 1208925819614629174706176.0),
-            (UnitInformation::Byte(Metric::Zetta), 1180591620717411303424.0),
+            (UnitInformation::Byte(Metric::Tera), 1099511627776.0),
+            (
+                UnitInformation::Byte(Metric::Yotta),
+                1208925819614629174706176.0,
+            ),
+            (
+                UnitInformation::Byte(Metric::Zetta),
+                1180591620717411303424.0,
+            ),
             (UnitInformation::Byte(Metric::Exa), 1152921504606846976.0),
             (UnitInformation::Byte(Metric::Atto), 1.0),
-
             (UnitInformation::Bit(Metric::Giga), 1073741824.0),
             (UnitInformation::Bit(Metric::Kilo), 1024.0),
             (UnitInformation::Bit(Metric::Mega), 1048576.0),
             (UnitInformation::Bit(Metric::None), 1.0),
             (UnitInformation::Bit(Metric::Peta), 1125899906842624.0),
-            (UnitInformation::Bit(Metric::Tera),  1099511627776.0),
-            (UnitInformation::Bit(Metric::Yotta), 1208925819614629174706176.0),
-            (UnitInformation::Bit(Metric::Zetta), 1180591620717411303424.0),
+            (UnitInformation::Bit(Metric::Tera), 1099511627776.0),
+            (
+                UnitInformation::Bit(Metric::Yotta),
+                1208925819614629174706176.0,
+            ),
+            (
+                UnitInformation::Bit(Metric::Zetta),
+                1180591620717411303424.0,
+            ),
             (UnitInformation::Bit(Metric::Exa), 1152921504606846976.0),
-            (UnitInformation::Bit(Metric::Atto), 1.0)
+            (UnitInformation::Bit(Metric::Atto), 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

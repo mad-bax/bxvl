@@ -40,3 +40,123 @@ impl BaseUnit for UnitElectricCharge {
         1.0
     }
 }
+
+#[cfg(test)]
+mod electrical_charge_testing {
+    use crate::units::{BaseUnit, Metric, UnitElectricCharge};
+
+    #[test]
+    fn unit_angle_base_comparison() {
+        assert!(UnitElectricCharge::Coulomb(Metric::None).base() == 1.0);
+    }
+
+    #[test]
+    fn unit_angle_to_string() {
+        for i in [
+            (UnitElectricCharge::Coulomb(Metric::Atto), "aC"),
+            (UnitElectricCharge::Coulomb(Metric::Centi), "cC"),
+            (UnitElectricCharge::Coulomb(Metric::Deca), "daC"),
+            (UnitElectricCharge::Coulomb(Metric::Deci), "dC"),
+            (UnitElectricCharge::Coulomb(Metric::Exa), "EC"),
+            (UnitElectricCharge::Coulomb(Metric::Femto), "fC"),
+            (UnitElectricCharge::Coulomb(Metric::Giga), "GC"),
+            (UnitElectricCharge::Coulomb(Metric::Hecto), "hC"),
+            (UnitElectricCharge::Coulomb(Metric::Kilo), "kC"),
+            (UnitElectricCharge::Coulomb(Metric::Mega), "MC"),
+            (UnitElectricCharge::Coulomb(Metric::Micro), "μC"),
+            (UnitElectricCharge::Coulomb(Metric::Milli), "mC"),
+            (UnitElectricCharge::Coulomb(Metric::Nano), "nC"),
+            (UnitElectricCharge::Coulomb(Metric::None), "C"),
+            (UnitElectricCharge::Coulomb(Metric::Peta), "PC"),
+            (UnitElectricCharge::Coulomb(Metric::Pico), "pC"),
+            (UnitElectricCharge::Coulomb(Metric::Tera), "TC"),
+            (UnitElectricCharge::Coulomb(Metric::Yocto), "yC"),
+            (UnitElectricCharge::Coulomb(Metric::Yotta), "YC"),
+            (UnitElectricCharge::Coulomb(Metric::Zepto), "zC"),
+            (UnitElectricCharge::Coulomb(Metric::Zetta), "ZC"),
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_angle_scale() {
+        for i in [
+            (UnitElectricCharge::Coulomb(Metric::Atto), Metric::Atto),
+            (UnitElectricCharge::Coulomb(Metric::Centi), Metric::Centi),
+            (UnitElectricCharge::Coulomb(Metric::Deca), Metric::Deca),
+            (UnitElectricCharge::Coulomb(Metric::Deci), Metric::Deci),
+            (UnitElectricCharge::Coulomb(Metric::Exa), Metric::Exa),
+            (UnitElectricCharge::Coulomb(Metric::Femto), Metric::Femto),
+            (UnitElectricCharge::Coulomb(Metric::Giga), Metric::Giga),
+            (UnitElectricCharge::Coulomb(Metric::Hecto), Metric::Hecto),
+            (UnitElectricCharge::Coulomb(Metric::Kilo), Metric::Kilo),
+            (UnitElectricCharge::Coulomb(Metric::Mega), Metric::Mega),
+            (UnitElectricCharge::Coulomb(Metric::Micro), Metric::Micro),
+            (UnitElectricCharge::Coulomb(Metric::Milli), Metric::Milli),
+            (UnitElectricCharge::Coulomb(Metric::Nano), Metric::Nano),
+            (UnitElectricCharge::Coulomb(Metric::None), Metric::None),
+            (UnitElectricCharge::Coulomb(Metric::Peta), Metric::Peta),
+            (UnitElectricCharge::Coulomb(Metric::Pico), Metric::Pico),
+            (UnitElectricCharge::Coulomb(Metric::Tera), Metric::Tera),
+            (UnitElectricCharge::Coulomb(Metric::Yocto), Metric::Yocto),
+            (UnitElectricCharge::Coulomb(Metric::Yotta), Metric::Yotta),
+            (UnitElectricCharge::Coulomb(Metric::Zepto), Metric::Zepto),
+            (UnitElectricCharge::Coulomb(Metric::Zetta), Metric::Zetta),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+
+        for i in [
+            (
+                UnitElectricCharge::Coulomb(Metric::Atto),
+                0.000000000000000001,
+            ),
+            (UnitElectricCharge::Coulomb(Metric::Centi), 0.01),
+            (UnitElectricCharge::Coulomb(Metric::Deca), 10.0),
+            (UnitElectricCharge::Coulomb(Metric::Deci), 0.1),
+            (
+                UnitElectricCharge::Coulomb(Metric::Exa),
+                1000000000000000000.0,
+            ),
+            (
+                UnitElectricCharge::Coulomb(Metric::Femto),
+                0.000000000000001,
+            ),
+            (UnitElectricCharge::Coulomb(Metric::Giga), 1000000000.0),
+            (UnitElectricCharge::Coulomb(Metric::Hecto), 100.0),
+            (UnitElectricCharge::Coulomb(Metric::Kilo), 1000.0),
+            (UnitElectricCharge::Coulomb(Metric::Mega), 1000000.0),
+            (UnitElectricCharge::Coulomb(Metric::Micro), 0.000001),
+            (UnitElectricCharge::Coulomb(Metric::Milli), 0.001),
+            (UnitElectricCharge::Coulomb(Metric::Nano), 0.000000001),
+            (UnitElectricCharge::Coulomb(Metric::None), 1.0),
+            (
+                UnitElectricCharge::Coulomb(Metric::Peta),
+                1000000000000000.0,
+            ),
+            (UnitElectricCharge::Coulomb(Metric::Pico), 0.000000000001),
+            (UnitElectricCharge::Coulomb(Metric::Tera), 1000000000000.0),
+            (
+                UnitElectricCharge::Coulomb(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitElectricCharge::Coulomb(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (
+                UnitElectricCharge::Coulomb(Metric::Zepto),
+                0.000000000000000000001,
+            ),
+            (
+                UnitElectricCharge::Coulomb(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
+    }
+}

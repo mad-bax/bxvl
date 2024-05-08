@@ -22,37 +22,13 @@ mod value_conversion_ops;
 use serde::{Deserialize, Serialize};
 
 use crate::units::{
-    UnitElectricCurrent,
-    UnitElectricInductance,
-    UnitElectricPotential,
-    UnitElectricResistance,
-    UnitEnergy,
-    UnitForce,
-    UnitFrequency,
-    UnitIlluminance,
-    UnitInformation,
-    UnitLength,
-    UnitLuminousFlux,
-    UnitLuminousIntensity,
-    UnitMagneticFlux,
-    UnitMagneticFluxDensity,
-    UnitPower,
-    UnitPressure,
-    UnitAbsorbedDose,
-    UnitRadioactivityExposure,
-    UnitRadioactivity,
-    UnitSound,
-    UnitSubstance,
-    UnitTemperature,
-    UnitTime,
-    UnitVolume,
-    UnitAngle,
-    UnitCatalyticActivity,
-    UnitElectricCapacitance,
-    UnitElectricCharge,
-    UnitElectricConductance,
-    UnitMass,
-    UnitSolidAngle,
+    UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+    UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance,
+    UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency,
+    UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity,
+    UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure,
+    UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
+    UnitTemperature, UnitTime, UnitVolume,
 };
 
 /// The `Value` struct definition
@@ -141,8 +117,8 @@ mod value_unit_tests {
 
     use crate::constants::{MASS_INDEX, SUBSTANCE_INDEX};
     use crate::constants::{MASS_MAP, SUBSTANCE_MAP};
-    use crate::units::UnitLength;
     use crate::units::Metric;
+    use crate::units::UnitLength;
     use crate::value;
     use crate::values::UnitMass;
     use crate::values::UnitSubstance;

@@ -40,3 +40,126 @@ impl BaseUnit for UnitLuminousIntensity {
         1.0
     }
 }
+
+#[cfg(test)]
+mod luminous_intensity_testing {
+    use crate::units::{BaseUnit, Metric, UnitLuminousIntensity};
+
+    #[test]
+    fn unit_angle_base_comparison() {
+        assert!(UnitLuminousIntensity::Candela(Metric::None).base() == 1.0);
+    }
+
+    #[test]
+    fn unit_angle_to_string() {
+        for i in [
+            (UnitLuminousIntensity::Candela(Metric::Atto), "acd"),
+            (UnitLuminousIntensity::Candela(Metric::Centi), "ccd"),
+            (UnitLuminousIntensity::Candela(Metric::Deca), "dacd"),
+            (UnitLuminousIntensity::Candela(Metric::Deci), "dcd"),
+            (UnitLuminousIntensity::Candela(Metric::Exa), "Ecd"),
+            (UnitLuminousIntensity::Candela(Metric::Femto), "fcd"),
+            (UnitLuminousIntensity::Candela(Metric::Giga), "Gcd"),
+            (UnitLuminousIntensity::Candela(Metric::Hecto), "hcd"),
+            (UnitLuminousIntensity::Candela(Metric::Kilo), "kcd"),
+            (UnitLuminousIntensity::Candela(Metric::Mega), "Mcd"),
+            (UnitLuminousIntensity::Candela(Metric::Micro), "μcd"),
+            (UnitLuminousIntensity::Candela(Metric::Milli), "mcd"),
+            (UnitLuminousIntensity::Candela(Metric::Nano), "ncd"),
+            (UnitLuminousIntensity::Candela(Metric::None), "cd"),
+            (UnitLuminousIntensity::Candela(Metric::Peta), "Pcd"),
+            (UnitLuminousIntensity::Candela(Metric::Pico), "pcd"),
+            (UnitLuminousIntensity::Candela(Metric::Tera), "Tcd"),
+            (UnitLuminousIntensity::Candela(Metric::Yocto), "ycd"),
+            (UnitLuminousIntensity::Candela(Metric::Yotta), "Ycd"),
+            (UnitLuminousIntensity::Candela(Metric::Zepto), "zcd"),
+            (UnitLuminousIntensity::Candela(Metric::Zetta), "Zcd"),
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_angle_scale() {
+        for i in [
+            (UnitLuminousIntensity::Candela(Metric::Atto), Metric::Atto),
+            (UnitLuminousIntensity::Candela(Metric::Centi), Metric::Centi),
+            (UnitLuminousIntensity::Candela(Metric::Deca), Metric::Deca),
+            (UnitLuminousIntensity::Candela(Metric::Deci), Metric::Deci),
+            (UnitLuminousIntensity::Candela(Metric::Exa), Metric::Exa),
+            (UnitLuminousIntensity::Candela(Metric::Femto), Metric::Femto),
+            (UnitLuminousIntensity::Candela(Metric::Giga), Metric::Giga),
+            (UnitLuminousIntensity::Candela(Metric::Hecto), Metric::Hecto),
+            (UnitLuminousIntensity::Candela(Metric::Kilo), Metric::Kilo),
+            (UnitLuminousIntensity::Candela(Metric::Mega), Metric::Mega),
+            (UnitLuminousIntensity::Candela(Metric::Micro), Metric::Micro),
+            (UnitLuminousIntensity::Candela(Metric::Milli), Metric::Milli),
+            (UnitLuminousIntensity::Candela(Metric::Nano), Metric::Nano),
+            (UnitLuminousIntensity::Candela(Metric::None), Metric::None),
+            (UnitLuminousIntensity::Candela(Metric::Peta), Metric::Peta),
+            (UnitLuminousIntensity::Candela(Metric::Pico), Metric::Pico),
+            (UnitLuminousIntensity::Candela(Metric::Tera), Metric::Tera),
+            (UnitLuminousIntensity::Candela(Metric::Yocto), Metric::Yocto),
+            (UnitLuminousIntensity::Candela(Metric::Yotta), Metric::Yotta),
+            (UnitLuminousIntensity::Candela(Metric::Zepto), Metric::Zepto),
+            (UnitLuminousIntensity::Candela(Metric::Zetta), Metric::Zetta),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+
+        for i in [
+            (
+                UnitLuminousIntensity::Candela(Metric::Atto),
+                0.000000000000000001,
+            ),
+            (UnitLuminousIntensity::Candela(Metric::Centi), 0.01),
+            (UnitLuminousIntensity::Candela(Metric::Deca), 10.0),
+            (UnitLuminousIntensity::Candela(Metric::Deci), 0.1),
+            (
+                UnitLuminousIntensity::Candela(Metric::Exa),
+                1000000000000000000.0,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Femto),
+                0.000000000000001,
+            ),
+            (UnitLuminousIntensity::Candela(Metric::Giga), 1000000000.0),
+            (UnitLuminousIntensity::Candela(Metric::Hecto), 100.0),
+            (UnitLuminousIntensity::Candela(Metric::Kilo), 1000.0),
+            (UnitLuminousIntensity::Candela(Metric::Mega), 1000000.0),
+            (UnitLuminousIntensity::Candela(Metric::Micro), 0.000001),
+            (UnitLuminousIntensity::Candela(Metric::Milli), 0.001),
+            (UnitLuminousIntensity::Candela(Metric::Nano), 0.000000001),
+            (UnitLuminousIntensity::Candela(Metric::None), 1.0),
+            (
+                UnitLuminousIntensity::Candela(Metric::Peta),
+                1000000000000000.0,
+            ),
+            (UnitLuminousIntensity::Candela(Metric::Pico), 0.000000000001),
+            (
+                UnitLuminousIntensity::Candela(Metric::Tera),
+                1000000000000.0,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Zepto),
+                0.000000000000000000001,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
+    }
+}

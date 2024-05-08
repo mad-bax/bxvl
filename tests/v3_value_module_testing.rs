@@ -4,16 +4,8 @@ extern crate v3;
 mod value_constant_tests {
     use v3::{
         units::{
-            UnitEnergy,
-            UnitFrequency,
-            UnitLength,
-            UnitSubstance,
-            UnitTemperature,
-            UnitTime,
-            Metric,
-            UnitElectricCapacitance,
-            UnitElectricCharge,
-            UnitMass,
+            Metric, UnitElectricCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency,
+            UnitLength, UnitMass, UnitSubstance, UnitTemperature, UnitTime,
         },
         values::value_consts,
     };
@@ -96,8 +88,15 @@ mod value_creation_tests {
 
     use v3::{
         units::{
-            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume
-        }, values::Value,
+            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+            UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
+            UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy,
+            UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength,
+            UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
+            UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
+            UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume,
+        },
+        values::Value,
     };
 
     const V1: f64 = 3.5;
@@ -489,37 +488,13 @@ mod value_operation_tests {
     use crate::value_creation_tests::TEST_METRIC_UNITS;
     use v3::{
         units::{
-            UnitElectricCurrent,
-            UnitElectricInductance,
-            UnitElectricPotential,
-            UnitElectricResistance,
-            UnitEnergy,
-            UnitForce,
-            UnitFrequency,
-            UnitIlluminance,
-            UnitInformation,
-            UnitLength,
-            UnitLuminousFlux,
-            UnitLuminousIntensity,
-            UnitMagneticFlux,
-            UnitMagneticFluxDensity,
-            UnitPower,
-            UnitPressure,
-            UnitAbsorbedDose,
-            UnitRadioactivityExposure,
-            UnitRadioactivity,
-            UnitSound,
-            UnitSubstance,
-            UnitTime,
-            UnitVolume,
-            Metric,
-            UnitAngle,
-            UnitCatalyticActivity,
-            UnitElectricCapacitance,
-            UnitElectricCharge,
-            UnitElectricConductance,
-            UnitMass,
-            UnitSolidAngle,
+            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+            UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
+            UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy,
+            UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength,
+            UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
+            UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
+            UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume,
         },
         values::Value,
     };
@@ -981,7 +956,7 @@ mod value_operation_tests {
 
 #[cfg(test)]
 mod value_display_tests {
-    use v3::units::{UnitLength, UnitTime, Metric};
+    use v3::units::{Metric, UnitLength, UnitTime};
     use v3::values::Value;
 
     #[test]
@@ -1029,7 +1004,7 @@ mod value_display_tests {
 
 #[cfg(test)]
 mod value_edge_cases {
-    use v3::units::{UnitLength, Metric};
+    use v3::units::{Metric, UnitLength};
     use v3::values::Value;
 
     #[test]

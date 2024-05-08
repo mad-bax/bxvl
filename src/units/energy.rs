@@ -80,6 +80,7 @@ mod energy_testing {
         // Footpounds
         assert!(UnitEnergy::FootPound.base() == 1.355818);
         // Electron Volts
-        assert!(UnitEnergy::ElectronVolt(Metric::None).base() >= 1.602_176_633e-19);
+        assert!(UnitEnergy::ElectronVolt(Metric::None).base() >= 1.602_176_634e-19);
+        assert!(UnitEnergy::ElectronVolt(Metric::None).base() < 1.602_176_635e-19);
     }
 }
