@@ -85,11 +85,204 @@ mod pressure_testing {
         assert!(UnitPressure::Bar(Metric::None).base() == 100000.0);
         // inHg
         assert!(UnitPressure::Hgin.base() >= 3386.3886665);
+        assert!(UnitPressure::Hgin.base() < 3386.3886667);
         // mmHg
         assert!(UnitPressure::Hgmm.base() >= 133.322387414);
+        assert!(UnitPressure::Hgmm.base() < 133.322387416);
         // PSI
         assert!(UnitPressure::Psi.base() == 6894.757);
         // Torr
         assert!(UnitPressure::Torr.base() >= 133.322368420);
+        assert!(UnitPressure::Torr.base() < 133.322368422);
+    }
+
+    #[test]
+    fn unit_length_to_string() {
+        for i in [
+            (UnitPressure::Bar(Metric::Atto), "abar"),
+            (UnitPressure::Bar(Metric::Centi), "cbar"),
+            (UnitPressure::Bar(Metric::Deca), "dabar"),
+            (UnitPressure::Bar(Metric::Deci), "dbar"),
+            (UnitPressure::Bar(Metric::Exa), "Ebar"),
+            (UnitPressure::Bar(Metric::Femto), "fbar"),
+            (UnitPressure::Bar(Metric::Giga), "Gbar"),
+            (UnitPressure::Bar(Metric::Hecto), "hbar"),
+            (UnitPressure::Bar(Metric::Kilo), "kbar"),
+            (UnitPressure::Bar(Metric::Mega), "Mbar"),
+            (UnitPressure::Bar(Metric::Micro), "μbar"),
+            (UnitPressure::Bar(Metric::Milli), "mbar"),
+            (UnitPressure::Bar(Metric::Nano), "nbar"),
+            (UnitPressure::Bar(Metric::None), "bar"),
+            (UnitPressure::Bar(Metric::Peta), "Pbar"),
+            (UnitPressure::Bar(Metric::Pico), "pbar"),
+            (UnitPressure::Bar(Metric::Tera), "Tbar"),
+            (UnitPressure::Bar(Metric::Yocto), "ybar"),
+            (UnitPressure::Bar(Metric::Yotta), "Ybar"),
+            (UnitPressure::Bar(Metric::Zepto), "zbar"),
+            (UnitPressure::Bar(Metric::Zetta), "Zbar"),
+
+            (UnitPressure::Pascal(Metric::Atto), "aPa"),
+            (UnitPressure::Pascal(Metric::Centi), "cPa"),
+            (UnitPressure::Pascal(Metric::Deca), "daPa"),
+            (UnitPressure::Pascal(Metric::Deci), "dPa"),
+            (UnitPressure::Pascal(Metric::Exa), "EPa"),
+            (UnitPressure::Pascal(Metric::Femto), "fPa"),
+            (UnitPressure::Pascal(Metric::Giga), "GPa"),
+            (UnitPressure::Pascal(Metric::Hecto), "hPa"),
+            (UnitPressure::Pascal(Metric::Kilo), "kPa"),
+            (UnitPressure::Pascal(Metric::Mega), "MPa"),
+            (UnitPressure::Pascal(Metric::Micro), "μPa"),
+            (UnitPressure::Pascal(Metric::Milli), "mPa"),
+            (UnitPressure::Pascal(Metric::Nano), "nPa"),
+            (UnitPressure::Pascal(Metric::None), "Pa"),
+            (UnitPressure::Pascal(Metric::Peta), "PPa"),
+            (UnitPressure::Pascal(Metric::Pico), "pPa"),
+            (UnitPressure::Pascal(Metric::Tera), "TPa"),
+            (UnitPressure::Pascal(Metric::Yocto), "yPa"),
+            (UnitPressure::Pascal(Metric::Yotta), "YPa"),
+            (UnitPressure::Pascal(Metric::Zepto), "zPa"),
+            (UnitPressure::Pascal(Metric::Zetta), "ZPa"),
+
+            (UnitPressure::Hgmm, "mmHg"),
+            (UnitPressure::Psi, "psi"),
+            (UnitPressure::Hgin, "inHg"),
+            (UnitPressure::Atm, "atm"),
+            (UnitPressure::Torr, "torr"),
+
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_length_scale() {
+        for i in [
+
+            (UnitPressure::Bar(Metric::Atto), Metric::Atto),
+            (UnitPressure::Bar(Metric::Centi), Metric::Centi),
+            (UnitPressure::Bar(Metric::Deca), Metric::Deca),
+            (UnitPressure::Bar(Metric::Deci), Metric::Deci),
+            (UnitPressure::Bar(Metric::Exa), Metric::Exa),
+            (UnitPressure::Bar(Metric::Femto), Metric::Femto),
+            (UnitPressure::Bar(Metric::Giga), Metric::Giga),
+            (UnitPressure::Bar(Metric::Hecto), Metric::Hecto),
+            (UnitPressure::Bar(Metric::Kilo), Metric::Kilo),
+            (UnitPressure::Bar(Metric::Mega), Metric::Mega),
+            (UnitPressure::Bar(Metric::Micro), Metric::Micro),
+            (UnitPressure::Bar(Metric::Milli), Metric::Milli),
+            (UnitPressure::Bar(Metric::Nano), Metric::Nano),
+            (UnitPressure::Bar(Metric::None), Metric::None),
+            (UnitPressure::Bar(Metric::Peta), Metric::Peta),
+            (UnitPressure::Bar(Metric::Pico), Metric::Pico),
+            (UnitPressure::Bar(Metric::Tera), Metric::Tera),
+            (UnitPressure::Bar(Metric::Yocto), Metric::Yocto),
+            (UnitPressure::Bar(Metric::Yotta), Metric::Yotta),
+            (UnitPressure::Bar(Metric::Zepto), Metric::Zepto),
+            (UnitPressure::Bar(Metric::Zetta), Metric::Zetta),
+
+            (UnitPressure::Pascal(Metric::Atto), Metric::Atto),
+            (UnitPressure::Pascal(Metric::Centi), Metric::Centi),
+            (UnitPressure::Pascal(Metric::Deca), Metric::Deca),
+            (UnitPressure::Pascal(Metric::Deci), Metric::Deci),
+            (UnitPressure::Pascal(Metric::Exa), Metric::Exa),
+            (UnitPressure::Pascal(Metric::Femto), Metric::Femto),
+            (UnitPressure::Pascal(Metric::Giga), Metric::Giga),
+            (UnitPressure::Pascal(Metric::Hecto), Metric::Hecto),
+            (UnitPressure::Pascal(Metric::Kilo), Metric::Kilo),
+            (UnitPressure::Pascal(Metric::Mega), Metric::Mega),
+            (UnitPressure::Pascal(Metric::Micro), Metric::Micro),
+            (UnitPressure::Pascal(Metric::Milli), Metric::Milli),
+            (UnitPressure::Pascal(Metric::Nano), Metric::Nano),
+            (UnitPressure::Pascal(Metric::None), Metric::None),
+            (UnitPressure::Pascal(Metric::Peta), Metric::Peta),
+            (UnitPressure::Pascal(Metric::Pico), Metric::Pico),
+            (UnitPressure::Pascal(Metric::Tera), Metric::Tera),
+            (UnitPressure::Pascal(Metric::Yocto), Metric::Yocto),
+            (UnitPressure::Pascal(Metric::Yotta), Metric::Yotta),
+            (UnitPressure::Pascal(Metric::Zepto), Metric::Zepto),
+            (UnitPressure::Pascal(Metric::Zetta), Metric::Zetta),
+
+            (UnitPressure::Hgmm, Metric::None),
+            (UnitPressure::Psi, Metric::None),
+            (UnitPressure::Hgin, Metric::None),
+            (UnitPressure::Atm, Metric::None),
+            (UnitPressure::Torr, Metric::None),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+        for i in [
+
+            (UnitPressure::Bar(Metric::Atto), 0.000000000000000001),
+            (UnitPressure::Bar(Metric::Centi), 0.01),
+            (UnitPressure::Bar(Metric::Deca), 10.0),
+            (UnitPressure::Bar(Metric::Deci), 0.1),
+            (UnitPressure::Bar(Metric::Exa), 1000000000000000000.0),
+            (UnitPressure::Bar(Metric::Femto), 0.000000000000001),
+            (UnitPressure::Bar(Metric::Giga), 1000000000.0),
+            (UnitPressure::Bar(Metric::Hecto), 100.0),
+            (UnitPressure::Bar(Metric::Kilo), 1000.0),
+            (UnitPressure::Bar(Metric::Mega), 1000000.0),
+            (UnitPressure::Bar(Metric::Micro), 0.000001),
+            (UnitPressure::Bar(Metric::Milli), 0.001),
+            (UnitPressure::Bar(Metric::Nano), 0.000000001),
+            (UnitPressure::Bar(Metric::None), 1.0),
+            (UnitPressure::Bar(Metric::Peta), 1000000000000000.0),
+            (UnitPressure::Bar(Metric::Pico), 0.000000000001),
+            (UnitPressure::Bar(Metric::Tera), 1000000000000.0),
+            (
+                UnitPressure::Bar(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitPressure::Bar(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitPressure::Bar(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitPressure::Bar(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitPressure::Pascal(Metric::Atto), 0.000000000000000001),
+            (UnitPressure::Pascal(Metric::Centi), 0.01),
+            (UnitPressure::Pascal(Metric::Deca), 10.0),
+            (UnitPressure::Pascal(Metric::Deci), 0.1),
+            (UnitPressure::Pascal(Metric::Exa), 1000000000000000000.0),
+            (UnitPressure::Pascal(Metric::Femto), 0.000000000000001),
+            (UnitPressure::Pascal(Metric::Giga), 1000000000.0),
+            (UnitPressure::Pascal(Metric::Hecto), 100.0),
+            (UnitPressure::Pascal(Metric::Kilo), 1000.0),
+            (UnitPressure::Pascal(Metric::Mega), 1000000.0),
+            (UnitPressure::Pascal(Metric::Micro), 0.000001),
+            (UnitPressure::Pascal(Metric::Milli), 0.001),
+            (UnitPressure::Pascal(Metric::Nano), 0.000000001),
+            (UnitPressure::Pascal(Metric::None), 1.0),
+            (UnitPressure::Pascal(Metric::Peta), 1000000000000000.0),
+            (UnitPressure::Pascal(Metric::Pico), 0.000000000001),
+            (UnitPressure::Pascal(Metric::Tera), 1000000000000.0),
+            (
+                UnitPressure::Pascal(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitPressure::Pascal(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitPressure::Pascal(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitPressure::Pascal(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitPressure::Hgmm, 1.0),
+            (UnitPressure::Psi, 1.0),
+            (UnitPressure::Hgin, 1.0),
+            (UnitPressure::Atm, 1.0),
+            (UnitPressure::Torr, 1.0),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
     }
 }

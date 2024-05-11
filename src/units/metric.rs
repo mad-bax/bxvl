@@ -62,12 +62,14 @@ impl TryFrom<&str> for Metric {
     type Error = V3Error;
     fn try_from(m: &str) -> Result<Self, Self::Error> {
         if m.chars().count() > 2 {
+            Err(V3Error::ParsingError("Invalid metric prefix".into()))
+        } else if m.chars().count() > 1 {
             if m.chars().nth(0) == Some('d') && m.chars().nth(1) == Some('a') {
                 Ok(Metric::Deca)
             } else {
                 Err(V3Error::ParsingError("Invalid metric prefix".into()))
             }
-        } else if m.chars().count() > 1 {
+        } else {
             match m.chars().nth(0).unwrap() {
                 'Y' => Ok(Metric::Yotta),
                 'Z' => Ok(Metric::Zetta),
@@ -90,8 +92,6 @@ impl TryFrom<&str> for Metric {
                 'y' => Ok(Metric::Yocto),
                 _ => Err(V3Error::ParsingError("Invalid metric prefix".into())),
             }
-        } else {
-            Err(V3Error::ParsingError("Invalid metric prefix".into()))
         }
     }
 }
@@ -146,5 +146,39 @@ mod metric_testing {
         assert_eq!(true, Metric::Peta.scale() < Metric::Exa.scale());
         assert_eq!(true, Metric::Exa.scale() < Metric::Zetta.scale());
         assert_eq!(true, Metric::Zetta.scale() < Metric::Yotta.scale());
+    }
+
+    #[test]
+    fn metric_string_scale() {
+        assert_eq!(Metric::try_from("Y").unwrap(), Metric::Yotta);
+        assert_eq!(Metric::try_from("Z").unwrap(), Metric::Zetta);
+        assert_eq!(Metric::try_from("E").unwrap(), Metric::Exa);
+        assert_eq!(Metric::try_from("P").unwrap(), Metric::Peta);
+        assert_eq!(Metric::try_from("T").unwrap(), Metric::Tera);
+        assert_eq!(Metric::try_from("G").unwrap(), Metric::Giga);
+        assert_eq!(Metric::try_from("M").unwrap(), Metric::Mega);
+        assert_eq!(Metric::try_from("k").unwrap(), Metric::Kilo);
+        assert_eq!(Metric::try_from("h").unwrap(), Metric::Hecto);
+        assert_eq!(Metric::try_from("d").unwrap(), Metric::Deci);
+        assert_eq!(Metric::try_from("c").unwrap(), Metric::Centi);
+        assert_eq!(Metric::try_from("μ").unwrap(), Metric::Micro);
+        assert_eq!(Metric::try_from("u").unwrap(), Metric::Micro);
+        assert_eq!(Metric::try_from("n").unwrap(), Metric::Nano);
+        assert_eq!(Metric::try_from("p").unwrap(), Metric::Pico);
+        assert_eq!(Metric::try_from("f").unwrap(), Metric::Femto);
+        assert_eq!(Metric::try_from("a").unwrap(), Metric::Atto);
+        assert_eq!(Metric::try_from("z").unwrap(), Metric::Zepto);
+        assert_eq!(Metric::try_from("y").unwrap(), Metric::Yocto);
+        assert_eq!(Metric::try_from("da").unwrap(), Metric::Deca);
+        assert_eq!(Metric::try_from("m").unwrap(), Metric::Milli);
+    }
+
+    #[test]
+    fn metric_string_scale_fails() {
+        assert_eq!(Metric::try_from("bb").is_err(), true);
+        assert_eq!(Metric::try_from("K").is_err(), true);
+        assert_eq!(Metric::try_from("aaa").is_err(), true);
+        assert_eq!(Metric::try_from("de").is_err(), true);
+        assert_eq!(Metric::try_from("fa").is_err(), true);
     }
 }

@@ -49,6 +49,8 @@ impl BaseUnit for UnitLength {
     fn scale(&self) -> f64 {
         match self {
             Self::Meter(m) => m.scale(),
+            Self::LightYear(m) => m.scale(),
+            Self::Parsec(m) => m.scale(),
             _ => 1.0,
         }
     }
@@ -70,6 +72,8 @@ impl BaseUnit for UnitLength {
     fn get_metric(&self) -> Metric {
         match self {
             Self::Meter(m) => *m,
+            Self::LightYear(m) => *m,
+            Self::Parsec(m) => *m,
             _ => Metric::None,
         }
     }
@@ -102,5 +106,274 @@ mod length_testing {
         assert!(UnitLength::Angstrom.base() == 0.000_000_000_1);
         // Parsec
         assert!(UnitLength::Parsec(Metric::None).base() >= 3.085_677_581_491e16);
+        assert!(UnitLength::Parsec(Metric::None).base() < 3.085_677_581_493e16);
+    }
+
+    #[test]
+    fn unit_length_to_string() {
+        for i in [
+            (UnitLength::Meter(Metric::Atto), "am"),
+            (UnitLength::Meter(Metric::Centi), "cm"),
+            (UnitLength::Meter(Metric::Deca), "dam"),
+            (UnitLength::Meter(Metric::Deci), "dm"),
+            (UnitLength::Meter(Metric::Exa), "Em"),
+            (UnitLength::Meter(Metric::Femto), "fm"),
+            (UnitLength::Meter(Metric::Giga), "Gm"),
+            (UnitLength::Meter(Metric::Hecto), "hm"),
+            (UnitLength::Meter(Metric::Kilo), "km"),
+            (UnitLength::Meter(Metric::Mega), "Mm"),
+            (UnitLength::Meter(Metric::Micro), "μm"),
+            (UnitLength::Meter(Metric::Milli), "mm"),
+            (UnitLength::Meter(Metric::Nano), "nm"),
+            (UnitLength::Meter(Metric::None), "m"),
+            (UnitLength::Meter(Metric::Peta), "Pm"),
+            (UnitLength::Meter(Metric::Pico), "pm"),
+            (UnitLength::Meter(Metric::Tera), "Tm"),
+            (UnitLength::Meter(Metric::Yocto), "ym"),
+            (UnitLength::Meter(Metric::Yotta), "Ym"),
+            (UnitLength::Meter(Metric::Zepto), "zm"),
+            (UnitLength::Meter(Metric::Zetta), "Zm"),
+
+            (UnitLength::LightYear(Metric::Atto), "alyr"),
+            (UnitLength::LightYear(Metric::Centi), "clyr"),
+            (UnitLength::LightYear(Metric::Deca), "dalyr"),
+            (UnitLength::LightYear(Metric::Deci), "dlyr"),
+            (UnitLength::LightYear(Metric::Exa), "Elyr"),
+            (UnitLength::LightYear(Metric::Femto), "flyr"),
+            (UnitLength::LightYear(Metric::Giga), "Glyr"),
+            (UnitLength::LightYear(Metric::Hecto), "hlyr"),
+            (UnitLength::LightYear(Metric::Kilo), "klyr"),
+            (UnitLength::LightYear(Metric::Mega), "Mlyr"),
+            (UnitLength::LightYear(Metric::Micro), "μlyr"),
+            (UnitLength::LightYear(Metric::Milli), "mlyr"),
+            (UnitLength::LightYear(Metric::Nano), "nlyr"),
+            (UnitLength::LightYear(Metric::None), "lyr"),
+            (UnitLength::LightYear(Metric::Peta), "Plyr"),
+            (UnitLength::LightYear(Metric::Pico), "plyr"),
+            (UnitLength::LightYear(Metric::Tera), "Tlyr"),
+            (UnitLength::LightYear(Metric::Yocto), "ylyr"),
+            (UnitLength::LightYear(Metric::Yotta), "Ylyr"),
+            (UnitLength::LightYear(Metric::Zepto), "zlyr"),
+            (UnitLength::LightYear(Metric::Zetta), "Zlyr"),
+
+            (UnitLength::Parsec(Metric::Atto), "apc"),
+            (UnitLength::Parsec(Metric::Centi), "cpc"),
+            (UnitLength::Parsec(Metric::Deca), "dapc"),
+            (UnitLength::Parsec(Metric::Deci), "dpc"),
+            (UnitLength::Parsec(Metric::Exa), "Epc"),
+            (UnitLength::Parsec(Metric::Femto), "fpc"),
+            (UnitLength::Parsec(Metric::Giga), "Gpc"),
+            (UnitLength::Parsec(Metric::Hecto), "hpc"),
+            (UnitLength::Parsec(Metric::Kilo), "kpc"),
+            (UnitLength::Parsec(Metric::Mega), "Mpc"),
+            (UnitLength::Parsec(Metric::Micro), "μpc"),
+            (UnitLength::Parsec(Metric::Milli), "mpc"),
+            (UnitLength::Parsec(Metric::Nano), "npc"),
+            (UnitLength::Parsec(Metric::None), "pc"),
+            (UnitLength::Parsec(Metric::Peta), "Ppc"),
+            (UnitLength::Parsec(Metric::Pico), "ppc"),
+            (UnitLength::Parsec(Metric::Tera), "Tpc"),
+            (UnitLength::Parsec(Metric::Yocto), "ypc"),
+            (UnitLength::Parsec(Metric::Yotta), "Ypc"),
+            (UnitLength::Parsec(Metric::Zepto), "zpc"),
+            (UnitLength::Parsec(Metric::Zetta), "Zpc"),
+
+            (UnitLength::Foot, "ft"),
+            (UnitLength::Inch, "in"),
+            (UnitLength::Angstrom, "Å"),
+            (UnitLength::AstronomicalUnit, "AU"),
+            (UnitLength::Mile, "miles"),
+            (UnitLength::Yard, "yd"),
+
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_length_scale() {
+        for i in [
+
+            (UnitLength::Meter(Metric::Atto), Metric::Atto),
+            (UnitLength::Meter(Metric::Centi), Metric::Centi),
+            (UnitLength::Meter(Metric::Deca), Metric::Deca),
+            (UnitLength::Meter(Metric::Deci), Metric::Deci),
+            (UnitLength::Meter(Metric::Exa), Metric::Exa),
+            (UnitLength::Meter(Metric::Femto), Metric::Femto),
+            (UnitLength::Meter(Metric::Giga), Metric::Giga),
+            (UnitLength::Meter(Metric::Hecto), Metric::Hecto),
+            (UnitLength::Meter(Metric::Kilo), Metric::Kilo),
+            (UnitLength::Meter(Metric::Mega), Metric::Mega),
+            (UnitLength::Meter(Metric::Micro), Metric::Micro),
+            (UnitLength::Meter(Metric::Milli), Metric::Milli),
+            (UnitLength::Meter(Metric::Nano), Metric::Nano),
+            (UnitLength::Meter(Metric::None), Metric::None),
+            (UnitLength::Meter(Metric::Peta), Metric::Peta),
+            (UnitLength::Meter(Metric::Pico), Metric::Pico),
+            (UnitLength::Meter(Metric::Tera), Metric::Tera),
+            (UnitLength::Meter(Metric::Yocto), Metric::Yocto),
+            (UnitLength::Meter(Metric::Yotta), Metric::Yotta),
+            (UnitLength::Meter(Metric::Zepto), Metric::Zepto),
+            (UnitLength::Meter(Metric::Zetta), Metric::Zetta),
+
+            (UnitLength::LightYear(Metric::Atto), Metric::Atto),
+            (UnitLength::LightYear(Metric::Centi), Metric::Centi),
+            (UnitLength::LightYear(Metric::Deca), Metric::Deca),
+            (UnitLength::LightYear(Metric::Deci), Metric::Deci),
+            (UnitLength::LightYear(Metric::Exa), Metric::Exa),
+            (UnitLength::LightYear(Metric::Femto), Metric::Femto),
+            (UnitLength::LightYear(Metric::Giga), Metric::Giga),
+            (UnitLength::LightYear(Metric::Hecto), Metric::Hecto),
+            (UnitLength::LightYear(Metric::Kilo), Metric::Kilo),
+            (UnitLength::LightYear(Metric::Mega), Metric::Mega),
+            (UnitLength::LightYear(Metric::Micro), Metric::Micro),
+            (UnitLength::LightYear(Metric::Milli), Metric::Milli),
+            (UnitLength::LightYear(Metric::Nano), Metric::Nano),
+            (UnitLength::LightYear(Metric::None), Metric::None),
+            (UnitLength::LightYear(Metric::Peta), Metric::Peta),
+            (UnitLength::LightYear(Metric::Pico), Metric::Pico),
+            (UnitLength::LightYear(Metric::Tera), Metric::Tera),
+            (UnitLength::LightYear(Metric::Yocto), Metric::Yocto),
+            (UnitLength::LightYear(Metric::Yotta), Metric::Yotta),
+            (UnitLength::LightYear(Metric::Zepto), Metric::Zepto),
+            (UnitLength::LightYear(Metric::Zetta), Metric::Zetta),
+
+            (UnitLength::Parsec(Metric::Atto), Metric::Atto),
+            (UnitLength::Parsec(Metric::Centi), Metric::Centi),
+            (UnitLength::Parsec(Metric::Deca), Metric::Deca),
+            (UnitLength::Parsec(Metric::Deci), Metric::Deci),
+            (UnitLength::Parsec(Metric::Exa), Metric::Exa),
+            (UnitLength::Parsec(Metric::Femto), Metric::Femto),
+            (UnitLength::Parsec(Metric::Giga), Metric::Giga),
+            (UnitLength::Parsec(Metric::Hecto), Metric::Hecto),
+            (UnitLength::Parsec(Metric::Kilo), Metric::Kilo),
+            (UnitLength::Parsec(Metric::Mega), Metric::Mega),
+            (UnitLength::Parsec(Metric::Micro), Metric::Micro),
+            (UnitLength::Parsec(Metric::Milli), Metric::Milli),
+            (UnitLength::Parsec(Metric::Nano), Metric::Nano),
+            (UnitLength::Parsec(Metric::None), Metric::None),
+            (UnitLength::Parsec(Metric::Peta), Metric::Peta),
+            (UnitLength::Parsec(Metric::Pico), Metric::Pico),
+            (UnitLength::Parsec(Metric::Tera), Metric::Tera),
+            (UnitLength::Parsec(Metric::Yocto), Metric::Yocto),
+            (UnitLength::Parsec(Metric::Yotta), Metric::Yotta),
+            (UnitLength::Parsec(Metric::Zepto), Metric::Zepto),
+            (UnitLength::Parsec(Metric::Zetta), Metric::Zetta),
+
+            (UnitLength::Foot, Metric::None),
+            (UnitLength::Inch, Metric::None),
+            (UnitLength::Angstrom, Metric::None),
+            (UnitLength::AstronomicalUnit, Metric::None),
+            (UnitLength::Mile, Metric::None),
+            (UnitLength::Yard, Metric::None),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+        for i in [
+
+            (UnitLength::Meter(Metric::Atto), 0.000000000000000001),
+            (UnitLength::Meter(Metric::Centi), 0.01),
+            (UnitLength::Meter(Metric::Deca), 10.0),
+            (UnitLength::Meter(Metric::Deci), 0.1),
+            (UnitLength::Meter(Metric::Exa), 1000000000000000000.0),
+            (UnitLength::Meter(Metric::Femto), 0.000000000000001),
+            (UnitLength::Meter(Metric::Giga), 1000000000.0),
+            (UnitLength::Meter(Metric::Hecto), 100.0),
+            (UnitLength::Meter(Metric::Kilo), 1000.0),
+            (UnitLength::Meter(Metric::Mega), 1000000.0),
+            (UnitLength::Meter(Metric::Micro), 0.000001),
+            (UnitLength::Meter(Metric::Milli), 0.001),
+            (UnitLength::Meter(Metric::Nano), 0.000000001),
+            (UnitLength::Meter(Metric::None), 1.0),
+            (UnitLength::Meter(Metric::Peta), 1000000000000000.0),
+            (UnitLength::Meter(Metric::Pico), 0.000000000001),
+            (UnitLength::Meter(Metric::Tera), 1000000000000.0),
+            (
+                UnitLength::Meter(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitLength::Meter(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitLength::Meter(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitLength::Meter(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitLength::LightYear(Metric::Atto), 0.000000000000000001),
+            (UnitLength::LightYear(Metric::Centi), 0.01),
+            (UnitLength::LightYear(Metric::Deca), 10.0),
+            (UnitLength::LightYear(Metric::Deci), 0.1),
+            (UnitLength::LightYear(Metric::Exa), 1000000000000000000.0),
+            (UnitLength::LightYear(Metric::Femto), 0.000000000000001),
+            (UnitLength::LightYear(Metric::Giga), 1000000000.0),
+            (UnitLength::LightYear(Metric::Hecto), 100.0),
+            (UnitLength::LightYear(Metric::Kilo), 1000.0),
+            (UnitLength::LightYear(Metric::Mega), 1000000.0),
+            (UnitLength::LightYear(Metric::Micro), 0.000001),
+            (UnitLength::LightYear(Metric::Milli), 0.001),
+            (UnitLength::LightYear(Metric::Nano), 0.000000001),
+            (UnitLength::LightYear(Metric::None), 1.0),
+            (UnitLength::LightYear(Metric::Peta), 1000000000000000.0),
+            (UnitLength::LightYear(Metric::Pico), 0.000000000001),
+            (UnitLength::LightYear(Metric::Tera), 1000000000000.0),
+            (
+                UnitLength::LightYear(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitLength::LightYear(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitLength::LightYear(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitLength::LightYear(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitLength::Parsec(Metric::Atto), 0.000000000000000001),
+            (UnitLength::Parsec(Metric::Centi), 0.01),
+            (UnitLength::Parsec(Metric::Deca), 10.0),
+            (UnitLength::Parsec(Metric::Deci), 0.1),
+            (UnitLength::Parsec(Metric::Exa), 1000000000000000000.0),
+            (UnitLength::Parsec(Metric::Femto), 0.000000000000001),
+            (UnitLength::Parsec(Metric::Giga), 1000000000.0),
+            (UnitLength::Parsec(Metric::Hecto), 100.0),
+            (UnitLength::Parsec(Metric::Kilo), 1000.0),
+            (UnitLength::Parsec(Metric::Mega), 1000000.0),
+            (UnitLength::Parsec(Metric::Micro), 0.000001),
+            (UnitLength::Parsec(Metric::Milli), 0.001),
+            (UnitLength::Parsec(Metric::Nano), 0.000000001),
+            (UnitLength::Parsec(Metric::None), 1.0),
+            (UnitLength::Parsec(Metric::Peta), 1000000000000000.0),
+            (UnitLength::Parsec(Metric::Pico), 0.000000000001),
+            (UnitLength::Parsec(Metric::Tera), 1000000000000.0),
+            (
+                UnitLength::Parsec(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitLength::Parsec(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitLength::Parsec(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitLength::Parsec(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitLength::Foot, 1.0),
+            (UnitLength::Inch, 1.0),
+            (UnitLength::Angstrom, 1.0),
+            (UnitLength::AstronomicalUnit, 1.0),
+            (UnitLength::Mile, 1.0),
+            (UnitLength::Yard, 1.0),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
     }
 }

@@ -73,5 +73,112 @@ mod absorbed_dose_testing {
         assert!(UnitAbsorbedDose::Rad.base() == 0.01);
         // Roentgens
         assert!(UnitAbsorbedDose::Roentgen.base() >= 0.00877000656);
+        assert!(UnitAbsorbedDose::Roentgen.base() < 0.00877000658);
+    }
+
+    #[test]
+    fn unit_length_to_string() {
+        for i in [
+            (UnitAbsorbedDose::Gray(Metric::Atto), "aGy"),
+            (UnitAbsorbedDose::Gray(Metric::Centi), "cGy"),
+            (UnitAbsorbedDose::Gray(Metric::Deca), "daGy"),
+            (UnitAbsorbedDose::Gray(Metric::Deci), "dGy"),
+            (UnitAbsorbedDose::Gray(Metric::Exa), "EGy"),
+            (UnitAbsorbedDose::Gray(Metric::Femto), "fGy"),
+            (UnitAbsorbedDose::Gray(Metric::Giga), "GGy"),
+            (UnitAbsorbedDose::Gray(Metric::Hecto), "hGy"),
+            (UnitAbsorbedDose::Gray(Metric::Kilo), "kGy"),
+            (UnitAbsorbedDose::Gray(Metric::Mega), "MGy"),
+            (UnitAbsorbedDose::Gray(Metric::Micro), "μGy"),
+            (UnitAbsorbedDose::Gray(Metric::Milli), "mGy"),
+            (UnitAbsorbedDose::Gray(Metric::Nano), "nGy"),
+            (UnitAbsorbedDose::Gray(Metric::None), "Gy"),
+            (UnitAbsorbedDose::Gray(Metric::Peta), "PGy"),
+            (UnitAbsorbedDose::Gray(Metric::Pico), "pGy"),
+            (UnitAbsorbedDose::Gray(Metric::Tera), "TGy"),
+            (UnitAbsorbedDose::Gray(Metric::Yocto), "yGy"),
+            (UnitAbsorbedDose::Gray(Metric::Yotta), "YGy"),
+            (UnitAbsorbedDose::Gray(Metric::Zepto), "zGy"),
+            (UnitAbsorbedDose::Gray(Metric::Zetta), "ZGy"),
+
+            (UnitAbsorbedDose::Roentgen, "R"),
+            (UnitAbsorbedDose::Rad, "rads"),
+
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_length_scale() {
+        for i in [
+
+            (UnitAbsorbedDose::Gray(Metric::Atto), Metric::Atto),
+            (UnitAbsorbedDose::Gray(Metric::Centi), Metric::Centi),
+            (UnitAbsorbedDose::Gray(Metric::Deca), Metric::Deca),
+            (UnitAbsorbedDose::Gray(Metric::Deci), Metric::Deci),
+            (UnitAbsorbedDose::Gray(Metric::Exa), Metric::Exa),
+            (UnitAbsorbedDose::Gray(Metric::Femto), Metric::Femto),
+            (UnitAbsorbedDose::Gray(Metric::Giga), Metric::Giga),
+            (UnitAbsorbedDose::Gray(Metric::Hecto), Metric::Hecto),
+            (UnitAbsorbedDose::Gray(Metric::Kilo), Metric::Kilo),
+            (UnitAbsorbedDose::Gray(Metric::Mega), Metric::Mega),
+            (UnitAbsorbedDose::Gray(Metric::Micro), Metric::Micro),
+            (UnitAbsorbedDose::Gray(Metric::Milli), Metric::Milli),
+            (UnitAbsorbedDose::Gray(Metric::Nano), Metric::Nano),
+            (UnitAbsorbedDose::Gray(Metric::None), Metric::None),
+            (UnitAbsorbedDose::Gray(Metric::Peta), Metric::Peta),
+            (UnitAbsorbedDose::Gray(Metric::Pico), Metric::Pico),
+            (UnitAbsorbedDose::Gray(Metric::Tera), Metric::Tera),
+            (UnitAbsorbedDose::Gray(Metric::Yocto), Metric::Yocto),
+            (UnitAbsorbedDose::Gray(Metric::Yotta), Metric::Yotta),
+            (UnitAbsorbedDose::Gray(Metric::Zepto), Metric::Zepto),
+            (UnitAbsorbedDose::Gray(Metric::Zetta), Metric::Zetta),
+
+            (UnitAbsorbedDose::Rad, Metric::None),
+            (UnitAbsorbedDose::Roentgen, Metric::None),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+        for i in [
+
+            (UnitAbsorbedDose::Gray(Metric::Atto), 0.000000000000000001),
+            (UnitAbsorbedDose::Gray(Metric::Centi), 0.01),
+            (UnitAbsorbedDose::Gray(Metric::Deca), 10.0),
+            (UnitAbsorbedDose::Gray(Metric::Deci), 0.1),
+            (UnitAbsorbedDose::Gray(Metric::Exa), 1000000000000000000.0),
+            (UnitAbsorbedDose::Gray(Metric::Femto), 0.000000000000001),
+            (UnitAbsorbedDose::Gray(Metric::Giga), 1000000000.0),
+            (UnitAbsorbedDose::Gray(Metric::Hecto), 100.0),
+            (UnitAbsorbedDose::Gray(Metric::Kilo), 1000.0),
+            (UnitAbsorbedDose::Gray(Metric::Mega), 1000000.0),
+            (UnitAbsorbedDose::Gray(Metric::Micro), 0.000001),
+            (UnitAbsorbedDose::Gray(Metric::Milli), 0.001),
+            (UnitAbsorbedDose::Gray(Metric::Nano), 0.000000001),
+            (UnitAbsorbedDose::Gray(Metric::None), 1.0),
+            (UnitAbsorbedDose::Gray(Metric::Peta), 1000000000000000.0),
+            (UnitAbsorbedDose::Gray(Metric::Pico), 0.000000000001),
+            (UnitAbsorbedDose::Gray(Metric::Tera), 1000000000000.0),
+            (
+                UnitAbsorbedDose::Gray(Metric::Yocto),
+                0.000000000000000000000001,
+            ),
+            (
+                UnitAbsorbedDose::Gray(Metric::Yotta),
+                1000000000000000000000000.0,
+            ),
+            (UnitAbsorbedDose::Gray(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitAbsorbedDose::Gray(Metric::Zetta),
+                1000000000000000000000.0,
+            ),
+
+            (UnitAbsorbedDose::Rad, 1.0),
+            (UnitAbsorbedDose::Roentgen, 1.0),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
     }
 }
