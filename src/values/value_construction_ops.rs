@@ -23,6 +23,7 @@ use crate::units::UnitLuminousIntensity;
 use crate::units::UnitMagneticFlux;
 use crate::units::UnitMagneticFluxDensity;
 use crate::units::UnitMass;
+use crate::units::UnitNone;
 use crate::units::UnitPower;
 use crate::units::UnitPressure;
 use crate::units::UnitRadioactivity;
@@ -2457,5 +2458,39 @@ impl Div<UnitMass> for Value {
             new.exp[MASS_INDEX] -= 1;
         }
         new
+    }
+}
+
+impl Mul<UnitNone> for f64 {
+    type Output = Value;
+    fn mul(self, _: UnitNone) -> Self::Output {
+        Value {
+            val: self,
+            ..Default::default()
+        }
+    }
+}
+
+impl Div<UnitNone> for f64 {
+    type Output = Value;
+    fn div(self, _: UnitNone) -> Self::Output {
+        Value {
+            val: self,
+            ..Default::default()
+        }
+    }
+}
+
+impl Mul<UnitNone> for Value {
+    type Output = Value;
+    fn mul(self, _: UnitNone) -> Self::Output {
+        self.clone()
+    }
+}
+
+impl Div<UnitNone> for Value {
+    type Output = Value;
+    fn div(self, _: UnitNone) -> Value {
+        self.clone()
     }
 }

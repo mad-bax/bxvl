@@ -43,3 +43,46 @@ impl BaseUnit for UnitNone {
         Metric::None
     }
 }
+
+#[cfg(test)]
+mod unitless_testing {
+    use crate::units::{BaseUnit, Metric, UnitNone};
+
+    /// Unit Time Comparison Base
+    ///
+    /// All units must return the 'base' value relative to the standard SI unit
+    #[test]
+    fn unit_time_base_comparison() {
+        assert_eq!(UnitNone::None.base(), 1.0);
+        assert_eq!(UnitNone::Percentage.base(), 1.0);
+    }
+
+    #[test]
+    fn unit_angle_to_string() {
+        for i in [
+            (UnitNone::None, ""),
+            (UnitNone::Percentage, "%"),
+        ] {
+            assert_eq!(&i.0.to_string(), i.1);
+            let t: String = i.0.into();
+            assert_eq!(t, i.1.to_string());
+        }
+    }
+
+    #[test]
+    fn unit_angle_scale() {
+        for i in [
+            (UnitNone::None, Metric::None),
+            (UnitNone::None, Metric::None),
+        ] {
+            assert_eq!(i.0.get_metric(), i.1);
+        }
+
+        for i in [
+            (UnitNone::None, 1.0),
+            (UnitNone::None, 1.0),
+        ] {
+            assert_eq!(i.0.scale(), i.1);
+        }
+    }
+}
