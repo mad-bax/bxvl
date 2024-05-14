@@ -4,486 +4,6 @@ use crate::constants::*;
 use crate::units::Convert;
 use crate::values::Value;
 
-impl Add<f64> for Value {
-    type Output = Value;
-    fn add(self, rhs: f64) -> Value {
-        let mut n: Value = self;
-        n.val += rhs;
-        n
-    }
-}
-
-impl AddAssign<f64> for Value {
-    fn add_assign(&mut self, rhs: f64) {
-        self.val += rhs;
-    }
-}
-
-impl Sub<f64> for Value {
-    type Output = Value;
-    fn sub(self, rhs: f64) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs;
-        n
-    }
-}
-
-impl SubAssign<f64> for Value {
-    fn sub_assign(&mut self, rhs: f64) {
-        self.val -= rhs;
-    }
-}
-
-impl Mul<f64> for Value {
-    type Output = Value;
-    fn mul(self, rhs: f64) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs;
-        n
-    }
-}
-
-impl MulAssign<f64> for Value {
-    fn mul_assign(&mut self, rhs: f64) {
-        self.val *= rhs;
-    }
-}
-
-impl Div<f64> for Value {
-    type Output = Value;
-    fn div(self, rhs: f64) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs;
-        n
-    }
-}
-
-impl DivAssign<f64> for Value {
-    fn div_assign(&mut self, rhs: f64) {
-        self.val /= rhs;
-    }
-}
-
-impl Add<f32> for Value {
-    type Output = Value;
-    fn add(self, rhs: f32) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<f32> for Value {
-    fn add_assign(&mut self, rhs: f32) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<f32> for Value {
-    type Output = Value;
-    fn sub(self, rhs: f32) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<f32> for Value {
-    fn sub_assign(&mut self, rhs: f32) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<f32> for Value {
-    type Output = Value;
-    fn mul(self, rhs: f32) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<f32> for Value {
-    fn mul_assign(&mut self, rhs: f32) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<f32> for Value {
-    type Output = Value;
-    fn div(self, rhs: f32) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<f32> for Value {
-    fn div_assign(&mut self, rhs: f32) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<usize> for Value {
-    type Output = Value;
-    fn add(self, rhs: usize) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<usize> for Value {
-    fn add_assign(&mut self, rhs: usize) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<usize> for Value {
-    type Output = Value;
-    fn sub(self, rhs: usize) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<usize> for Value {
-    fn sub_assign(&mut self, rhs: usize) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<usize> for Value {
-    type Output = Value;
-    fn mul(self, rhs: usize) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<usize> for Value {
-    fn mul_assign(&mut self, rhs: usize) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<usize> for Value {
-    type Output = Value;
-    fn div(self, rhs: usize) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<usize> for Value {
-    fn div_assign(&mut self, rhs: usize) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<isize> for Value {
-    type Output = Value;
-    fn add(self, rhs: isize) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<isize> for Value {
-    fn add_assign(&mut self, rhs: isize) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<isize> for Value {
-    type Output = Value;
-    fn sub(self, rhs: isize) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<isize> for Value {
-    fn sub_assign(&mut self, rhs: isize) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<isize> for Value {
-    type Output = Value;
-    fn mul(self, rhs: isize) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<isize> for Value {
-    fn mul_assign(&mut self, rhs: isize) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<isize> for Value {
-    type Output = Value;
-    fn div(self, rhs: isize) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<isize> for Value {
-    fn div_assign(&mut self, rhs: isize) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<i32> for Value {
-    type Output = Value;
-    fn add(self, rhs: i32) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<i32> for Value {
-    fn add_assign(&mut self, rhs: i32) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<i32> for Value {
-    type Output = Value;
-    fn sub(self, rhs: i32) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<i32> for Value {
-    fn sub_assign(&mut self, rhs: i32) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<i32> for Value {
-    type Output = Value;
-    fn mul(self, rhs: i32) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<i32> for Value {
-    fn mul_assign(&mut self, rhs: i32) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<i32> for Value {
-    type Output = Value;
-    fn div(self, rhs: i32) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<i32> for Value {
-    fn div_assign(&mut self, rhs: i32) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<u32> for Value {
-    type Output = Value;
-    fn add(self, rhs: u32) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<u32> for Value {
-    fn add_assign(&mut self, rhs: u32) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<u32> for Value {
-    type Output = Value;
-    fn sub(self, rhs: u32) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<u32> for Value {
-    fn sub_assign(&mut self, rhs: u32) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<u32> for Value {
-    type Output = Value;
-    fn mul(self, rhs: u32) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<u32> for Value {
-    fn mul_assign(&mut self, rhs: u32) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<u32> for Value {
-    type Output = Value;
-    fn div(self, rhs: u32) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<u32> for Value {
-    fn div_assign(&mut self, rhs: u32) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<i64> for Value {
-    type Output = Value;
-    fn add(self, rhs: i64) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<i64> for Value {
-    fn add_assign(&mut self, rhs: i64) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<i64> for Value {
-    type Output = Value;
-    fn sub(self, rhs: i64) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<i64> for Value {
-    fn sub_assign(&mut self, rhs: i64) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<i64> for Value {
-    type Output = Value;
-    fn mul(self, rhs: i64) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<i64> for Value {
-    fn mul_assign(&mut self, rhs: i64) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<i64> for Value {
-    type Output = Value;
-    fn div(self, rhs: i64) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<i64> for Value {
-    fn div_assign(&mut self, rhs: i64) {
-        self.val /= rhs as f64;
-    }
-}
-
-impl Add<u64> for Value {
-    type Output = Value;
-    fn add(self, rhs: u64) -> Value {
-        let mut n: Value = self;
-        n.val += rhs as f64;
-        n
-    }
-}
-
-impl AddAssign<u64> for Value {
-    fn add_assign(&mut self, rhs: u64) {
-        self.val += rhs as f64;
-    }
-}
-
-impl Sub<u64> for Value {
-    type Output = Value;
-    fn sub(self, rhs: u64) -> Value {
-        let mut n: Value = self;
-        n.val -= rhs as f64;
-        n
-    }
-}
-
-impl SubAssign<u64> for Value {
-    fn sub_assign(&mut self, rhs: u64) {
-        self.val -= rhs as f64;
-    }
-}
-
-impl Mul<u64> for Value {
-    type Output = Value;
-    fn mul(self, rhs: u64) -> Value {
-        let mut n: Value = self;
-        n.val *= rhs as f64;
-        n
-    }
-}
-
-impl MulAssign<u64> for Value {
-    fn mul_assign(&mut self, rhs: u64) {
-        self.val *= rhs as f64;
-    }
-}
-
-impl Div<u64> for Value {
-    type Output = Value;
-    fn div(self, rhs: u64) -> Value {
-        let mut n: Value = self;
-        n.val /= rhs as f64;
-        n
-    }
-}
-
-impl DivAssign<u64> for Value {
-    fn div_assign(&mut self, rhs: u64) {
-        self.val /= rhs as f64;
-    }
-}
-
 impl Add<Value> for Value {
     type Output = Value;
     fn add(self, other: Value) -> Value {
@@ -2820,5 +2340,74 @@ impl DivAssign<Value> for Value {
             }
         }
         self.val /= cmp_val;
+    }
+}
+
+#[cfg(test)]
+mod arithmetic_ops_testing {
+    use crate::units::{Metric, UnitLength};
+
+    #[test]
+    fn add() {
+        let v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        let v3 = v1 + v2;
+        assert_eq!(v1 + 4.0, v3);
+    }
+
+    #[test]
+    fn add_assign() {
+        let mut v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        v1 += v2;
+        assert_eq!(v1, 16.0);
+    }
+
+    #[test]
+    fn sub() {
+        let v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        let v3 = v1 - v2;
+        assert_eq!(v1 - 4.0, v3);
+    }
+
+    #[test]
+    fn sub_assign() {
+        let mut v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        v1 -= v2;
+        assert_eq!(v1, 8.0);
+    }
+
+    #[test]
+    fn mul() {
+        let v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        let v3 = v1 * v2;
+        assert_eq!(v1 * 4.0, v3.val);
+    }
+
+    #[test]
+    fn mul_assign() {
+        let mut v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        v1 *= v2;
+        assert_eq!(v1, 48.0);
+    }
+
+    #[test]
+    fn div() {
+        let v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        let v3 = v1 / v2;
+        assert_eq!(v1 / 4.0, v3.val);
+    }
+
+    #[test]
+    fn div_assign() {
+        let mut v1 = 12.0 * UnitLength::Meter(Metric::None);
+        let v2 = 4.0 * UnitLength::Meter(Metric::None);
+        v1 /= v2;
+        assert_eq!(v1, 3.0);
     }
 }

@@ -4,13 +4,13 @@ pub mod value_impl;
 /// The `Value` constant constructors
 pub mod value_consts;
 
-/// Arithmetic definitions for `Value`s
-mod value_arithmetic_ops;
+mod strings;
+
+mod arithmetic_ops;
 
 mod construction;
 
-/// Display and from_str definitions for `Values`
-mod value_string;
+mod manipulation;
 
 /// Ordering operations (`==`, `!=`, `>=`, ...) definitions for `Value`s
 mod value_std_ops;
