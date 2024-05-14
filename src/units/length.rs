@@ -133,7 +133,6 @@ mod length_testing {
             (UnitLength::Meter(Metric::Yotta), "Ym"),
             (UnitLength::Meter(Metric::Zepto), "zm"),
             (UnitLength::Meter(Metric::Zetta), "Zm"),
-
             (UnitLength::LightYear(Metric::Atto), "alyr"),
             (UnitLength::LightYear(Metric::Centi), "clyr"),
             (UnitLength::LightYear(Metric::Deca), "dalyr"),
@@ -155,7 +154,6 @@ mod length_testing {
             (UnitLength::LightYear(Metric::Yotta), "Ylyr"),
             (UnitLength::LightYear(Metric::Zepto), "zlyr"),
             (UnitLength::LightYear(Metric::Zetta), "Zlyr"),
-
             (UnitLength::Parsec(Metric::Atto), "apc"),
             (UnitLength::Parsec(Metric::Centi), "cpc"),
             (UnitLength::Parsec(Metric::Deca), "dapc"),
@@ -177,14 +175,12 @@ mod length_testing {
             (UnitLength::Parsec(Metric::Yotta), "Ypc"),
             (UnitLength::Parsec(Metric::Zepto), "zpc"),
             (UnitLength::Parsec(Metric::Zetta), "Zpc"),
-
             (UnitLength::Foot, "ft"),
             (UnitLength::Inch, "in"),
             (UnitLength::Angstrom, "Å"),
             (UnitLength::AstronomicalUnit, "AU"),
             (UnitLength::Mile, "miles"),
             (UnitLength::Yard, "yd"),
-
         ] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
@@ -195,7 +191,6 @@ mod length_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
-
             (UnitLength::Meter(Metric::Atto), Metric::Atto),
             (UnitLength::Meter(Metric::Centi), Metric::Centi),
             (UnitLength::Meter(Metric::Deca), Metric::Deca),
@@ -217,7 +212,6 @@ mod length_testing {
             (UnitLength::Meter(Metric::Yotta), Metric::Yotta),
             (UnitLength::Meter(Metric::Zepto), Metric::Zepto),
             (UnitLength::Meter(Metric::Zetta), Metric::Zetta),
-
             (UnitLength::LightYear(Metric::Atto), Metric::Atto),
             (UnitLength::LightYear(Metric::Centi), Metric::Centi),
             (UnitLength::LightYear(Metric::Deca), Metric::Deca),
@@ -239,7 +233,6 @@ mod length_testing {
             (UnitLength::LightYear(Metric::Yotta), Metric::Yotta),
             (UnitLength::LightYear(Metric::Zepto), Metric::Zepto),
             (UnitLength::LightYear(Metric::Zetta), Metric::Zetta),
-
             (UnitLength::Parsec(Metric::Atto), Metric::Atto),
             (UnitLength::Parsec(Metric::Centi), Metric::Centi),
             (UnitLength::Parsec(Metric::Deca), Metric::Deca),
@@ -261,7 +254,6 @@ mod length_testing {
             (UnitLength::Parsec(Metric::Yotta), Metric::Yotta),
             (UnitLength::Parsec(Metric::Zepto), Metric::Zepto),
             (UnitLength::Parsec(Metric::Zetta), Metric::Zetta),
-
             (UnitLength::Foot, Metric::None),
             (UnitLength::Inch, Metric::None),
             (UnitLength::Angstrom, Metric::None),
@@ -272,7 +264,6 @@ mod length_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-
             (UnitLength::Meter(Metric::Atto), 0.000000000000000001),
             (UnitLength::Meter(Metric::Centi), 0.01),
             (UnitLength::Meter(Metric::Deca), 10.0),
@@ -290,20 +281,13 @@ mod length_testing {
             (UnitLength::Meter(Metric::Peta), 1000000000000000.0),
             (UnitLength::Meter(Metric::Pico), 0.000000000001),
             (UnitLength::Meter(Metric::Tera), 1000000000000.0),
-            (
-                UnitLength::Meter(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
+            (UnitLength::Meter(Metric::Yocto), 0.000000000000000000000001),
             (
                 UnitLength::Meter(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
             (UnitLength::Meter(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitLength::Meter(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
-
+            (UnitLength::Meter(Metric::Zetta), 1000000000000000000000.0),
             (UnitLength::LightYear(Metric::Atto), 0.000000000000000001),
             (UnitLength::LightYear(Metric::Centi), 0.01),
             (UnitLength::LightYear(Metric::Deca), 10.0),
@@ -329,12 +313,14 @@ mod length_testing {
                 UnitLength::LightYear(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitLength::LightYear(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitLength::LightYear(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitLength::LightYear(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitLength::Parsec(Metric::Atto), 0.000000000000000001),
             (UnitLength::Parsec(Metric::Centi), 0.01),
             (UnitLength::Parsec(Metric::Deca), 10.0),
@@ -361,11 +347,7 @@ mod length_testing {
                 1000000000000000000000000.0,
             ),
             (UnitLength::Parsec(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitLength::Parsec(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
-
+            (UnitLength::Parsec(Metric::Zetta), 1000000000000000000000.0),
             (UnitLength::Foot, 1.0),
             (UnitLength::Inch, 1.0),
             (UnitLength::Angstrom, 1.0),

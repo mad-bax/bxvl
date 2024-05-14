@@ -7,8 +7,7 @@ pub mod value_consts;
 /// Arithmetic definitions for `Value`s
 mod value_arithmetic_ops;
 
-/// Constructor definitions for `Value`s
-mod value_construction_ops;
+mod construction;
 
 /// Display and from_str definitions for `Values`
 mod value_string;

@@ -100,10 +100,8 @@ mod absorbed_dose_testing {
             (UnitAbsorbedDose::Gray(Metric::Yotta), "YGy"),
             (UnitAbsorbedDose::Gray(Metric::Zepto), "zGy"),
             (UnitAbsorbedDose::Gray(Metric::Zetta), "ZGy"),
-
             (UnitAbsorbedDose::Roentgen, "R"),
             (UnitAbsorbedDose::Rad, "rads"),
-
         ] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
@@ -114,7 +112,6 @@ mod absorbed_dose_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
-
             (UnitAbsorbedDose::Gray(Metric::Atto), Metric::Atto),
             (UnitAbsorbedDose::Gray(Metric::Centi), Metric::Centi),
             (UnitAbsorbedDose::Gray(Metric::Deca), Metric::Deca),
@@ -136,14 +133,12 @@ mod absorbed_dose_testing {
             (UnitAbsorbedDose::Gray(Metric::Yotta), Metric::Yotta),
             (UnitAbsorbedDose::Gray(Metric::Zepto), Metric::Zepto),
             (UnitAbsorbedDose::Gray(Metric::Zetta), Metric::Zetta),
-
             (UnitAbsorbedDose::Rad, Metric::None),
             (UnitAbsorbedDose::Roentgen, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-
             (UnitAbsorbedDose::Gray(Metric::Atto), 0.000000000000000001),
             (UnitAbsorbedDose::Gray(Metric::Centi), 0.01),
             (UnitAbsorbedDose::Gray(Metric::Deca), 10.0),
@@ -169,12 +164,14 @@ mod absorbed_dose_testing {
                 UnitAbsorbedDose::Gray(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitAbsorbedDose::Gray(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitAbsorbedDose::Gray(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitAbsorbedDose::Gray(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitAbsorbedDose::Rad, 1.0),
             (UnitAbsorbedDose::Roentgen, 1.0),
         ] {

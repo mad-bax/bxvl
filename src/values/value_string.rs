@@ -109,11 +109,26 @@ impl FromStr for Value {
 mod value_string_testing {
     use std::str::FromStr;
 
-    use crate::{units::{Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitNone, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume}, values::{value_string::{LENGTH_MAP, TIME_MAP}, Value}};
+    use crate::{
+        units::{
+            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+            UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
+            UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy,
+            UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength,
+            UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
+            UnitMass, UnitNone, UnitPower, UnitPressure, UnitRadioactivity,
+            UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature,
+            UnitTime, UnitVolume,
+        },
+        values::{
+            value_string::{LENGTH_MAP, TIME_MAP},
+            Value,
+        },
+    };
 
     #[test]
     fn from_str_test_01() {
-        let v1:Value = Value::from_str("3.4 in/s").unwrap();
+        let v1: Value = Value::from_str("3.4 in/s").unwrap();
         assert_eq!(v1.val, 3.4);
         assert_eq!(v1.unit_map, LENGTH_MAP | TIME_MAP);
         assert_eq!(v1.v_length, Some(UnitLength::Inch));
@@ -122,7 +137,7 @@ mod value_string_testing {
 
     #[test]
     fn from_str_test_02() {
-        let v1:Value = Value::from_str("3.4").unwrap();
+        let v1: Value = Value::from_str("3.4").unwrap();
         assert_eq!(v1.val, 3.4);
         assert_eq!(v1.unit_map, 0);
         assert_eq!(v1.v_length, None);
@@ -133,13 +148,13 @@ mod value_string_testing {
     #[test]
     #[should_panic]
     fn from_str_test_03() {
-        let _:Value = Value::from_str("3.4.5").unwrap();
+        let _: Value = Value::from_str("3.4.5").unwrap();
     }
 
     #[test]
     #[should_panic]
     fn from_str_test_04() {
-        let _:Value = Value::from_str("3.4.5 in/s").unwrap();
+        let _: Value = Value::from_str("3.4.5 in/s").unwrap();
     }
 
     #[test]
@@ -166,31 +181,100 @@ mod value_string_testing {
 
     #[test]
     fn value_display_units() {
-        assert_eq!((1.1 * UnitAbsorbedDose::Gray(Metric::None)).to_string(), "1.1 Gy");
-        assert_eq!((1.1 * UnitAngle::Radian(Metric::None)).to_string(), "1.1 rad");
-        assert_eq!((1.1 * UnitCatalyticActivity::Katal(Metric::None)).to_string(), "1.1 kat");
-        assert_eq!((1.1 * UnitElectricCapacitance::Farad(Metric::None)).to_string(), "1.1 F");
-        assert_eq!((1.1 * UnitElectricCharge::Coulomb(Metric::None)).to_string(), "1.1 C");
-        assert_eq!((1.1 * UnitElectricConductance::Siemens(Metric::None)).to_string(), "1.1 S");
-        assert_eq!((1.1 * UnitElectricCurrent::Ampere(Metric::None)).to_string(), "1.1 A");
-        assert_eq!((1.1 * UnitElectricInductance::Henry(Metric::None)).to_string(), "1.1 H");
-        assert_eq!((1.1 * UnitElectricPotential::Volt(Metric::None)).to_string(), "1.1 V");
-        assert_eq!((1.1 * UnitElectricResistance::Ohm(Metric::None)).to_string(), "1.1 Ω");
-        assert_eq!((1.1 * UnitFrequency::Hertz(Metric::None)).to_string(), "1.1 Hz");
-        assert_eq!((1.1 * UnitIlluminance::Lux(Metric::None)).to_string(), "1.1 lx");
-        assert_eq!((1.1 * UnitInformation::Byte(Metric::None)).to_string(), "1.1 b");
-        assert_eq!((1.1 * UnitLuminousFlux::Lumen(Metric::None)).to_string(), "1.1 lm");
-        assert_eq!((1.1 * UnitLuminousIntensity::Candela(Metric::None)).to_string(), "1.1 cd");
-        assert_eq!((1.1 * UnitMagneticFlux::Weber(Metric::None)).to_string(), "1.1 Wb");
-        assert_eq!((1.1 * UnitMagneticFluxDensity::Tesla(Metric::None)).to_string(), "1.1 T");
+        assert_eq!(
+            (1.1 * UnitAbsorbedDose::Gray(Metric::None)).to_string(),
+            "1.1 Gy"
+        );
+        assert_eq!(
+            (1.1 * UnitAngle::Radian(Metric::None)).to_string(),
+            "1.1 rad"
+        );
+        assert_eq!(
+            (1.1 * UnitCatalyticActivity::Katal(Metric::None)).to_string(),
+            "1.1 kat"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCapacitance::Farad(Metric::None)).to_string(),
+            "1.1 F"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCharge::Coulomb(Metric::None)).to_string(),
+            "1.1 C"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricConductance::Siemens(Metric::None)).to_string(),
+            "1.1 S"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCurrent::Ampere(Metric::None)).to_string(),
+            "1.1 A"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricInductance::Henry(Metric::None)).to_string(),
+            "1.1 H"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricPotential::Volt(Metric::None)).to_string(),
+            "1.1 V"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricResistance::Ohm(Metric::None)).to_string(),
+            "1.1 Ω"
+        );
+        assert_eq!(
+            (1.1 * UnitFrequency::Hertz(Metric::None)).to_string(),
+            "1.1 Hz"
+        );
+        assert_eq!(
+            (1.1 * UnitIlluminance::Lux(Metric::None)).to_string(),
+            "1.1 lx"
+        );
+        assert_eq!(
+            (1.1 * UnitInformation::Byte(Metric::None)).to_string(),
+            "1.1 b"
+        );
+        assert_eq!(
+            (1.1 * UnitLuminousFlux::Lumen(Metric::None)).to_string(),
+            "1.1 lm"
+        );
+        assert_eq!(
+            (1.1 * UnitLuminousIntensity::Candela(Metric::None)).to_string(),
+            "1.1 cd"
+        );
+        assert_eq!(
+            (1.1 * UnitMagneticFlux::Weber(Metric::None)).to_string(),
+            "1.1 Wb"
+        );
+        assert_eq!(
+            (1.1 * UnitMagneticFluxDensity::Tesla(Metric::None)).to_string(),
+            "1.1 T"
+        );
         assert_eq!((1.1 * UnitPower::Watt(Metric::None)).to_string(), "1.1 W");
-        assert_eq!((1.1 * UnitPressure::Bar(Metric::None)).to_string(), "1.1 bar");
-        assert_eq!((1.1 * UnitRadioactivity::Becquerel(Metric::None)).to_string(), "1.1 Bq");
-        assert_eq!((1.1 * UnitRadioactivityExposure::Sievert(Metric::None)).to_string(), "1.1 Sv");
-        assert_eq!((1.1 * UnitSolidAngle::Steradian(Metric::None)).to_string(), "1.1 sr");
+        assert_eq!(
+            (1.1 * UnitPressure::Bar(Metric::None)).to_string(),
+            "1.1 bar"
+        );
+        assert_eq!(
+            (1.1 * UnitRadioactivity::Becquerel(Metric::None)).to_string(),
+            "1.1 Bq"
+        );
+        assert_eq!(
+            (1.1 * UnitRadioactivityExposure::Sievert(Metric::None)).to_string(),
+            "1.1 Sv"
+        );
+        assert_eq!(
+            (1.1 * UnitSolidAngle::Steradian(Metric::None)).to_string(),
+            "1.1 sr"
+        );
         assert_eq!((1.1 * UnitSound::Bel(Metric::None)).to_string(), "1.1 B");
-        assert_eq!((1.1 * UnitSubstance::Mole(Metric::None)).to_string(), "1.1 mol");
-        assert_eq!((1.1 * UnitTemperature::Kelvin(Metric::None)).to_string(), "1.1 K");
+        assert_eq!(
+            (1.1 * UnitSubstance::Mole(Metric::None)).to_string(),
+            "1.1 mol"
+        );
+        assert_eq!(
+            (1.1 * UnitTemperature::Kelvin(Metric::None)).to_string(),
+            "1.1 K"
+        );
         assert_eq!((1.1 * UnitVolume::Liter(Metric::None)).to_string(), "1.1 l");
     }
 }

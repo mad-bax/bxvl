@@ -95,9 +95,7 @@ mod radioactivity_testing {
             (UnitRadioactivity::Becquerel(Metric::Yotta), "YBq"),
             (UnitRadioactivity::Becquerel(Metric::Zepto), "zBq"),
             (UnitRadioactivity::Becquerel(Metric::Zetta), "ZBq"),
-
             (UnitRadioactivity::Curie, "Ci"),
-
         ] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
@@ -108,7 +106,6 @@ mod radioactivity_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
-
             (UnitRadioactivity::Becquerel(Metric::Atto), Metric::Atto),
             (UnitRadioactivity::Becquerel(Metric::Centi), Metric::Centi),
             (UnitRadioactivity::Becquerel(Metric::Deca), Metric::Deca),
@@ -130,19 +127,26 @@ mod radioactivity_testing {
             (UnitRadioactivity::Becquerel(Metric::Yotta), Metric::Yotta),
             (UnitRadioactivity::Becquerel(Metric::Zepto), Metric::Zepto),
             (UnitRadioactivity::Becquerel(Metric::Zetta), Metric::Zetta),
-
             (UnitRadioactivity::Curie, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-
-            (UnitRadioactivity::Becquerel(Metric::Atto), 0.000000000000000001),
+            (
+                UnitRadioactivity::Becquerel(Metric::Atto),
+                0.000000000000000001,
+            ),
             (UnitRadioactivity::Becquerel(Metric::Centi), 0.01),
             (UnitRadioactivity::Becquerel(Metric::Deca), 10.0),
             (UnitRadioactivity::Becquerel(Metric::Deci), 0.1),
-            (UnitRadioactivity::Becquerel(Metric::Exa), 1000000000000000000.0),
-            (UnitRadioactivity::Becquerel(Metric::Femto), 0.000000000000001),
+            (
+                UnitRadioactivity::Becquerel(Metric::Exa),
+                1000000000000000000.0,
+            ),
+            (
+                UnitRadioactivity::Becquerel(Metric::Femto),
+                0.000000000000001,
+            ),
             (UnitRadioactivity::Becquerel(Metric::Giga), 1000000000.0),
             (UnitRadioactivity::Becquerel(Metric::Hecto), 100.0),
             (UnitRadioactivity::Becquerel(Metric::Kilo), 1000.0),
@@ -151,7 +155,10 @@ mod radioactivity_testing {
             (UnitRadioactivity::Becquerel(Metric::Milli), 0.001),
             (UnitRadioactivity::Becquerel(Metric::Nano), 0.000000001),
             (UnitRadioactivity::Becquerel(Metric::None), 1.0),
-            (UnitRadioactivity::Becquerel(Metric::Peta), 1000000000000000.0),
+            (
+                UnitRadioactivity::Becquerel(Metric::Peta),
+                1000000000000000.0,
+            ),
             (UnitRadioactivity::Becquerel(Metric::Pico), 0.000000000001),
             (UnitRadioactivity::Becquerel(Metric::Tera), 1000000000000.0),
             (
@@ -162,12 +169,14 @@ mod radioactivity_testing {
                 UnitRadioactivity::Becquerel(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitRadioactivity::Becquerel(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitRadioactivity::Becquerel(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitRadioactivity::Becquerel(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitRadioactivity::Curie, 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);

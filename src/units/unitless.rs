@@ -59,10 +59,7 @@ mod unitless_testing {
 
     #[test]
     fn unit_angle_to_string() {
-        for i in [
-            (UnitNone::None, ""),
-            (UnitNone::Percentage, "%"),
-        ] {
+        for i in [(UnitNone::None, ""), (UnitNone::Percentage, "%")] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
             assert_eq!(t, i.1.to_string());
@@ -78,10 +75,7 @@ mod unitless_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
 
-        for i in [
-            (UnitNone::None, 1.0),
-            (UnitNone::None, 1.0),
-        ] {
+        for i in [(UnitNone::None, 1.0), (UnitNone::None, 1.0)] {
             assert_eq!(i.0.scale(), i.1);
         }
     }

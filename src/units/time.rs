@@ -161,14 +161,8 @@ mod time_testing {
             (UnitTime::Second(Metric::Peta), 1000000000000000.0),
             (UnitTime::Second(Metric::Pico), 0.000000000001),
             (UnitTime::Second(Metric::Tera), 1000000000000.0),
-            (
-                UnitTime::Second(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitTime::Second(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
+            (UnitTime::Second(Metric::Yocto), 0.000000000000000000000001),
+            (UnitTime::Second(Metric::Yotta), 1000000000000000000000000.0),
             (UnitTime::Second(Metric::Zepto), 0.000000000000000000001),
             (UnitTime::Second(Metric::Zetta), 1000000000000000000000.0),
             (UnitTime::Hour, 1.0),

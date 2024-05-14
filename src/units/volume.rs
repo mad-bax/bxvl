@@ -141,10 +141,7 @@ mod volume_testing {
             (UnitVolume::Liter(Metric::Peta), 1000000000000000.0),
             (UnitVolume::Liter(Metric::Pico), 0.000000000001),
             (UnitVolume::Liter(Metric::Tera), 1000000000000.0),
-            (
-                UnitVolume::Liter(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
+            (UnitVolume::Liter(Metric::Yocto), 0.000000000000000000000001),
             (
                 UnitVolume::Liter(Metric::Yotta),
                 1000000000000000000000000.0,

@@ -96,7 +96,6 @@ mod force_testing {
             (UnitForce::Newton(Metric::Yotta), "YN"),
             (UnitForce::Newton(Metric::Zepto), "zN"),
             (UnitForce::Newton(Metric::Zetta), "ZN"),
-
             (UnitForce::PoundForce, "lbfr"),
         ] {
             assert_eq!(&i.0.to_string(), i.1);
@@ -108,7 +107,6 @@ mod force_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
-
             (UnitForce::Newton(Metric::Atto), Metric::Atto),
             (UnitForce::Newton(Metric::Centi), Metric::Centi),
             (UnitForce::Newton(Metric::Deca), Metric::Deca),
@@ -130,13 +128,11 @@ mod force_testing {
             (UnitForce::Newton(Metric::Yotta), Metric::Yotta),
             (UnitForce::Newton(Metric::Zepto), Metric::Zepto),
             (UnitForce::Newton(Metric::Zetta), Metric::Zetta),
-
             (UnitForce::PoundForce, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-
             (UnitForce::Newton(Metric::Atto), 0.000000000000000001),
             (UnitForce::Newton(Metric::Centi), 0.01),
             (UnitForce::Newton(Metric::Deca), 10.0),
@@ -154,20 +150,13 @@ mod force_testing {
             (UnitForce::Newton(Metric::Peta), 1000000000000000.0),
             (UnitForce::Newton(Metric::Pico), 0.000000000001),
             (UnitForce::Newton(Metric::Tera), 1000000000000.0),
-            (
-                UnitForce::Newton(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
+            (UnitForce::Newton(Metric::Yocto), 0.000000000000000000000001),
             (
                 UnitForce::Newton(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
             (UnitForce::Newton(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitForce::Newton(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
-
+            (UnitForce::Newton(Metric::Zetta), 1000000000000000000000.0),
             (UnitForce::PoundForce, 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);

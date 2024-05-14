@@ -58,14 +58,14 @@ impl BaseUnit for UnitTemperature {
     fn get_metric(&self) -> Metric {
         match self {
             UnitTemperature::Kelvin(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 
     fn scale(&self) -> f64 {
         match self {
             UnitTemperature::Kelvin(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -76,9 +76,9 @@ impl BaseUnit for UnitTemperature {
 
 #[cfg(test)]
 mod temperature_testing {
-    use crate::units::{Metric, UnitTemperature, BaseUnit};
+    use crate::units::{BaseUnit, Metric, UnitTemperature};
 
-        #[test]
+    #[test]
     fn unit_radioactivity_base_comparison() {
         assert!(UnitTemperature::Kelvin(Metric::None).base() == 1.0);
         assert!(UnitTemperature::Fahrenheit.base() == 1.0);
@@ -109,10 +109,8 @@ mod temperature_testing {
             (UnitTemperature::Kelvin(Metric::Yotta), "YK"),
             (UnitTemperature::Kelvin(Metric::Zepto), "zK"),
             (UnitTemperature::Kelvin(Metric::Zetta), "ZK"),
-
             (UnitTemperature::Fahrenheit, "°f"),
             (UnitTemperature::Celsius, "°c"),
-
         ] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
@@ -123,7 +121,6 @@ mod temperature_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
-
             (UnitTemperature::Kelvin(Metric::Atto), Metric::Atto),
             (UnitTemperature::Kelvin(Metric::Centi), Metric::Centi),
             (UnitTemperature::Kelvin(Metric::Deca), Metric::Deca),
@@ -145,14 +142,12 @@ mod temperature_testing {
             (UnitTemperature::Kelvin(Metric::Yotta), Metric::Yotta),
             (UnitTemperature::Kelvin(Metric::Zepto), Metric::Zepto),
             (UnitTemperature::Kelvin(Metric::Zetta), Metric::Zetta),
-
             (UnitTemperature::Fahrenheit, Metric::None),
             (UnitTemperature::Celsius, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-
             (UnitTemperature::Kelvin(Metric::Atto), 0.000000000000000001),
             (UnitTemperature::Kelvin(Metric::Centi), 0.01),
             (UnitTemperature::Kelvin(Metric::Deca), 10.0),
@@ -178,12 +173,14 @@ mod temperature_testing {
                 UnitTemperature::Kelvin(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitTemperature::Kelvin(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitTemperature::Kelvin(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitTemperature::Kelvin(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitTemperature::Fahrenheit, 1.0),
             (UnitTemperature::Celsius, 1.0),
         ] {

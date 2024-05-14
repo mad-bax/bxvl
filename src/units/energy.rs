@@ -128,7 +128,6 @@ mod energy_testing {
             (UnitEnergy::GramCalorie(Metric::Yotta), "Ycal"),
             (UnitEnergy::GramCalorie(Metric::Zepto), "zcal"),
             (UnitEnergy::GramCalorie(Metric::Zetta), "Zcal"),
-
             (UnitEnergy::ElectronVolt(Metric::Atto), "aeV"),
             (UnitEnergy::ElectronVolt(Metric::Centi), "ceV"),
             (UnitEnergy::ElectronVolt(Metric::Deca), "daeV"),
@@ -181,7 +180,6 @@ mod energy_testing {
             (UnitEnergy::ElectronVolt(Metric::Yotta), Metric::Yotta),
             (UnitEnergy::ElectronVolt(Metric::Zepto), Metric::Zepto),
             (UnitEnergy::ElectronVolt(Metric::Zetta), Metric::Zetta),
-
             (UnitEnergy::GramCalorie(Metric::Atto), Metric::Atto),
             (UnitEnergy::GramCalorie(Metric::Centi), Metric::Centi),
             (UnitEnergy::GramCalorie(Metric::Deca), Metric::Deca),
@@ -203,7 +201,6 @@ mod energy_testing {
             (UnitEnergy::GramCalorie(Metric::Yotta), Metric::Yotta),
             (UnitEnergy::GramCalorie(Metric::Zepto), Metric::Zepto),
             (UnitEnergy::GramCalorie(Metric::Zetta), Metric::Zetta),
-
             (UnitEnergy::Joule(Metric::Atto), Metric::Atto),
             (UnitEnergy::Joule(Metric::Centi), Metric::Centi),
             (UnitEnergy::Joule(Metric::Deca), Metric::Deca),
@@ -225,7 +222,6 @@ mod energy_testing {
             (UnitEnergy::Joule(Metric::Yotta), Metric::Yotta),
             (UnitEnergy::Joule(Metric::Zepto), Metric::Zepto),
             (UnitEnergy::Joule(Metric::Zetta), Metric::Zetta),
-
             (UnitEnergy::FootPound, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
@@ -257,12 +253,14 @@ mod energy_testing {
                 UnitEnergy::ElectronVolt(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitEnergy::ElectronVolt(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitEnergy::ElectronVolt(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitEnergy::ElectronVolt(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitEnergy::GramCalorie(Metric::Atto), 0.000000000000000001),
             (UnitEnergy::GramCalorie(Metric::Centi), 0.01),
             (UnitEnergy::GramCalorie(Metric::Deca), 10.0),
@@ -288,12 +286,14 @@ mod energy_testing {
                 UnitEnergy::GramCalorie(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
-            (UnitEnergy::GramCalorie(Metric::Zepto), 0.000000000000000000001),
+            (
+                UnitEnergy::GramCalorie(Metric::Zepto),
+                0.000000000000000000001,
+            ),
             (
                 UnitEnergy::GramCalorie(Metric::Zetta),
                 1000000000000000000000.0,
             ),
-
             (UnitEnergy::Joule(Metric::Atto), 0.000000000000000001),
             (UnitEnergy::Joule(Metric::Centi), 0.01),
             (UnitEnergy::Joule(Metric::Deca), 10.0),
@@ -311,20 +311,13 @@ mod energy_testing {
             (UnitEnergy::Joule(Metric::Peta), 1000000000000000.0),
             (UnitEnergy::Joule(Metric::Pico), 0.000000000001),
             (UnitEnergy::Joule(Metric::Tera), 1000000000000.0),
-            (
-                UnitEnergy::Joule(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
+            (UnitEnergy::Joule(Metric::Yocto), 0.000000000000000000000001),
             (
                 UnitEnergy::Joule(Metric::Yotta),
                 1000000000000000000000000.0,
             ),
             (UnitEnergy::Joule(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitEnergy::Joule(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
-
+            (UnitEnergy::Joule(Metric::Zetta), 1000000000000000000000.0),
             (UnitEnergy::FootPound, 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);

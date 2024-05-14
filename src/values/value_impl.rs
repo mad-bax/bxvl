@@ -36,7 +36,7 @@ use crate::units::UnitVolume;
 use crate::values::Value;
 
 impl Default for Value {
-    /// The default constructor for a `Value`
+    /// The default constructor for a [`Value`]
     ///
     /// # Example
     /// ```rust
@@ -85,7 +85,7 @@ impl Default for Value {
 }
 
 impl Value {
-    /// The main constructor for a `Value`
+    /// The main constructor for a [`Value`]
     ///
     /// # Example
     /// ```rust
@@ -137,7 +137,7 @@ impl Value {
         Ok(ret)
     }
 
-    /// Creates a `Value` specifically in radians
+    /// Creates a [`Value`] specifically in radians
     fn _radians(val: f64) -> Value {
         let mut ret: Value = Value {
             val,
@@ -179,10 +179,10 @@ impl Value {
         ret
     }
 
-    /// Convert a `Value` to another of the same base unit types.
+    /// Convert a [`Value`] to another of the same base unit types.
     ///
     /// `convert` uses a `&str` as an argument and parses it into the relevant units.
-    /// The parsed `&str` must be over the same unit types as the `Value` to be converted.
+    /// The parsed `&str` must be over the same unit types as the [`Value`] to be converted.
     ///
     /// e.g. m/s and ft/hour, or J/kg and cal/lbs
     ///
@@ -208,7 +208,7 @@ impl Value {
         self._convert(&temp)
     }
 
-    /// Actual convert functionality with a given `Value` argument
+    /// Actual convert functionality with a given [`Value`] argument
     pub(in crate::values) fn _convert(&mut self, other: &Value) -> Result<(), V3Error> {
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
             if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {
@@ -532,7 +532,7 @@ impl Value {
         Ok(())
     }
 
-    /// Inverses the `Value`
+    /// Inverses the [`Value`]
     ///
     /// # Example
     /// ```rust
@@ -584,37 +584,37 @@ impl Value {
         self.val *= self.v_angle.unwrap().convert(&UnitAngle::Degree);
     }
 
-    /// Returns if the `Value` numeric is NAN
+    /// Returns if the [`Value`] numeric is NAN
     pub fn is_nan(&self) -> bool {
         self.val.is_nan()
     }
 
-    /// Returns if the `Value` numeric is finite
+    /// Returns if the [`Value`] numeric is finite
     pub fn is_finite(&self) -> bool {
         self.val.is_finite()
     }
 
-    /// Returns if the `Value` numeric is infinite
+    /// Returns if the [`Value`] numeric is infinite
     pub fn is_infinite(&self) -> bool {
         self.val.is_infinite()
     }
 
-    /// Returns if the `Value` numeric is normal
+    /// Returns if the [`Value`] numeric is normal
     pub fn is_normal(&self) -> bool {
         self.val.is_normal()
     }
 
-    /// Returns if the `Value` numeric is subnormal
+    /// Returns if the [`Value`] numeric is subnormal
     pub fn is_subnormal(&self) -> bool {
         self.val.is_subnormal()
     }
 
-    /// Returns if the `Value` numeric is sign positive
+    /// Returns if the [`Value`] numeric is sign positive
     pub fn is_sign_positive(&self) -> bool {
         self.val.is_sign_positive()
     }
 
-    /// Returns if the `Value` numeric is sign negative
+    /// Returns if the [`Value`] numeric is sign negative
     pub fn is_sign_negative(&self) -> bool {
         self.val.is_sign_negative()
     }
@@ -688,44 +688,44 @@ impl Value {
         n
     }
 
-    /// Returns the sine of a `Value` in radians
+    /// Returns the sine of a [`Value`] in radians
     pub fn sin(&self) -> Value {
         Value::_radians(self.val.sin())
     }
 
-    /// Returns the cosine of a `Value` in radians
+    /// Returns the cosine of a [`Value`] in radians
     pub fn cos(&self) -> Value {
         Value::_radians(self.val.cos())
     }
 
-    /// Returns the tangent of a `Value` in radians
+    /// Returns the tangent of a [`Value`] in radians
     pub fn tan(&self) -> Value {
         Value::_radians(self.val.tan())
     }
 
-    /// Returns the tangent-h of a `Value` in radians
+    /// Returns the tangent-h of a [`Value`] in radians
     pub fn tanh(&self) -> Value {
         Value::_radians(self.val.tanh())
     }
 
-    /// Returns the arcsine of a `Value` in radians
+    /// Returns the arcsine of a [`Value`] in radians
     pub fn asin(&self) -> Value {
         Value::_radians(self.val.asin())
     }
 
-    /// Returns the arccosine of a `Value` in radians
+    /// Returns the arccosine of a [`Value`] in radians
     pub fn acos(&self) -> Value {
         Value::_radians(self.val.acos())
     }
 
-    /// Returns the arctangent of a `Value` in radians
+    /// Returns the arctangent of a [`Value`] in radians
     pub fn atan(&self) -> Value {
         Value::_radians(self.val.atan())
     }
 
-    /// Returns the full unit circle arctangent of a `Value` in radians
+    /// Returns the full unit circle arctangent of a [`Value`] in radians
     ///
-    /// atan2 will panic if the the given `Value` is not an angle.
+    /// atan2 will panic if the the given [`Value`] is not an angle.
     ///
     /// # Example
     /// ```rust
@@ -748,10 +748,10 @@ impl Value {
         Value::_radians(self.val.atan2(new_v))
     }
 
-    /// Combines unit types in a `Value` if applicable.
+    /// Combines unit types in a [`Value`] if applicable.
     ///
-    /// When multiplying different `Value`s together, there are specific combinations that
-    /// can create more complex unit types which are supported by the `Value` type.
+    /// When multiplying different [`Value`]s together, there are specific combinations that
+    /// can create more complex unit types which are supported by the [`Value`] type.
     ///
     /// e.g. F = m*a, where Newtons = kilogram * (meters/second^2).
     ///
@@ -1077,9 +1077,9 @@ impl Value {
         Ok(ret)
     }
 
-    /// Reduces a `Value`'s unit complexity.
+    /// Reduces a [`Value`]'s unit complexity.
     ///
-    /// When a `Value` has a specific type that is composed from base units such as `Newtons`;
+    /// When a [`Value`] has a specific type that is composed from base units such as `Newtons`;
     /// it can be reduced to those base units.
     ///
     /// # Example
@@ -1116,7 +1116,7 @@ impl Value {
         )))
     }
 
-    /// Returns if a `Value`'s unit type is reducible.
+    /// Returns if a [`Value`]'s unit type is reducible.
     pub fn reducible(&self) -> bool {
         matches!(
             self.unit_map,
@@ -1137,7 +1137,7 @@ impl Value {
         )
     }
 
-    /// Actual reduce function that operates on a `Value` type
+    /// Actual reduce function that operates on a [`Value`] type
     fn _reduce(&mut self, other: &Value) -> bool {
         if self.unit_map == other.unit_map {
             return false;
@@ -1510,7 +1510,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` has no units
+    /// Returns `true` if a [`Value`] has no units
     ///
     /// <none>
     pub fn is_empty(&self) -> bool {
@@ -1520,7 +1520,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a length
+    /// Returns `true` if a [`Value`] is a length
     ///
     /// `length`
     pub fn is_length(&self) -> bool {
@@ -1530,7 +1530,7 @@ impl Value {
         true
     }
 
-    /// Returns `true` if a `Value` is an area
+    /// Returns `true` if a [`Value`] is an area
     ///
     /// `length^2`
     pub fn is_area(&self) -> bool {
@@ -1540,7 +1540,7 @@ impl Value {
         true
     }
 
-    /// Returns `true` if a `Value` is a volume
+    /// Returns `true` if a [`Value`] is a volume
     ///
     /// `volume`
     ///
@@ -1554,7 +1554,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a temperature
+    /// Returns `true` if a [`Value`] is a temperature
     ///
     /// `temperature`
     pub fn is_temperature(&self) -> bool {
@@ -1564,7 +1564,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a density
+    /// Returns `true` if a [`Value`] is a density
     ///
     /// `mass / volume`
     pub fn is_density(&self) -> bool {
@@ -1580,7 +1580,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a velocity
+    /// Returns `true` if a [`Value`] is a velocity
     ///
     /// `length / time`
     pub fn is_velocity(&self) -> bool {
@@ -1593,7 +1593,7 @@ impl Value {
         true
     }
 
-    /// Returns `true` if a `Value` is an acceleration
+    /// Returns `true` if a [`Value`] is an acceleration
     ///
     /// `length / time^2`
     pub fn is_acceleration(&self) -> bool {
@@ -1605,7 +1605,7 @@ impl Value {
         true
     }
 
-    /// Returns `true` if a `Value` is a force
+    /// Returns `true` if a [`Value`] is a force
     ///
     /// `force`
     ///
@@ -1622,7 +1622,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is measurement of momentum
+    /// Returns `true` if a [`Value`] is measurement of momentum
     ///
     /// `mass * velocity`
     pub fn is_momentum(&self) -> bool {
@@ -1636,7 +1636,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a time
+    /// Returns `true` if a [`Value`] is a time
     ///
     /// `time`
     pub fn is_time(&self) -> bool {
@@ -1649,7 +1649,7 @@ impl Value {
         true
     }
 
-    /// Returns `true` if a `Value` is a mass
+    /// Returns `true` if a [`Value`] is a mass
     ///
     /// `mass`
     pub fn is_mass(&self) -> bool {
@@ -1659,7 +1659,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a frequency
+    /// Returns `true` if a [`Value`] is a frequency
     ///
     /// `frequency`
     ///
@@ -1673,7 +1673,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a pressure
+    /// Returns `true` if a [`Value`] is a pressure
     ///
     /// `pressure`
     ///
@@ -1695,7 +1695,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of energy
+    /// Returns `true` if a [`Value`] is a measurement of energy
     ///
     /// `energy`
     ///
@@ -1727,7 +1727,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of power
+    /// Returns `true` if a [`Value`] is a measurement of power
     ///
     /// `power`
     ///
@@ -1754,7 +1754,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric charge
+    /// Returns `true` if a [`Value`] is a measurement of electric charge
     ///
     /// `electric charge`
     ///
@@ -1775,7 +1775,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric current
+    /// Returns `true` if a [`Value`] is a measurement of electric current
     ///
     /// `electric current`
     pub fn is_electric_current(&self) -> bool {
@@ -1785,7 +1785,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric potential
+    /// Returns `true` if a [`Value`] is a measurement of electric potential
     ///
     /// `electric potential`
     ///
@@ -1806,7 +1806,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric capacitance
+    /// Returns `true` if a [`Value`] is a measurement of electric capacitance
     ///
     /// `electric capacitance`
     ///
@@ -1827,7 +1827,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric resistance
+    /// Returns `true` if a [`Value`] is a measurement of electric resistance
     ///
     /// `electric resistance`
     ///
@@ -1847,7 +1847,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric conductance
+    /// Returns `true` if a [`Value`] is a measurement of electric conductance
     ///
     /// `electric conductance`
     ///
@@ -1866,7 +1866,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of magnetic flux
+    /// Returns `true` if a [`Value`] is a measurement of magnetic flux
     ///
     /// `magnetic flux`
     ///
@@ -1892,7 +1892,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of magnetic flux density
+    /// Returns `true` if a [`Value`] is a measurement of magnetic flux density
     ///
     /// `magnetic flux density`
     ///
@@ -1921,7 +1921,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of electric inductance
+    /// Returns `true` if a [`Value`] is a measurement of electric inductance
     ///
     /// `inductance`
     ///
@@ -1948,7 +1948,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of luminous flux
+    /// Returns `true` if a [`Value`] is a measurement of luminous flux
     ///
     /// `luminous flux`
     pub fn is_luminous_flux(&self) -> bool {
@@ -1958,7 +1958,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of illuminance
+    /// Returns `true` if a [`Value`] is a measurement of illuminance
     ///
     /// `illuminance`
     ///
@@ -1974,7 +1974,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of radioactivity
+    /// Returns `true` if a [`Value`] is a measurement of radioactivity
     ///
     /// `radioactivity`
     pub fn is_radioactivity(&self) -> bool {
@@ -1984,7 +1984,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of absorbed dose of ionizing radiation
+    /// Returns `true` if a [`Value`] is a measurement of absorbed dose of ionizing radiation
     ///
     /// `absorbed dose`
     pub fn is_absorbed_dose(&self) -> bool {
@@ -1994,7 +1994,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of an equivalent dose of ionizing radiation
+    /// Returns `true` if a [`Value`] is a measurement of an equivalent dose of ionizing radiation
     ///
     /// `equivalent dose`
     pub fn is_equivalent_dose(&self) -> bool {
@@ -2006,7 +2006,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of catalytic activity
+    /// Returns `true` if a [`Value`] is a measurement of catalytic activity
     ///
     /// `catalytic activity`
     ///
@@ -2022,7 +2022,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is an angle
+    /// Returns `true` if a [`Value`] is an angle
     ///
     /// `angle`
     pub fn is_angle(&self) -> bool {
@@ -2032,7 +2032,17 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is an angle measured in radians
+    /// Returns `true` if a [`Value`] is a solid angle
+    ///
+    /// `solid angle`
+    pub fn is_solid_angle(&self) -> bool {
+        if self.unit_map == SOLID_ANGLE_MAP && self.exp[SOLID_ANGLE_INDEX] == 1 {
+            return true;
+        }
+        false
+    }
+
+    /// Returns `true` if a [`Value`] is an angle measured in radians
     ///
     /// `angle`
     pub fn is_radians(&self) -> bool {
@@ -2045,7 +2055,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of information
+    /// Returns `true` if a [`Value`] is a measurement of information
     ///
     /// `information`
     pub fn is_information(&self) -> bool {
@@ -2055,7 +2065,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of luminous intensity
+    /// Returns `true` if a [`Value`] is a measurement of luminous intensity
     ///
     /// `luminous intensity`
     pub fn is_luminous_intensity(&self) -> bool {
@@ -2065,7 +2075,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of sound
+    /// Returns `true` if a [`Value`] is a measurement of sound
     ///
     /// `sound`
     pub fn is_sound(&self) -> bool {
@@ -2075,7 +2085,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of substance
+    /// Returns `true` if a [`Value`] is a measurement of substance
     ///
     /// `substance`
     pub fn is_substance(&self) -> bool {
@@ -2085,7 +2095,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a jerk
+    /// Returns `true` if a [`Value`] is a jerk
     ///
     /// `length / time^3`
     ///
@@ -2100,7 +2110,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a snap
+    /// Returns `true` if a [`Value`] is a snap
     ///
     /// `length / time^4`
     pub fn is_snap(&self) -> bool {
@@ -2113,7 +2123,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of angular velocity
+    /// Returns `true` if a [`Value`] is a measurement of angular velocity
     ///
     /// `angle / time`
     pub fn is_angular_velocity(&self) -> bool {
@@ -2126,7 +2136,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of angular acceleration
+    /// Returns `true` if a [`Value`] is a measurement of angular acceleration
     ///
     /// `angle / time^2`
     pub fn is_angular_acceleration(&self) -> bool {
@@ -2139,7 +2149,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of frequency drift
+    /// Returns `true` if a [`Value`] is a measurement of frequency drift
     ///
     /// `frequency / time`
     pub fn is_frequency_drift(&self) -> bool {
@@ -2152,7 +2162,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of flow
+    /// Returns `true` if a [`Value`] is a measurement of flow
     ///
     /// `volume / time`
     pub fn is_flow(&self) -> bool {
@@ -2168,7 +2178,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a yank
+    /// Returns `true` if a [`Value`] is a yank
     ///
     /// `force / time`
     pub fn is_yank(&self) -> bool {
@@ -2181,7 +2191,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of angular momentum
+    /// Returns `true` if a [`Value`] is a measurement of angular momentum
     ///
     /// `force * length * time`
     pub fn is_angular_momentum(&self) -> bool {
@@ -2195,7 +2205,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of torque
+    /// Returns `true` if a [`Value`] is a measurement of torque
     ///
     /// `force * length`
     ///
@@ -2213,7 +2223,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if a `Value` is a measurement of energy density
+    /// Returns `true` if a [`Value`] is a measurement of energy density
     ///
     /// `energy / volume`
     pub fn is_energy_density(&self) -> bool {
@@ -2229,7 +2239,7 @@ impl Value {
         false
     }
 
-    /// Creates a new unit type when constructing a `Value`
+    /// Creates a new unit type when constructing a [`Value`]
     fn _create_unit(&mut self, units: &str) -> Result<(), V3Error> {
         let tokens: (Vec<String>, Vec<String>) = Value::_get_tokens(units, false)?;
 
@@ -2270,7 +2280,7 @@ impl Value {
         Ok(())
     }
 
-    /// Tokenizes a given string for a new `Value` for easier parsing
+    /// Tokenizes a given string for a new [`Value`] for easier parsing
     fn _get_tokens(block: &str, do_denom: bool) -> Result<(Vec<String>, Vec<String>), V3Error> {
         let mut numor: Vec<String> = Vec::new();
         let mut denom: Vec<String> = Vec::new();
@@ -2347,7 +2357,7 @@ impl Value {
         Ok((numor, denom))
     }
 
-    /// Searches through the given string for a new `Value` to parse for units
+    /// Searches through the given string for a new [`Value`] to parse for units
     fn _parse_units(&mut self, unit: String, exp: i32) -> Result<(), V3Error> {
         let l: usize = unit.chars().count();
         if l == 0 {
@@ -2576,7 +2586,7 @@ impl Value {
         Ok(())
     }
 
-    /// Searches and assigns a unit type to a `Value` during string parsing and construction
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_single_letter(&mut self, unit: char, exp: i32, m: Metric) -> Result<(), V3Error> {
         match unit {
             '1' => {
@@ -2694,7 +2704,7 @@ impl Value {
         Ok(())
     }
 
-    /// Searches and assigns a unit type to a `Value` during string parsing and construction
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_double_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
         match unit.as_str() {
             "Hz" => {
@@ -2795,7 +2805,7 @@ impl Value {
         Ok(())
     }
 
-    /// Searches and assigns a unit type to a `Value` during string parsing and construction
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_triple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
             return self._get_single_letter(da.chars().next().unwrap(), exp, Metric::Deca);
@@ -2868,7 +2878,7 @@ impl Value {
         Ok(())
     }
 
-    /// Searches and assigns a unit type to a `Value` during string parsing and construction
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_quadruple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
             return self._get_double_letter(&da.to_string(), exp, Metric::Deca);
@@ -2913,7 +2923,7 @@ impl Value {
         Ok(())
     }
 
-    /// Searches and assigns a unit type to a `Value` during string parsing and construction
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_pentuple_letter(&mut self, unit: &str, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
             return self._get_triple_letter(&da.to_string(), exp, Metric::Deca);
@@ -2997,7 +3007,7 @@ impl Value {
         true
     }
 
-    /// Checks if the `Value` unit types are the same
+    /// Checks if the [`Value`] unit types are the same
     pub(in crate::values) fn __equal(&self, other: &Value) -> bool {
         if self.unit_map != other.unit_map {
             return false;
