@@ -776,10 +776,10 @@ impl Value {
 mod parse_testing {
     use crate::{
         constants::{
-            ANGLE_INDEX, ANGLE_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP, INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, PRESSURE_INDEX, PRESSURE_MAP, TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP
+            ANGLE_INDEX, ANGLE_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP, INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, MASS_INDEX, MASS_MAP, PRESSURE_INDEX, PRESSURE_MAP, TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP
         },
         units::{
-            Metric, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitLength, UnitPressure, UnitTemperature, UnitTime
+            Metric, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime
         },
         values::Value,
     };
@@ -1393,5 +1393,122 @@ mod parse_testing {
         assert_eq!(v.unit_map, FORCE_MAP);
         assert_eq!(v.v_force, Some(UnitForce::PoundForce));
         assert_eq!(v.exp[FORCE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_ounce() {
+        let v = Value::new(1.5, "ounce").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "ounces").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "oz").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "1/ounce").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/ounces").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/oz").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_pound() {
+        let v = Value::new(1.5, "pound").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "pounds").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "lb").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "1/pound").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/pounds").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/lb").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Pound));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_grain() {
+        let v = Value::new(1.5, "grain").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "Grains").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "gr").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
+        assert_eq!(v.exp[MASS_INDEX], 1);
+
+        let v = Value::new(1.5, "1/ounce").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/ounces").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
+
+        let v = Value::new(1.5, "1/oz").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, MASS_MAP);
+        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.exp[MASS_INDEX], -1);
     }
 }
