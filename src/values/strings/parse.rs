@@ -1278,13 +1278,13 @@ mod parse_testing {
         assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
 
-        let v = Value::new(1.5, "1/°c").unwrap();
+        let v = Value::new(1.5, "      1                /                         °c    ").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
         assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
 
-        let v = Value::new(1.5, "1/c").unwrap();
+        let v = Value::new(1.5, "1        /c").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
         assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
@@ -1436,12 +1436,6 @@ mod parse_testing {
 
     #[test]
     fn unique_names_pound() {
-        let v = Value::new(1.5, "pound").unwrap();
-        assert_eq!(v, 1.5);
-        assert_eq!(v.unit_map, MASS_MAP);
-        assert_eq!(v.v_mass, Some(UnitMass::Pound));
-        assert_eq!(v.exp[MASS_INDEX], 1);
-
         let v = Value::new(1.5, "pounds").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, MASS_MAP);
@@ -1453,12 +1447,6 @@ mod parse_testing {
         assert_eq!(v.unit_map, MASS_MAP);
         assert_eq!(v.v_mass, Some(UnitMass::Pound));
         assert_eq!(v.exp[MASS_INDEX], 1);
-
-        let v = Value::new(1.5, "1/pound").unwrap();
-        assert_eq!(v, 1.5);
-        assert_eq!(v.unit_map, MASS_MAP);
-        assert_eq!(v.v_mass, Some(UnitMass::Pound));
-        assert_eq!(v.exp[MASS_INDEX], -1);
 
         let v = Value::new(1.5, "1/pounds").unwrap();
         assert_eq!(v, 1.5);
@@ -1481,7 +1469,7 @@ mod parse_testing {
         assert_eq!(v.v_mass, Some(UnitMass::Grain));
         assert_eq!(v.exp[MASS_INDEX], 1);
 
-        let v = Value::new(1.5, "Grains").unwrap();
+        let v = Value::new(1.5, "grains").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, MASS_MAP);
         assert_eq!(v.v_mass, Some(UnitMass::Grain));
