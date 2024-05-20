@@ -110,51 +110,27 @@ mod electrical_inductance_testing {
         }
 
         for i in [
-            (
-                UnitElectricInductance::Henry(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitElectricInductance::Henry(Metric::Atto), 1.0e-18),
             (UnitElectricInductance::Henry(Metric::Centi), 0.01),
             (UnitElectricInductance::Henry(Metric::Deca), 10.0),
             (UnitElectricInductance::Henry(Metric::Deci), 0.1),
-            (
-                UnitElectricInductance::Henry(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitElectricInductance::Henry(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitElectricInductance::Henry(Metric::Giga), 1000000000.0),
+            (UnitElectricInductance::Henry(Metric::Exa), 1.0e18),
+            (UnitElectricInductance::Henry(Metric::Femto), 1.0e-15),
+            (UnitElectricInductance::Henry(Metric::Giga), 1.0e9),
             (UnitElectricInductance::Henry(Metric::Hecto), 100.0),
-            (UnitElectricInductance::Henry(Metric::Kilo), 1000.0),
-            (UnitElectricInductance::Henry(Metric::Mega), 1000000.0),
-            (UnitElectricInductance::Henry(Metric::Micro), 0.000001),
+            (UnitElectricInductance::Henry(Metric::Kilo), 1.0e3),
+            (UnitElectricInductance::Henry(Metric::Mega), 1.0e6),
+            (UnitElectricInductance::Henry(Metric::Micro), 1.0e-6),
             (UnitElectricInductance::Henry(Metric::Milli), 0.001),
-            (UnitElectricInductance::Henry(Metric::Nano), 0.000000001),
+            (UnitElectricInductance::Henry(Metric::Nano), 1.0e-9),
             (UnitElectricInductance::Henry(Metric::None), 1.0),
-            (
-                UnitElectricInductance::Henry(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (UnitElectricInductance::Henry(Metric::Pico), 0.000000000001),
-            (UnitElectricInductance::Henry(Metric::Tera), 1000000000000.0),
-            (
-                UnitElectricInductance::Henry(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitElectricInductance::Henry(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitElectricInductance::Henry(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitElectricInductance::Henry(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitElectricInductance::Henry(Metric::Peta), 1.0e15),
+            (UnitElectricInductance::Henry(Metric::Pico), 1.0e-12),
+            (UnitElectricInductance::Henry(Metric::Tera), 1.0e12),
+            (UnitElectricInductance::Henry(Metric::Yocto), 1.0e-24),
+            (UnitElectricInductance::Henry(Metric::Yotta), 1.0e24),
+            (UnitElectricInductance::Henry(Metric::Zepto), 1.0e-21),
+            (UnitElectricInductance::Henry(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

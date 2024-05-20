@@ -110,51 +110,27 @@ mod electrical_potential_testing {
         }
 
         for i in [
-            (
-                UnitElectricPotential::Volt(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitElectricPotential::Volt(Metric::Atto), 1.0e-18),
             (UnitElectricPotential::Volt(Metric::Centi), 0.01),
             (UnitElectricPotential::Volt(Metric::Deca), 10.0),
             (UnitElectricPotential::Volt(Metric::Deci), 0.1),
-            (
-                UnitElectricPotential::Volt(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitElectricPotential::Volt(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitElectricPotential::Volt(Metric::Giga), 1000000000.0),
+            (UnitElectricPotential::Volt(Metric::Exa), 1.0e18),
+            (UnitElectricPotential::Volt(Metric::Femto), 1.0e-15),
+            (UnitElectricPotential::Volt(Metric::Giga), 1.0e9),
             (UnitElectricPotential::Volt(Metric::Hecto), 100.0),
-            (UnitElectricPotential::Volt(Metric::Kilo), 1000.0),
-            (UnitElectricPotential::Volt(Metric::Mega), 1000000.0),
-            (UnitElectricPotential::Volt(Metric::Micro), 0.000001),
+            (UnitElectricPotential::Volt(Metric::Kilo), 1.0e3),
+            (UnitElectricPotential::Volt(Metric::Mega), 1.0e6),
+            (UnitElectricPotential::Volt(Metric::Micro), 1.0e-6),
             (UnitElectricPotential::Volt(Metric::Milli), 0.001),
-            (UnitElectricPotential::Volt(Metric::Nano), 0.000000001),
+            (UnitElectricPotential::Volt(Metric::Nano), 1.0e-9),
             (UnitElectricPotential::Volt(Metric::None), 1.0),
-            (
-                UnitElectricPotential::Volt(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (UnitElectricPotential::Volt(Metric::Pico), 0.000000000001),
-            (UnitElectricPotential::Volt(Metric::Tera), 1000000000000.0),
-            (
-                UnitElectricPotential::Volt(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitElectricPotential::Volt(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitElectricPotential::Volt(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitElectricPotential::Volt(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitElectricPotential::Volt(Metric::Peta), 1.0e15),
+            (UnitElectricPotential::Volt(Metric::Pico), 1.0e-12),
+            (UnitElectricPotential::Volt(Metric::Tera), 1.0e12),
+            (UnitElectricPotential::Volt(Metric::Yocto), 1.0e-24),
+            (UnitElectricPotential::Volt(Metric::Yotta), 1.0e24),
+            (UnitElectricPotential::Volt(Metric::Zepto), 1.0e-21),
+            (UnitElectricPotential::Volt(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

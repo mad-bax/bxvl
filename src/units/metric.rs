@@ -6,33 +6,39 @@ impl Metric {
     /// Returns the numeric scaling of a given metric prefix
     pub fn scale(&self) -> f64 {
         match self {
-            Metric::Yotta => 1000000000000000000000000.0,
-            Metric::Zetta => 1000000000000000000000.0,
-            Metric::Exa => 1000000000000000000.0,
-            Metric::Peta => 1000000000000000.0,
-            Metric::Tera => 1000000000000.0,
-            Metric::Giga => 1000000000.0,
-            Metric::Mega => 1000000.0,
-            Metric::Kilo => 1000.0,
-            Metric::Hecto => 100.0,
+            Metric::Quetta => 1.0e30,
+            Metric::Ronna => 1.0e27,
+            Metric::Yotta => 1.0e24,
+            Metric::Zetta => 1.0e21,
+            Metric::Exa => 1.0e18,
+            Metric::Peta => 1.0e15,
+            Metric::Tera => 1.0e12,
+            Metric::Giga => 1.0e9,
+            Metric::Mega => 1.0e6,
+            Metric::Kilo => 1.0e3,
+            Metric::Hecto => 1.0e2,
             Metric::Deca => 10.0,
             Metric::None => 1.0,
             Metric::Deci => 0.1,
             Metric::Centi => 0.01,
-            Metric::Milli => 0.001,
-            Metric::Micro => 0.000001,
-            Metric::Nano => 0.000000001,
-            Metric::Pico => 0.000000000001,
-            Metric::Femto => 0.000000000000001,
-            Metric::Atto => 0.000000000000000001,
-            Metric::Zepto => 0.000000000000000000001,
-            Metric::Yocto => 0.000000000000000000000001,
+            Metric::Milli => 1.0e-3,
+            Metric::Micro => 1.0e-6,
+            Metric::Nano => 1.0e-9,
+            Metric::Pico => 1.0e-12,
+            Metric::Femto => 1.0e-15,
+            Metric::Atto => 1.0e-18,
+            Metric::Zepto => 1.0e-21,
+            Metric::Yocto => 1.0e-24,
+            Metric::Ronto => 1.0e-27,
+            Metric::Quecto => 1.0e-30,
         }
     }
 
     /// Returns the string representation of the metric prefix
     pub fn as_str(&self) -> &str {
         match self {
+            Metric::Quetta => "Q",
+            Metric::Ronna => "R",
             Metric::Yotta => "Y",
             Metric::Zetta => "Z",
             Metric::Exa => "E",
@@ -54,6 +60,8 @@ impl Metric {
             Metric::Atto => "a",
             Metric::Zepto => "z",
             Metric::Yocto => "y",
+            Metric::Ronto => "r",
+            Metric::Quecto => "q",
         }
     }
 }
@@ -71,6 +79,8 @@ impl TryFrom<&str> for Metric {
             }
         } else {
             match m.chars().nth(0).unwrap() {
+                'Q' => Ok(Metric::Quetta),
+                'R' => Ok(Metric::Ronna),
                 'Y' => Ok(Metric::Yotta),
                 'Z' => Ok(Metric::Zetta),
                 'E' => Ok(Metric::Exa),
@@ -90,6 +100,8 @@ impl TryFrom<&str> for Metric {
                 'a' => Ok(Metric::Atto),
                 'z' => Ok(Metric::Zepto),
                 'y' => Ok(Metric::Yocto),
+                'r' => Ok(Metric::Ronto),
+                'q' => Ok(Metric::Quecto),
                 _ => Err(V3Error::ParsingError("Invalid metric prefix".into())),
             }
         }
@@ -102,6 +114,8 @@ mod metric_testing {
 
     #[test]
     fn metric_comparison() {
+        assert_eq!(true, Metric::Quecto < Metric::Ronto);
+        assert_eq!(true, Metric::Ronto < Metric::Yocto);
         assert_eq!(true, Metric::Yocto < Metric::Zepto);
         assert_eq!(true, Metric::Zepto < Metric::Atto);
         assert_eq!(true, Metric::Atto < Metric::Femto);
@@ -122,10 +136,14 @@ mod metric_testing {
         assert_eq!(true, Metric::Peta < Metric::Exa);
         assert_eq!(true, Metric::Exa < Metric::Zetta);
         assert_eq!(true, Metric::Zetta < Metric::Yotta);
+        assert_eq!(true, Metric::Yotta < Metric::Ronna);
+        assert_eq!(true, Metric::Ronna < Metric::Quetta);
     }
 
     #[test]
     fn metric_comparison_scale() {
+        assert_eq!(true, Metric::Quecto.scale() < Metric::Ronto.scale());
+        assert_eq!(true, Metric::Ronto.scale() < Metric::Yocto.scale());
         assert_eq!(true, Metric::Yocto.scale() < Metric::Zepto.scale());
         assert_eq!(true, Metric::Zepto.scale() < Metric::Atto.scale());
         assert_eq!(true, Metric::Atto.scale() < Metric::Femto.scale());
@@ -146,10 +164,14 @@ mod metric_testing {
         assert_eq!(true, Metric::Peta.scale() < Metric::Exa.scale());
         assert_eq!(true, Metric::Exa.scale() < Metric::Zetta.scale());
         assert_eq!(true, Metric::Zetta.scale() < Metric::Yotta.scale());
+        assert_eq!(true, Metric::Yotta.scale() < Metric::Ronna.scale());
+        assert_eq!(true, Metric::Ronna.scale() < Metric::Quetta.scale());
     }
 
     #[test]
     fn metric_string_scale() {
+        assert_eq!(Metric::try_from("Q").unwrap(), Metric::Quetta);
+        assert_eq!(Metric::try_from("R").unwrap(), Metric::Ronna);
         assert_eq!(Metric::try_from("Y").unwrap(), Metric::Yotta);
         assert_eq!(Metric::try_from("Z").unwrap(), Metric::Zetta);
         assert_eq!(Metric::try_from("E").unwrap(), Metric::Exa);
@@ -171,6 +193,8 @@ mod metric_testing {
         assert_eq!(Metric::try_from("y").unwrap(), Metric::Yocto);
         assert_eq!(Metric::try_from("da").unwrap(), Metric::Deca);
         assert_eq!(Metric::try_from("m").unwrap(), Metric::Milli);
+        assert_eq!(Metric::try_from("r").unwrap(), Metric::Ronto);
+        assert_eq!(Metric::try_from("q").unwrap(), Metric::Quecto);
     }
 
     #[test]

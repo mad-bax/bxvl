@@ -110,54 +110,27 @@ mod magnetic_flux_density_testing {
         }
 
         for i in [
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitMagneticFluxDensity::Tesla(Metric::Atto), 1.0e-18),
             (UnitMagneticFluxDensity::Tesla(Metric::Centi), 0.01),
             (UnitMagneticFluxDensity::Tesla(Metric::Deca), 10.0),
             (UnitMagneticFluxDensity::Tesla(Metric::Deci), 0.1),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitMagneticFluxDensity::Tesla(Metric::Giga), 1000000000.0),
+            (UnitMagneticFluxDensity::Tesla(Metric::Exa), 1.0e18),
+            (UnitMagneticFluxDensity::Tesla(Metric::Femto), 1.0e-15),
+            (UnitMagneticFluxDensity::Tesla(Metric::Giga), 1.0e9),
             (UnitMagneticFluxDensity::Tesla(Metric::Hecto), 100.0),
-            (UnitMagneticFluxDensity::Tesla(Metric::Kilo), 1000.0),
-            (UnitMagneticFluxDensity::Tesla(Metric::Mega), 1000000.0),
-            (UnitMagneticFluxDensity::Tesla(Metric::Micro), 0.000001),
+            (UnitMagneticFluxDensity::Tesla(Metric::Kilo), 1.0e3),
+            (UnitMagneticFluxDensity::Tesla(Metric::Mega), 1.0e6),
+            (UnitMagneticFluxDensity::Tesla(Metric::Micro), 1.0e-6),
             (UnitMagneticFluxDensity::Tesla(Metric::Milli), 0.001),
-            (UnitMagneticFluxDensity::Tesla(Metric::Nano), 0.000000001),
+            (UnitMagneticFluxDensity::Tesla(Metric::Nano), 1.0e-9),
             (UnitMagneticFluxDensity::Tesla(Metric::None), 1.0),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (UnitMagneticFluxDensity::Tesla(Metric::Pico), 0.000000000001),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Tera),
-                1000000000000.0,
-            ),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitMagneticFluxDensity::Tesla(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitMagneticFluxDensity::Tesla(Metric::Peta), 1.0e15),
+            (UnitMagneticFluxDensity::Tesla(Metric::Pico), 1.0e-12),
+            (UnitMagneticFluxDensity::Tesla(Metric::Tera), 1.0e12),
+            (UnitMagneticFluxDensity::Tesla(Metric::Yocto), 1.0e-24),
+            (UnitMagneticFluxDensity::Tesla(Metric::Yotta), 1.0e24),
+            (UnitMagneticFluxDensity::Tesla(Metric::Zepto), 1.0e-21),
+            (UnitMagneticFluxDensity::Tesla(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

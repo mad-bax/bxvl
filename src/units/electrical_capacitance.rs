@@ -110,54 +110,27 @@ mod electrical_capacitance_testing {
         }
 
         for i in [
-            (
-                UnitElectricCapacitance::Farad(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitElectricCapacitance::Farad(Metric::Atto), 1.0e-18),
             (UnitElectricCapacitance::Farad(Metric::Centi), 0.01),
             (UnitElectricCapacitance::Farad(Metric::Deca), 10.0),
             (UnitElectricCapacitance::Farad(Metric::Deci), 0.1),
-            (
-                UnitElectricCapacitance::Farad(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitElectricCapacitance::Farad(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitElectricCapacitance::Farad(Metric::Giga), 1000000000.0),
+            (UnitElectricCapacitance::Farad(Metric::Exa), 1.0e18),
+            (UnitElectricCapacitance::Farad(Metric::Femto), 1.0e-15),
+            (UnitElectricCapacitance::Farad(Metric::Giga), 1.0e9),
             (UnitElectricCapacitance::Farad(Metric::Hecto), 100.0),
-            (UnitElectricCapacitance::Farad(Metric::Kilo), 1000.0),
-            (UnitElectricCapacitance::Farad(Metric::Mega), 1000000.0),
-            (UnitElectricCapacitance::Farad(Metric::Micro), 0.000001),
+            (UnitElectricCapacitance::Farad(Metric::Kilo), 1.0e3),
+            (UnitElectricCapacitance::Farad(Metric::Mega), 1.0e6),
+            (UnitElectricCapacitance::Farad(Metric::Micro), 1.0e-6),
             (UnitElectricCapacitance::Farad(Metric::Milli), 0.001),
-            (UnitElectricCapacitance::Farad(Metric::Nano), 0.000000001),
+            (UnitElectricCapacitance::Farad(Metric::Nano), 1.0e-9),
             (UnitElectricCapacitance::Farad(Metric::None), 1.0),
-            (
-                UnitElectricCapacitance::Farad(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (UnitElectricCapacitance::Farad(Metric::Pico), 0.000000000001),
-            (
-                UnitElectricCapacitance::Farad(Metric::Tera),
-                1000000000000.0,
-            ),
-            (
-                UnitElectricCapacitance::Farad(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitElectricCapacitance::Farad(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitElectricCapacitance::Farad(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitElectricCapacitance::Farad(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitElectricCapacitance::Farad(Metric::Peta), 1.0e15),
+            (UnitElectricCapacitance::Farad(Metric::Pico), 1.0e-12),
+            (UnitElectricCapacitance::Farad(Metric::Tera), 1.0e12),
+            (UnitElectricCapacitance::Farad(Metric::Yocto), 1.0e-24),
+            (UnitElectricCapacitance::Farad(Metric::Yotta), 1.0e24),
+            (UnitElectricCapacitance::Farad(Metric::Zepto), 1.0e-21),
+            (UnitElectricCapacitance::Farad(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

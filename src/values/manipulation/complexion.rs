@@ -5,7 +5,7 @@ use crate::{
         ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_INDEX, ELECTRIC_POTENTIAL_INDEX,
         ELECTRIC_POTENTIAL_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP,
         ILLUMINANCE_INDEX, ILLUMINANCE_MAP, INDUCTANCE_INDEX, INDUCTANCE_MAP, LENGTH_INDEX,
-        LENGTH_MAP, LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP, LUMINOUS_INTENSITY_INDEX,
+        LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP, LUMINOUS_INTENSITY_INDEX,
         MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_INDEX,
         MAGNETIC_FLUX_MAP, MASS_INDEX, POWER_INDEX, POWER_MAP, PRESSURE_INDEX, PRESSURE_MAP,
         RESISTANCE_INDEX, RESISTANCE_MAP, SOLID_ANGLE_INDEX, SUBSTANCE_INDEX, TIME_INDEX, TIME_MAP,
@@ -37,15 +37,15 @@ impl Value {
     /// # Example
     /// ```rust
     /// use v3::values::Value;
-    /// use v3::units::{UnitLength, UnitMass, UnitTime, Metric};
+    /// use v3::units::{UnitLength, UnitMass, UnitTime, UnitForce, Metric};
     /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
     /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
     /// let mut f:Value = match (mass*acc).complex() {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)
     /// };
+    /// assert!(f==44.145 * UnitForce::Newton(Metric::None));
     /// ```
-    /// `f` will be equal to `44.145 N`
     pub fn complex(&self) -> Result<Value, V3Error> {
         let mut ret: Value = *self;
         if ret.is_force() && ret.unit_map != FORCE_MAP {
@@ -62,60 +62,85 @@ impl Value {
             ret.v_mass = None;
             ret.v_time = None;
         } else if ret.is_pressure() && ret.unit_map != PRESSURE_MAP {
-            (ret >>= UnitForce::Newton(Metric::None));
-            (ret >>= UnitLength::Meter(Metric::None));
-            ret.exp[FORCE_INDEX] = 0;
-            ret.exp[LENGTH_INDEX] = 0;
-            ret.unit_map = PRESSURE_MAP;
-            ret.exp[PRESSURE_INDEX] = 1;
-            ret.v_pressure = Some(UnitPressure::Pascal(Metric::None));
-            ret.v_force = None;
-            ret.v_length = None;
-        } else if ret.is_energy() && ret.unit_map != ENERGY_MAP {
-            if ret.unit_map & LENGTH_MAP == LENGTH_MAP {
+            if ret.unit_map & FORCE_MAP == FORCE_MAP {
                 (ret >>= UnitForce::Newton(Metric::None));
                 (ret >>= UnitLength::Meter(Metric::None));
                 ret.exp[FORCE_INDEX] = 0;
                 ret.exp[LENGTH_INDEX] = 0;
                 ret.v_force = None;
                 ret.v_length = None;
+            } else {
+                ret >>= UnitMass::Gram(Metric::Kilo);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret.exp[MASS_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_mass = None;
+                ret.v_time = None;
+                ret.v_length = None;
+            }
+            ret.unit_map = PRESSURE_MAP;
+            ret.exp[PRESSURE_INDEX] = 1;
+            ret.v_pressure = Some(UnitPressure::Pascal(Metric::None));
+        } else if ret.is_energy() && ret.unit_map != ENERGY_MAP {
+            if ret.unit_map & FORCE_MAP == FORCE_MAP {
+                ret >>= UnitForce::Newton(Metric::None);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret.exp[FORCE_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.v_force = None;
+                ret.v_length = None;
             } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (ret >>= UnitElectricCharge::Coulomb(Metric::None));
-                (ret >>= UnitElectricPotential::Volt(Metric::None));
+                ret >>= UnitElectricCharge::Coulomb(Metric::None);
+                ret >>= UnitElectricPotential::Volt(Metric::None);
                 ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
                 ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
                 ret.v_electric_potential = None;
                 ret.v_electric_charge = None;
             } else if ret.unit_map & POWER_MAP == POWER_MAP {
-                (ret >>= UnitPower::Watt(Metric::None));
-                (ret >>= UnitTime::Second(Metric::None));
+                ret >>= UnitPower::Watt(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
                 ret.exp[POWER_INDEX] = 0;
                 ret.exp[TIME_INDEX] = 0;
                 ret.v_power = None;
                 ret.v_time = None;
             } else {
-                panic!("[complex] Unit translation: assumption Energy");
+                ret >>= UnitMass::Gram(Metric::Kilo);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret.exp[MASS_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
+                ret.v_mass = None;
+                ret.v_length = None;
+                ret.v_time = None;
             }
             ret.unit_map = ENERGY_MAP;
             ret.exp[ENERGY_INDEX] = 1;
             ret.v_energy = Some(UnitEnergy::Joule(Metric::None));
         } else if ret.is_power() && ret.unit_map != POWER_MAP {
             if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
-                (ret >>= UnitEnergy::Joule(Metric::None));
-                (ret >>= UnitTime::Second(Metric::None));
+                ret >>= UnitEnergy::Joule(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
                 ret.exp[ENERGY_INDEX] = 0;
                 ret.exp[TIME_INDEX] = 0;
                 ret.v_energy = None;
                 ret.v_time = None;
             } else if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
-                (ret >>= UnitElectricPotential::Volt(Metric::None));
-                (ret >>= UnitElectricCurrent::Ampere(Metric::None));
+                ret >>= UnitElectricPotential::Volt(Metric::None);
+                ret >>= UnitElectricCurrent::Ampere(Metric::None);
                 ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
                 ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
                 ret.v_electric_potential = None;
                 ret.v_electric_current = None;
             } else {
-                panic!("[complex] Unit translation: assumption Power");
+                ret >>= UnitMass::Gram(Metric::Kilo);
+                ret >>= UnitLength::Meter(Metric::None);
+                ret >>= UnitTime::Second(Metric::None);
+                ret.exp[MASS_INDEX] = 0;
+                ret.exp[LENGTH_INDEX] = 0;
+                ret.exp[TIME_INDEX] = 0;
             }
             ret.unit_map = POWER_MAP;
             ret.exp[POWER_INDEX] = 1;
@@ -350,5 +375,100 @@ impl Value {
             ret.v_catalytic = Some(UnitCatalyticActivity::Katal(Metric::None));
         }
         Ok(ret)
+    }
+}
+
+#[cfg(test)]
+mod complexity_testing {
+    use crate::units::{
+        Metric, UnitElectricCharge, UnitElectricCurrent, UnitElectricPotential, UnitEnergy,
+        UnitForce, UnitLength, UnitMass, UnitPower, UnitPressure, UnitTime,
+    };
+
+    #[test]
+    fn complexity_power1() {
+        let t1 = 4.5 * UnitEnergy::Joule(Metric::None);
+        let t2 = 2.0 / UnitTime::Second(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitPower::Watt(Metric::None));
+    }
+
+    #[test]
+    fn complexity_power2() {
+        let t1 = 4.5 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 2.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitPower::Watt(Metric::None));
+    }
+
+    #[test]
+    fn complexity_power3() {
+        let t1 = 4.5 * UnitMass::Gram(Metric::Kilo);
+        let t2 = 2.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let t3 = 5.0
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let res = (t1 * t2 * t3).complex().unwrap();
+        assert!(res == 45.0 * UnitPower::Watt(Metric::None));
+    }
+
+    #[test]
+    fn complexity_force() {
+        let mass = 4.5 * UnitMass::Gram(Metric::Kilo);
+        let acc = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None)
+            * UnitLength::Meter(Metric::None);
+        let f = (mass * acc).complex().unwrap();
+        assert!(f == 44.145 * UnitForce::Newton(Metric::None));
+    }
+
+    #[test]
+    fn complexity_pressure1() {
+        let t1 = 4.5 * UnitForce::Newton(Metric::None);
+        let t2 = 2.0 / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitPressure::Pascal(Metric::None));
+    }
+
+    #[test]
+    fn complexity_pressure2() {
+        let t1 = 4.5 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        let t2 = 2.0 / UnitLength::Meter(Metric::None);
+        let t3 = 5.0 * UnitMass::Gram(Metric::Kilo);
+        let res = (t1 * t2 * t3).complex().unwrap();
+        assert!(res == 45.0 * UnitPressure::Pascal(Metric::None));
+    }
+
+    #[test]
+    fn complexity_energy1() {
+        let t1 = 4.5 * UnitForce::Newton(Metric::None);
+        let t2 = 2.0 * UnitLength::Meter(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitEnergy::Joule(Metric::None));
+    }
+
+    #[test]
+    fn complexity_energy2() {
+        let t1 = 4.5 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 2.0 * UnitElectricCharge::Coulomb(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitEnergy::Joule(Metric::None));
+    }
+
+    #[test]
+    fn complexity_energy3() {
+        let t1 = 4.5 * UnitPower::Watt(Metric::None);
+        let t2 = 2.0 * UnitTime::Second(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitEnergy::Joule(Metric::None));
+    }
+
+    #[test]
+    fn complexity_energy4() {
+        let t1 = 4.5 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        let t2 = 2.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let t3 = 5.0 * UnitMass::Gram(Metric::Kilo);
+        let res = (t1 * t2 * t3).complex().unwrap();
+        assert!(res == 45.0 * UnitEnergy::Joule(Metric::None));
     }
 }

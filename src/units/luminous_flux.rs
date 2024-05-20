@@ -110,39 +110,27 @@ mod luminous_flux_testing {
         }
 
         for i in [
-            (UnitLuminousFlux::Lumen(Metric::Atto), 0.000000000000000001),
+            (UnitLuminousFlux::Lumen(Metric::Atto), 1.0e-18),
             (UnitLuminousFlux::Lumen(Metric::Centi), 0.01),
             (UnitLuminousFlux::Lumen(Metric::Deca), 10.0),
             (UnitLuminousFlux::Lumen(Metric::Deci), 0.1),
-            (UnitLuminousFlux::Lumen(Metric::Exa), 1000000000000000000.0),
-            (UnitLuminousFlux::Lumen(Metric::Femto), 0.000000000000001),
-            (UnitLuminousFlux::Lumen(Metric::Giga), 1000000000.0),
+            (UnitLuminousFlux::Lumen(Metric::Exa), 1.0e18),
+            (UnitLuminousFlux::Lumen(Metric::Femto), 1.0e-15),
+            (UnitLuminousFlux::Lumen(Metric::Giga), 1.0e9),
             (UnitLuminousFlux::Lumen(Metric::Hecto), 100.0),
-            (UnitLuminousFlux::Lumen(Metric::Kilo), 1000.0),
-            (UnitLuminousFlux::Lumen(Metric::Mega), 1000000.0),
-            (UnitLuminousFlux::Lumen(Metric::Micro), 0.000001),
+            (UnitLuminousFlux::Lumen(Metric::Kilo), 1.0e3),
+            (UnitLuminousFlux::Lumen(Metric::Mega), 1.0e6),
+            (UnitLuminousFlux::Lumen(Metric::Micro), 1.0e-6),
             (UnitLuminousFlux::Lumen(Metric::Milli), 0.001),
-            (UnitLuminousFlux::Lumen(Metric::Nano), 0.000000001),
+            (UnitLuminousFlux::Lumen(Metric::Nano), 1.0e-9),
             (UnitLuminousFlux::Lumen(Metric::None), 1.0),
-            (UnitLuminousFlux::Lumen(Metric::Peta), 1000000000000000.0),
-            (UnitLuminousFlux::Lumen(Metric::Pico), 0.000000000001),
-            (UnitLuminousFlux::Lumen(Metric::Tera), 1000000000000.0),
-            (
-                UnitLuminousFlux::Lumen(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitLuminousFlux::Lumen(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitLuminousFlux::Lumen(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitLuminousFlux::Lumen(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitLuminousFlux::Lumen(Metric::Peta), 1.0e15),
+            (UnitLuminousFlux::Lumen(Metric::Pico), 1.0e-12),
+            (UnitLuminousFlux::Lumen(Metric::Tera), 1.0e12),
+            (UnitLuminousFlux::Lumen(Metric::Yocto), 1.0e-24),
+            (UnitLuminousFlux::Lumen(Metric::Yotta), 1.0e24),
+            (UnitLuminousFlux::Lumen(Metric::Zepto), 1.0e-21),
+            (UnitLuminousFlux::Lumen(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

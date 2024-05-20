@@ -110,51 +110,27 @@ mod electrical_resistance_testing {
         }
 
         for i in [
-            (
-                UnitElectricResistance::Ohm(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitElectricResistance::Ohm(Metric::Atto), 1.0e-18),
             (UnitElectricResistance::Ohm(Metric::Centi), 0.01),
             (UnitElectricResistance::Ohm(Metric::Deca), 10.0),
             (UnitElectricResistance::Ohm(Metric::Deci), 0.1),
-            (
-                UnitElectricResistance::Ohm(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitElectricResistance::Ohm(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitElectricResistance::Ohm(Metric::Giga), 1000000000.0),
+            (UnitElectricResistance::Ohm(Metric::Exa), 1.0e18),
+            (UnitElectricResistance::Ohm(Metric::Femto), 1.0e-15),
+            (UnitElectricResistance::Ohm(Metric::Giga), 1.0e9),
             (UnitElectricResistance::Ohm(Metric::Hecto), 100.0),
-            (UnitElectricResistance::Ohm(Metric::Kilo), 1000.0),
-            (UnitElectricResistance::Ohm(Metric::Mega), 1000000.0),
-            (UnitElectricResistance::Ohm(Metric::Micro), 0.000001),
+            (UnitElectricResistance::Ohm(Metric::Kilo), 1.0e3),
+            (UnitElectricResistance::Ohm(Metric::Mega), 1.0e6),
+            (UnitElectricResistance::Ohm(Metric::Micro), 1.0e-6),
             (UnitElectricResistance::Ohm(Metric::Milli), 0.001),
-            (UnitElectricResistance::Ohm(Metric::Nano), 0.000000001),
+            (UnitElectricResistance::Ohm(Metric::Nano), 1.0e-9),
             (UnitElectricResistance::Ohm(Metric::None), 1.0),
-            (
-                UnitElectricResistance::Ohm(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (UnitElectricResistance::Ohm(Metric::Pico), 0.000000000001),
-            (UnitElectricResistance::Ohm(Metric::Tera), 1000000000000.0),
-            (
-                UnitElectricResistance::Ohm(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitElectricResistance::Ohm(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitElectricResistance::Ohm(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitElectricResistance::Ohm(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitElectricResistance::Ohm(Metric::Peta), 1.0e15),
+            (UnitElectricResistance::Ohm(Metric::Pico), 1.0e-12),
+            (UnitElectricResistance::Ohm(Metric::Tera), 1.0e12),
+            (UnitElectricResistance::Ohm(Metric::Yocto), 1.0e-24),
+            (UnitElectricResistance::Ohm(Metric::Yotta), 1.0e24),
+            (UnitElectricResistance::Ohm(Metric::Zepto), 1.0e-21),
+            (UnitElectricResistance::Ohm(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

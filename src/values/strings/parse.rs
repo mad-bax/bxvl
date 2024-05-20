@@ -516,6 +516,8 @@ impl Value {
     /// Returns the `Metric` enum for a given prefix
     fn _get_metric(&mut self, unit: &char) -> Result<Metric, V3Error> {
         match unit {
+            'Q' => Ok(Metric::Quetta),
+            'R' => Ok(Metric::Ronna),
             'Y' => Ok(Metric::Yotta),
             'Z' => Ok(Metric::Zetta),
             'E' => Ok(Metric::Exa),
@@ -535,6 +537,8 @@ impl Value {
             'a' => Ok(Metric::Atto),
             'z' => Ok(Metric::Zepto),
             'y' => Ok(Metric::Yocto),
+            'r' => Ok(Metric::Ronto),
+            'q' => Ok(Metric::Quecto),
             _ => Err(V3Error::UnsupportedMetric(format!(
                 "[_get_metric] Unsupported metric: {}",
                 unit
@@ -776,10 +780,13 @@ impl Value {
 mod parse_testing {
     use crate::{
         constants::{
-            ANGLE_INDEX, ANGLE_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP, INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, MASS_INDEX, MASS_MAP, PRESSURE_INDEX, PRESSURE_MAP, TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP
+            ANGLE_INDEX, ANGLE_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP,
+            INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, MASS_INDEX, MASS_MAP,
+            PRESSURE_INDEX, PRESSURE_MAP, TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP,
         },
         units::{
-            Metric, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime
+            Metric, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitLength, UnitMass,
+            UnitPressure, UnitTemperature, UnitTime,
         },
         values::Value,
     };
@@ -851,7 +858,6 @@ mod parse_testing {
 
     #[test]
     fn unique_names_mmhg() {
-
         // mmHg
         let v = Value::new(1.5, "mmHg").unwrap();
         assert_eq!(v, 1.5);
@@ -865,7 +871,6 @@ mod parse_testing {
         assert_eq!(v.v_pressure, Some(UnitPressure::Hgmm));
         assert_eq!(v.exp[PRESSURE_INDEX], -1);
     }
-
 
     #[test]
     fn unique_names_inhg() {
@@ -1278,7 +1283,11 @@ mod parse_testing {
         assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
 
-        let v = Value::new(1.5, "      1                /                         °c    ").unwrap();
+        let v = Value::new(
+            1.5,
+            "      1                /                         °c    ",
+        )
+        .unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
         assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));

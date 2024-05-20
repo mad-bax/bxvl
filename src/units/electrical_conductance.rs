@@ -137,57 +137,27 @@ mod electrical_conductance_testing {
         }
 
         for i in [
-            (
-                UnitElectricConductance::Siemens(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitElectricConductance::Siemens(Metric::Atto), 1.0e-18),
             (UnitElectricConductance::Siemens(Metric::Centi), 0.01),
             (UnitElectricConductance::Siemens(Metric::Deca), 10.0),
             (UnitElectricConductance::Siemens(Metric::Deci), 0.1),
-            (
-                UnitElectricConductance::Siemens(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Femto),
-                0.000000000000001,
-            ),
-            (UnitElectricConductance::Siemens(Metric::Giga), 1000000000.0),
+            (UnitElectricConductance::Siemens(Metric::Exa), 1.0e18),
+            (UnitElectricConductance::Siemens(Metric::Femto), 1.0e-15),
+            (UnitElectricConductance::Siemens(Metric::Giga), 1.0e9),
             (UnitElectricConductance::Siemens(Metric::Hecto), 100.0),
-            (UnitElectricConductance::Siemens(Metric::Kilo), 1000.0),
-            (UnitElectricConductance::Siemens(Metric::Mega), 1000000.0),
-            (UnitElectricConductance::Siemens(Metric::Micro), 0.000001),
+            (UnitElectricConductance::Siemens(Metric::Kilo), 1.0e3),
+            (UnitElectricConductance::Siemens(Metric::Mega), 1.0e6),
+            (UnitElectricConductance::Siemens(Metric::Micro), 1.0e-6),
             (UnitElectricConductance::Siemens(Metric::Milli), 0.001),
-            (UnitElectricConductance::Siemens(Metric::Nano), 0.000000001),
+            (UnitElectricConductance::Siemens(Metric::Nano), 1.0e-9),
             (UnitElectricConductance::Siemens(Metric::None), 1.0),
-            (
-                UnitElectricConductance::Siemens(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Pico),
-                0.000000000001,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Tera),
-                1000000000000.0,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitElectricConductance::Siemens(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitElectricConductance::Siemens(Metric::Peta), 1.0e15),
+            (UnitElectricConductance::Siemens(Metric::Pico), 1.0e-12),
+            (UnitElectricConductance::Siemens(Metric::Tera), 1.0e12),
+            (UnitElectricConductance::Siemens(Metric::Yocto), 1.0e-24),
+            (UnitElectricConductance::Siemens(Metric::Yotta), 1.0e24),
+            (UnitElectricConductance::Siemens(Metric::Zepto), 1.0e-21),
+            (UnitElectricConductance::Siemens(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

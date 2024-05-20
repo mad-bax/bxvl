@@ -81,6 +81,10 @@ mod angle_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitAngle::Radian(Metric::Ronna), "Rrad"),
+            (UnitAngle::Radian(Metric::Ronto), "rrad"),
+            (UnitAngle::Radian(Metric::Quecto), "qrad"),
+            (UnitAngle::Radian(Metric::Quetta), "Qrad"),
             (UnitAngle::Radian(Metric::Atto), "arad"),
             (UnitAngle::Radian(Metric::Centi), "crad"),
             (UnitAngle::Radian(Metric::Deca), "darad"),
@@ -112,6 +116,10 @@ mod angle_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitAngle::Radian(Metric::Ronna), Metric::Ronna),
+            (UnitAngle::Radian(Metric::Ronto), Metric::Ronto),
+            (UnitAngle::Radian(Metric::Quecto), Metric::Quecto),
+            (UnitAngle::Radian(Metric::Quetta), Metric::Quetta),
             (UnitAngle::Radian(Metric::Atto), Metric::Atto),
             (UnitAngle::Radian(Metric::Centi), Metric::Centi),
             (UnitAngle::Radian(Metric::Deca), Metric::Deca),
@@ -138,30 +146,31 @@ mod angle_testing {
         }
 
         for i in [
-            (UnitAngle::Radian(Metric::Atto), 0.000000000000000001),
+            (UnitAngle::Radian(Metric::Ronna), 1.0e27),
+            (UnitAngle::Radian(Metric::Ronto), 1.0e-27),
+            (UnitAngle::Radian(Metric::Quecto), 1.0e-30),
+            (UnitAngle::Radian(Metric::Quetta), 1.0e30),
+            (UnitAngle::Radian(Metric::Atto), 1.0e-18),
             (UnitAngle::Radian(Metric::Centi), 0.01),
             (UnitAngle::Radian(Metric::Deca), 10.0),
             (UnitAngle::Radian(Metric::Deci), 0.1),
-            (UnitAngle::Radian(Metric::Exa), 1000000000000000000.0),
-            (UnitAngle::Radian(Metric::Femto), 0.000000000000001),
-            (UnitAngle::Radian(Metric::Giga), 1000000000.0),
+            (UnitAngle::Radian(Metric::Exa), 1.0e18),
+            (UnitAngle::Radian(Metric::Femto), 1.0e-15),
+            (UnitAngle::Radian(Metric::Giga), 1.0e9),
             (UnitAngle::Radian(Metric::Hecto), 100.0),
-            (UnitAngle::Radian(Metric::Kilo), 1000.0),
-            (UnitAngle::Radian(Metric::Mega), 1000000.0),
-            (UnitAngle::Radian(Metric::Micro), 0.000001),
+            (UnitAngle::Radian(Metric::Kilo), 1.0e3),
+            (UnitAngle::Radian(Metric::Mega), 1.0e6),
+            (UnitAngle::Radian(Metric::Micro), 1.0e-6),
             (UnitAngle::Radian(Metric::Milli), 0.001),
-            (UnitAngle::Radian(Metric::Nano), 0.000000001),
+            (UnitAngle::Radian(Metric::Nano), 1.0e-9),
             (UnitAngle::Radian(Metric::None), 1.0),
-            (UnitAngle::Radian(Metric::Peta), 1000000000000000.0),
-            (UnitAngle::Radian(Metric::Pico), 0.000000000001),
-            (UnitAngle::Radian(Metric::Tera), 1000000000000.0),
-            (UnitAngle::Radian(Metric::Yocto), 0.000000000000000000000001),
-            (
-                UnitAngle::Radian(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (UnitAngle::Radian(Metric::Zepto), 0.000000000000000000001),
-            (UnitAngle::Radian(Metric::Zetta), 1000000000000000000000.0),
+            (UnitAngle::Radian(Metric::Peta), 1.0e15),
+            (UnitAngle::Radian(Metric::Pico), 1.0e-12),
+            (UnitAngle::Radian(Metric::Tera), 1.0e12),
+            (UnitAngle::Radian(Metric::Yocto), 1.0e-24),
+            (UnitAngle::Radian(Metric::Yotta), 1.0e24),
+            (UnitAngle::Radian(Metric::Zepto), 1.0e-21),
+            (UnitAngle::Radian(Metric::Zetta), 1.0e21),
             (UnitAngle::Degree, 1.0),
             (UnitAngle::Moa, 1.0),
         ] {

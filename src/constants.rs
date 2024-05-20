@@ -104,7 +104,7 @@ pub(crate) const KELVIN_TO_CELSIUS: f64 = 273.15;
 /// Volume
 ///
 /// The conversion numeric for meters cubed to liters
-pub(crate) const METER3_TO_LITER: f64 = 1000.0;
+pub(crate) const METER3_TO_LITER: f64 = 1.0e3;
 
 /// The definition for absolute zero
 pub(crate) const VAL_ABS_ZERO: f64 = 0.0;

@@ -448,8 +448,8 @@ The project supports all base SI units as listed by the National Institute of St
 
 | Unit | Metric Prefixing Support | Base Conversion Factor | Unit string         |
 | ---- | ------------------------ | ---------------------- | ------------------- |
-| Bit  | `Kilo` - `Yotta`         | `8.0 bits == 1.0 byte` | `bits`              |
-| Byte | `Kilo` - `Yotta`         | `1.0 bytes`            | `b`<br/>`byte`[`s`] |
+| Bit  | `Kilo` - `Quetta`        | `8.0 bits == 1.0 byte` | `bits`              |
+| Byte | `Kilo` - `Quetta`        | `1.0 bytes`            | `b`<br/>`byte`[`s`] |
 
 ### Special Unit Keywords
 
@@ -461,28 +461,32 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Metric Prefix Identifiers
 
-| Metric name | Prefix string |
-| ----------- | ------------- |
-| Yotta       | `Y`           |
-| Zetta       | `Z`           |
-| Exa         | `E`           |
-| Peta        | `P`           |
-| Tera        | `T`           |
-| Giga        | `G`           |
-| Mega        | `M`           |
-| Kilo        | `k`           |
-| Hecto       | `h`           |
-| Deca        | `da`          |
-| Deci        | `d`           |
-| Centi       | `c`           |
-| Milli       | `m`           |
-| Micro       | `μ`<br/>`u`   |
-| Nano        | `n`           |
-| Pico        | `p`           |
-| Femto       | `f`           |
-| Atto        | `a`           |
-| Zepto       | `z`           |
-| Yocto       | `y`           |
+| Metric name | Prefix string | Metric Scaling |
+| ----------- | ------------- | -------------- |
+| Quetta      | `Q`           | $1.0e30$       |
+| Ronna       | `R`           | $1.0e27$       |
+| Yotta       | `Y`           | $1.0e24$       |
+| Zetta       | `Z`           | $1.0e21$       |
+| Exa         | `E`           | $1.0e18$       |
+| Peta        | `P`           | $1.0e15$       |
+| Tera        | `T`           | $1.0e12$       |
+| Giga        | `G`           | $1.0e9$        |
+| Mega        | `M`           | $1.0e6$        |
+| Kilo        | `k`           | $1.0e3$        |
+| Hecto       | `h`           | $1.0e2$        |
+| Deca        | `da`          | $1.0e1$        |
+| Deci        | `d`           | $1.0e-1$       |
+| Centi       | `c`           | $1.0e-2$       |
+| Milli       | `m`           | $1.0e-3$       |
+| Micro       | `μ`<br/>`u`   | $1.0e-6$       |
+| Nano        | `n`           | $1.0e-9$       |
+| Pico        | `p`           | $1.0e-12$      |
+| Femto       | `f`           | $1.0e-15$      |
+| Atto        | `a`           | $1.0e-18$      |
+| Zepto       | `z`           | $1.0e-21$      |
+| Yocto       | `y`           | $1.0e-24$      |
+| Ronto       | `r`           | $1.0e-27$      |
+| Quecto      | `q`           | $1.0e-30$      |
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
 
@@ -510,4 +514,5 @@ V3 can and is intended to be improved with some of these goals in mind:
 - ~~Metric support for `Kelvin`~~
   - ✅ Support added
 - Metric support for `Celsius`
+- ~~New support for: `Quetta`, `Quecto`, `Ronna`, and `Ronto`~~
 - speed speed speed

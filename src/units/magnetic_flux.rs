@@ -110,39 +110,27 @@ mod magnetic_flux_testing {
         }
 
         for i in [
-            (UnitMagneticFlux::Weber(Metric::Atto), 0.000000000000000001),
+            (UnitMagneticFlux::Weber(Metric::Atto), 1.0e-18),
             (UnitMagneticFlux::Weber(Metric::Centi), 0.01),
             (UnitMagneticFlux::Weber(Metric::Deca), 10.0),
             (UnitMagneticFlux::Weber(Metric::Deci), 0.1),
-            (UnitMagneticFlux::Weber(Metric::Exa), 1000000000000000000.0),
-            (UnitMagneticFlux::Weber(Metric::Femto), 0.000000000000001),
-            (UnitMagneticFlux::Weber(Metric::Giga), 1000000000.0),
+            (UnitMagneticFlux::Weber(Metric::Exa), 1.0e18),
+            (UnitMagneticFlux::Weber(Metric::Femto), 1.0e-15),
+            (UnitMagneticFlux::Weber(Metric::Giga), 1.0e9),
             (UnitMagneticFlux::Weber(Metric::Hecto), 100.0),
-            (UnitMagneticFlux::Weber(Metric::Kilo), 1000.0),
-            (UnitMagneticFlux::Weber(Metric::Mega), 1000000.0),
-            (UnitMagneticFlux::Weber(Metric::Micro), 0.000001),
+            (UnitMagneticFlux::Weber(Metric::Kilo), 1.0e3),
+            (UnitMagneticFlux::Weber(Metric::Mega), 1.0e6),
+            (UnitMagneticFlux::Weber(Metric::Micro), 1.0e-6),
             (UnitMagneticFlux::Weber(Metric::Milli), 0.001),
-            (UnitMagneticFlux::Weber(Metric::Nano), 0.000000001),
+            (UnitMagneticFlux::Weber(Metric::Nano), 1.0e-9),
             (UnitMagneticFlux::Weber(Metric::None), 1.0),
-            (UnitMagneticFlux::Weber(Metric::Peta), 1000000000000000.0),
-            (UnitMagneticFlux::Weber(Metric::Pico), 0.000000000001),
-            (UnitMagneticFlux::Weber(Metric::Tera), 1000000000000.0),
-            (
-                UnitMagneticFlux::Weber(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitMagneticFlux::Weber(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitMagneticFlux::Weber(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitMagneticFlux::Weber(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitMagneticFlux::Weber(Metric::Peta), 1.0e15),
+            (UnitMagneticFlux::Weber(Metric::Pico), 1.0e-12),
+            (UnitMagneticFlux::Weber(Metric::Tera), 1.0e12),
+            (UnitMagneticFlux::Weber(Metric::Yocto), 1.0e-24),
+            (UnitMagneticFlux::Weber(Metric::Yotta), 1.0e24),
+            (UnitMagneticFlux::Weber(Metric::Zepto), 1.0e-21),
+            (UnitMagneticFlux::Weber(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

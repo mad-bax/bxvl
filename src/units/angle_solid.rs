@@ -57,6 +57,10 @@ mod solid_angle_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitSolidAngle::Steradian(Metric::Quecto), "qsr"),
+            (UnitSolidAngle::Steradian(Metric::Ronto), "rsr"),
+            (UnitSolidAngle::Steradian(Metric::Ronna), "Rsr"),
+            (UnitSolidAngle::Steradian(Metric::Quetta), "Qsr"),
             (UnitSolidAngle::Steradian(Metric::Atto), "asr"),
             (UnitSolidAngle::Steradian(Metric::Centi), "csr"),
             (UnitSolidAngle::Steradian(Metric::Deca), "dasr"),
@@ -88,6 +92,10 @@ mod solid_angle_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitSolidAngle::Steradian(Metric::Quecto), Metric::Quecto),
+            (UnitSolidAngle::Steradian(Metric::Ronto), Metric::Ronto),
+            (UnitSolidAngle::Steradian(Metric::Ronna), Metric::Ronna),
+            (UnitSolidAngle::Steradian(Metric::Quetta), Metric::Quetta),
             (UnitSolidAngle::Steradian(Metric::Atto), Metric::Atto),
             (UnitSolidAngle::Steradian(Metric::Centi), Metric::Centi),
             (UnitSolidAngle::Steradian(Metric::Deca), Metric::Deca),
@@ -114,45 +122,31 @@ mod solid_angle_testing {
         }
 
         for i in [
-            (
-                UnitSolidAngle::Steradian(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitSolidAngle::Steradian(Metric::Ronna), 1.0e27),
+            (UnitSolidAngle::Steradian(Metric::Ronto), 1.0e-27),
+            (UnitSolidAngle::Steradian(Metric::Quecto), 1.0e-30),
+            (UnitSolidAngle::Steradian(Metric::Quetta), 1.0e30),
+            (UnitSolidAngle::Steradian(Metric::Atto), 1.0e-18),
             (UnitSolidAngle::Steradian(Metric::Centi), 0.01),
             (UnitSolidAngle::Steradian(Metric::Deca), 10.0),
             (UnitSolidAngle::Steradian(Metric::Deci), 0.1),
-            (
-                UnitSolidAngle::Steradian(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (UnitSolidAngle::Steradian(Metric::Femto), 0.000000000000001),
-            (UnitSolidAngle::Steradian(Metric::Giga), 1000000000.0),
+            (UnitSolidAngle::Steradian(Metric::Exa), 1.0e18),
+            (UnitSolidAngle::Steradian(Metric::Femto), 1.0e-15),
+            (UnitSolidAngle::Steradian(Metric::Giga), 1.0e9),
             (UnitSolidAngle::Steradian(Metric::Hecto), 100.0),
-            (UnitSolidAngle::Steradian(Metric::Kilo), 1000.0),
-            (UnitSolidAngle::Steradian(Metric::Mega), 1000000.0),
-            (UnitSolidAngle::Steradian(Metric::Micro), 0.000001),
+            (UnitSolidAngle::Steradian(Metric::Kilo), 1.0e3),
+            (UnitSolidAngle::Steradian(Metric::Mega), 1.0e6),
+            (UnitSolidAngle::Steradian(Metric::Micro), 1.0e-6),
             (UnitSolidAngle::Steradian(Metric::Milli), 0.001),
-            (UnitSolidAngle::Steradian(Metric::Nano), 0.000000001),
+            (UnitSolidAngle::Steradian(Metric::Nano), 1.0e-9),
             (UnitSolidAngle::Steradian(Metric::None), 1.0),
-            (UnitSolidAngle::Steradian(Metric::Peta), 1000000000000000.0),
-            (UnitSolidAngle::Steradian(Metric::Pico), 0.000000000001),
-            (UnitSolidAngle::Steradian(Metric::Tera), 1000000000000.0),
-            (
-                UnitSolidAngle::Steradian(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitSolidAngle::Steradian(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitSolidAngle::Steradian(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitSolidAngle::Steradian(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitSolidAngle::Steradian(Metric::Peta), 1.0e15),
+            (UnitSolidAngle::Steradian(Metric::Pico), 1.0e-12),
+            (UnitSolidAngle::Steradian(Metric::Tera), 1.0e12),
+            (UnitSolidAngle::Steradian(Metric::Yocto), 1.0e-24),
+            (UnitSolidAngle::Steradian(Metric::Yotta), 1.0e24),
+            (UnitSolidAngle::Steradian(Metric::Zepto), 1.0e-21),
+            (UnitSolidAngle::Steradian(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

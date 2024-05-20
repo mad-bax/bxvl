@@ -110,33 +110,27 @@ mod substance_testing {
         }
 
         for i in [
-            (UnitSubstance::Mole(Metric::Atto), 0.000000000000000001),
+            (UnitSubstance::Mole(Metric::Atto), 1.0e-18),
             (UnitSubstance::Mole(Metric::Centi), 0.01),
             (UnitSubstance::Mole(Metric::Deca), 10.0),
             (UnitSubstance::Mole(Metric::Deci), 0.1),
-            (UnitSubstance::Mole(Metric::Exa), 1000000000000000000.0),
-            (UnitSubstance::Mole(Metric::Femto), 0.000000000000001),
-            (UnitSubstance::Mole(Metric::Giga), 1000000000.0),
+            (UnitSubstance::Mole(Metric::Exa), 1.0e18),
+            (UnitSubstance::Mole(Metric::Femto), 1.0e-15),
+            (UnitSubstance::Mole(Metric::Giga), 1.0e9),
             (UnitSubstance::Mole(Metric::Hecto), 100.0),
-            (UnitSubstance::Mole(Metric::Kilo), 1000.0),
-            (UnitSubstance::Mole(Metric::Mega), 1000000.0),
-            (UnitSubstance::Mole(Metric::Micro), 0.000001),
+            (UnitSubstance::Mole(Metric::Kilo), 1.0e3),
+            (UnitSubstance::Mole(Metric::Mega), 1.0e6),
+            (UnitSubstance::Mole(Metric::Micro), 1.0e-6),
             (UnitSubstance::Mole(Metric::Milli), 0.001),
-            (UnitSubstance::Mole(Metric::Nano), 0.000000001),
+            (UnitSubstance::Mole(Metric::Nano), 1.0e-9),
             (UnitSubstance::Mole(Metric::None), 1.0),
-            (UnitSubstance::Mole(Metric::Peta), 1000000000000000.0),
-            (UnitSubstance::Mole(Metric::Pico), 0.000000000001),
-            (UnitSubstance::Mole(Metric::Tera), 1000000000000.0),
-            (
-                UnitSubstance::Mole(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitSubstance::Mole(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (UnitSubstance::Mole(Metric::Zepto), 0.000000000000000000001),
-            (UnitSubstance::Mole(Metric::Zetta), 1000000000000000000000.0),
+            (UnitSubstance::Mole(Metric::Peta), 1.0e15),
+            (UnitSubstance::Mole(Metric::Pico), 1.0e-12),
+            (UnitSubstance::Mole(Metric::Tera), 1.0e12),
+            (UnitSubstance::Mole(Metric::Yocto), 1.0e-24),
+            (UnitSubstance::Mole(Metric::Yotta), 1.0e24),
+            (UnitSubstance::Mole(Metric::Zepto), 1.0e-21),
+            (UnitSubstance::Mole(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

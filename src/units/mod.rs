@@ -102,6 +102,10 @@ use serde::{Deserialize, Serialize};
 /// The Metric scale names
 #[derive(Debug, PartialOrd, Eq, PartialEq, Copy, Clone, Default, Serialize, Deserialize)]
 pub enum Metric {
+    /// Quecto
+    Quecto,
+    /// Ronto
+    Ronto,
     /// Yocto
     Yocto,
     /// Zepto
@@ -145,6 +149,10 @@ pub enum Metric {
     Zetta,
     /// Yotta
     Yotta,
+    /// Ronna
+    Ronna,
+    /// Quetta
+    Quetta,
 }
 
 /// The unit types of solid angles

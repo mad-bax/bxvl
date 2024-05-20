@@ -192,63 +192,27 @@ mod equivalent_dose_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Atto),
-                0.000000000000000001,
-            ),
+            (UnitRadioactivityExposure::Sievert(Metric::Atto), 1.0e-18),
             (UnitRadioactivityExposure::Sievert(Metric::Centi), 0.01),
             (UnitRadioactivityExposure::Sievert(Metric::Deca), 10.0),
             (UnitRadioactivityExposure::Sievert(Metric::Deci), 0.1),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Exa),
-                1000000000000000000.0,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Femto),
-                0.000000000000001,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Giga),
-                1000000000.0,
-            ),
+            (UnitRadioactivityExposure::Sievert(Metric::Exa), 1.0e18),
+            (UnitRadioactivityExposure::Sievert(Metric::Femto), 1.0e-15),
+            (UnitRadioactivityExposure::Sievert(Metric::Giga), 1.0e9),
             (UnitRadioactivityExposure::Sievert(Metric::Hecto), 100.0),
-            (UnitRadioactivityExposure::Sievert(Metric::Kilo), 1000.0),
-            (UnitRadioactivityExposure::Sievert(Metric::Mega), 1000000.0),
-            (UnitRadioactivityExposure::Sievert(Metric::Micro), 0.000001),
+            (UnitRadioactivityExposure::Sievert(Metric::Kilo), 1.0e3),
+            (UnitRadioactivityExposure::Sievert(Metric::Mega), 1.0e6),
+            (UnitRadioactivityExposure::Sievert(Metric::Micro), 1.0e-6),
             (UnitRadioactivityExposure::Sievert(Metric::Milli), 0.001),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Nano),
-                0.000000001,
-            ),
+            (UnitRadioactivityExposure::Sievert(Metric::Nano), 1.0e-9),
             (UnitRadioactivityExposure::Sievert(Metric::None), 1.0),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Peta),
-                1000000000000000.0,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Pico),
-                0.000000000001,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Tera),
-                1000000000000.0,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Zepto),
-                0.000000000000000000001,
-            ),
-            (
-                UnitRadioactivityExposure::Sievert(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitRadioactivityExposure::Sievert(Metric::Peta), 1.0e15),
+            (UnitRadioactivityExposure::Sievert(Metric::Pico), 1.0e-12),
+            (UnitRadioactivityExposure::Sievert(Metric::Tera), 1.0e12),
+            (UnitRadioactivityExposure::Sievert(Metric::Yocto), 1.0e-24),
+            (UnitRadioactivityExposure::Sievert(Metric::Yotta), 1.0e24),
+            (UnitRadioactivityExposure::Sievert(Metric::Zepto), 1.0e-21),
+            (UnitRadioactivityExposure::Sievert(Metric::Zetta), 1.0e21),
             (UnitRadioactivityExposure::Rem, 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);

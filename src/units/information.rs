@@ -33,6 +33,8 @@ impl BaseUnit for UnitInformation {
     fn scale(&self) -> f64 {
         match self {
             UnitInformation::Bit(m) | UnitInformation::Byte(m) => match m {
+                Metric::Quetta => 1267650600228229401496703205376.0,
+                Metric::Ronna => 1237940039285380274899124224.0,
                 Metric::Yotta => 1208925819614629174706176.0,
                 Metric::Zetta => 1180591620717411303424.0,
                 Metric::Exa => 1152921504606846976.0,
@@ -85,6 +87,10 @@ mod information_testing {
     #[test]
     fn unit_information_to_string() {
         for i in [
+            (UnitInformation::Byte(Metric::Ronto), "rb"),
+            (UnitInformation::Byte(Metric::Ronna), "Rb"),
+            (UnitInformation::Byte(Metric::Quetta), "Qb"),
+            (UnitInformation::Byte(Metric::Quecto), "qb"),
             (UnitInformation::Byte(Metric::Atto), "ab"),
             (UnitInformation::Byte(Metric::Centi), "cb"),
             (UnitInformation::Byte(Metric::Deca), "dab"),
@@ -106,6 +112,10 @@ mod information_testing {
             (UnitInformation::Byte(Metric::Yotta), "Yb"),
             (UnitInformation::Byte(Metric::Zepto), "zb"),
             (UnitInformation::Byte(Metric::Zetta), "Zb"),
+            (UnitInformation::Bit(Metric::Ronto), "rbits"),
+            (UnitInformation::Bit(Metric::Ronna), "Rbits"),
+            (UnitInformation::Bit(Metric::Quetta), "Qbits"),
+            (UnitInformation::Bit(Metric::Quecto), "qbits"),
             (UnitInformation::Bit(Metric::Atto), "abits"),
             (UnitInformation::Bit(Metric::Centi), "cbits"),
             (UnitInformation::Bit(Metric::Deca), "dabits"),
@@ -140,6 +150,10 @@ mod information_testing {
     #[test]
     fn unit_information_scale() {
         for i in [
+            (UnitInformation::Byte(Metric::Ronto), Metric::Ronto),
+            (UnitInformation::Byte(Metric::Ronna), Metric::Ronna),
+            (UnitInformation::Byte(Metric::Quetta), Metric::Quetta),
+            (UnitInformation::Byte(Metric::Quecto), Metric::Quecto),
             (UnitInformation::Byte(Metric::Atto), Metric::Atto),
             (UnitInformation::Byte(Metric::Centi), Metric::Centi),
             (UnitInformation::Byte(Metric::Deca), Metric::Deca),
@@ -161,6 +175,10 @@ mod information_testing {
             (UnitInformation::Byte(Metric::Yotta), Metric::Yotta),
             (UnitInformation::Byte(Metric::Zepto), Metric::Zepto),
             (UnitInformation::Byte(Metric::Zetta), Metric::Zetta),
+            (UnitInformation::Bit(Metric::Ronto), Metric::Ronto),
+            (UnitInformation::Bit(Metric::Ronna), Metric::Ronna),
+            (UnitInformation::Bit(Metric::Quetta), Metric::Quetta),
+            (UnitInformation::Bit(Metric::Quecto), Metric::Quecto),
             (UnitInformation::Bit(Metric::Atto), Metric::Atto),
             (UnitInformation::Bit(Metric::Centi), Metric::Centi),
             (UnitInformation::Bit(Metric::Deca), Metric::Deca),
@@ -187,6 +205,8 @@ mod information_testing {
         }
 
         for i in [
+            (UnitInformation::Byte(Metric::Ronna), 1237940039285380274899124224.0),
+            (UnitInformation::Byte(Metric::Quetta), 1267650600228229401496703205376.0),
             (UnitInformation::Byte(Metric::Giga), 1073741824.0),
             (UnitInformation::Byte(Metric::Kilo), 1024.0),
             (UnitInformation::Byte(Metric::Mega), 1048576.0),
@@ -203,6 +223,8 @@ mod information_testing {
             ),
             (UnitInformation::Byte(Metric::Exa), 1152921504606846976.0),
             (UnitInformation::Byte(Metric::Atto), 1.0),
+            (UnitInformation::Bit(Metric::Ronna), 1237940039285380274899124224.0),
+            (UnitInformation::Bit(Metric::Quetta), 1267650600228229401496703205376.0),
             (UnitInformation::Bit(Metric::Giga), 1073741824.0),
             (UnitInformation::Bit(Metric::Kilo), 1024.0),
             (UnitInformation::Bit(Metric::Mega), 1048576.0),

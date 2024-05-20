@@ -117,36 +117,27 @@ mod frequency_testing {
         }
 
         for i in [
-            (UnitFrequency::Hertz(Metric::Atto), 0.000000000000000001),
+            (UnitFrequency::Hertz(Metric::Atto), 1.0e-18),
             (UnitFrequency::Hertz(Metric::Centi), 0.01),
             (UnitFrequency::Hertz(Metric::Deca), 10.0),
             (UnitFrequency::Hertz(Metric::Deci), 0.1),
-            (UnitFrequency::Hertz(Metric::Exa), 1000000000000000000.0),
-            (UnitFrequency::Hertz(Metric::Femto), 0.000000000000001),
-            (UnitFrequency::Hertz(Metric::Giga), 1000000000.0),
+            (UnitFrequency::Hertz(Metric::Exa), 1.0e18),
+            (UnitFrequency::Hertz(Metric::Femto), 1.0e-15),
+            (UnitFrequency::Hertz(Metric::Giga), 1.0e9),
             (UnitFrequency::Hertz(Metric::Hecto), 100.0),
-            (UnitFrequency::Hertz(Metric::Kilo), 1000.0),
-            (UnitFrequency::Hertz(Metric::Mega), 1000000.0),
-            (UnitFrequency::Hertz(Metric::Micro), 0.000001),
+            (UnitFrequency::Hertz(Metric::Kilo), 1.0e3),
+            (UnitFrequency::Hertz(Metric::Mega), 1.0e6),
+            (UnitFrequency::Hertz(Metric::Micro), 1.0e-6),
             (UnitFrequency::Hertz(Metric::Milli), 0.001),
-            (UnitFrequency::Hertz(Metric::Nano), 0.000000001),
+            (UnitFrequency::Hertz(Metric::Nano), 1.0e-9),
             (UnitFrequency::Hertz(Metric::None), 1.0),
-            (UnitFrequency::Hertz(Metric::Peta), 1000000000000000.0),
-            (UnitFrequency::Hertz(Metric::Pico), 0.000000000001),
-            (UnitFrequency::Hertz(Metric::Tera), 1000000000000.0),
-            (
-                UnitFrequency::Hertz(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitFrequency::Hertz(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (UnitFrequency::Hertz(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitFrequency::Hertz(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitFrequency::Hertz(Metric::Peta), 1.0e15),
+            (UnitFrequency::Hertz(Metric::Pico), 1.0e-12),
+            (UnitFrequency::Hertz(Metric::Tera), 1.0e12),
+            (UnitFrequency::Hertz(Metric::Yocto), 1.0e-24),
+            (UnitFrequency::Hertz(Metric::Yotta), 1.0e24),
+            (UnitFrequency::Hertz(Metric::Zepto), 1.0e-21),
+            (UnitFrequency::Hertz(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

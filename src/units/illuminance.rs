@@ -110,36 +110,27 @@ mod illuminance_testing {
         }
 
         for i in [
-            (UnitIlluminance::Lux(Metric::Atto), 0.000000000000000001),
+            (UnitIlluminance::Lux(Metric::Atto), 1.0e-18),
             (UnitIlluminance::Lux(Metric::Centi), 0.01),
             (UnitIlluminance::Lux(Metric::Deca), 10.0),
             (UnitIlluminance::Lux(Metric::Deci), 0.1),
-            (UnitIlluminance::Lux(Metric::Exa), 1000000000000000000.0),
-            (UnitIlluminance::Lux(Metric::Femto), 0.000000000000001),
-            (UnitIlluminance::Lux(Metric::Giga), 1000000000.0),
+            (UnitIlluminance::Lux(Metric::Exa), 1.0e18),
+            (UnitIlluminance::Lux(Metric::Femto), 1.0e-15),
+            (UnitIlluminance::Lux(Metric::Giga), 1.0e9),
             (UnitIlluminance::Lux(Metric::Hecto), 100.0),
-            (UnitIlluminance::Lux(Metric::Kilo), 1000.0),
-            (UnitIlluminance::Lux(Metric::Mega), 1000000.0),
-            (UnitIlluminance::Lux(Metric::Micro), 0.000001),
+            (UnitIlluminance::Lux(Metric::Kilo), 1.0e3),
+            (UnitIlluminance::Lux(Metric::Mega), 1.0e6),
+            (UnitIlluminance::Lux(Metric::Micro), 1.0e-6),
             (UnitIlluminance::Lux(Metric::Milli), 0.001),
-            (UnitIlluminance::Lux(Metric::Nano), 0.000000001),
+            (UnitIlluminance::Lux(Metric::Nano), 1.0e-9),
             (UnitIlluminance::Lux(Metric::None), 1.0),
-            (UnitIlluminance::Lux(Metric::Peta), 1000000000000000.0),
-            (UnitIlluminance::Lux(Metric::Pico), 0.000000000001),
-            (UnitIlluminance::Lux(Metric::Tera), 1000000000000.0),
-            (
-                UnitIlluminance::Lux(Metric::Yocto),
-                0.000000000000000000000001,
-            ),
-            (
-                UnitIlluminance::Lux(Metric::Yotta),
-                1000000000000000000000000.0,
-            ),
-            (UnitIlluminance::Lux(Metric::Zepto), 0.000000000000000000001),
-            (
-                UnitIlluminance::Lux(Metric::Zetta),
-                1000000000000000000000.0,
-            ),
+            (UnitIlluminance::Lux(Metric::Peta), 1.0e15),
+            (UnitIlluminance::Lux(Metric::Pico), 1.0e-12),
+            (UnitIlluminance::Lux(Metric::Tera), 1.0e12),
+            (UnitIlluminance::Lux(Metric::Yocto), 1.0e-24),
+            (UnitIlluminance::Lux(Metric::Yotta), 1.0e24),
+            (UnitIlluminance::Lux(Metric::Zepto), 1.0e-21),
+            (UnitIlluminance::Lux(Metric::Zetta), 1.0e21),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }
