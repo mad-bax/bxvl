@@ -53,6 +53,10 @@ mod power_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitPower::Watt(Metric::Ronto), "rW"),
+            (UnitPower::Watt(Metric::Ronna), "RW"),
+            (UnitPower::Watt(Metric::Quetta), "QW"),
+            (UnitPower::Watt(Metric::Quecto), "qW"),
             (UnitPower::Watt(Metric::Atto), "aW"),
             (UnitPower::Watt(Metric::Centi), "cW"),
             (UnitPower::Watt(Metric::Deca), "daW"),
@@ -84,6 +88,10 @@ mod power_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitPower::Watt(Metric::Ronto), Metric::Ronto),
+            (UnitPower::Watt(Metric::Ronna), Metric::Ronna),
+            (UnitPower::Watt(Metric::Quetta), Metric::Quetta),
+            (UnitPower::Watt(Metric::Quecto), Metric::Quecto),
             (UnitPower::Watt(Metric::Atto), Metric::Atto),
             (UnitPower::Watt(Metric::Centi), Metric::Centi),
             (UnitPower::Watt(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod power_testing {
         }
 
         for i in [
+            (UnitPower::Watt(Metric::Ronto), 1.0e-27),
+            (UnitPower::Watt(Metric::Ronna), 1.0e27),
+            (UnitPower::Watt(Metric::Quetta), 1.0e30),
+            (UnitPower::Watt(Metric::Quecto), 1.0e-30),
             (UnitPower::Watt(Metric::Atto), 1.0e-18),
             (UnitPower::Watt(Metric::Centi), 0.01),
             (UnitPower::Watt(Metric::Deca), 10.0),

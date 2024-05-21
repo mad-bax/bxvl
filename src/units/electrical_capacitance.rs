@@ -53,6 +53,10 @@ mod electrical_capacitance_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricCapacitance::Farad(Metric::Ronto), "rF"),
+            (UnitElectricCapacitance::Farad(Metric::Ronna), "RF"),
+            (UnitElectricCapacitance::Farad(Metric::Quetta), "QF"),
+            (UnitElectricCapacitance::Farad(Metric::Quecto), "qF"),
             (UnitElectricCapacitance::Farad(Metric::Atto), "aF"),
             (UnitElectricCapacitance::Farad(Metric::Centi), "cF"),
             (UnitElectricCapacitance::Farad(Metric::Deca), "daF"),
@@ -84,6 +88,10 @@ mod electrical_capacitance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricCapacitance::Farad(Metric::Ronto), Metric::Ronto),
+            (UnitElectricCapacitance::Farad(Metric::Ronna), Metric::Ronna),
+            (UnitElectricCapacitance::Farad(Metric::Quetta), Metric::Quetta),
+            (UnitElectricCapacitance::Farad(Metric::Quecto), Metric::Quecto),
             (UnitElectricCapacitance::Farad(Metric::Atto), Metric::Atto),
             (UnitElectricCapacitance::Farad(Metric::Centi), Metric::Centi),
             (UnitElectricCapacitance::Farad(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_capacitance_testing {
         }
 
         for i in [
+            (UnitElectricCapacitance::Farad(Metric::Ronto), 1.0e-27),
+            (UnitElectricCapacitance::Farad(Metric::Ronna), 1.0e27),
+            (UnitElectricCapacitance::Farad(Metric::Quetta), 1.0e30),
+            (UnitElectricCapacitance::Farad(Metric::Quecto), 1.0e-30),
             (UnitElectricCapacitance::Farad(Metric::Atto), 1.0e-18),
             (UnitElectricCapacitance::Farad(Metric::Centi), 0.01),
             (UnitElectricCapacitance::Farad(Metric::Deca), 10.0),

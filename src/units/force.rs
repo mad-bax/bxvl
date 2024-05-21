@@ -75,6 +75,10 @@ mod force_testing {
     #[test]
     fn unit_force_to_string() {
         for i in [
+            (UnitForce::Newton(Metric::Ronto), "rN"),
+            (UnitForce::Newton(Metric::Ronna), "RN"),
+            (UnitForce::Newton(Metric::Quetta), "QN"),
+            (UnitForce::Newton(Metric::Quecto), "qN"),
             (UnitForce::Newton(Metric::Atto), "aN"),
             (UnitForce::Newton(Metric::Centi), "cN"),
             (UnitForce::Newton(Metric::Deca), "daN"),
@@ -107,6 +111,10 @@ mod force_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitForce::Newton(Metric::Ronto), Metric::Ronto),
+            (UnitForce::Newton(Metric::Ronna), Metric::Ronna),
+            (UnitForce::Newton(Metric::Quetta), Metric::Quetta),
+            (UnitForce::Newton(Metric::Quecto), Metric::Quecto),
             (UnitForce::Newton(Metric::Atto), Metric::Atto),
             (UnitForce::Newton(Metric::Centi), Metric::Centi),
             (UnitForce::Newton(Metric::Deca), Metric::Deca),
@@ -133,6 +141,10 @@ mod force_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitForce::Newton(Metric::Ronto), 1.0e-27),
+            (UnitForce::Newton(Metric::Ronna), 1.0e27),
+            (UnitForce::Newton(Metric::Quetta), 1.0e30),
+            (UnitForce::Newton(Metric::Quecto), 1.0e-30),
             (UnitForce::Newton(Metric::Atto), 1.0e-18),
             (UnitForce::Newton(Metric::Centi), 0.01),
             (UnitForce::Newton(Metric::Deca), 10.0),

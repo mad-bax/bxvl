@@ -53,6 +53,10 @@ mod magnetic_flux_density_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronto), "rT"),
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronna), "RT"),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quetta), "QT"),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quecto), "qT"),
             (UnitMagneticFluxDensity::Tesla(Metric::Atto), "aT"),
             (UnitMagneticFluxDensity::Tesla(Metric::Centi), "cT"),
             (UnitMagneticFluxDensity::Tesla(Metric::Deca), "daT"),
@@ -84,6 +88,10 @@ mod magnetic_flux_density_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronto), Metric::Ronto),
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronna), Metric::Ronna),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quetta), Metric::Quetta),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quecto), Metric::Quecto),
             (UnitMagneticFluxDensity::Tesla(Metric::Atto), Metric::Atto),
             (UnitMagneticFluxDensity::Tesla(Metric::Centi), Metric::Centi),
             (UnitMagneticFluxDensity::Tesla(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod magnetic_flux_density_testing {
         }
 
         for i in [
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronto), 1.0e-27),
+            (UnitMagneticFluxDensity::Tesla(Metric::Ronna), 1.0e27),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quetta), 1.0e30),
+            (UnitMagneticFluxDensity::Tesla(Metric::Quecto), 1.0e-30),
             (UnitMagneticFluxDensity::Tesla(Metric::Atto), 1.0e-18),
             (UnitMagneticFluxDensity::Tesla(Metric::Centi), 0.01),
             (UnitMagneticFluxDensity::Tesla(Metric::Deca), 10.0),

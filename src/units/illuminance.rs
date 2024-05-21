@@ -53,6 +53,10 @@ mod illuminance_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitIlluminance::Lux(Metric::Ronto), "rlx"),
+            (UnitIlluminance::Lux(Metric::Ronna), "Rlx"),
+            (UnitIlluminance::Lux(Metric::Quetta), "Qlx"),
+            (UnitIlluminance::Lux(Metric::Quecto), "qlx"),
             (UnitIlluminance::Lux(Metric::Atto), "alx"),
             (UnitIlluminance::Lux(Metric::Centi), "clx"),
             (UnitIlluminance::Lux(Metric::Deca), "dalx"),
@@ -84,6 +88,10 @@ mod illuminance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitIlluminance::Lux(Metric::Ronto), Metric::Ronto),
+            (UnitIlluminance::Lux(Metric::Ronna), Metric::Ronna),
+            (UnitIlluminance::Lux(Metric::Quetta), Metric::Quetta),
+            (UnitIlluminance::Lux(Metric::Quecto), Metric::Quecto),
             (UnitIlluminance::Lux(Metric::Atto), Metric::Atto),
             (UnitIlluminance::Lux(Metric::Centi), Metric::Centi),
             (UnitIlluminance::Lux(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod illuminance_testing {
         }
 
         for i in [
+            (UnitIlluminance::Lux(Metric::Ronto), 1.0e-27),
+            (UnitIlluminance::Lux(Metric::Ronna), 1.0e27),
+            (UnitIlluminance::Lux(Metric::Quetta), 1.0e30),
+            (UnitIlluminance::Lux(Metric::Quecto), 1.0e-30),
             (UnitIlluminance::Lux(Metric::Atto), 1.0e-18),
             (UnitIlluminance::Lux(Metric::Centi), 0.01),
             (UnitIlluminance::Lux(Metric::Deca), 10.0),

@@ -70,6 +70,10 @@ mod mass_testing {
             (UnitMass::Grain, "gr"),
             (UnitMass::Ounce, "oz"),
             (UnitMass::Pound, "lb"),
+            (UnitMass::Gram(Metric::Ronto), "rg"),
+            (UnitMass::Gram(Metric::Ronna), "Rg"),
+            (UnitMass::Gram(Metric::Quetta), "Qg"),
+            (UnitMass::Gram(Metric::Quecto), "qg"),
             (UnitMass::Gram(Metric::Atto), "ag"),
             (UnitMass::Gram(Metric::Centi), "cg"),
             (UnitMass::Gram(Metric::Deca), "dag"),
@@ -101,6 +105,10 @@ mod mass_testing {
     #[test]
     fn unit_mass_get_metric() {
         for i in [
+            (UnitMass::Gram(Metric::Ronto), Metric::Ronto),
+            (UnitMass::Gram(Metric::Ronna), Metric::Ronna),
+            (UnitMass::Gram(Metric::Quetta), Metric::Quetta),
+            (UnitMass::Gram(Metric::Quecto), Metric::Quecto),
             (UnitMass::Gram(Metric::Atto), Metric::Atto),
             (UnitMass::Gram(Metric::Centi), Metric::Centi),
             (UnitMass::Gram(Metric::Deca), Metric::Deca),
@@ -122,6 +130,9 @@ mod mass_testing {
             (UnitMass::Gram(Metric::Yotta), Metric::Yotta),
             (UnitMass::Gram(Metric::Zepto), Metric::Zepto),
             (UnitMass::Gram(Metric::Zetta), Metric::Zetta),
+            (UnitMass::Grain, Metric::None),
+            (UnitMass::Ounce, Metric::None),
+            (UnitMass::Pound, Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
@@ -138,6 +149,10 @@ mod mass_testing {
     #[test]
     fn unit_mass_metric_scale() {
         for i in [
+            (UnitMass::Gram(Metric::Ronto), 1.0e-27),
+            (UnitMass::Gram(Metric::Ronna), 1.0e27),
+            (UnitMass::Gram(Metric::Quetta), 1.0e30),
+            (UnitMass::Gram(Metric::Quecto), 1.0e-30),
             (UnitMass::Gram(Metric::Atto), 1.0e-18),
             (UnitMass::Gram(Metric::Centi), 0.01),
             (UnitMass::Gram(Metric::Deca), 10.0),
@@ -159,6 +174,9 @@ mod mass_testing {
             (UnitMass::Gram(Metric::Yotta), 1.0e24),
             (UnitMass::Gram(Metric::Zepto), 1.0e-21),
             (UnitMass::Gram(Metric::Zetta), 1.0e21),
+            (UnitMass::Grain, 1.0),
+            (UnitMass::Ounce, 1.0),
+            (UnitMass::Pound, 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }

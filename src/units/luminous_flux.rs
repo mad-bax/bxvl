@@ -53,6 +53,10 @@ mod luminous_flux_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitLuminousFlux::Lumen(Metric::Ronto), "rlm"),
+            (UnitLuminousFlux::Lumen(Metric::Ronna), "Rlm"),
+            (UnitLuminousFlux::Lumen(Metric::Quetta), "Qlm"),
+            (UnitLuminousFlux::Lumen(Metric::Quecto), "qlm"),
             (UnitLuminousFlux::Lumen(Metric::Atto), "alm"),
             (UnitLuminousFlux::Lumen(Metric::Centi), "clm"),
             (UnitLuminousFlux::Lumen(Metric::Deca), "dalm"),
@@ -84,6 +88,10 @@ mod luminous_flux_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitLuminousFlux::Lumen(Metric::Ronto), Metric::Ronto),
+            (UnitLuminousFlux::Lumen(Metric::Ronna), Metric::Ronna),
+            (UnitLuminousFlux::Lumen(Metric::Quetta), Metric::Quetta),
+            (UnitLuminousFlux::Lumen(Metric::Quecto), Metric::Quecto),
             (UnitLuminousFlux::Lumen(Metric::Atto), Metric::Atto),
             (UnitLuminousFlux::Lumen(Metric::Centi), Metric::Centi),
             (UnitLuminousFlux::Lumen(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod luminous_flux_testing {
         }
 
         for i in [
+            (UnitLuminousFlux::Lumen(Metric::Ronto), 1.0e-27),
+            (UnitLuminousFlux::Lumen(Metric::Ronna), 1.0e27),
+            (UnitLuminousFlux::Lumen(Metric::Quetta), 1.0e30),
+            (UnitLuminousFlux::Lumen(Metric::Quecto), 1.0e-30),
             (UnitLuminousFlux::Lumen(Metric::Atto), 1.0e-18),
             (UnitLuminousFlux::Lumen(Metric::Centi), 0.01),
             (UnitLuminousFlux::Lumen(Metric::Deca), 10.0),

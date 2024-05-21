@@ -99,6 +99,10 @@ mod pressure_testing {
     #[test]
     fn unit_length_to_string() {
         for i in [
+            (UnitPressure::Bar(Metric::Ronto), "rbar"),
+            (UnitPressure::Bar(Metric::Ronna), "Rbar"),
+            (UnitPressure::Bar(Metric::Quetta), "Qbar"),
+            (UnitPressure::Bar(Metric::Quecto), "qbar"),
             (UnitPressure::Bar(Metric::Atto), "abar"),
             (UnitPressure::Bar(Metric::Centi), "cbar"),
             (UnitPressure::Bar(Metric::Deca), "dabar"),
@@ -120,6 +124,10 @@ mod pressure_testing {
             (UnitPressure::Bar(Metric::Yotta), "Ybar"),
             (UnitPressure::Bar(Metric::Zepto), "zbar"),
             (UnitPressure::Bar(Metric::Zetta), "Zbar"),
+            (UnitPressure::Pascal(Metric::Ronto), "rPa"),
+            (UnitPressure::Pascal(Metric::Ronna), "RPa"),
+            (UnitPressure::Pascal(Metric::Quetta), "QPa"),
+            (UnitPressure::Pascal(Metric::Quecto), "qPa"),
             (UnitPressure::Pascal(Metric::Atto), "aPa"),
             (UnitPressure::Pascal(Metric::Centi), "cPa"),
             (UnitPressure::Pascal(Metric::Deca), "daPa"),
@@ -156,6 +164,10 @@ mod pressure_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
+            (UnitPressure::Bar(Metric::Quecto), Metric::Quecto),
+            (UnitPressure::Bar(Metric::Quetta), Metric::Quetta),
+            (UnitPressure::Bar(Metric::Ronto), Metric::Ronto),
+            (UnitPressure::Bar(Metric::Ronna), Metric::Ronna),
             (UnitPressure::Bar(Metric::Atto), Metric::Atto),
             (UnitPressure::Bar(Metric::Centi), Metric::Centi),
             (UnitPressure::Bar(Metric::Deca), Metric::Deca),
@@ -177,6 +189,10 @@ mod pressure_testing {
             (UnitPressure::Bar(Metric::Yotta), Metric::Yotta),
             (UnitPressure::Bar(Metric::Zepto), Metric::Zepto),
             (UnitPressure::Bar(Metric::Zetta), Metric::Zetta),
+            (UnitPressure::Pascal(Metric::Quecto), Metric::Quecto),
+            (UnitPressure::Pascal(Metric::Quetta), Metric::Quetta),
+            (UnitPressure::Pascal(Metric::Ronto), Metric::Ronto),
+            (UnitPressure::Pascal(Metric::Ronna), Metric::Ronna),
             (UnitPressure::Pascal(Metric::Atto), Metric::Atto),
             (UnitPressure::Pascal(Metric::Centi), Metric::Centi),
             (UnitPressure::Pascal(Metric::Deca), Metric::Deca),
@@ -207,6 +223,10 @@ mod pressure_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitPressure::Bar(Metric::Ronna), 1.0e27),
+            (UnitPressure::Bar(Metric::Ronto), 1.0e-27),
+            (UnitPressure::Bar(Metric::Quecto), 1.0e-30),
+            (UnitPressure::Bar(Metric::Quetta), 1.0e30),
             (UnitPressure::Bar(Metric::Atto), 1.0e-18),
             (UnitPressure::Bar(Metric::Centi), 0.01),
             (UnitPressure::Bar(Metric::Deca), 10.0),
@@ -228,6 +248,10 @@ mod pressure_testing {
             (UnitPressure::Bar(Metric::Yotta), 1.0e24),
             (UnitPressure::Bar(Metric::Zepto), 1.0e-21),
             (UnitPressure::Bar(Metric::Zetta), 1.0e21),
+            (UnitPressure::Pascal(Metric::Ronna), 1.0e27),
+            (UnitPressure::Pascal(Metric::Ronto), 1.0e-27),
+            (UnitPressure::Pascal(Metric::Quecto), 1.0e-30),
+            (UnitPressure::Pascal(Metric::Quetta), 1.0e30),
             (UnitPressure::Pascal(Metric::Atto), 1.0e-18),
             (UnitPressure::Pascal(Metric::Centi), 0.01),
             (UnitPressure::Pascal(Metric::Deca), 10.0),

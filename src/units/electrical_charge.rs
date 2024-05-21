@@ -53,6 +53,10 @@ mod electrical_charge_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricCharge::Coulomb(Metric::Ronto), "rC"),
+            (UnitElectricCharge::Coulomb(Metric::Ronna), "RC"),
+            (UnitElectricCharge::Coulomb(Metric::Quetta), "QC"),
+            (UnitElectricCharge::Coulomb(Metric::Quecto), "qC"),
             (UnitElectricCharge::Coulomb(Metric::Atto), "aC"),
             (UnitElectricCharge::Coulomb(Metric::Centi), "cC"),
             (UnitElectricCharge::Coulomb(Metric::Deca), "daC"),
@@ -84,6 +88,10 @@ mod electrical_charge_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricCharge::Coulomb(Metric::Ronto), Metric::Ronto),
+            (UnitElectricCharge::Coulomb(Metric::Ronna), Metric::Ronna),
+            (UnitElectricCharge::Coulomb(Metric::Quetta), Metric::Quetta),
+            (UnitElectricCharge::Coulomb(Metric::Quecto), Metric::Quecto),
             (UnitElectricCharge::Coulomb(Metric::Atto), Metric::Atto),
             (UnitElectricCharge::Coulomb(Metric::Centi), Metric::Centi),
             (UnitElectricCharge::Coulomb(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_charge_testing {
         }
 
         for i in [
+            (UnitElectricCharge::Coulomb(Metric::Ronto), 1.0e-27),
+            (UnitElectricCharge::Coulomb(Metric::Ronna), 1.0e27),
+            (UnitElectricCharge::Coulomb(Metric::Quetta), 1.0e30),
+            (UnitElectricCharge::Coulomb(Metric::Quecto), 1.0e-30),
             (UnitElectricCharge::Coulomb(Metric::Atto), 1.0e-18),
             (UnitElectricCharge::Coulomb(Metric::Centi), 0.01),
             (UnitElectricCharge::Coulomb(Metric::Deca), 10.0),

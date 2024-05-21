@@ -53,6 +53,10 @@ mod electrical_resistance_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricResistance::Ohm(Metric::Ronto), "rΩ"),
+            (UnitElectricResistance::Ohm(Metric::Ronna), "RΩ"),
+            (UnitElectricResistance::Ohm(Metric::Quetta), "QΩ"),
+            (UnitElectricResistance::Ohm(Metric::Quecto), "qΩ"),
             (UnitElectricResistance::Ohm(Metric::Atto), "aΩ"),
             (UnitElectricResistance::Ohm(Metric::Centi), "cΩ"),
             (UnitElectricResistance::Ohm(Metric::Deca), "daΩ"),
@@ -84,6 +88,10 @@ mod electrical_resistance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricResistance::Ohm(Metric::Ronto), Metric::Ronto),
+            (UnitElectricResistance::Ohm(Metric::Ronna), Metric::Ronna),
+            (UnitElectricResistance::Ohm(Metric::Quetta), Metric::Quetta),
+            (UnitElectricResistance::Ohm(Metric::Quecto), Metric::Quecto),
             (UnitElectricResistance::Ohm(Metric::Atto), Metric::Atto),
             (UnitElectricResistance::Ohm(Metric::Centi), Metric::Centi),
             (UnitElectricResistance::Ohm(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_resistance_testing {
         }
 
         for i in [
+            (UnitElectricResistance::Ohm(Metric::Ronto), 1.0e-27),
+            (UnitElectricResistance::Ohm(Metric::Ronna), 1.0e27),
+            (UnitElectricResistance::Ohm(Metric::Quetta), 1.0e30),
+            (UnitElectricResistance::Ohm(Metric::Quecto), 1.0e-30),
             (UnitElectricResistance::Ohm(Metric::Atto), 1.0e-18),
             (UnitElectricResistance::Ohm(Metric::Centi), 0.01),
             (UnitElectricResistance::Ohm(Metric::Deca), 10.0),

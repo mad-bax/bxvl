@@ -53,6 +53,10 @@ mod magnetic_flux_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitMagneticFlux::Weber(Metric::Ronto), "rWb"),
+            (UnitMagneticFlux::Weber(Metric::Ronna), "RWb"),
+            (UnitMagneticFlux::Weber(Metric::Quetta), "QWb"),
+            (UnitMagneticFlux::Weber(Metric::Quecto), "qWb"),
             (UnitMagneticFlux::Weber(Metric::Atto), "aWb"),
             (UnitMagneticFlux::Weber(Metric::Centi), "cWb"),
             (UnitMagneticFlux::Weber(Metric::Deca), "daWb"),
@@ -84,6 +88,10 @@ mod magnetic_flux_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitMagneticFlux::Weber(Metric::Ronto), Metric::Ronto),
+            (UnitMagneticFlux::Weber(Metric::Ronna), Metric::Ronna),
+            (UnitMagneticFlux::Weber(Metric::Quetta), Metric::Quetta),
+            (UnitMagneticFlux::Weber(Metric::Quecto), Metric::Quecto),
             (UnitMagneticFlux::Weber(Metric::Atto), Metric::Atto),
             (UnitMagneticFlux::Weber(Metric::Centi), Metric::Centi),
             (UnitMagneticFlux::Weber(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod magnetic_flux_testing {
         }
 
         for i in [
+            (UnitMagneticFlux::Weber(Metric::Ronto), 1.0e-27),
+            (UnitMagneticFlux::Weber(Metric::Ronna), 1.0e27),
+            (UnitMagneticFlux::Weber(Metric::Quetta), 1.0e30),
+            (UnitMagneticFlux::Weber(Metric::Quecto), 1.0e-30),
             (UnitMagneticFlux::Weber(Metric::Atto), 1.0e-18),
             (UnitMagneticFlux::Weber(Metric::Centi), 0.01),
             (UnitMagneticFlux::Weber(Metric::Deca), 10.0),

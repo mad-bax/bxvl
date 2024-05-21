@@ -53,6 +53,10 @@ mod catalytic_activity_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitCatalyticActivity::Katal(Metric::Ronto), "rkat"),
+            (UnitCatalyticActivity::Katal(Metric::Ronna), "Rkat"),
+            (UnitCatalyticActivity::Katal(Metric::Quetta), "Qkat"),
+            (UnitCatalyticActivity::Katal(Metric::Quecto), "qkat"),
             (UnitCatalyticActivity::Katal(Metric::Atto), "akat"),
             (UnitCatalyticActivity::Katal(Metric::Centi), "ckat"),
             (UnitCatalyticActivity::Katal(Metric::Deca), "dakat"),
@@ -84,6 +88,10 @@ mod catalytic_activity_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitCatalyticActivity::Katal(Metric::Ronto), Metric::Ronto),
+            (UnitCatalyticActivity::Katal(Metric::Ronna), Metric::Ronna),
+            (UnitCatalyticActivity::Katal(Metric::Quetta), Metric::Quetta),
+            (UnitCatalyticActivity::Katal(Metric::Quecto), Metric::Quecto),
             (UnitCatalyticActivity::Katal(Metric::Atto), Metric::Atto),
             (UnitCatalyticActivity::Katal(Metric::Centi), Metric::Centi),
             (UnitCatalyticActivity::Katal(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod catalytic_activity_testing {
         }
 
         for i in [
+            (UnitCatalyticActivity::Katal(Metric::Ronto), 1.0e-27),
+            (UnitCatalyticActivity::Katal(Metric::Ronna), 1.0e27),
+            (UnitCatalyticActivity::Katal(Metric::Quecto), 1.0e-30),
+            (UnitCatalyticActivity::Katal(Metric::Quetta), 1.0e30),
             (UnitCatalyticActivity::Katal(Metric::Atto), 1.0e-18),
             (UnitCatalyticActivity::Katal(Metric::Centi), 0.01),
             (UnitCatalyticActivity::Katal(Metric::Deca), 10.0),

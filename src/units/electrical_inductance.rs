@@ -53,6 +53,10 @@ mod electrical_inductance_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricInductance::Henry(Metric::Ronto), "rH"),
+            (UnitElectricInductance::Henry(Metric::Ronna), "RH"),
+            (UnitElectricInductance::Henry(Metric::Quetta), "QH"),
+            (UnitElectricInductance::Henry(Metric::Quecto), "qH"),
             (UnitElectricInductance::Henry(Metric::Atto), "aH"),
             (UnitElectricInductance::Henry(Metric::Centi), "cH"),
             (UnitElectricInductance::Henry(Metric::Deca), "daH"),
@@ -84,6 +88,10 @@ mod electrical_inductance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricInductance::Henry(Metric::Ronto), Metric::Ronto),
+            (UnitElectricInductance::Henry(Metric::Ronna), Metric::Ronna),
+            (UnitElectricInductance::Henry(Metric::Quetta), Metric::Quetta),
+            (UnitElectricInductance::Henry(Metric::Quecto), Metric::Quecto),
             (UnitElectricInductance::Henry(Metric::Atto), Metric::Atto),
             (UnitElectricInductance::Henry(Metric::Centi), Metric::Centi),
             (UnitElectricInductance::Henry(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_inductance_testing {
         }
 
         for i in [
+            (UnitElectricInductance::Henry(Metric::Ronto), 1.0e-27),
+            (UnitElectricInductance::Henry(Metric::Ronna), 1.0e27),
+            (UnitElectricInductance::Henry(Metric::Quetta), 1.0e30),
+            (UnitElectricInductance::Henry(Metric::Quecto), 1.0e-30),
             (UnitElectricInductance::Henry(Metric::Atto), 1.0e-18),
             (UnitElectricInductance::Henry(Metric::Centi), 0.01),
             (UnitElectricInductance::Henry(Metric::Deca), 10.0),

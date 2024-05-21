@@ -53,6 +53,10 @@ mod luminous_intensity_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitLuminousIntensity::Candela(Metric::Ronto), "rcd"),
+            (UnitLuminousIntensity::Candela(Metric::Ronna), "Rcd"),
+            (UnitLuminousIntensity::Candela(Metric::Quetta), "Qcd"),
+            (UnitLuminousIntensity::Candela(Metric::Quecto), "qcd"),
             (UnitLuminousIntensity::Candela(Metric::Atto), "acd"),
             (UnitLuminousIntensity::Candela(Metric::Centi), "ccd"),
             (UnitLuminousIntensity::Candela(Metric::Deca), "dacd"),
@@ -84,6 +88,10 @@ mod luminous_intensity_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitLuminousIntensity::Candela(Metric::Ronto), Metric::Ronto),
+            (UnitLuminousIntensity::Candela(Metric::Ronna), Metric::Ronna),
+            (UnitLuminousIntensity::Candela(Metric::Quetta), Metric::Quetta),
+            (UnitLuminousIntensity::Candela(Metric::Quecto), Metric::Quecto),
             (UnitLuminousIntensity::Candela(Metric::Atto), Metric::Atto),
             (UnitLuminousIntensity::Candela(Metric::Centi), Metric::Centi),
             (UnitLuminousIntensity::Candela(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod luminous_intensity_testing {
         }
 
         for i in [
+            (UnitLuminousIntensity::Candela(Metric::Ronto), 1.0e-27),
+            (UnitLuminousIntensity::Candela(Metric::Ronna), 1.0e27),
+            (UnitLuminousIntensity::Candela(Metric::Quetta), 1.0e30),
+            (UnitLuminousIntensity::Candela(Metric::Quecto), 1.0e-30),
             (UnitLuminousIntensity::Candela(Metric::Atto), 1.0e-18),
             (UnitLuminousIntensity::Candela(Metric::Centi), 0.01),
             (UnitLuminousIntensity::Candela(Metric::Deca), 10.0),

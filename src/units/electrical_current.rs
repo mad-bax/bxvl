@@ -53,6 +53,10 @@ mod electrical_current_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricCurrent::Ampere(Metric::Ronna), "RA"),
+            (UnitElectricCurrent::Ampere(Metric::Ronto), "rA"),
+            (UnitElectricCurrent::Ampere(Metric::Quetta), "QA"),
+            (UnitElectricCurrent::Ampere(Metric::Quecto), "qA"),
             (UnitElectricCurrent::Ampere(Metric::Atto), "aA"),
             (UnitElectricCurrent::Ampere(Metric::Centi), "cA"),
             (UnitElectricCurrent::Ampere(Metric::Deca), "daA"),
@@ -84,6 +88,10 @@ mod electrical_current_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricCurrent::Ampere(Metric::Ronto), Metric::Ronto),
+            (UnitElectricCurrent::Ampere(Metric::Ronna), Metric::Ronna),
+            (UnitElectricCurrent::Ampere(Metric::Quetta), Metric::Quetta),
+            (UnitElectricCurrent::Ampere(Metric::Quecto), Metric::Quecto),
             (UnitElectricCurrent::Ampere(Metric::Atto), Metric::Atto),
             (UnitElectricCurrent::Ampere(Metric::Centi), Metric::Centi),
             (UnitElectricCurrent::Ampere(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_current_testing {
         }
 
         for i in [
+            (UnitElectricCurrent::Ampere(Metric::Ronto), 1.0e-27),
+            (UnitElectricCurrent::Ampere(Metric::Ronna), 1.0e27),
+            (UnitElectricCurrent::Ampere(Metric::Quetta), 1.0e30),
+            (UnitElectricCurrent::Ampere(Metric::Quecto), 1.0e-30),
             (UnitElectricCurrent::Ampere(Metric::Atto), 1.0e-18),
             (UnitElectricCurrent::Ampere(Metric::Centi), 0.01),
             (UnitElectricCurrent::Ampere(Metric::Deca), 10.0),

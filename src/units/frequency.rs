@@ -60,6 +60,10 @@ mod frequency_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitFrequency::Hertz(Metric::Ronto), "rHz"),
+            (UnitFrequency::Hertz(Metric::Ronna), "RHz"),
+            (UnitFrequency::Hertz(Metric::Quetta), "QHz"),
+            (UnitFrequency::Hertz(Metric::Quecto), "qHz"),
             (UnitFrequency::Hertz(Metric::Atto), "aHz"),
             (UnitFrequency::Hertz(Metric::Centi), "cHz"),
             (UnitFrequency::Hertz(Metric::Deca), "daHz"),
@@ -91,6 +95,10 @@ mod frequency_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitFrequency::Hertz(Metric::Ronto), Metric::Ronto),
+            (UnitFrequency::Hertz(Metric::Ronna), Metric::Ronna),
+            (UnitFrequency::Hertz(Metric::Quetta), Metric::Quetta),
+            (UnitFrequency::Hertz(Metric::Quecto), Metric::Quecto),
             (UnitFrequency::Hertz(Metric::Atto), Metric::Atto),
             (UnitFrequency::Hertz(Metric::Centi), Metric::Centi),
             (UnitFrequency::Hertz(Metric::Deca), Metric::Deca),
@@ -117,6 +125,10 @@ mod frequency_testing {
         }
 
         for i in [
+            (UnitFrequency::Hertz(Metric::Ronto), 1.0e-27),
+            (UnitFrequency::Hertz(Metric::Ronna), 1.0e27),
+            (UnitFrequency::Hertz(Metric::Quetta), 1.0e30),
+            (UnitFrequency::Hertz(Metric::Quecto), 1.0e-30),
             (UnitFrequency::Hertz(Metric::Atto), 1.0e-18),
             (UnitFrequency::Hertz(Metric::Centi), 0.01),
             (UnitFrequency::Hertz(Metric::Deca), 10.0),

@@ -53,6 +53,10 @@ mod electrical_potential_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitElectricPotential::Volt(Metric::Ronto), "rV"),
+            (UnitElectricPotential::Volt(Metric::Ronna), "RV"),
+            (UnitElectricPotential::Volt(Metric::Quetta), "QV"),
+            (UnitElectricPotential::Volt(Metric::Quecto), "qV"),
             (UnitElectricPotential::Volt(Metric::Atto), "aV"),
             (UnitElectricPotential::Volt(Metric::Centi), "cV"),
             (UnitElectricPotential::Volt(Metric::Deca), "daV"),
@@ -84,6 +88,10 @@ mod electrical_potential_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitElectricPotential::Volt(Metric::Ronto), Metric::Ronto),
+            (UnitElectricPotential::Volt(Metric::Ronna), Metric::Ronna),
+            (UnitElectricPotential::Volt(Metric::Quetta), Metric::Quetta),
+            (UnitElectricPotential::Volt(Metric::Quecto), Metric::Quecto),
             (UnitElectricPotential::Volt(Metric::Atto), Metric::Atto),
             (UnitElectricPotential::Volt(Metric::Centi), Metric::Centi),
             (UnitElectricPotential::Volt(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod electrical_potential_testing {
         }
 
         for i in [
+            (UnitElectricPotential::Volt(Metric::Ronto), 1.0e-27),
+            (UnitElectricPotential::Volt(Metric::Ronna), 1.0e27),
+            (UnitElectricPotential::Volt(Metric::Quetta), 1.0e30),
+            (UnitElectricPotential::Volt(Metric::Quecto), 1.0e-30),
             (UnitElectricPotential::Volt(Metric::Atto), 1.0e-18),
             (UnitElectricPotential::Volt(Metric::Centi), 0.01),
             (UnitElectricPotential::Volt(Metric::Deca), 10.0),
