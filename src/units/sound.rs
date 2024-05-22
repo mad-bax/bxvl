@@ -53,6 +53,10 @@ mod sound_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitSound::Bel(Metric::Ronto), "rB"),
+            (UnitSound::Bel(Metric::Ronna), "RB"),
+            (UnitSound::Bel(Metric::Quetta), "QB"),
+            (UnitSound::Bel(Metric::Quecto), "qB"),
             (UnitSound::Bel(Metric::Atto), "aB"),
             (UnitSound::Bel(Metric::Centi), "cB"),
             (UnitSound::Bel(Metric::Deca), "daB"),
@@ -84,6 +88,10 @@ mod sound_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitSound::Bel(Metric::Ronto), Metric::Ronto),
+            (UnitSound::Bel(Metric::Ronna), Metric::Ronna),
+            (UnitSound::Bel(Metric::Quetta), Metric::Quetta),
+            (UnitSound::Bel(Metric::Quecto), Metric::Quecto),
             (UnitSound::Bel(Metric::Atto), Metric::Atto),
             (UnitSound::Bel(Metric::Centi), Metric::Centi),
             (UnitSound::Bel(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod sound_testing {
         }
 
         for i in [
+            (UnitSound::Bel(Metric::Ronto), 1.0e-27),
+            (UnitSound::Bel(Metric::Ronna), 1.0e27),
+            (UnitSound::Bel(Metric::Quetta), 1.0e30),
+            (UnitSound::Bel(Metric::Quecto), 1.0e-30),
             (UnitSound::Bel(Metric::Atto), 1.0e-18),
             (UnitSound::Bel(Metric::Centi), 0.01),
             (UnitSound::Bel(Metric::Deca), 10.0),

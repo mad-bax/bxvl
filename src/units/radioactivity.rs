@@ -74,6 +74,10 @@ mod radioactivity_testing {
     #[test]
     fn unit_length_to_string() {
         for i in [
+            (UnitRadioactivity::Becquerel(Metric::Ronto), "rBq"),
+            (UnitRadioactivity::Becquerel(Metric::Ronna), "RBq"),
+            (UnitRadioactivity::Becquerel(Metric::Quetta), "QBq"),
+            (UnitRadioactivity::Becquerel(Metric::Quecto), "qBq"),
             (UnitRadioactivity::Becquerel(Metric::Atto), "aBq"),
             (UnitRadioactivity::Becquerel(Metric::Centi), "cBq"),
             (UnitRadioactivity::Becquerel(Metric::Deca), "daBq"),
@@ -106,6 +110,10 @@ mod radioactivity_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
+            (UnitRadioactivity::Becquerel(Metric::Ronto), Metric::Ronto),
+            (UnitRadioactivity::Becquerel(Metric::Ronna), Metric::Ronna),
+            (UnitRadioactivity::Becquerel(Metric::Quetta), Metric::Quetta),
+            (UnitRadioactivity::Becquerel(Metric::Quecto), Metric::Quecto),
             (UnitRadioactivity::Becquerel(Metric::Atto), Metric::Atto),
             (UnitRadioactivity::Becquerel(Metric::Centi), Metric::Centi),
             (UnitRadioactivity::Becquerel(Metric::Deca), Metric::Deca),
@@ -132,6 +140,10 @@ mod radioactivity_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitRadioactivity::Becquerel(Metric::Ronto), 1.0e-27),
+            (UnitRadioactivity::Becquerel(Metric::Ronna), 1.0e27),
+            (UnitRadioactivity::Becquerel(Metric::Quetta), 1.0e30),
+            (UnitRadioactivity::Becquerel(Metric::Quecto), 1.0e-30),
             (UnitRadioactivity::Becquerel(Metric::Atto), 1.0e-18),
             (UnitRadioactivity::Becquerel(Metric::Centi), 0.01),
             (UnitRadioactivity::Becquerel(Metric::Deca), 10.0),

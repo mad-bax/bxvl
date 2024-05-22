@@ -90,8 +90,14 @@ mod electrical_capacitance_testing {
         for i in [
             (UnitElectricCapacitance::Farad(Metric::Ronto), Metric::Ronto),
             (UnitElectricCapacitance::Farad(Metric::Ronna), Metric::Ronna),
-            (UnitElectricCapacitance::Farad(Metric::Quetta), Metric::Quetta),
-            (UnitElectricCapacitance::Farad(Metric::Quecto), Metric::Quecto),
+            (
+                UnitElectricCapacitance::Farad(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitElectricCapacitance::Farad(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (UnitElectricCapacitance::Farad(Metric::Atto), Metric::Atto),
             (UnitElectricCapacitance::Farad(Metric::Centi), Metric::Centi),
             (UnitElectricCapacitance::Farad(Metric::Deca), Metric::Deca),

@@ -53,6 +53,10 @@ mod substance_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitSubstance::Mole(Metric::Ronto), "rmol"),
+            (UnitSubstance::Mole(Metric::Ronna), "Rmol"),
+            (UnitSubstance::Mole(Metric::Quetta), "Qmol"),
+            (UnitSubstance::Mole(Metric::Quecto), "qmol"),
             (UnitSubstance::Mole(Metric::Atto), "amol"),
             (UnitSubstance::Mole(Metric::Centi), "cmol"),
             (UnitSubstance::Mole(Metric::Deca), "damol"),
@@ -84,6 +88,10 @@ mod substance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitSubstance::Mole(Metric::Ronto), Metric::Ronto),
+            (UnitSubstance::Mole(Metric::Ronna), Metric::Ronna),
+            (UnitSubstance::Mole(Metric::Quetta), Metric::Quetta),
+            (UnitSubstance::Mole(Metric::Quecto), Metric::Quecto),
             (UnitSubstance::Mole(Metric::Atto), Metric::Atto),
             (UnitSubstance::Mole(Metric::Centi), Metric::Centi),
             (UnitSubstance::Mole(Metric::Deca), Metric::Deca),
@@ -110,6 +118,10 @@ mod substance_testing {
         }
 
         for i in [
+            (UnitSubstance::Mole(Metric::Ronto), 1.0e-27),
+            (UnitSubstance::Mole(Metric::Ronna), 1.0e27),
+            (UnitSubstance::Mole(Metric::Quetta), 1.0e30),
+            (UnitSubstance::Mole(Metric::Quecto), 1.0e-30),
             (UnitSubstance::Mole(Metric::Atto), 1.0e-18),
             (UnitSubstance::Mole(Metric::Centi), 0.01),
             (UnitSubstance::Mole(Metric::Deca), 10.0),

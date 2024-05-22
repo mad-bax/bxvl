@@ -90,8 +90,14 @@ mod luminous_intensity_testing {
         for i in [
             (UnitLuminousIntensity::Candela(Metric::Ronto), Metric::Ronto),
             (UnitLuminousIntensity::Candela(Metric::Ronna), Metric::Ronna),
-            (UnitLuminousIntensity::Candela(Metric::Quetta), Metric::Quetta),
-            (UnitLuminousIntensity::Candela(Metric::Quecto), Metric::Quecto),
+            (
+                UnitLuminousIntensity::Candela(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitLuminousIntensity::Candela(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (UnitLuminousIntensity::Candela(Metric::Atto), Metric::Atto),
             (UnitLuminousIntensity::Candela(Metric::Centi), Metric::Centi),
             (UnitLuminousIntensity::Candela(Metric::Deca), Metric::Deca),

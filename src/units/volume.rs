@@ -67,6 +67,10 @@ mod volume_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitVolume::Liter(Metric::Ronto), "rl"),
+            (UnitVolume::Liter(Metric::Ronna), "Rl"),
+            (UnitVolume::Liter(Metric::Quetta), "Ql"),
+            (UnitVolume::Liter(Metric::Quecto), "ql"),
             (UnitVolume::Liter(Metric::Atto), "al"),
             (UnitVolume::Liter(Metric::Centi), "cl"),
             (UnitVolume::Liter(Metric::Deca), "dal"),
@@ -98,6 +102,10 @@ mod volume_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitVolume::Liter(Metric::Ronto), Metric::Ronto),
+            (UnitVolume::Liter(Metric::Ronna), Metric::Ronna),
+            (UnitVolume::Liter(Metric::Quetta), Metric::Quetta),
+            (UnitVolume::Liter(Metric::Quecto), Metric::Quecto),
             (UnitVolume::Liter(Metric::Atto), Metric::Atto),
             (UnitVolume::Liter(Metric::Centi), Metric::Centi),
             (UnitVolume::Liter(Metric::Deca), Metric::Deca),
@@ -124,6 +132,10 @@ mod volume_testing {
         }
 
         for i in [
+            (UnitVolume::Liter(Metric::Ronto), 1.0e-27),
+            (UnitVolume::Liter(Metric::Ronna), 1.0e27),
+            (UnitVolume::Liter(Metric::Quetta), 1.0e30),
+            (UnitVolume::Liter(Metric::Quecto), 1.0e-30),
             (UnitVolume::Liter(Metric::Atto), 1.0e-18),
             (UnitVolume::Liter(Metric::Centi), 0.01),
             (UnitVolume::Liter(Metric::Deca), 10.0),

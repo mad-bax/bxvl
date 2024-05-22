@@ -88,10 +88,22 @@ mod electrical_conductance_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
-            (UnitElectricConductance::Siemens(Metric::Ronto), Metric::Ronto),
-            (UnitElectricConductance::Siemens(Metric::Ronna), Metric::Ronna),
-            (UnitElectricConductance::Siemens(Metric::Quetta), Metric::Quetta),
-            (UnitElectricConductance::Siemens(Metric::Quecto), Metric::Quecto),
+            (
+                UnitElectricConductance::Siemens(Metric::Ronto),
+                Metric::Ronto,
+            ),
+            (
+                UnitElectricConductance::Siemens(Metric::Ronna),
+                Metric::Ronna,
+            ),
+            (
+                UnitElectricConductance::Siemens(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitElectricConductance::Siemens(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (UnitElectricConductance::Siemens(Metric::Atto), Metric::Atto),
             (
                 UnitElectricConductance::Siemens(Metric::Centi),

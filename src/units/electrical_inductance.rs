@@ -90,8 +90,14 @@ mod electrical_inductance_testing {
         for i in [
             (UnitElectricInductance::Henry(Metric::Ronto), Metric::Ronto),
             (UnitElectricInductance::Henry(Metric::Ronna), Metric::Ronna),
-            (UnitElectricInductance::Henry(Metric::Quetta), Metric::Quetta),
-            (UnitElectricInductance::Henry(Metric::Quecto), Metric::Quecto),
+            (
+                UnitElectricInductance::Henry(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitElectricInductance::Henry(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (UnitElectricInductance::Henry(Metric::Atto), Metric::Atto),
             (UnitElectricInductance::Henry(Metric::Centi), Metric::Centi),
             (UnitElectricInductance::Henry(Metric::Deca), Metric::Deca),

@@ -74,6 +74,10 @@ mod equivalent_dose_testing {
     #[test]
     fn unit_length_to_string() {
         for i in [
+            (UnitRadioactivityExposure::Sievert(Metric::Ronto), "rSv"),
+            (UnitRadioactivityExposure::Sievert(Metric::Ronna), "RSv"),
+            (UnitRadioactivityExposure::Sievert(Metric::Quetta), "QSv"),
+            (UnitRadioactivityExposure::Sievert(Metric::Quecto), "qSv"),
             (UnitRadioactivityExposure::Sievert(Metric::Atto), "aSv"),
             (UnitRadioactivityExposure::Sievert(Metric::Centi), "cSv"),
             (UnitRadioactivityExposure::Sievert(Metric::Deca), "daSv"),
@@ -106,6 +110,22 @@ mod equivalent_dose_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
+            (
+                UnitRadioactivityExposure::Sievert(Metric::Ronto),
+                Metric::Ronto,
+            ),
+            (
+                UnitRadioactivityExposure::Sievert(Metric::Ronna),
+                Metric::Ronna,
+            ),
+            (
+                UnitRadioactivityExposure::Sievert(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitRadioactivityExposure::Sievert(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (
                 UnitRadioactivityExposure::Sievert(Metric::Atto),
                 Metric::Atto,
@@ -192,6 +212,10 @@ mod equivalent_dose_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitRadioactivityExposure::Sievert(Metric::Ronto), 1.0e-27),
+            (UnitRadioactivityExposure::Sievert(Metric::Ronna), 1.0e27),
+            (UnitRadioactivityExposure::Sievert(Metric::Quetta), 1.0e30),
+            (UnitRadioactivityExposure::Sievert(Metric::Quecto), 1.0e-30),
             (UnitRadioactivityExposure::Sievert(Metric::Atto), 1.0e-18),
             (UnitRadioactivityExposure::Sievert(Metric::Centi), 0.01),
             (UnitRadioactivityExposure::Sievert(Metric::Deca), 10.0),

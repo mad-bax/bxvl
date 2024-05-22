@@ -81,6 +81,10 @@ mod time_testing {
     #[test]
     fn unit_angle_to_string() {
         for i in [
+            (UnitTime::Second(Metric::Ronto), "rs"),
+            (UnitTime::Second(Metric::Ronna), "Rs"),
+            (UnitTime::Second(Metric::Quetta), "Qs"),
+            (UnitTime::Second(Metric::Quecto), "qs"),
             (UnitTime::Second(Metric::Atto), "as"),
             (UnitTime::Second(Metric::Centi), "cs"),
             (UnitTime::Second(Metric::Deca), "das"),
@@ -115,6 +119,10 @@ mod time_testing {
     #[test]
     fn unit_angle_scale() {
         for i in [
+            (UnitTime::Second(Metric::Ronto), Metric::Ronto),
+            (UnitTime::Second(Metric::Ronna), Metric::Ronna),
+            (UnitTime::Second(Metric::Quetta), Metric::Quetta),
+            (UnitTime::Second(Metric::Quecto), Metric::Quecto),
             (UnitTime::Second(Metric::Atto), Metric::Atto),
             (UnitTime::Second(Metric::Centi), Metric::Centi),
             (UnitTime::Second(Metric::Deca), Metric::Deca),
@@ -144,6 +152,10 @@ mod time_testing {
         }
 
         for i in [
+            (UnitTime::Second(Metric::Ronto), 1.0e-27),
+            (UnitTime::Second(Metric::Ronna), 1.0e27),
+            (UnitTime::Second(Metric::Quetta), 1.0e30),
+            (UnitTime::Second(Metric::Quecto), 1.0e-30),
             (UnitTime::Second(Metric::Atto), 1.0e-18),
             (UnitTime::Second(Metric::Centi), 0.01),
             (UnitTime::Second(Metric::Deca), 10.0),

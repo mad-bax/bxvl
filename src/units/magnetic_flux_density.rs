@@ -90,8 +90,14 @@ mod magnetic_flux_density_testing {
         for i in [
             (UnitMagneticFluxDensity::Tesla(Metric::Ronto), Metric::Ronto),
             (UnitMagneticFluxDensity::Tesla(Metric::Ronna), Metric::Ronna),
-            (UnitMagneticFluxDensity::Tesla(Metric::Quetta), Metric::Quetta),
-            (UnitMagneticFluxDensity::Tesla(Metric::Quecto), Metric::Quecto),
+            (
+                UnitMagneticFluxDensity::Tesla(Metric::Quetta),
+                Metric::Quetta,
+            ),
+            (
+                UnitMagneticFluxDensity::Tesla(Metric::Quecto),
+                Metric::Quecto,
+            ),
             (UnitMagneticFluxDensity::Tesla(Metric::Atto), Metric::Atto),
             (UnitMagneticFluxDensity::Tesla(Metric::Centi), Metric::Centi),
             (UnitMagneticFluxDensity::Tesla(Metric::Deca), Metric::Deca),

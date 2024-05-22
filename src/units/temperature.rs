@@ -88,6 +88,10 @@ mod temperature_testing {
     #[test]
     fn unit_length_to_string() {
         for i in [
+            (UnitTemperature::Kelvin(Metric::Ronto), "rK"),
+            (UnitTemperature::Kelvin(Metric::Ronna), "RK"),
+            (UnitTemperature::Kelvin(Metric::Quetta), "QK"),
+            (UnitTemperature::Kelvin(Metric::Quecto), "qK"),
             (UnitTemperature::Kelvin(Metric::Atto), "aK"),
             (UnitTemperature::Kelvin(Metric::Centi), "cK"),
             (UnitTemperature::Kelvin(Metric::Deca), "daK"),
@@ -121,6 +125,10 @@ mod temperature_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
+            (UnitTemperature::Kelvin(Metric::Ronto), Metric::Ronto),
+            (UnitTemperature::Kelvin(Metric::Ronna), Metric::Ronna),
+            (UnitTemperature::Kelvin(Metric::Quetta), Metric::Quetta),
+            (UnitTemperature::Kelvin(Metric::Quecto), Metric::Quecto),
             (UnitTemperature::Kelvin(Metric::Atto), Metric::Atto),
             (UnitTemperature::Kelvin(Metric::Centi), Metric::Centi),
             (UnitTemperature::Kelvin(Metric::Deca), Metric::Deca),
@@ -148,6 +156,10 @@ mod temperature_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitTemperature::Kelvin(Metric::Ronto), 1.0e-27),
+            (UnitTemperature::Kelvin(Metric::Ronna), 1.0e27),
+            (UnitTemperature::Kelvin(Metric::Quetta), 1.0e30),
+            (UnitTemperature::Kelvin(Metric::Quecto), 1.0e-30),
             (UnitTemperature::Kelvin(Metric::Atto), 1.0e-18),
             (UnitTemperature::Kelvin(Metric::Centi), 0.01),
             (UnitTemperature::Kelvin(Metric::Deca), 10.0),

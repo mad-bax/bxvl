@@ -79,6 +79,10 @@ mod absorbed_dose_testing {
     #[test]
     fn unit_length_to_string() {
         for i in [
+            (UnitAbsorbedDose::Gray(Metric::Ronto), "rGy"),
+            (UnitAbsorbedDose::Gray(Metric::Ronna), "RGy"),
+            (UnitAbsorbedDose::Gray(Metric::Quetta), "QGy"),
+            (UnitAbsorbedDose::Gray(Metric::Quecto), "qGy"),
             (UnitAbsorbedDose::Gray(Metric::Atto), "aGy"),
             (UnitAbsorbedDose::Gray(Metric::Centi), "cGy"),
             (UnitAbsorbedDose::Gray(Metric::Deca), "daGy"),
@@ -112,6 +116,10 @@ mod absorbed_dose_testing {
     #[test]
     fn unit_length_scale() {
         for i in [
+            (UnitAbsorbedDose::Gray(Metric::Ronto), Metric::Ronto),
+            (UnitAbsorbedDose::Gray(Metric::Ronna), Metric::Ronna),
+            (UnitAbsorbedDose::Gray(Metric::Quetta), Metric::Quetta),
+            (UnitAbsorbedDose::Gray(Metric::Quecto), Metric::Quecto),
             (UnitAbsorbedDose::Gray(Metric::Atto), Metric::Atto),
             (UnitAbsorbedDose::Gray(Metric::Centi), Metric::Centi),
             (UnitAbsorbedDose::Gray(Metric::Deca), Metric::Deca),
@@ -139,6 +147,10 @@ mod absorbed_dose_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
         for i in [
+            (UnitAbsorbedDose::Gray(Metric::Ronto), 1.0e-27),
+            (UnitAbsorbedDose::Gray(Metric::Ronna), 1.0e27),
+            (UnitAbsorbedDose::Gray(Metric::Quetta), 1.0e30),
+            (UnitAbsorbedDose::Gray(Metric::Quecto), 1.0e-30),
             (UnitAbsorbedDose::Gray(Metric::Atto), 1.0e-18),
             (UnitAbsorbedDose::Gray(Metric::Centi), 0.01),
             (UnitAbsorbedDose::Gray(Metric::Deca), 10.0),

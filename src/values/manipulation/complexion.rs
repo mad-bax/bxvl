@@ -181,31 +181,26 @@ impl Value {
                 ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
                 ret.v_energy = None;
                 ret.v_electric_charge = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Electric Potential");
             }
             ret.unit_map = ELECTRIC_POTENTIAL_MAP;
             ret.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
             ret.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
         } else if ret.is_capacitance() && self.unit_map != CAPACITANCE_MAP {
-            if ret.unit_map & ELECTRIC_CHARGE_MAP == ELECTRIC_CHARGE_MAP {
+            if ret.unit_map & ELECTRIC_POTENTIAL_MAP == ELECTRIC_POTENTIAL_MAP {
                 (ret >>= UnitElectricCharge::Coulomb(Metric::None));
                 (ret >>= UnitElectricPotential::Volt(Metric::None));
                 ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
                 ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
                 ret.v_electric_potential = None;
                 ret.v_electric_charge = None;
-            } else if ret.unit_map & RESISTANCE_MAP == RESISTANCE_MAP {
-                (ret >>= UnitTime::Second(Metric::None));
-                (ret >>= UnitElectricResistance::Ohm(Metric::None));
-                ret.exp[TIME_INDEX] = 0;
-                ret.exp[RESISTANCE_INDEX] = 0;
-                ret.v_time = None;
-                ret.v_resistance = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Capacitance")
+            } else if ret.unit_map & ENERGY_MAP == ENERGY_MAP {
+                (ret >>= UnitElectricCharge::Coulomb(Metric::None));
+                (ret >>= UnitEnergy::Joule(Metric::None));
+                ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
+                ret.exp[ENERGY_INDEX] = 0;
+                ret.v_electric_charge = None;
+                ret.v_energy = None;
             }
-
             ret.unit_map = CAPACITANCE_MAP;
             ret.exp[CAPACITANCE_INDEX] = 1;
             ret.v_capacitance = Some(UnitElectricCapacitance::Farad(Metric::None));
@@ -221,8 +216,6 @@ impl Value {
                 ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
                 ret.v_electric_potential = None;
                 ret.v_electric_current = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Resistance");
             }
 
             ret.unit_map = RESISTANCE_MAP;
@@ -269,8 +262,6 @@ impl Value {
                 ret.exp[TIME_INDEX] = 0;
                 ret.v_electric_potential = None;
                 ret.v_time = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Magnetic Flux");
             }
 
             ret.unit_map = MAGNETIC_FLUX_MAP;
@@ -304,8 +295,6 @@ impl Value {
                 ret.v_length = None;
                 ret.v_electric_current = None;
                 ret.v_force = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Magnetic Flux Density");
             }
 
             ret.unit_map = MAGNETIC_FLUX_DENSITY_MAP;
@@ -336,8 +325,6 @@ impl Value {
                 ret.exp[ELECTRIC_CURRENT_INDEX] = 0;
                 ret.v_magnetic_flux = None;
                 ret.v_electric_current = None;
-            } else {
-                panic!("[complex] Unit translation: assumption Electric Inductance");
             }
 
             ret.unit_map = INDUCTANCE_MAP;
@@ -381,9 +368,138 @@ impl Value {
 #[cfg(test)]
 mod complexity_testing {
     use crate::units::{
-        Metric, UnitElectricCharge, UnitElectricCurrent, UnitElectricPotential, UnitEnergy,
-        UnitForce, UnitLength, UnitMass, UnitPower, UnitPressure, UnitTime,
+        Metric, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitLength, UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitTime
     };
+
+    #[test]
+    fn complexity_magnetic_flux_density3() {
+        let t1 = 4.5 * UnitForce::Newton(Metric::None);
+        let t2 = 2.0 / UnitLength::Meter(Metric::None);
+        let t3 = 2.0 / UnitElectricCurrent::Ampere(Metric::None);
+        let res = (t1 * t2 * t3).complex().unwrap();
+        assert!(res == 18.0 * UnitMagneticFluxDensity::Tesla(Metric::None));
+    }
+
+    #[test]
+    fn complexity_magnetic_flux_density2() {
+        let t1 = 4.5 * UnitMagneticFlux::Weber(Metric::None);
+        let t2 = 2.0 / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitMagneticFluxDensity::Tesla(Metric::None));
+    }
+
+    #[test]
+    fn complexity_magnetic_flux_density1() {
+        let t1 = 4.5 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 2.0 * UnitTime::Second(Metric::None);
+        let t3 = 2.0 / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+        let res = (t1 * t2 * t3).complex().unwrap();
+        assert!(res == 18.0 * UnitMagneticFluxDensity::Tesla(Metric::None));
+    }
+
+    #[test]
+    fn complexity_magnetic_flux1() {
+        let t1 = 4.5 / UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 2.0 * UnitEnergy::Joule(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitMagneticFlux::Weber(Metric::None));
+    }
+
+    #[test]
+    fn complexity_magnetic_flux2() {
+        let t1 = 4.5 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t2 = 2.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitMagneticFlux::Weber(Metric::None));
+    }
+
+    #[test]
+    fn complexity_magnetic_flux3() {
+        let t1 = 4.5 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 2.0 * UnitTime::Second(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitMagneticFlux::Weber(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_conductance1() {
+        let t1 = 2.0 / UnitElectricResistance::Ohm(Metric::None);
+        let res = t1.complex().unwrap();
+        assert!(res == 2.0 * UnitElectricConductance::Siemens(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_conductance2() {
+        let t1 = 4.5 * UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 2.0 / UnitElectricPotential::Volt(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricConductance::Siemens(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_resistance1() {
+        let t1 = 2.0 / UnitElectricConductance::Siemens(Metric::None);
+        let res = t1.complex().unwrap();
+        assert!(res == 2.0 * UnitElectricResistance::Ohm(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_resistance2() {
+        let t1 = 4.5 / UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 2.0 * UnitElectricPotential::Volt(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricResistance::Ohm(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_capacitance1() {
+        let t1 = 4.5 * UnitElectricCharge::Coulomb(Metric::None);
+        let t2 = 2.0 / UnitElectricPotential::Volt(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricCapacitance::Farad(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_capacitance2() {
+        let t1 = 4.5
+            * UnitElectricCharge::Coulomb(Metric::None)
+            * UnitElectricCharge::Coulomb(Metric::None);
+        let t2 = 2.0 / UnitEnergy::Joule(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricCapacitance::Farad(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_potential1() {
+        let t1 = 4.5 * UnitPower::Watt(Metric::None);
+        let t2 = 2.0 / UnitElectricCurrent::Ampere(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricPotential::Volt(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_potential2() {
+        let t1 = 4.5 * UnitEnergy::Joule(Metric::None);
+        let t2 = 2.0 / UnitElectricCharge::Coulomb(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricPotential::Volt(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_charge1() {
+        let t1 = 4.5 * UnitTime::Second(Metric::None);
+        let t2 = 2.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricCharge::Coulomb(Metric::None));
+    }
+
+    #[test]
+    fn complexity_electric_charge2() {
+        let t1 = 4.5 * UnitElectricCapacitance::Farad(Metric::None);
+        let t2 = 2.0 * UnitElectricPotential::Volt(Metric::None);
+        let res = (t1 * t2).complex().unwrap();
+        assert!(res == 9.0 * UnitElectricCharge::Coulomb(Metric::None));
+    }
 
     #[test]
     fn complexity_power1() {
