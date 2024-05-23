@@ -34,6 +34,7 @@ V3 is a scientific unit-type library that allows variables to dynamically keep t
   - [Spatial Volume](#spatial-volume)
   - [Pressure](#pressure)
   - [Geometric Angle](#geometric-angle)
+  - [Geometric Solid Angle](#geometric-solid-angle)
   - [Frequency](#frequency)
   - [Force](#force)
   - [Energy](#energy)
@@ -74,7 +75,7 @@ let v4:Value = 22.3
   * UnitLength::Meter(Metric::None);
 ```
 
-Using `Values`:
+Creating `Value`s using other `Values`:
 
 ```rust
 use v3::values::Value;
@@ -144,7 +145,55 @@ This behavior is explicit and must be called by the user.
 
 ### Unit Checking
 
-V3 provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations, such as `.is_yank()` ([Force](#force)/[Time](#time)) and `.is_torque()` ([Force](#force)\*[Length](#lengths) *or* [Energy](#energy)/[Angle](#geometric-angle)) as two examples.
+V3 provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations (See below).
+
+| Function                     | Measurement Types                                                                                                                                                                                                                                                                      |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `is_length()`                | [Length](#lengths)                                                                                                                                                                                                                                                                     |
+| `is_area()`                  | [Length](#lengths)^2                                                                                                                                                                                                                                                                   |
+| `is_volume()`                | [Volume](#spatial-volume)<br/>[Length](#lengths)^3                                                                                                                                                                                                                                     |
+| `is_temperature()`           | [Temperature](#thermal-temperature)                                                                                                                                                                                                                                                    |
+| `is_mass()`                  | [Mass](#mass)                                                                                                                                                                                                                                                                          |
+| `is_density()`               | [Mass](#mass)/[Volume](#spatial-volume)<br/>[Mass](#mass)/[Length](#lengths)^3                                                                                                                                                                                                         |
+| `is_time()`                  | [Time](#time)                                                                                                                                                                                                                                                                          |
+| `is_substance()`             | [Substance](#substance)                                                                                                                                                                                                                                                                |
+| `is_angle()`                 | [Angle](#geometric-angle)                                                                                                                                                                                                                                                              |
+| `is_solid_angle()`           | [Solid Angle](#geometric-solid-angle)                                                                                                                                                                                                                                                  |
+| `is_information()`           | [Information](#information)                                                                                                                                                                                                                                                            |
+| `is_velocity()`              | [Length](#lengths)/[Time](#time)                                                                                                                                                                                                                                                       |
+| `is_acceleration()`          | [Length](#lengths)/[Time](#time)^2                                                                                                                                                                                                                                                     |
+| `is_force()`                 | [Force](#force)<br/>[Mass](#mass)\**acceleration*                                                                                                                                                                                                                                      |
+| `is_momentum()`              | [Mass](#mass)\**velocity*                                                                                                                                                                                                                                                              |
+| `is_frequency()`             | [Frequency](#frequency)<br/>1/[Time](#time)                                                                                                                                                                                                                                            |
+| `is_pressure()`              | [Pressure](#pressure)<br/>[Force](#force)/*area*<br/>[Mass](#mass)/([Length](#lengths)\*[Time](#time)^2)                                                                                                                                                                               |
+| `is_energy()`                | [Energy](#energy)<br/>[Length](#lengths)\*[Force](#force)<br/>[Electric Potential](#electric-potential)\*[Electric Charge](#electric-charge)<br/>[Power](#power)\*[Time](#time)<br/>[Mass](#mass)\**area*/[Time](#time)^2                                                              |
+| `is_power()`                 | [Power](#power)<br/>[Energy](#energy)/[Time](#time)<br/>[Electrical Potential](#electric-potential)\*[Electric Current](#electric-current)<br/>[Mass](#mass)\**area*/[Time](#time)^3                                                                                                   |
+| `is_electric_charge()`       | [Electric Charge](#electric-charge)<br/>[Electric Current](#electric-current)\*[Time](#time)<br/>[Electric Capacitance](#electric-capacitance)\*[Electric Potential](#electric-potential)                                                                                              |
+| `is_electric_current()`      | [Electric Current](#electric-current)                                                                                                                                                                                                                                                  |
+| `is_electric_potential()`    | [Electric Potential](#electric-potential)<br/>[Power](#power)/[Electric Current](#electric-current)<br/>[Energy](#energy)/[Electric Charge](#electric-charge)                                                                                                                          |
+| `is_capacitance()`           | [Electric Capacitance](#electric-capacitance)<br/>[Electric Charge](#electric-charge)/[Electric Potential](#electric-potential)<br/>[Energy](#energy)/[Electric Charge](#electric-charge)                                                                                              |
+| `is_resistance()`            | [Electric Resistance](#electric-resistance)<br/>1/[Electric Conductance](#electric-conductance)<br/>[Electric Potential](#electric-potential)/[Electric Current](#electric-current)                                                                                                    |
+| `is_conductance()`           | [Electric Conductance](#electric-conductance)<br/>1/[Electric Resistance](#electric-resistance)<br/>[Electric Current](#electric-current)/[Electric Potential](#electric-potential)                                                                                                    |
+| `is_magnetic_flux()`         | [Magnetic Flux](#magnetic-flux)<br/>[Energy](#energy)/[Electric Current](#electric-current)<br/>[Magnetic Flux Density](#magnetic-flux-density)\**area*<br/>[Electric Potential](#electric-potential)\*[Time](#time)                                                                   |
+| `is_magnetic_flux_density()` | [Magnetic Flux Density](#magnetic-flux-density)<br/>[Electric Potential](#electric-potential)\*[Time](#time)/*area*<br/>[Magnetic Flux](#magnetic-flux)/*area*<br/>[Force](#force)/([Electric Current](#electric-current)\*[Length](#lengths))                                         |
+| `is_inductance()`            | [Electric Inductance](#electric-inductance)<br/>[Electric Potential](#electric-potential)\*[Time](#time)/[Electric Current](#electric-current)<br/>[Electric Resistance](#electric-resistance)*[Time](#time)<br/>[Magnetic Flux](#magnetic-flux)/[Electric Current](#electric-current) |
+| `is_luminous_flux()`         | [Luminous Flux](#luminous-flux)                                                                                                                                                                                                                                                        |
+| `is_illuminance()`           | [Illuminance](#illuminance)<br/>[Luminous Flux](#luminous-flux)/*area*                                                                                                                                                                                                                 |
+| `is_luminous_intensity()`    | [Luminous Intensity](#luminous-intensity)                                                                                                                                                                                                                                              |
+| `is_radioactivity()`         | [Radioactivity](#radioactivity)                                                                                                                                                                                                                                                        |
+| `is_absorbed_dose()`         | [Absorbed Dose](#absorbed-dosage-of-ionizing-radiation)                                                                                                                                                                                                                                |
+| `is_equivalent_dose()`       | [Equivalent Dose](#equivalent-dosage-of-ionizing-radiation)                                                                                                                                                                                                                            |
+| `is_catalytic_activity()`    | [Catalytic Activity](#catalytic-activity)<br/>[Substance](#substance)/[Time](#time)                                                                                                                                                                                                    |
+| `is_sound()`                 | [Sound](#sound-intensity)                                                                                                                                                                                                                                                              |
+| `is_jerk()`                  | [Length](#lengths)/[Time](#time)^3                                                                                                                                                                                                                                                     |
+| `is_snap()`                  | [Length](#lengths)/[Time](#time)^4                                                                                                                                                                                                                                                     |
+| `is_angular_velocity()`      | [Angle](#geometric-angle)/[Time](#time)                                                                                                                                                                                                                                                |
+| `is_angular_acceleration()`  | [Angle](#geometric-angle)/[Time](#time)                                                                                                                                                                                                                                                |
+| `is_frequency_drift()`       | [Frequency](#frequency)/[Time](#time)                                                                                                                                                                                                                                                  |
+| `is_flow()`                  | [Volume](#spatial-volume)/[Time](#time)<br/>[Length](#lengths)^3/[Time](#time)                                                                                                                                                                                                         |
+| `is_angular_momentum()`      | [Force](#force)\*[Length](#lengths)\*[Time](#time)                                                                                                                                                                                                                                       |
+| `is_torque()`                | [Force](#force)*[Length](#lengths)<br/>[Energy](#energy)/[Angle](#geometric-angle)                                                                                                                                                                                                     |
+| `is_energy_density()`        | [Energy](#energy)/[Volume](#spatial-volume)<br/>[Energy](#energy)/[Length](#lengths)^3                                                                                                                                                                                                 |
 
 ## Conversions
 
@@ -235,35 +284,35 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Lengths
 
-| Unit              | Metric Prefixing Support | Base Conversion Factor              | Unit string                |
-| ----------------- | ------------------------ | ----------------------------------- | -------------------------- |
-| Meter             | &check;                  | `1.0 m`                             | `m`                        |
-| Inch              |                          | `0.025_4 m`                         | `in`<br/>`inch`[`es`]      |
-| Foot              |                          | `0.304_8 m`                         | `ft`<br/>`feet`<br/>`foot` |
-| Yard              |                          | `0.914_4 m`                         | `yd`[`s`]<br/>`yard`[`s`]  |
-| Mile              |                          | `1_609.344 m`                       | `mile`[`s`]                |
-| Astronomical Unit |                          | `149_569_870_700.0 m`               | `AU`                       |
-| Parsec            | &check;                  | `(648_000.0/π)*149_569_870_700.0 m` | `pc`                       |
-| Light Year        | &check;                  | `9_460_730_472_580_800.0 m`         | `lyr`                      |
-| Ångström          |                          | `0.000_000_000_1 m`                 | `Å`<br/>`angstrom`[`s`]    |
+| Unit              | Metric Prefixing Support | Base Conversion Factor              | Unit string            |
+| ----------------- | ------------------------ | ----------------------------------- | ---------------------- |
+| Meter             | &check;                  | `1.0 m`                             | `m`                    |
+| Inch              |                          | `0.025_4 m`                         | `in`, `inch`[`es`]     |
+| Foot              |                          | `0.304_8 m`                         | `ft`, `feet` `foot`    |
+| Yard              |                          | `0.914_4 m`                         | `yd`[`s`], `yard`[`s`] |
+| Mile              |                          | `1_609.344 m`                       | `mile`[`s`]            |
+| Astronomical Unit |                          | `149_569_870_700.0 m`               | `AU`                   |
+| Parsec            | &check;                  | `(648_000.0/π)*149_569_870_700.0 m` | `pc`                   |
+| Light Year        | &check;                  | `9_460_730_472_580_800.0 m`         | `lyr`                  |
+| Ångström          |                          | `0.000_000_000_1 m`                 | `Å`, `angstrom`[`s`]   |
 
 ### Time
 
-| Unit   | Metric Prefixing Support | Base Conversion Factor | Unit string              |
-| ------ | ------------------------ | ---------------------- | ------------------------ |
-| Second | &check;                  | `1.0 s`                | `s`                      |
-| Minute |                          | `60.0 s`               | `min`<br/>`minute`[`s`]  |
-| Hour   |                          | `3_600.0 s`            | `h`[`r`]<br/>`hour`[`s`] |
-| Day    |                          | `86_400.0 s`           | `d`<br/>`day`[`s`]       |
+| Unit   | Metric Prefixing Support | Base Conversion Factor | Unit string           |
+| ------ | ------------------------ | ---------------------- | --------------------- |
+| Second | &check;                  | `1.0 s`                | `s`                   |
+| Minute |                          | `60.0 s`               | `min`, `minute`[`s`]  |
+| Hour   |                          | `3_600.0 s`            | `h`[`r`], `hour`[`s`] |
+| Day    |                          | `86_400.0 s`           | `d`, `day`[`s`]       |
 
 ### Mass
 
-|Unit |Metric Prefixing Support|Base Conversion Factor|Unit string           |
-|-----|------------------------|----------------------|----------------------|
-|Gram |&check;                 |`1.0 g`               |`g`                   |
-|Grain|                        |`453.592_37/7_000.0 g`|`gr`<br/>`grain`[`s`] |
-|Ounce|                        |`453.592_37/16.0 g`   |`oz`<br/>`ounce`[`s`] |
-|Pound|                        |`453.592_37 g`        |`lb`[`s`]<br/>`pounds`|
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string         |
+| ----- | ------------------------ | ---------------------- | ------------------- |
+| Gram  | &check;                  | `1.0 g`                | `g`                 |
+| Grain |                          | `453.592_37/7_000.0 g` | `gr`, `grain`[`s`]  |
+| Ounce |                          | `453.592_37/16.0 g`    | `oz`, `ounce`[`s`]  |
+| Pound |                          | `453.592_37 g`         | `lb`[`s`], `pounds` |
 
 ### Electric Current
 
@@ -291,15 +340,15 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Electric Capacitance
 
-| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string          |
-| ----- | ------------------------ | ---------------------- | -------------------- |
-| Farad | &check;                  | `1.0 F`                | `F`<br/>`farad`[`s`] |
+| Unit  | Metric Prefixing Support | Base Conversion Factor | Unit string       |
+| ----- | ------------------------ | ---------------------- | ----------------- |
+| Farad | &check;                  | `1.0 F`                | `F`, `farad`[`s`] |
 
 ### Electric Resistance
 
 | Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
 | ---- | ------------------------ | ---------------------- | ----------- |
-| Ohm  | &check;                  | `1.0 Ω`                | `Ω`<br/>`O` |
+| Ohm  | &check;                  | `1.0 Ω`                | `Ω` `O` |
 
 ### Electric Inductance
 
@@ -321,11 +370,11 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Thermal Temperature
 
-| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string           |
-| ---------- | ------------------------ | ---------------------- | --------------------- |
-| Celsius    | **[Future Support]**     | `c-273.15 K`           | `c`<br/>`°c`<br/>`°C` |
-| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`<br/>`°f`<br/>`°F` |
-| Kelvin     | &check;                  | `1.0 K`                | `K`                   |
+| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string     |
+| ---------- | ------------------------ | ---------------------- | --------------- |
+| Celsius    | **[Future Support]**     | `c-273.15 K`           | `c`, `°c`, `°C` |
+| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`, `°f`, `°F` |
+| Kelvin     | &check;                  | `1.0 K`                | `K`             |
 
 ### Substance
 
@@ -359,24 +408,30 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Pressure
 
-| Unit                   | Metric Prefixing Support | Base Conversion Factor | Unit string     |
-| ---------------------- | ------------------------ | ---------------------- | --------------- |
-| Pascal                 | &check;                  | `1.0 Pa`               | `Pa`            |
-| Bar                    | &check;                  | `100_000.0 Pa`         | `bar`           |
-| Torr                   |                          | `101_325.0/760.0 Pa`   | `torr`          |
-| mmHg                   |                          | `133.322_387_415 Pa`   | `mmHg`          |
-| inHg                   |                          | `3_386.388_666_6 Pa`   | `inHg`          |
-| Atmospheres            |                          | `101_325.0 Pa`         | `ATM`<br/>`atm` |
-| Pounds per square inch |                          | `6894.757 Pa`          | `PSI`<br/>`psi` |
+| Unit                   | Metric Prefixing Support | Base Conversion Factor | Unit string  |
+| ---------------------- | ------------------------ | ---------------------- | ------------ |
+| Pascal                 | &check;                  | `1.0 Pa`               | `Pa`         |
+| Bar                    | &check;                  | `100_000.0 Pa`         | `bar`        |
+| Torr                   |                          | `101_325.0/760.0 Pa`   | `torr`       |
+| mmHg                   |                          | `133.322_387_415 Pa`   | `mmHg`       |
+| inHg                   |                          | `3_386.388_666_6 Pa`   | `inHg`       |
+| Atmospheres            |                          | `101_325.0 Pa`         | `ATM`, `atm` |
+| Pounds per square inch |                          | `6894.757 Pa`          | `PSI`, `psi` |
 
 ### Geometric Angle
 
-| Unit            | Metric Prefixing Support | Base Conversion Factor | Unit string             |
-| --------------- | ------------------------ | ---------------------- | ----------------------- |
-| Degree          |                          | `π/180.0 rad`          | `°`<br/>`degree`[`s`]   |
-| Radian          | &check;                  | `1.0 rad`              | `rad`<br/>`radian`[`s`] |
-| Milliradian     | &check;                  | `1_000.0 rad`          | `mil`[`s`]<br/>`MIL`    |
-| Minute of Angle |                          | `π/10_800.0 rad`       | `moa`<br/>`MOA`         |
+| Unit            | Metric Prefixing Support | Base Conversion Factor | Unit string          |
+| --------------- | ------------------------ | ---------------------- | -------------------- |
+| Degree          |                          | `π/180.0 rad`          | `°`, `degree`[`s`]   |
+| Radian          | &check;                  | `1.0 rad`              | `rad`, `radian`[`s`] |
+| Milliradian     | &check;                  | `1_000.0 rad`          | `mil`[`s`], `MIL`    |
+| Minute of Angle |                          | `π/10_800.0 rad`       | `moa`, `MOA`         |
+
+### Geometric Solid Angle
+
+| Unit      | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| --------- | ------------------------ | ---------------------- | ----------- |
+| Steradian | &check;                  | `1.0 sr`               | `sr`        |
 
 ### Frequency
 
@@ -386,19 +441,19 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Force
 
-| Unit        | Metric Prefixing Support | Base Conversion Factor  | Unit string                                           |
-| ----------- | ------------------------ | ----------------------- | ----------------------------------------------------- |
-| Newton      | &check;                  | `1.0 N`                 | `N`                                                   |
-| Pound Force |                          | `4.448_221_615_260_5 N` | `lbfr`<br/>`lbsfr`<br/>`poundforce`<br/>`poundsforce` |
+| Unit        | Metric Prefixing Support | Base Conversion Factor  | Unit string                               |
+| ----------- | ------------------------ | ----------------------- | ----------------------------------------- |
+| Newton      | &check;                  | `1.0 N`                 | `N`                                       |
+| Pound Force |                          | `4.448_221_615_260_5 N` | `lbfr`, `lbsfr`, `poundforce` `poundsforce` |
 
 ### Energy
 
-| Unit          | Metric Prefixing Support | Base Conversion Factor | Unit string                      |
-| ------------- | ------------------------ | ---------------------- | -------------------------------- |
-| Joule         | &check;                  | `1.0 J`                | `J`                              |
-| Calorie       | &check;                  | `4.184 J`              | `cal`                            |
-| Foot pound    |                          | `1.355_818 J`          | `ftlb`[`s`]<br/>`footpound`[`s`] |
-| Electron Volt | &check;                  | `1.6021_766_34e-19 J`  | `eV`                             |
+| Unit          | Metric Prefixing Support | Base Conversion Factor | Unit string                   |
+| ------------- | ------------------------ | ---------------------- | ----------------------------- |
+| Joule         | &check;                  | `1.0 J`                | `J`                           |
+| Calorie       | &check;                  | `4.184 J`              | `cal`                         |
+| Foot pound    |                          | `1.355_818 J`          | `ftlb`[`s`], `footpound`[`s`] |
+| Electron Volt | &check;                  | `1.6021_766_34e-19 J`  | `eV`                          |
 
 ### Power
 
@@ -415,18 +470,18 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### *Absorbed* Dosage of Ionizing Radiation
 
-| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string       |
-| ------- | ------------------------ | ---------------------- | ----------------- |
-| Gray    | &check;                  | `1.0 Gy`               | `Gy`              |
-| Röntgen |                          | `0.01 Gy`              | `R`               |
-| Rad     |                          | `1.0/114.025 Gy`       | `rads`<br/>`Rads` |
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string    |
+| ------- | ------------------------ | ---------------------- | -------------- |
+| Gray    | &check;                  | `1.0 Gy`               | `Gy`           |
+| Röntgen |                          | `0.01 Gy`              | `R`            |
+| Rad     |                          | `1.0/114.025 Gy`       | `rads`, `Rads` |
 
 ### *Equivalent* Dosage of Ionizing Radiation
 
-| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string     |
-| ------- | ------------------------ | ---------------------- | --------------- |
-| Sievert | &check;                  | `1.0 Sv`               | `Sv`            |
-| Rem     |                          | `0.01 Sv`              | `rem`<br/>`Rem` |
+| Unit    | Metric Prefixing Support | Base Conversion Factor | Unit string  |
+| ------- | ------------------------ | ---------------------- | ------------ |
+| Sievert | &check;                  | `1.0 Sv`               | `Sv`         |
+| Rem     |                          | `0.01 Sv`              | `rem`, `Rem` |
 
 ### Catalytic Activity
 
@@ -446,47 +501,48 @@ The project supports all base SI units as listed by the National Institute of St
 
 *i.e.* `kb` &rarr; `1024 bytes`, *not* `1000 bytes`
 
-| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string         |
-| ---- | ------------------------ | ---------------------- | ------------------- |
-| Bit  | `Kilo` - `Quetta`        | `8.0 bits == 1.0 byte` | `bits`              |
-| Byte | `Kilo` - `Quetta`        | `1.0 bytes`            | `b`<br/>`byte`[`s`] |
+| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string      |
+| ---- | ------------------------ | ---------------------- | ---------------- |
+| Bit  | `Kilo` - `Quetta`        | `8.0 bits == 1.0 byte` | `bits`           |
+| Byte | `Kilo` - `Quetta`        | `1.0 bytes`            | `b`, `byte`[`s`] |
 
 ### Special Unit Keywords
 
-| Unit                | Metric  | Unit string | Equivalent |
-| ------------------- | ------- | ----------- | ---------- |
-| Miles per hour      |         | `mph`       | `miles/hr` |
-| Kilometers per hour | &check; | `kph`       | `km/hr`    |
-| kilocalorie         | &check; | `Cal`       | `kcal`     |
+| Unit                | Unit string | Equivalent |
+| ------------------- | ----------- | ---------- |
+| Miles per hour      | `mph`       | `miles/hr` |
+| Kilometers per hour | `kph`       | `km/hr`    |
+| kilocalorie         | `Cal`       | `kcal`     |
 
 ### Metric Prefix Identifiers
 
 | Metric name | Prefix string | Metric Scaling |
 | ----------- | ------------- | -------------- |
-| Quetta      | `Q`           | $1.0e30$       |
-| Ronna       | `R`           | $1.0e27$       |
-| Yotta       | `Y`           | $1.0e24$       |
-| Zetta       | `Z`           | $1.0e21$       |
-| Exa         | `E`           | $1.0e18$       |
-| Peta        | `P`           | $1.0e15$       |
-| Tera        | `T`           | $1.0e12$       |
-| Giga        | `G`           | $1.0e9$        |
-| Mega        | `M`           | $1.0e6$        |
-| Kilo        | `k`           | $1.0e3$        |
-| Hecto       | `h`           | $1.0e2$        |
-| Deca        | `da`          | $1.0e1$        |
-| Deci        | `d`           | $1.0e-1$       |
-| Centi       | `c`           | $1.0e-2$       |
-| Milli       | `m`           | $1.0e-3$       |
-| Micro       | `μ`<br/>`u`   | $1.0e-6$       |
-| Nano        | `n`           | $1.0e-9$       |
-| Pico        | `p`           | $1.0e-12$      |
-| Femto       | `f`           | $1.0e-15$      |
-| Atto        | `a`           | $1.0e-18$      |
-| Zepto       | `z`           | $1.0e-21$      |
-| Yocto       | `y`           | $1.0e-24$      |
-| Ronto       | `r`           | $1.0e-27$      |
-| Quecto      | `q`           | $1.0e-30$      |
+| Quetta      | `Q`           | $1e30$         |
+| Ronna       | `R`           | $1e27$         |
+| Yotta       | `Y`           | $1e24$         |
+| Zetta       | `Z`           | $1e21$         |
+| Exa         | `E`           | $1e18$         |
+| Peta        | `P`           | $1e15$         |
+| Tera        | `T`           | $1e12$         |
+| Giga        | `G`           | $1e9$          |
+| Mega        | `M`           | $1e6$          |
+| Kilo        | `k`           | $1e3$          |
+| Hecto       | `h`           | $1e2$          |
+| Deca        | `da`          | $1e1$          |
+| **None**    |               | $1$            |
+| Deci        | `d`           | $1e-1$         |
+| Centi       | `c`           | $1e-2$         |
+| Milli       | `m`           | $1e-3$         |
+| Micro       | `μ` `u`       | $1e-6$         |
+| Nano        | `n`           | $1e-9$         |
+| Pico        | `p`           | $1e-12$        |
+| Femto       | `f`           | $1e-15$        |
+| Atto        | `a`           | $1e-18$        |
+| Zepto       | `z`           | $1e-21$        |
+| Yocto       | `y`           | $1e-24$        |
+| Ronto       | `r`           | $1e-27$        |
+| Quecto      | `q`           | $1e-30$        |
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
 
@@ -507,12 +563,12 @@ V3 can and is intended to be improved with some of these goals in mind:
   - Weight : `stone`, `ton`, `slug`
 - ~~Metric support for `parsec` and `lightyears`~~
   - ✅ Support added
-- ~~Metric support for `mmHg`~~
+- ~~'Metric' prefixing for `mmHg`?~~
   - ❌ Does not make sense given its static metric prefix
 - ~~Metric support for `electronVolt`~~
   - ✅ Support added
 - ~~Metric support for `Kelvin`~~
   - ✅ Support added
 - Metric support for `Celsius`
-- ~~New support for: `Quetta`, `Quecto`, `Ronna`, and `Ronto`~~
+- ~~New metric prefixing for: `Quetta`, `Quecto`, `Ronna`, and `Ronto`~~
 - speed speed speed
