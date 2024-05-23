@@ -120,7 +120,7 @@ let m:Value = Value::new(2.5, "kg").unwrap();
 let acc:Value = Value::new(9.81, "m/s^2").unwrap();
 
 let f1:Value = m*acc;
-let f2:Value = (m*acc).complex().unwrap();
+let f2:Value = (m*acc).complex();
 assert!(f1.is_force() && f2.is_force());
 assert!(f1.val == f2.val);
 ```

@@ -6,18 +6,20 @@ use crate::{
         ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX,
         FORCE_MAP, FREQUENCY_INDEX, FREQUENCY_MAP, ILLUMINANCE_INDEX, ILLUMINANCE_MAP,
         INDUCTANCE_INDEX, INDUCTANCE_MAP, LENGTH_INDEX, LENGTH_MAP, LUMINOUS_FLUX_INDEX,
-        LUMINOUS_FLUX_MAP, MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP,
-        MAGNETIC_FLUX_INDEX, MAGNETIC_FLUX_MAP, MASS_INDEX, MASS_MAP, POWER_INDEX, POWER_MAP,
-        PRESSURE_INDEX, PRESSURE_MAP, RESISTANCE_INDEX, RESISTANCE_MAP, SUBSTANCE_INDEX,
-        SUBSTANCE_MAP, TIME_INDEX, TIME_MAP,
+        LUMINOUS_FLUX_MAP, LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP,
+        MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_INDEX,
+        MAGNETIC_FLUX_MAP, MASS_INDEX, MASS_MAP, POWER_INDEX, POWER_MAP, PRESSURE_INDEX,
+        PRESSURE_MAP, RESISTANCE_INDEX, RESISTANCE_MAP, SOLID_ANGLE_INDEX, SOLID_ANGLE_MAP,
+        SUBSTANCE_INDEX, SUBSTANCE_MAP, TIME_INDEX, TIME_MAP,
     },
     errors::V3Error,
     units::{
         Metric, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge,
         UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance,
         UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency,
-        UnitIlluminance, UnitLength, UnitLuminousFlux, UnitMagneticFlux, UnitMagneticFluxDensity,
-        UnitMass, UnitPower, UnitPressure, UnitSubstance, UnitTime,
+        UnitIlluminance, UnitLength, UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux,
+        UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitSolidAngle, UnitSubstance,
+        UnitTime,
     },
     values::Value,
 };
@@ -30,11 +32,9 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use v3::values::Value;
-    /// let mut f:Value = match Value::new(3.0, "N") {
-    ///     Ok(t) => t,
-    ///     Err(e) => panic!("{}", e)
-    /// };
+    /// use v3::{values::Value, units::{Metric, UnitForce}};
+    ///
+    /// let mut f:Value = 3.0 * UnitForce::Newton(Metric::None);
     ///
     /// match f.reduce("kg*m/s^2") {
     ///     Ok(_) => {}
@@ -78,6 +78,7 @@ impl Value {
                 | MAGNETIC_FLUX_MAP
                 | MAGNETIC_FLUX_DENSITY_MAP
                 | INDUCTANCE_MAP
+                | LUMINOUS_FLUX_MAP
                 | ILLUMINANCE_MAP
                 | CAPACITANCE_MAP
         )
@@ -430,6 +431,17 @@ impl Value {
                 *self >>= *other;
                 return true;
             }
+        } else if self.unit_map == LUMINOUS_FLUX_MAP && other.is_luminous_flux() {
+            *self >>= UnitLuminousFlux::Lumen(Metric::None);
+            self.v_luminous_flux_intensity = Some(UnitLuminousIntensity::Candela(Metric::None));
+            self.v_solid_angle = Some(UnitSolidAngle::Steradian(Metric::None));
+            self.v_luminous_flux = None;
+            self.exp[LUMINOUS_FLUX_INDEX] = 0;
+            self.exp[LUMINOUS_INTENSITY_INDEX] = 1;
+            self.exp[SOLID_ANGLE_INDEX] = -1;
+            self.unit_map = LUMINOUS_INTENSITY_MAP | SOLID_ANGLE_MAP;
+            *self >>= *other;
+            return true;
         } else if self.unit_map == ILLUMINANCE_MAP && other.is_illuminance() {
             *self >>= UnitIlluminance::Lux(Metric::None);
             self.v_luminous_flux = Some(UnitLuminousFlux::Lumen(Metric::None));

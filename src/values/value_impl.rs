@@ -806,8 +806,14 @@ impl Value {
     /// Returns `true` if a [`Value`] is a measurement of luminous flux
     ///
     /// `luminous flux`
+    ///
+    /// `luminous intensity / solid angle`
     pub fn is_luminous_flux(&self) -> bool {
-        if self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1 {
+        if (self.unit_map == LUMINOUS_FLUX_MAP && self.exp[LUMINOUS_FLUX_INDEX] == 1)
+            || (self.unit_map == LUMINOUS_INTENSITY_MAP | SOLID_ANGLE_MAP
+                && self.exp[LUMINOUS_INTENSITY_INDEX] == 1
+                && self.exp[SOLID_ANGLE_INDEX] == -1)
+        {
             return true;
         }
         false
@@ -822,7 +828,7 @@ impl Value {
         if (self.unit_map == ILLUMINANCE_MAP && self.exp[ILLUMINANCE_INDEX] == 1)
             || (self.unit_map == LUMINOUS_FLUX_MAP | LENGTH_MAP
                 && self.exp[LUMINOUS_FLUX_INDEX] == 1
-                && self.exp[LENGTH_MAP] == -2)
+                && self.exp[LENGTH_INDEX] == -2)
         {
             return true;
         }
