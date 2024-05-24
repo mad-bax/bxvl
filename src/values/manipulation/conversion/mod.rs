@@ -1,3 +1,6 @@
+pub mod angle;
+pub mod length;
+
 use crate::{
     constants::{
         ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_MAP, CATALYTIC_ACTIVITY_MAP,

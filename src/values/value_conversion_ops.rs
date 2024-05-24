@@ -4,7 +4,6 @@ use crate::constants::*;
 use crate::errors::V3Error;
 use crate::units::Convert;
 use crate::units::UnitAbsorbedDose;
-use crate::units::UnitAngle;
 use crate::units::UnitCatalyticActivity;
 use crate::units::UnitElectricCapacitance;
 use crate::units::UnitElectricCharge;
@@ -18,7 +17,6 @@ use crate::units::UnitForce;
 use crate::units::UnitFrequency;
 use crate::units::UnitIlluminance;
 use crate::units::UnitInformation;
-use crate::units::UnitLength;
 use crate::units::UnitLuminousFlux;
 use crate::units::UnitLuminousIntensity;
 use crate::units::UnitMagneticFlux;
@@ -64,31 +62,6 @@ impl Shr<String> for Value {
     }
 }
 
-impl Shr<UnitLength> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitLength) -> Self::Output {
-        let mut n: Value = self;
-        if n.unit_map & VOLUME_MAP == VOLUME_MAP && n.exp[VOLUME_INDEX] == 1 {
-            n.val *= n.v_volume.unwrap().convert(&other);
-            n.v_volume = None;
-            n.v_length = Some(other);
-            n.unit_map = LENGTH_MAP;
-            n.exp[VOLUME_INDEX] = 0;
-            n.exp[LENGTH_INDEX] = 3;
-            return Ok(n);
-        } else if self.unit_map & LENGTH_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_length
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[LENGTH_INDEX]);
-        n.v_length = Some(other);
-        Ok(n)
-    }
-}
-
 impl Shr<UnitAbsorbedDose> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other: UnitAbsorbedDose) -> Self::Output {
@@ -102,23 +75,6 @@ impl Shr<UnitAbsorbedDose> for Value {
             .convert(&other)
             .powi(self.exp[ABSORBED_DOSE_INDEX]);
         n.v_ab_dose = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitAngle> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitAngle) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ANGLE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_angle
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ANGLE_INDEX]);
-        n.v_angle = Some(other);
         Ok(n)
     }
 }
@@ -651,28 +607,6 @@ impl ShrAssign<String> for Value {
     }
 }
 
-impl ShrAssign<UnitLength> for Value {
-    fn shr_assign(&mut self, other: UnitLength) {
-        if self.unit_map & VOLUME_MAP == VOLUME_MAP && self.exp[VOLUME_INDEX] == 1 {
-            self.val *= self.v_volume.unwrap().convert(&other);
-            self.v_volume = None;
-            self.v_length = Some(other);
-            self.unit_map = LENGTH_MAP;
-            self.exp[VOLUME_INDEX] = 0;
-            self.exp[LENGTH_INDEX] = 3;
-            return;
-        } else if self.unit_map & LENGTH_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_length
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[LENGTH_INDEX]);
-        self.v_length = Some(other);
-    }
-}
-
 impl ShrAssign<UnitAbsorbedDose> for Value {
     fn shr_assign(&mut self, other: UnitAbsorbedDose) {
         if self.unit_map & ABSORBED_DOSE_MAP == 0 {
@@ -684,20 +618,6 @@ impl ShrAssign<UnitAbsorbedDose> for Value {
             .convert(&other)
             .powi(self.exp[ABSORBED_DOSE_INDEX]);
         self.v_ab_dose = Some(other);
-    }
-}
-
-impl ShrAssign<UnitAngle> for Value {
-    fn shr_assign(&mut self, other: UnitAngle) {
-        if self.unit_map & ANGLE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_angle
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ANGLE_INDEX]);
-        self.v_angle = Some(other);
     }
 }
 
