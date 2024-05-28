@@ -1,4 +1,13 @@
 pub mod angle;
+pub mod angle_solid;
+pub mod catalytic_activity;
+pub mod electrical_capacitance;
+pub mod electrical_charge;
+pub mod electrical_conductance;
+pub mod electrical_current;
+pub mod electrical_inductance;
+pub mod electrical_potential;
+pub mod electrical_resistance;
 pub mod length;
 
 use crate::{

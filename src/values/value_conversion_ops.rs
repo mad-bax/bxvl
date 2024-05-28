@@ -4,14 +4,6 @@ use crate::constants::*;
 use crate::errors::V3Error;
 use crate::units::Convert;
 use crate::units::UnitAbsorbedDose;
-use crate::units::UnitCatalyticActivity;
-use crate::units::UnitElectricCapacitance;
-use crate::units::UnitElectricCharge;
-use crate::units::UnitElectricConductance;
-use crate::units::UnitElectricCurrent;
-use crate::units::UnitElectricInductance;
-use crate::units::UnitElectricPotential;
-use crate::units::UnitElectricResistance;
 use crate::units::UnitEnergy;
 use crate::units::UnitForce;
 use crate::units::UnitFrequency;
@@ -26,7 +18,6 @@ use crate::units::UnitPower;
 use crate::units::UnitPressure;
 use crate::units::UnitRadioactivity;
 use crate::units::UnitRadioactivityExposure;
-use crate::units::UnitSolidAngle;
 use crate::units::UnitSound;
 use crate::units::UnitSubstance;
 use crate::units::UnitTemperature;
@@ -75,125 +66,6 @@ impl Shr<UnitAbsorbedDose> for Value {
             .convert(&other)
             .powi(self.exp[ABSORBED_DOSE_INDEX]);
         n.v_ab_dose = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitSolidAngle> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitSolidAngle) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & SOLID_ANGLE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_solid_angle
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[SOLID_ANGLE_INDEX]);
-        n.v_solid_angle = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricCapacitance> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricCapacitance) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & CAPACITANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_capacitance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[CAPACITANCE_INDEX]);
-        n.v_capacitance = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitCatalyticActivity> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitCatalyticActivity) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_catalytic
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
-        n.v_catalytic = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricCharge> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricCharge) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_electric_charge
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
-        n.v_electric_charge = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricConductance> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricConductance) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_electric_conductance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
-        n.v_electric_conductance = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricCurrent> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricCurrent) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_electric_current
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
-        n.v_electric_current = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricPotential> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricPotential) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_electric_potential
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
-        n.v_electric_potential = Some(other);
         Ok(n)
     }
 }
@@ -270,23 +142,6 @@ impl Shr<UnitIlluminance> for Value {
             .convert(&other)
             .powi(self.exp[ILLUMINANCE_INDEX]);
         n.v_illuminance = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitElectricInductance> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricInductance) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & INDUCTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_inductance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[INDUCTANCE_INDEX]);
-        n.v_inductance = Some(other);
         Ok(n)
     }
 }
@@ -457,23 +312,6 @@ impl Shr<UnitRadioactivityExposure> for Value {
     }
 }
 
-impl Shr<UnitElectricResistance> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitElectricResistance) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & RESISTANCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_resistance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[RESISTANCE_INDEX]);
-        n.v_resistance = Some(other);
-        Ok(n)
-    }
-}
-
 impl Shr<UnitSound> for Value {
     type Output = Result<Value, V3Error>;
     fn shr(self, other: UnitSound) -> Self::Output {
@@ -621,104 +459,6 @@ impl ShrAssign<UnitAbsorbedDose> for Value {
     }
 }
 
-impl ShrAssign<UnitSolidAngle> for Value {
-    fn shr_assign(&mut self, other: UnitSolidAngle) {
-        if self.unit_map & SOLID_ANGLE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_solid_angle
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[SOLID_ANGLE_INDEX]);
-        self.v_solid_angle = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricCapacitance> for Value {
-    fn shr_assign(&mut self, other: UnitElectricCapacitance) {
-        if self.unit_map & CAPACITANCE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_capacitance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[CAPACITANCE_INDEX]);
-        self.v_capacitance = Some(other);
-    }
-}
-
-impl ShrAssign<UnitCatalyticActivity> for Value {
-    fn shr_assign(&mut self, other: UnitCatalyticActivity) {
-        if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_catalytic
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
-        self.v_catalytic = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricCharge> for Value {
-    fn shr_assign(&mut self, other: UnitElectricCharge) {
-        if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_electric_charge
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
-        self.v_electric_charge = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricConductance> for Value {
-    fn shr_assign(&mut self, other: UnitElectricConductance) {
-        if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_electric_conductance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
-        self.v_electric_conductance = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricCurrent> for Value {
-    fn shr_assign(&mut self, other: UnitElectricCurrent) {
-        if self.unit_map & ELECTRIC_CURRENT_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_electric_current
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
-        self.v_electric_current = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricPotential> for Value {
-    fn shr_assign(&mut self, other: UnitElectricPotential) {
-        if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_electric_potential
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
-        self.v_electric_potential = Some(other);
-    }
-}
-
 impl ShrAssign<UnitEnergy> for Value {
     fn shr_assign(&mut self, other: UnitEnergy) {
         if self.unit_map & ENERGY_MAP == 0 {
@@ -780,20 +520,6 @@ impl ShrAssign<UnitIlluminance> for Value {
             .convert(&other)
             .powi(self.exp[ILLUMINANCE_INDEX]);
         self.v_illuminance = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricInductance> for Value {
-    fn shr_assign(&mut self, other: UnitElectricInductance) {
-        if self.unit_map & INDUCTANCE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_inductance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[INDUCTANCE_INDEX]);
-        self.v_inductance = Some(other);
     }
 }
 
@@ -934,20 +660,6 @@ impl ShrAssign<UnitRadioactivityExposure> for Value {
             .convert(&other)
             .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
         self.v_radioactivity_exposure = Some(other);
-    }
-}
-
-impl ShrAssign<UnitElectricResistance> for Value {
-    fn shr_assign(&mut self, other: UnitElectricResistance) {
-        if self.unit_map & RESISTANCE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_resistance
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[RESISTANCE_INDEX]);
-        self.v_resistance = Some(other);
     }
 }
 
