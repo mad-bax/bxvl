@@ -4,9 +4,6 @@ use crate::constants::*;
 use crate::errors::V3Error;
 use crate::units::Convert;
 use crate::units::UnitAbsorbedDose;
-use crate::units::UnitEnergy;
-use crate::units::UnitForce;
-use crate::units::UnitFrequency;
 use crate::units::UnitIlluminance;
 use crate::units::UnitInformation;
 use crate::units::UnitLuminousFlux;
@@ -66,65 +63,6 @@ impl Shr<UnitAbsorbedDose> for Value {
             .convert(&other)
             .powi(self.exp[ABSORBED_DOSE_INDEX]);
         n.v_ab_dose = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitEnergy> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitEnergy) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & ENERGY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_energy
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ENERGY_INDEX]);
-        n.v_energy = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitForce> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitForce) -> Self::Output {
-        let mut n: Value = self;
-        if self.unit_map & FORCE_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_force
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        n.v_force = Some(other);
-        Ok(n)
-    }
-}
-
-impl Shr<UnitFrequency> for Value {
-    type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitFrequency) -> Self::Output {
-        let mut n: Value = self;
-        if n.unit_map & TIME_MAP == TIME_MAP && n.exp[TIME_INDEX] == -1 {
-            n.val *= self.v_time.unwrap().convert(&other);
-            n.v_time = None;
-            n.v_frequency = Some(other);
-            n.exp[TIME_INDEX] = 0;
-            n.exp[FREQUENCY_INDEX] = 1;
-            n.unit_map = FREQUENCY_MAP;
-            return Ok(n);
-        } else if self.unit_map & FREQUENCY_MAP == 0 {
-            return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
-        }
-        n.val *= n
-            .v_frequency
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[FREQUENCY_INDEX]);
-        n.v_frequency = Some(other);
         Ok(n)
     }
 }
@@ -456,56 +394,6 @@ impl ShrAssign<UnitAbsorbedDose> for Value {
             .convert(&other)
             .powi(self.exp[ABSORBED_DOSE_INDEX]);
         self.v_ab_dose = Some(other);
-    }
-}
-
-impl ShrAssign<UnitEnergy> for Value {
-    fn shr_assign(&mut self, other: UnitEnergy) {
-        if self.unit_map & ENERGY_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_energy
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[ENERGY_INDEX]);
-        self.v_energy = Some(other);
-    }
-}
-
-impl ShrAssign<UnitForce> for Value {
-    fn shr_assign(&mut self, other: UnitForce) {
-        if self.unit_map & FORCE_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_force
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        self.v_force = Some(other);
-    }
-}
-
-impl ShrAssign<UnitFrequency> for Value {
-    fn shr_assign(&mut self, other: UnitFrequency) {
-        if self.unit_map & TIME_MAP == TIME_MAP && self.exp[TIME_INDEX] == -1 {
-            self.val *= self.v_time.unwrap().convert(&other);
-            self.v_time = None;
-            self.v_frequency = Some(other);
-            self.exp[TIME_INDEX] = 0;
-            self.exp[FREQUENCY_INDEX] = 1;
-            self.unit_map = FREQUENCY_MAP;
-            return;
-        } else if self.unit_map & FREQUENCY_MAP == 0 {
-            panic!("[shr_assign] Incompatible value types");
-        }
-        self.val *= self
-            .v_frequency
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[FREQUENCY_INDEX]);
-        self.v_frequency = Some(other);
     }
 }
 

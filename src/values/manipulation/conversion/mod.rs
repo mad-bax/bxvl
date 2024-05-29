@@ -8,6 +8,9 @@ pub mod electrical_current;
 pub mod electrical_inductance;
 pub mod electrical_potential;
 pub mod electrical_resistance;
+pub mod energy;
+pub mod force;
+pub mod frequency;
 pub mod length;
 
 use crate::{
