@@ -13,7 +13,8 @@ impl Shr<UnitFrequency> for Value {
             n.v_frequency = Some(other);
             n.exp[TIME_INDEX] = 0;
             n.exp[FREQUENCY_INDEX] = 1;
-            n.unit_map = FREQUENCY_MAP;
+            n.unit_map &= !TIME_MAP;
+            n.unit_map |= FREQUENCY_MAP;
             return Ok(n);
         } else if self.unit_map & FREQUENCY_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
@@ -36,7 +37,8 @@ impl ShrAssign<UnitFrequency> for Value {
             self.v_frequency = Some(other);
             self.exp[TIME_INDEX] = 0;
             self.exp[FREQUENCY_INDEX] = 1;
-            self.unit_map = FREQUENCY_MAP;
+            self.unit_map &= !TIME_MAP;
+            self.unit_map |= FREQUENCY_MAP;
             return;
         } else if self.unit_map & FREQUENCY_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
@@ -113,6 +115,12 @@ mod conversion_testing {
     #[test]
     fn unit_conversions_stat_exp1() {
         let t1 = 4.1 * UnitFrequency::Hertz(Metric::None);
+        let t1_2 = 4.1 / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
+
+        println!("{}", t1_2.to_string());
+        let t2 = (t1_2 >> UnitFrequency::Hertz(Metric::None)).unwrap();
+        println!("{}", t2.to_string());
+        assert_eq!(t2.to_string(), "4.1 m*Hz");
 
         for i in TEST_METRIC {
             // Scale the metric value by converting
