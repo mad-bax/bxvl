@@ -1,7 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{PRESSURE_INDEX, PRESSURE_MAP}, errors::V3Error, units::{Convert, UnitPressure}, values::Value};
-
+use crate::{
+    constants::{PRESSURE_INDEX, PRESSURE_MAP},
+    errors::V3Error,
+    units::{Convert, UnitPressure},
+    values::Value,
+};
 
 impl Shr<UnitPressure> for Value {
     type Output = Result<Value, V3Error>;
@@ -52,7 +56,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitPressure, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitPressure};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),

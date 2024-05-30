@@ -1,6 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP}, errors::V3Error, units::{Convert, UnitAbsorbedDose}, values::Value};
+use crate::{
+    constants::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
+    errors::V3Error,
+    units::{Convert, UnitAbsorbedDose},
+    values::Value,
+};
 
 impl Shr<UnitAbsorbedDose> for Value {
     type Output = Result<Value, V3Error>;

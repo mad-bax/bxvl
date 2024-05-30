@@ -1,7 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP}, errors::V3Error, units::{Convert, UnitRadioactivity}, values::Value};
-
+use crate::{
+    constants::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
+    errors::V3Error,
+    units::{Convert, UnitRadioactivity},
+    values::Value,
+};
 
 impl Shr<UnitRadioactivity> for Value {
     type Output = Result<Value, V3Error>;
@@ -52,7 +56,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitRadioactivity, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitRadioactivity};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),

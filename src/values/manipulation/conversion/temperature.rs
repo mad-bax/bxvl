@@ -1,7 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{TEMPERATURE_INDEX, TEMPERATURE_MAP}, errors::V3Error, units::UnitTemperature, values::Value};
-
+use crate::{
+    constants::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
+    errors::V3Error,
+    units::UnitTemperature,
+    values::Value,
+};
 
 impl Shr<UnitTemperature> for Value {
     type Output = Result<Value, V3Error>;
@@ -58,7 +62,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitTemperature, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitTemperature};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),

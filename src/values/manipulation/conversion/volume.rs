@@ -1,7 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{LENGTH_INDEX, LENGTH_MAP, VOLUME_INDEX, VOLUME_MAP}, errors::V3Error, units::{Convert, UnitVolume}, values::Value};
-
+use crate::{
+    constants::{LENGTH_INDEX, LENGTH_MAP, VOLUME_INDEX, VOLUME_MAP},
+    errors::V3Error,
+    units::{Convert, UnitVolume},
+    values::Value,
+};
 
 impl Shr<UnitVolume> for Value {
     type Output = Result<Value, V3Error>;
@@ -69,7 +73,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitVolume, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitVolume};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),

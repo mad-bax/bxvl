@@ -1,6 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP}, errors::V3Error, units::{Convert, UnitRadioactivityExposure}, values::Value};
+use crate::{
+    constants::{RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP},
+    errors::V3Error,
+    units::{Convert, UnitRadioactivityExposure},
+    values::Value,
+};
 
 impl Shr<UnitRadioactivityExposure> for Value {
     type Output = Result<Value, V3Error>;
@@ -51,7 +56,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitRadioactivityExposure, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitRadioactivityExposure};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),
@@ -90,7 +95,9 @@ mod conversion_testing {
 
     #[test]
     fn covert_stat_fail() {
-        assert!(((1.0 * UnitLength::Foot) >> UnitRadioactivityExposure::Sievert(Metric::None)).is_err());
+        assert!(
+            ((1.0 * UnitLength::Foot) >> UnitRadioactivityExposure::Sievert(Metric::None)).is_err()
+        );
     }
 
     #[test]

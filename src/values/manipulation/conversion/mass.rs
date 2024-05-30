@@ -1,6 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{MASS_INDEX, MASS_MAP}, errors::V3Error, units::{Convert, UnitMass}, values::Value};
+use crate::{
+    constants::{MASS_INDEX, MASS_MAP},
+    errors::V3Error,
+    units::{Convert, UnitMass},
+    values::Value,
+};
 
 impl Shr<UnitMass> for Value {
     type Output = Result<Value, V3Error>;
@@ -47,7 +52,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::units::{Metric, UnitMass, UnitLength};
+    use crate::units::{Metric, UnitLength, UnitMass};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),

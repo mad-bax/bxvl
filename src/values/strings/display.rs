@@ -126,6 +126,8 @@ mod value_string_testing {
             (1.1 * UnitAngle::Radian(Metric::None)).to_string(),
             "1.1 rad"
         );
+        assert_eq!((1.1 * UnitAngle::Moa).to_string(), "1.1 moa");
+        assert_eq!((1.1 * UnitAngle::Degree).to_string(), "1.1 °");
         assert_eq!(
             (1.1 * UnitCatalyticActivity::Katal(Metric::None)).to_string(),
             "1.1 kat"
