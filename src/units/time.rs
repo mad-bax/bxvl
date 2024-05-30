@@ -31,7 +31,7 @@ impl Convert<UnitTime> for UnitTime {
 
 impl Convert<UnitFrequency> for UnitTime {
     fn convert(&self, other: &UnitFrequency) -> f64 {
-        1.0 / (self.base() * self.scale() * other.scale())
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 

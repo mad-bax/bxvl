@@ -1,40 +1,31 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{
-    constants::{FORCE_INDEX, FORCE_MAP},
-    errors::V3Error,
-    units::{Convert, UnitForce},
-    values::Value,
-};
+use crate::{constants::{MASS_INDEX, MASS_MAP}, errors::V3Error, units::{Convert, UnitMass}, values::Value};
 
-impl Shr<UnitForce> for Value {
+impl Shr<UnitMass> for Value {
     type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitForce) -> Self::Output {
+    fn shr(self, other: UnitMass) -> Self::Output {
         let mut n: Value = self;
-        if self.unit_map & FORCE_MAP == 0 {
+        if self.unit_map & MASS_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
         }
-        n.val *= n
-            .v_force
-            .unwrap()
-            .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        n.v_force = Some(other);
+        n.val *= n.v_mass.unwrap().convert(&other).powi(self.exp[MASS_INDEX]);
+        n.v_mass = Some(other);
         Ok(n)
     }
 }
 
-impl ShrAssign<UnitForce> for Value {
-    fn shr_assign(&mut self, other: UnitForce) {
-        if self.unit_map & FORCE_MAP == 0 {
+impl ShrAssign<UnitMass> for Value {
+    fn shr_assign(&mut self, other: UnitMass) {
+        if self.unit_map & MASS_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
         self.val *= self
-            .v_force
+            .v_mass
             .unwrap()
             .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        self.v_force = Some(other);
+            .powi(self.exp[MASS_INDEX]);
+        self.v_mass = Some(other);
     }
 }
 
@@ -56,10 +47,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::{
-        constants::FC_LBF_TO_N,
-        units::{Metric, UnitForce, UnitLength},
-    };
+    use crate::units::{Metric, UnitMass, UnitLength};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),
@@ -93,21 +81,21 @@ mod conversion_testing {
     #[should_panic]
     fn covert_mut_fail() {
         let mut x = 1.0 * UnitLength::Foot;
-        x >>= UnitForce::Newton(Metric::None);
+        x >>= UnitMass::Gram(Metric::None);
     }
 
     #[test]
     fn covert_stat_fail() {
-        assert!(((1.0 * UnitLength::Foot) >> UnitForce::Newton(Metric::None)).is_err());
+        assert!(((1.0 * UnitLength::Foot) >> UnitMass::Gram(Metric::None)).is_err());
     }
 
     #[test]
     fn unit_conversions_stat_exp1() {
-        let t1 = 4.1 * UnitForce::Newton(Metric::None);
+        let t1 = 4.1 * UnitMass::Gram(Metric::None);
 
         for i in TEST_METRIC {
             // Scale the metric value by converting
-            let t2 = (t1 >> UnitForce::Newton(i.0)).unwrap();
+            let t2 = (t1 >> UnitMass::Gram(i.0)).unwrap();
 
             // Then divide the values and divide by the scaling. This should
             // bring the value back to the original assignment. This value
@@ -118,27 +106,19 @@ mod conversion_testing {
             // Verify that the string units are correct.
             assert_eq!(
                 t2.to_string().split(' ').collect::<Vec<&str>>()[1],
-                format!("{}N", i.1)
+                format!("{}g", i.1)
             );
         }
-
-        let t2 = (t1 >> UnitForce::PoundForce).unwrap();
-        let temp = t1.val / t2.val;
-        assert_apr!(temp, FC_LBF_TO_N);
-        assert_eq!(
-            t2.to_string().split(' ').collect::<Vec<&str>>()[1],
-            format!("lbfr")
-        );
     }
 
     #[test]
     fn unit_conversions_mut_exp1() {
-        let mut t1 = 4.1 * UnitForce::Newton(Metric::None);
-        let t1_orig = 4.1 * UnitForce::Newton(Metric::None);
+        let mut t1 = 4.1 * UnitMass::Gram(Metric::None);
+        let t1_orig = 4.1 * UnitMass::Gram(Metric::None);
 
         for i in TEST_METRIC {
             // Scale the metric value by converting
-            t1 >>= UnitForce::Newton(i.0);
+            t1 >>= UnitMass::Gram(i.0);
 
             // Then divide the values and divide by the scaling. This should
             // bring the value back to the original assignment. This value
@@ -147,7 +127,7 @@ mod conversion_testing {
             assert_apr!(temp, 1.0);
 
             // Reset a little bit
-            t1 = 4.1 * UnitForce::Newton(Metric::None);
+            t1 = 4.1 * UnitMass::Gram(Metric::None);
         }
     }
 }

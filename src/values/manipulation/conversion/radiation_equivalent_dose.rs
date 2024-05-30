@@ -1,40 +1,35 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{
-    constants::{FORCE_INDEX, FORCE_MAP},
-    errors::V3Error,
-    units::{Convert, UnitForce},
-    values::Value,
-};
+use crate::{constants::{RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP}, errors::V3Error, units::{Convert, UnitRadioactivityExposure}, values::Value};
 
-impl Shr<UnitForce> for Value {
+impl Shr<UnitRadioactivityExposure> for Value {
     type Output = Result<Value, V3Error>;
-    fn shr(self, other: UnitForce) -> Self::Output {
+    fn shr(self, other: UnitRadioactivityExposure) -> Self::Output {
         let mut n: Value = self;
-        if self.unit_map & FORCE_MAP == 0 {
+        if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
             return Err(V3Error::ValueConversionError("[shr] Incompatible types"));
         }
         n.val *= n
-            .v_force
+            .v_radioactivity_exposure
             .unwrap()
             .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        n.v_force = Some(other);
+            .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
+        n.v_radioactivity_exposure = Some(other);
         Ok(n)
     }
 }
 
-impl ShrAssign<UnitForce> for Value {
-    fn shr_assign(&mut self, other: UnitForce) {
-        if self.unit_map & FORCE_MAP == 0 {
+impl ShrAssign<UnitRadioactivityExposure> for Value {
+    fn shr_assign(&mut self, other: UnitRadioactivityExposure) {
+        if self.unit_map & RADIOACTIVITY_EXPOSURE_MAP == 0 {
             panic!("[shr_assign] Incompatible value types");
         }
         self.val *= self
-            .v_force
+            .v_radioactivity_exposure
             .unwrap()
             .convert(&other)
-            .powi(self.exp[FORCE_INDEX]);
-        self.v_force = Some(other);
+            .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
+        self.v_radioactivity_exposure = Some(other);
     }
 }
 
@@ -56,10 +51,7 @@ mod conversion_testing {
         };
     }
 
-    use crate::{
-        constants::FC_LBF_TO_N,
-        units::{Metric, UnitForce, UnitLength},
-    };
+    use crate::units::{Metric, UnitRadioactivityExposure, UnitLength};
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),
@@ -93,21 +85,21 @@ mod conversion_testing {
     #[should_panic]
     fn covert_mut_fail() {
         let mut x = 1.0 * UnitLength::Foot;
-        x >>= UnitForce::Newton(Metric::None);
+        x >>= UnitRadioactivityExposure::Sievert(Metric::None);
     }
 
     #[test]
     fn covert_stat_fail() {
-        assert!(((1.0 * UnitLength::Foot) >> UnitForce::Newton(Metric::None)).is_err());
+        assert!(((1.0 * UnitLength::Foot) >> UnitRadioactivityExposure::Sievert(Metric::None)).is_err());
     }
 
     #[test]
     fn unit_conversions_stat_exp1() {
-        let t1 = 4.1 * UnitForce::Newton(Metric::None);
+        let t1 = 4.1 * UnitRadioactivityExposure::Sievert(Metric::None);
 
         for i in TEST_METRIC {
             // Scale the metric value by converting
-            let t2 = (t1 >> UnitForce::Newton(i.0)).unwrap();
+            let t2 = (t1 >> UnitRadioactivityExposure::Sievert(i.0)).unwrap();
 
             // Then divide the values and divide by the scaling. This should
             // bring the value back to the original assignment. This value
@@ -118,27 +110,19 @@ mod conversion_testing {
             // Verify that the string units are correct.
             assert_eq!(
                 t2.to_string().split(' ').collect::<Vec<&str>>()[1],
-                format!("{}N", i.1)
+                format!("{}Sv", i.1)
             );
         }
-
-        let t2 = (t1 >> UnitForce::PoundForce).unwrap();
-        let temp = t1.val / t2.val;
-        assert_apr!(temp, FC_LBF_TO_N);
-        assert_eq!(
-            t2.to_string().split(' ').collect::<Vec<&str>>()[1],
-            format!("lbfr")
-        );
     }
 
     #[test]
     fn unit_conversions_mut_exp1() {
-        let mut t1 = 4.1 * UnitForce::Newton(Metric::None);
-        let t1_orig = 4.1 * UnitForce::Newton(Metric::None);
+        let mut t1 = 4.1 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t1_orig = 4.1 * UnitRadioactivityExposure::Sievert(Metric::None);
 
         for i in TEST_METRIC {
             // Scale the metric value by converting
-            t1 >>= UnitForce::Newton(i.0);
+            t1 >>= UnitRadioactivityExposure::Sievert(i.0);
 
             // Then divide the values and divide by the scaling. This should
             // bring the value back to the original assignment. This value
@@ -147,7 +131,7 @@ mod conversion_testing {
             assert_apr!(temp, 1.0);
 
             // Reset a little bit
-            t1 = 4.1 * UnitForce::Newton(Metric::None);
+            t1 = 4.1 * UnitRadioactivityExposure::Sievert(Metric::None);
         }
     }
 }

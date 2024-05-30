@@ -15,9 +15,6 @@ mod manipulation;
 /// Ordering operations (`==`, `!=`, `>=`, ...) definitions for `Value`s
 mod value_std_ops;
 
-/// `Value` conversion definitions
-mod value_conversion_ops;
-
 use serde::{Deserialize, Serialize};
 
 use crate::units::{

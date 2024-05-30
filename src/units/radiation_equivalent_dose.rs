@@ -26,7 +26,7 @@ impl Into<String> for UnitRadioactivityExposure {
 impl Convert<UnitRadioactivityExposure> for UnitRadioactivityExposure {
     /// Returns the `f64` multiplier to convert a `Value`
     fn convert(&self, other: &UnitRadioactivityExposure) -> f64 {
-        (self.scale() / self.scale()) * (self.base() / other.base())
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 

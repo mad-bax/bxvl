@@ -11,7 +11,26 @@ pub mod electrical_resistance;
 pub mod energy;
 pub mod force;
 pub mod frequency;
+pub mod illuminance;
+pub mod information;
 pub mod length;
+pub mod luminous_flux;
+pub mod luminous_intensity;
+pub mod magnetic_flux_density;
+pub mod magnetic_flux;
+pub mod mass;
+pub mod power;
+pub mod pressure;
+pub mod radiation_absorbed_dose;
+pub mod radiation_equivalent_dose;
+pub mod radioactivity;
+pub mod sound;
+pub mod substance;
+pub mod temperature;
+pub mod time;
+pub mod volume;
+
+use std::ops::{Shr, ShrAssign};
 
 use crate::{
     constants::{
@@ -28,6 +47,67 @@ use crate::{
     units::{Convert, Metric, UnitAngle, UnitLength},
     values::Value,
 };
+
+impl Shr<Value> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other: Value) -> Self::Output {
+        if self.__equivalent(&other) {
+            let mut ret: Value = self;
+            ret._convert(&other)?;
+            return Ok(ret);
+        }
+        Err(V3Error::ValueConversionError("[shr] Incompatible types"))
+    }
+}
+
+impl Shr<&str> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other: &str) -> Self::Output {
+        let n: Value = Value::new(1.0, other)?;
+        self >> n
+    }
+}
+
+impl Shr<String> for Value {
+    type Output = Result<Value, V3Error>;
+    fn shr(self, other: String) -> Self::Output {
+        let n: Value = Value::new(1.0, other.as_str())?;
+        self >> n
+    }
+}
+
+impl ShrAssign<Value> for Value {
+    fn shr_assign(&mut self, other: Value) {
+        if self.__equivalent(&other) {
+            match self._convert(&other) {
+                Ok(_) => {}
+                Err(_) => panic!("[shr_assign] Incompatible value types: {}, {}", self, other),
+            }
+        } else {
+            panic!("[shr_assign] Incompatible value types: {}, {}", self, other);
+        }
+    }
+}
+
+impl ShrAssign<&str> for Value {
+    fn shr_assign(&mut self, other: &str) {
+        let n: Value = match Value::new(1.0, other) {
+            Ok(t) => t,
+            Err(_) => panic!("[shr_assign] Incompatible value types"),
+        };
+        *self >>= n;
+    }
+}
+
+impl ShrAssign<String> for Value {
+    fn shr_assign(&mut self, other: String) {
+        let n: Value = match Value::new(1.0, other.as_str()) {
+            Ok(t) => t,
+            Err(_) => panic!("[shr_assign] Incompatible value types"),
+        };
+        *self >>= n;
+    }
+}
 
 impl Value {
     /// Convert a [`Value`] to another of the same base unit types.
@@ -110,7 +190,8 @@ impl Value {
         {
             self.exp[FREQUENCY_INDEX] = 0;
             self.exp[TIME_INDEX] = -1;
-            self.unit_map = TIME_MAP;
+            self.unit_map &= !FREQUENCY_MAP;
+            self.unit_map |= TIME_MAP;
             self.val *= self.v_frequency.unwrap().convert(&other.v_time.unwrap());
             self.v_frequency = None;
             self.v_time = other.v_time;
@@ -122,7 +203,8 @@ impl Value {
         {
             self.exp[FREQUENCY_INDEX] = 1;
             self.exp[TIME_INDEX] = 0;
-            self.unit_map = FREQUENCY_MAP;
+            self.unit_map &= !TIME_MAP;
+            self.unit_map |= FREQUENCY_MAP;
             self.val *= self.v_time.unwrap().convert(&other.v_frequency.unwrap());
             self.v_frequency = other.v_frequency;
             self.v_time = None;
@@ -249,9 +331,7 @@ impl Value {
                             self.v_magnetic_flux_density = other.v_magnetic_flux_density;
                             tmp
                         }
-                        TEMPERATURE_MAP => {
-                            1.0 // This should not convert at the moment
-                        }
+                        TEMPERATURE_MAP => unreachable!("This cannot be reached!"),
                         SUBSTANCE_MAP => {
                             tmp = self
                                 .v_substance

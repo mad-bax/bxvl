@@ -24,7 +24,7 @@ impl Convert<UnitFrequency> for UnitFrequency {
 impl Convert<UnitTime> for UnitFrequency {
     /// Returns the `f64` multiplier to convert a `Value`
     fn convert(&self, other: &UnitTime) -> f64 {
-        (self.scale() / other.scale()) * (other.convert(&UnitTime::Second(Metric::None)))
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 

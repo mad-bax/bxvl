@@ -1,7 +1,11 @@
 use std::ops::{Shr, ShrAssign};
 
-use crate::{constants::{ENERGY_INDEX, ENERGY_MAP}, errors::V3Error, units::{Convert, UnitEnergy}, values::Value};
-
+use crate::{
+    constants::{ENERGY_INDEX, ENERGY_MAP},
+    errors::V3Error,
+    units::{Convert, UnitEnergy},
+    values::Value,
+};
 
 impl Shr<UnitEnergy> for Value {
     type Output = Result<Value, V3Error>;
@@ -52,7 +56,10 @@ mod conversion_testing {
         };
     }
 
-    use crate::{constants::{EN_CAL_TO_J, EN_EV_TO_J}, units::{Metric, UnitEnergy, UnitLength}};
+    use crate::{
+        constants::{EN_CAL_TO_J, EN_EV_TO_J},
+        units::{Metric, UnitEnergy, UnitLength},
+    };
 
     const TEST_METRIC: [(Metric, &str); 25] = [
         (Metric::Quetta, "Q"),
