@@ -439,10 +439,8 @@ impl Value {
     ///
     /// `length / time`
     pub fn is_velocity(&self) -> bool {
-        if self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map {
-            return false;
-        }
-        if self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -1 {
+        if (self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map) 
+         || (self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -1) {
             return false;
         }
         true
@@ -1384,5 +1382,282 @@ impl Value {
         }
 
         final_str
+    }
+}
+
+#[cfg(test)]
+mod value_impl_testing {
+    use crate::{units::{Metric, UnitAngle, UnitLength, UnitMass, UnitTime, UnitVolume}, values::Value};
+
+
+    #[test]
+    fn degrees_to_radians() {
+        let mut t = 4.0 * UnitAngle::Degree;
+        t.to_radians();
+    }
+
+    #[test]
+    fn radians_to_degrees() {
+        let mut t = 4.0 * UnitAngle::Radian(Metric::None);
+        t.to_degrees();
+    }
+
+    #[test]
+    #[should_panic]
+    fn degrees_to_radians_fail() {
+        let mut t = 4.0 * UnitLength::Inch;
+        t.to_radians();
+    }
+
+    #[test]
+    #[should_panic]
+    fn radians_to_degrees_fail() {
+        let mut t = 4.0 * UnitLength::Inch;
+        t.to_degrees();
+    }
+
+    #[test]
+    fn value_inverse() {
+        let mut t = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        t.inv();
+        assert_eq!(t.to_string(), "0.25 s/m");
+    }
+
+    #[test]
+    fn is_nan_true() {
+        let t = Value::new(f64::NAN, "m").unwrap();
+        assert!(t.is_nan());
+    }
+
+    #[test]
+    fn is_nan_false() {
+        let t = Value::new(1.0, "Wb").unwrap();
+        assert!(!t.is_nan());
+    }
+
+    #[test]
+    fn is_finite() {
+        let t = Value::new(1.0, "T").unwrap();
+        assert!(t.is_finite());
+    }
+
+    #[test]
+    fn is_infinite() {
+        let t = Value::new(f64::INFINITY, "keV").unwrap();
+        assert!(t.is_infinite());
+    }
+
+    #[test]
+    fn is_normal() {
+        let t = Value::new(1.0, "PSI").unwrap();
+        assert!(t.is_normal());
+    }
+
+    #[test]
+    fn is_subnormal() {
+        let t = Value::new(1.0, "rem").unwrap();
+        assert!(!t.is_subnormal());
+    }
+
+    #[test]
+    fn is_sign_negative() {
+        let t = Value::new(-1.0, "rads").unwrap();
+        assert!(t.is_sign_negative());
+        assert!(!t.is_sign_positive());
+    }
+
+    #[test]
+    fn is_sign_positive() {
+        let t = Value::new(1.0, "1/rads").unwrap();
+        assert!(!t.is_sign_negative());
+        assert!(t.is_sign_positive());
+    }
+
+    #[test]
+    fn test_sqrt() {
+        let t = 4.0 * UnitLength::Inch * UnitLength::Inch;
+        let k = t.sqrt();
+        assert_eq!(t.to_string(), "4 in^2");
+        assert_eq!(k.to_string(), "2 in");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_sqrt_fail() {
+        let _ = (4.0 * UnitLength::Inch).sqrt();
+    }
+
+    #[test]
+    fn test_powv() {
+        let t = 2.0 * UnitLength::Inch;
+        let k = t.powv(2);
+        assert_eq!(t*t, k);
+    }
+
+    #[test]
+    fn test_cbrt() {
+        let t = 8.0 * UnitLength::Inch * UnitLength::Inch * UnitLength::Inch;
+        let k = t.cbrt();
+        assert_eq!(t.to_string(), "8 in^3");
+        assert_eq!(k.to_string(), "2 in");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_cbrt_fail() {
+        let _ = (8.0 * UnitLength::Inch * UnitLength::Inch).cbrt();
+    }
+
+    #[test]
+    fn get_sin() {
+        let t = 4.0 * UnitLength::Meter(Metric::None);
+        let a = t.sin();
+        println!("{}", a.val);
+        assert!(a.val >= -0.756803);
+        assert!(a.val <= -0.756801);
+    }
+
+    #[test]
+    fn get_cos() {
+        let t = 4.0 * UnitLength::Meter(Metric::None);
+        let a = t.cos();
+        println!("{}", a.val);
+        assert!(a.val >= -0.653644);
+        assert!(a.val <= -0.653643);
+    }
+
+    #[test]
+    fn get_tan() {
+        let t = 4.0 * UnitLength::Meter(Metric::None);
+        let a = t.tan();
+        println!("{}", a.val);
+        assert!(a.val >= 1.157821);
+        assert!(a.val <= 1.157822);
+    }
+
+    #[test]
+    fn get_tanh() {
+        let t = 4.0 * UnitLength::Meter(Metric::None);
+        let a = t.tanh();
+        println!("{}", a.val);
+        assert!(a.val >= 0.9993292);
+        assert!(a.val <= 0.9993293);
+    }
+
+    #[test]
+    fn get_asin() {
+        let t = 0.5 * UnitLength::Meter(Metric::None);
+        let a = t.asin();
+        println!("{}", a.val);
+        assert!(a.val >= 0.523598);
+        assert!(a.val <= 0.523600);
+    }
+
+    #[test]
+    fn get_acos() {
+        let t = 0.5 * UnitLength::Meter(Metric::None);
+        let a = t.acos();
+        println!("{}", a.val);
+        assert!(a.val >= 1.047197);
+        assert!(a.val <= 1.047199);
+    }
+
+    #[test]
+    fn get_atan() {
+        let t = 0.5 * UnitLength::Meter(Metric::None);
+        let a = t.atan();
+        println!("{}", a.val);
+        assert!(a.val >= 0.463647);
+        assert!(a.val <= 0.463649);
+    }
+
+    #[test]
+    fn get_atan2() {
+        let t = 5.0 * UnitAngle::Radian(Metric::None);
+        let v = 3.0 * UnitAngle::Radian(Metric::None);
+        let a = t.atan2(&v);
+        println!("{}", a.val);
+        assert!(a.val >= 1.0303768);
+        assert!(a.val <= 1.0303769);
+    }
+
+    #[test]
+    #[should_panic]
+    fn get_atan2_fail() {
+        let t = 5.0 * UnitAngle::Radian(Metric::None);
+        let v = 3.0 * UnitLength::Meter(Metric::None);
+        let _ = t.atan2(&v);
+    }
+
+    #[test]
+    fn is_empty() {
+        let t = 1.0 * UnitLength::Inch;
+        assert!(!t.is_empty());
+        let v = Value::new(1.0, "").unwrap();
+        assert!(v.is_empty());
+    }
+
+    #[test]
+    fn is_length() {
+        let t = 1.0 * UnitLength::Inch;
+        let v = 1.0 * UnitTime::Minute;
+        assert!(t.is_length());
+        assert!(!v.is_length());
+    }
+
+    #[test]
+    fn is_area() {
+        let t = 1.0 * UnitLength::Inch * UnitLength::Inch;
+        let v = 1.0 * UnitTime::Minute;
+        assert!(t.is_area());
+        assert!(!v.is_area());
+    }
+
+    #[test]
+    fn is_volume_fail() {
+        let t = 1.0 * UnitLength::Inch * UnitLength::Inch;
+        assert!(!t.is_volume());
+    }
+
+    #[test]
+    fn is_temperature_fail() {
+        let t = 1.0 * UnitLength::Inch;
+        assert!(!t.is_temperature());
+        assert!(!t.is_velocity());
+    }
+
+    #[test]
+    fn is_density() {
+        let t = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitVolume::Liter(Metric::None);
+        let v = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+        let k = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+
+        assert!(t.is_density());
+        assert!(v.is_density());
+        assert!(!k.is_density());
+    }
+
+    #[test]
+    fn is_velocity() {
+        let t = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        let v = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        assert!(t.is_velocity());
+        assert!(!v.is_velocity());
+    }
+
+    #[test]
+    fn is_acceleration() {
+        let t = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        let v = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        assert!(!t.is_acceleration());
+        assert!(v.is_acceleration());
+    }
+
+    #[test]
+    fn is_momentum() {
+        let t = 4.0 * UnitMass::Gram(Metric::Kilo) * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        assert!(t.is_momentum());
+        assert!(!k.is_momentum());
     }
 }
