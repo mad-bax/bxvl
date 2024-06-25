@@ -10,16 +10,6 @@ impl PartialEq<Value> for Value {
     }
 }
 
-impl PartialEq<&mut Value> for Value {
-    fn eq(&self, other: &&mut Value) -> bool {
-        if !self.__equal(other) {
-            return false;
-        }
-
-        self.val == other.val
-    }
-}
-
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Value) -> Option<std::cmp::Ordering> {
         if self.unit_map != other.unit_map {
@@ -31,7 +21,7 @@ impl PartialOrd for Value {
             && self.unit_map != TEMPERATURE_MAP
             && self.v_temperature != other.v_temperature
         {
-            // Error cannot convert as part of larger unit
+            return None;
         }
 
         let mut cmp_val: f64 = other.val;
@@ -280,5 +270,618 @@ impl PartialEq<f64> for Value {
 impl PartialOrd<f64> for Value {
     fn partial_cmp(&self, other: &f64) -> Option<std::cmp::Ordering> {
         self.val.partial_cmp(other)
+    }
+}
+
+impl PartialEq<Value> for f64 {
+    fn eq(&self, other: &Value) -> bool {
+        self == &other.val
+    }
+}
+
+impl PartialOrd<Value> for f64 {
+    fn partial_cmp(&self, other: &Value) -> Option<std::cmp::Ordering> {
+        self.partial_cmp(&other.val)
+    }
+}
+
+#[cfg(test)]
+mod std_ops_testing {
+    use crate::units::{
+        Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+        UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance,
+        UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency,
+        UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity,
+        UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure,
+        UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
+        UnitTemperature, UnitTime, UnitVolume,
+    };
+
+    #[test]
+    fn f64_ord() {
+        let t1 = 5.4 * UnitLength::Meter(Metric::None);
+        assert!(6.0 > t1);
+        assert!(6.0 >= t1);
+        assert!(5.0 < t1);
+        assert!(5.0 <= t1);
+
+        assert!(t1 < 6.0);
+        assert!(t1 <= 6.0);
+        assert!(t1 > 5.0);
+        assert!(t1 >= 5.0);
+
+        assert!(t1 == 5.4);
+        assert!(5.4 == t1);
+    }
+
+    #[test]
+    fn value_eq_borrow() {
+        let t1 = 5.4 * UnitLength::Meter(Metric::None);
+        #[allow(unused_mut)]
+        let mut t2 = 5.4 * UnitLength::Meter(Metric::None);
+        #[allow(unused_mut)]
+        let mut t3 = 6.0 * UnitLength::Meter(Metric::None);
+
+        assert!(t1 == t2);
+        assert!(t2 == t1);
+        assert!(t1 != t3);
+        assert!(t3 != t1);
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_ords_bad_map() {
+        let t1 = 5.4 * UnitLength::Meter(Metric::None);
+        let t2 = 5.0 * UnitMass::Ounce;
+
+        assert_eq!(t1 > t2, true);
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_ords_bad_temp() {
+        let t1 = 5.4 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t2 = 5.0 * UnitTemperature::Kelvin(Metric::None) * UnitLength::Meter(Metric::None);
+
+        assert_eq!(t1 > t2, true);
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_ords_bad_exp() {
+        let t1 = 5.4 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let t2 = 5.0 * UnitLength::Meter(Metric::None);
+
+        assert_eq!(t1 > t2, true);
+    }
+
+    #[test]
+    fn value_ords() {
+        let t1 = 5.4 * UnitTemperature::Kelvin(Metric::None);
+        let t2 = 5.0 * UnitTemperature::Kelvin(Metric::None);
+        let t3 = 6.0 * UnitTemperature::Kelvin(Metric::None);
+        let t4 = 0.0054 * UnitTemperature::Kelvin(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitSound::Bel(Metric::None);
+        let t2 = 5.0 * UnitSound::Bel(Metric::None);
+        let t3 = 6.0 * UnitSound::Bel(Metric::None);
+        let t4 = 0.0054 * UnitSound::Bel(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitSolidAngle::Steradian(Metric::None);
+        let t2 = 5.0 * UnitSolidAngle::Steradian(Metric::None);
+        let t3 = 6.0 * UnitSolidAngle::Steradian(Metric::None);
+        let t4 = 0.0054 * UnitSolidAngle::Steradian(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitVolume::Liter(Metric::None);
+        let t2 = 5.0 * UnitVolume::Liter(Metric::None);
+        let t3 = 6.0 * UnitVolume::Liter(Metric::None);
+        let t4 = 0.0054 * UnitVolume::Liter(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitTime::Second(Metric::None);
+        let t2 = 5.0 * UnitTime::Second(Metric::None);
+        let t3 = 6.0 * UnitTime::Second(Metric::None);
+        let t4 = 0.0054 * UnitTime::Second(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitSubstance::Mole(Metric::None);
+        let t2 = 5.0 * UnitSubstance::Mole(Metric::None);
+        let t3 = 6.0 * UnitSubstance::Mole(Metric::None);
+        let t4 = 0.0054 * UnitSubstance::Mole(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitMass::Gram(Metric::None);
+        let t2 = 5.0 * UnitMass::Gram(Metric::None);
+        let t3 = 6.0 * UnitMass::Gram(Metric::None);
+        let t4 = 0.0054 * UnitMass::Gram(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitRadioactivity::Becquerel(Metric::None);
+        let t2 = 5.0 * UnitRadioactivity::Becquerel(Metric::None);
+        let t3 = 6.0 * UnitRadioactivity::Becquerel(Metric::None);
+        let t4 = 0.0054 * UnitRadioactivity::Becquerel(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t2 = 5.0 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t3 = 6.0 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t4 = 0.0054 * UnitRadioactivityExposure::Sievert(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitPower::Watt(Metric::None);
+        let t2 = 5.0 * UnitPower::Watt(Metric::None);
+        let t3 = 6.0 * UnitPower::Watt(Metric::None);
+        let t4 = 0.0054 * UnitPower::Watt(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitPressure::Bar(Metric::None);
+        let t2 = 5.0 * UnitPressure::Bar(Metric::None);
+        let t3 = 6.0 * UnitPressure::Bar(Metric::None);
+        let t4 = 0.0054 * UnitPressure::Bar(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t2 = 5.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t3 = 6.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t4 = 0.0054 * UnitMagneticFluxDensity::Tesla(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitMagneticFlux::Weber(Metric::None);
+        let t2 = 5.0 * UnitMagneticFlux::Weber(Metric::None);
+        let t3 = 6.0 * UnitMagneticFlux::Weber(Metric::None);
+        let t4 = 0.0054 * UnitMagneticFlux::Weber(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitLuminousIntensity::Candela(Metric::None);
+        let t2 = 5.0 * UnitLuminousIntensity::Candela(Metric::None);
+        let t3 = 6.0 * UnitLuminousIntensity::Candela(Metric::None);
+        let t4 = 0.0054 * UnitLuminousIntensity::Candela(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitLuminousFlux::Lumen(Metric::None);
+        let t2 = 5.0 * UnitLuminousFlux::Lumen(Metric::None);
+        let t3 = 6.0 * UnitLuminousFlux::Lumen(Metric::None);
+        let t4 = 0.0054 * UnitLuminousFlux::Lumen(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 4.0 * UnitInformation::Byte(Metric::None);
+        let t2 = 2.0 * UnitInformation::Byte(Metric::None);
+        let t3 = 8.0 * UnitInformation::Byte(Metric::None);
+        let t4 = 0.00390625 * UnitInformation::Byte(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitIlluminance::Lux(Metric::None);
+        let t2 = 5.0 * UnitIlluminance::Lux(Metric::None);
+        let t3 = 6.0 * UnitIlluminance::Lux(Metric::None);
+        let t4 = 0.0054 * UnitIlluminance::Lux(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitFrequency::Hertz(Metric::None);
+        let t2 = 5.0 * UnitFrequency::Hertz(Metric::None);
+        let t3 = 6.0 * UnitFrequency::Hertz(Metric::None);
+        let t4 = 0.0054 * UnitFrequency::Hertz(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitForce::Newton(Metric::None);
+        let t2 = 5.0 * UnitForce::Newton(Metric::None);
+        let t3 = 6.0 * UnitForce::Newton(Metric::None);
+        let t4 = 0.0054 * UnitForce::Newton(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitEnergy::Joule(Metric::None);
+        let t2 = 5.0 * UnitEnergy::Joule(Metric::None);
+        let t3 = 6.0 * UnitEnergy::Joule(Metric::None);
+        let t4 = 0.0054 * UnitEnergy::Joule(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricResistance::Ohm(Metric::None);
+        let t2 = 5.0 * UnitElectricResistance::Ohm(Metric::None);
+        let t3 = 6.0 * UnitElectricResistance::Ohm(Metric::None);
+        let t4 = 0.0054 * UnitElectricResistance::Ohm(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 5.0 * UnitElectricPotential::Volt(Metric::None);
+        let t3 = 6.0 * UnitElectricPotential::Volt(Metric::None);
+        let t4 = 0.0054 * UnitElectricPotential::Volt(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricInductance::Henry(Metric::None);
+        let t2 = 5.0 * UnitElectricInductance::Henry(Metric::None);
+        let t3 = 6.0 * UnitElectricInductance::Henry(Metric::None);
+        let t4 = 0.0054 * UnitElectricInductance::Henry(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 5.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let t3 = 6.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let t4 = 0.0054 * UnitElectricCurrent::Ampere(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricConductance::Siemens(Metric::None);
+        let t2 = 5.0 * UnitElectricConductance::Siemens(Metric::None);
+        let t3 = 6.0 * UnitElectricConductance::Siemens(Metric::None);
+        let t4 = 0.0054 * UnitElectricConductance::Siemens(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricCharge::Coulomb(Metric::None);
+        let t2 = 5.0 * UnitElectricCharge::Coulomb(Metric::None);
+        let t3 = 6.0 * UnitElectricCharge::Coulomb(Metric::None);
+        let t4 = 0.0054 * UnitElectricCharge::Coulomb(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitElectricCapacitance::Farad(Metric::None);
+        let t2 = 5.0 * UnitElectricCapacitance::Farad(Metric::None);
+        let t3 = 6.0 * UnitElectricCapacitance::Farad(Metric::None);
+        let t4 = 0.0054 * UnitElectricCapacitance::Farad(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitLength::Meter(Metric::None);
+        let t2 = 5.0 * UnitLength::Meter(Metric::None);
+        let t3 = 6.0 * UnitLength::Meter(Metric::None);
+        let t4 = 0.0054 * UnitLength::Meter(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitAbsorbedDose::Gray(Metric::None);
+        let t2 = 5.0 * UnitAbsorbedDose::Gray(Metric::None);
+        let t3 = 6.0 * UnitAbsorbedDose::Gray(Metric::None);
+        let t4 = 0.0054 * UnitAbsorbedDose::Gray(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitAngle::Radian(Metric::None);
+        let t2 = 5.0 * UnitAngle::Radian(Metric::None);
+        let t3 = 6.0 * UnitAngle::Radian(Metric::None);
+        let t4 = 0.0054 * UnitAngle::Radian(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
+
+        let t1 = 5.4 * UnitCatalyticActivity::Katal(Metric::None);
+        let t2 = 5.0 * UnitCatalyticActivity::Katal(Metric::None);
+        let t3 = 6.0 * UnitCatalyticActivity::Katal(Metric::None);
+        let t4 = 0.0054 * UnitCatalyticActivity::Katal(Metric::Kilo);
+
+        assert!(t1 < t3 && t1 > t2);
+        assert!(t1 <= t3 && t1 >= t2);
+        assert!(t3 > t1 && t3 > t2);
+        assert!(t3 >= t1 && t3 >= t2);
+        assert!(t2 < t1 && t2 < t3);
+        assert!(t2 <= t1 && t2 <= t3);
+
+        assert!(t4 > t2 && t4 < t3);
+        assert!(t4 >= t2 && t4 <= t3);
+        assert!(t4 >= t1);
+        assert!(t4 <= t1);
     }
 }

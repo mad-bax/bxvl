@@ -108,14 +108,14 @@ impl Value {
                     }
                 }
                 '/' => {
-                    if !found_divisor {
+                    if !found_divisor && left_count == 0 {
                         found_divisor = true;
+                    } else if left_count > 0 {
+                        // Do nothing, this div is in parentheses
                     } else {
-                        todo!("Too many divisors");
+                        panic!("Too many divisors")
                     }
-                    if !found_divisor && !constructor.is_empty() {
-                        denom.push(constructor.clone());
-                    } else if !constructor.is_empty() {
+                    if !constructor.is_empty() {
                         numor.push(constructor.clone());
                     }
                     constructor = String::new();
@@ -350,9 +350,10 @@ impl Value {
                 match self._get_metric(match &unit.chars().next() {
                     Some(t) => t,
                     None => {
+                        // Unreachable all things being equal
                         return Err(V3Error::ParsingError(
                             "[_get_double_letter] Cannot get next metric char".into(),
-                        ))
+                        ));
                     }
                 }) {
                     Ok(new_m) => {
@@ -370,6 +371,11 @@ impl Value {
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_triple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
+            if m != Metric::None {
+                return Err(V3Error::ParsingError(
+                    "[_get_pentuple_letter] Already registered metric prefix".into(),
+                ));
+            }
             return self._get_single_letter(da.chars().next().unwrap(), exp, Metric::Deca);
         }
 
@@ -394,16 +400,16 @@ impl Value {
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
             }
-            "Cal" => {
-                // if m is not empty error out
-                self.v_energy = Some(UnitEnergy::GramCalorie(Metric::Kilo));
-                self.exp[ENERGY_INDEX] = exp;
-                self.unit_map |= ENERGY_MAP;
-            }
             "cal" => {
                 self.v_energy = Some(UnitEnergy::GramCalorie(m));
                 self.exp[ENERGY_INDEX] = exp;
                 self.unit_map |= ENERGY_MAP;
+            }
+            "Cal" => {
+                self.v_energy = Some(UnitEnergy::GramCalorie(Metric::Kilo));
+                self.exp[ENERGY_INDEX] = exp;
+                self.unit_map |= ENERGY_MAP;
+                return Ok(());
             }
             "lyr" => {
                 self.v_length = Some(UnitLength::LightYear(m));
@@ -421,9 +427,10 @@ impl Value {
                 match self._get_metric(match &unit.chars().next() {
                     Some(t) => t,
                     None => {
+                        // Unreachable all things being equal
                         return Err(V3Error::ParsingError(
                             "[_get_triple_letter] Cannot get next metric char".into(),
-                        ))
+                        ));
                     }
                 }) {
                     Ok(new_m) => {
@@ -443,6 +450,11 @@ impl Value {
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_quadruple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
+            if m != Metric::None {
+                return Err(V3Error::ParsingError(
+                    "[_get_pentuple_letter] Already registered metric prefix".into(),
+                ));
+            }
             return self._get_double_letter(&da.to_string(), exp, Metric::Deca);
         }
 
@@ -467,9 +479,10 @@ impl Value {
                 match self._get_metric(match &unit.chars().next() {
                     Some(t) => t,
                     None => {
+                        // Unreachable all things being equal
                         return Err(V3Error::ParsingError(
                             "[_get_quadruple_letter] Cannot get next metric char".into(),
-                        ))
+                        ));
                     }
                 }) {
                     Ok(new_m) => {
@@ -488,6 +501,11 @@ impl Value {
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_pentuple_letter(&mut self, unit: &str, exp: i32, m: Metric) -> Result<(), V3Error> {
         if let Some(da) = unit.strip_prefix("da") {
+            if m != Metric::None {
+                return Err(V3Error::ParsingError(
+                    "[_get_pentuple_letter] Already registered metric prefix".into(),
+                ));
+            }
             return self._get_triple_letter(&da.to_string(), exp, Metric::Deca);
         }
 
@@ -500,14 +518,38 @@ impl Value {
         match self._get_metric(match &unit.chars().next() {
             Some(t) => t,
             None => {
+                // Unreachable all things being equal
                 return Err(V3Error::ParsingError(
                     "[_get_pentuple_letter] Cannot get next metric char".into(),
-                ))
+                ));
             }
         }) {
             Ok(new_m) => {
                 let t: Vec<char> = unit.chars().collect::<Vec<_>>();
                 self._get_quadruple_letter(&t[1..].iter().collect::<String>(), exp, new_m)
+            }
+            Err(e) => Err(e),
+        }
+    }
+
+    /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
+    fn _get_sextuple_letter(&mut self, unit: &str, exp: i32) -> Result<(), V3Error> {
+        if let Some(da) = unit.strip_prefix("da") {
+            return self._get_quadruple_letter(&da.to_string(), exp, Metric::Deca);
+        }
+
+        match self._get_metric(match &unit.chars().next() {
+            Some(t) => t,
+            None => {
+                // Unreachable all things being equal
+                return Err(V3Error::ParsingError(
+                    "[_get_sextuple_letter] Cannot get next metric char".into(),
+                ));
+            }
+        }) {
+            Ok(new_m) => {
+                let t: Vec<char> = unit.chars().collect::<Vec<_>>();
+                self._get_pentuple_letter(&t[1..].iter().collect::<String>(), exp, new_m)
             }
             Err(e) => Err(e),
         }
@@ -766,6 +808,8 @@ impl Value {
             self._get_quadruple_letter(&unit, exp, Metric::None)?;
         } else if l == 5 {
             self._get_pentuple_letter(&unit, exp, Metric::None)?;
+        } else if l == 6 {
+            self._get_sextuple_letter(&unit, exp)?;
         } else {
             return Err(V3Error::UnsupportedUnit(format!(
                 "[_parse_units] Unit {} exceeds parsing bounds",
@@ -780,16 +824,57 @@ impl Value {
 mod parse_testing {
     use crate::{
         constants::{
-            ANGLE_INDEX, ANGLE_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP,
-            INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, MASS_INDEX, MASS_MAP,
-            PRESSURE_INDEX, PRESSURE_MAP, TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP,
+            ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_INDEX,
+            CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP,
+            ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX,
+            ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_INDEX, ELECTRIC_CURRENT_MAP,
+            ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP, ENERGY_INDEX, ENERGY_MAP,
+            FORCE_INDEX, FORCE_MAP, FREQUENCY_INDEX, FREQUENCY_MAP, ILLUMINANCE_INDEX,
+            ILLUMINANCE_MAP, INDUCTANCE_INDEX, INDUCTANCE_MAP, INFORMATION_INDEX, INFORMATION_MAP,
+            LENGTH_INDEX, LENGTH_MAP, LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP,
+            LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP, MAGNETIC_FLUX_DENSITY_INDEX,
+            MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_INDEX, MAGNETIC_FLUX_MAP, MASS_INDEX,
+            MASS_MAP, POWER_INDEX, POWER_MAP, PRESSURE_INDEX, PRESSURE_MAP,
+            RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP, RADIOACTIVITY_INDEX,
+            RADIOACTIVITY_MAP, RESISTANCE_INDEX, RESISTANCE_MAP, SOLID_ANGLE_INDEX,
+            SOLID_ANGLE_MAP, SOUND_INDEX, SOUND_MAP, SUBSTANCE_INDEX, SUBSTANCE_MAP,
+            TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP, VOLUME_INDEX, VOLUME_MAP,
         },
         units::{
-            Metric, UnitAngle, UnitEnergy, UnitForce, UnitInformation, UnitLength, UnitMass,
-            UnitPressure, UnitTemperature, UnitTime,
+            Metric, UnitAngle, UnitElectricCapacitance, UnitEnergy, UnitForce, UnitInformation,
+            UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime,
         },
         values::Value,
     };
+
+    const TEST_METRIC: [(Metric, &str); 26] = [
+        (Metric::Quetta, "Q"),
+        (Metric::Ronna, "R"),
+        (Metric::Yotta, "Y"),
+        (Metric::Zetta, "Z"),
+        (Metric::Exa, "E"),
+        (Metric::Peta, "P"),
+        (Metric::Tera, "T"),
+        (Metric::Giga, "G"),
+        (Metric::Mega, "M"),
+        (Metric::Kilo, "k"),
+        (Metric::Hecto, "h"),
+        (Metric::Deca, "da"),
+        (Metric::None, ""),
+        (Metric::Deci, "d"),
+        (Metric::Centi, "c"),
+        (Metric::Milli, "m"),
+        (Metric::Micro, "μ"),
+        (Metric::Micro, "u"),
+        (Metric::Nano, "n"),
+        (Metric::Pico, "p"),
+        (Metric::Femto, "f"),
+        (Metric::Atto, "a"),
+        (Metric::Zepto, "z"),
+        (Metric::Yocto, "y"),
+        (Metric::Ronto, "r"),
+        (Metric::Quecto, "q"),
+    ];
 
     #[test]
     #[should_panic]
@@ -814,6 +899,184 @@ mod parse_testing {
         let v = Value::new(1.5, "").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, 0);
+    }
+
+    #[test]
+    fn extra_metric() {
+        let _ = Value::new(1.5, "dadam").is_err();
+        let _ = Value::new(1.5, "kMm").is_err();
+    }
+
+    #[test]
+    fn bad_exp() {
+        let _ = Value::new(1.5, "m^r").is_err();
+        let _ = Value::new(1.5, "m^-r").is_err();
+        let _ = Value::new(1.5, "1/m^r").is_err();
+    }
+
+    #[test]
+    fn div_special_case() {
+        assert!(Value::new(1.5, "/m").is_ok());
+    }
+
+    #[test]
+    fn mul_special_case() {
+        assert!(Value::new(1.5, "m*s").is_ok());
+        assert!(Value::new(1.5, "m*(s/l)").is_ok());
+        assert!(Value::new(1.5, "(m*s)/l").is_ok());
+    }
+
+    #[test]
+    fn char_lengths() {
+        assert!(Value::new(1.5, " \t\n\t          ").is_ok());
+        assert!(Value::new(1.5, "Q").is_err());
+        assert!(Value::new(1.5, "Qo").is_err());
+        assert!(Value::new(1.5, "Qoo").is_err());
+        assert!(Value::new(1.5, "Qooo").is_err());
+        assert!(Value::new(1.5, "Qoooo").is_err());
+        assert!(Value::new(1.5, "Qooooo").is_err());
+        assert!(Value::new(1.5, "Qoooooo").is_err());
+
+        assert!(Value::new(1.5, "o").is_err());
+        assert!(Value::new(1.5, "oo").is_err());
+        assert!(Value::new(1.5, "ooo").is_err());
+        assert!(Value::new(1.5, "oooo").is_err());
+        assert!(Value::new(1.5, "ooooo").is_err());
+        assert!(Value::new(1.5, "oooooo").is_err());
+        assert!(Value::new(1.5, "ooooooo").is_err());
+    }
+
+    #[test]
+    fn letters_4_len() {
+        let units = [
+            ("torr", PRESSURE_MAP, PRESSURE_INDEX),
+            ("bits", INFORMATION_MAP, INFORMATION_INDEX),
+        ];
+
+        for u in units {
+            for m in TEST_METRIC {
+                let v = Value::new(1.5, &format!("{}{}", m.1, u.0)).unwrap();
+                assert_eq!(v, 1.5);
+                assert_eq!(v.unit_map, u.1);
+                assert_eq!(v.exp[u.2], 1);
+            }
+        }
+    }
+
+    #[test]
+    fn letters_3_len() {
+        let units = [
+            ("mol", SUBSTANCE_MAP, SUBSTANCE_INDEX),
+            ("kat", CATALYTIC_ACTIVITY_MAP, CATALYTIC_ACTIVITY_INDEX),
+            ("rad", ANGLE_MAP, ANGLE_INDEX),
+            ("bar", PRESSURE_MAP, PRESSURE_INDEX),
+            ("cal", ENERGY_MAP, ENERGY_INDEX),
+            ("lyr", LENGTH_MAP, LENGTH_INDEX),
+        ];
+
+        for u in units {
+            for m in TEST_METRIC {
+                let v = Value::new(1.5, &format!("{}{}", m.1, u.0)).unwrap();
+                assert_eq!(v, 1.5);
+                assert_eq!(v.unit_map, u.1);
+                assert_eq!(v.exp[u.2], 1);
+            }
+        }
+    }
+
+    #[test]
+    fn letters_2_len() {
+        let metric_units = [
+            ("Hz", FREQUENCY_MAP, FREQUENCY_INDEX),
+            ("Pa", PRESSURE_MAP, PRESSURE_INDEX),
+            ("Wb", MAGNETIC_FLUX_MAP, MAGNETIC_FLUX_INDEX),
+            ("lm", LUMINOUS_FLUX_MAP, LUMINOUS_FLUX_INDEX),
+            ("lx", ILLUMINANCE_MAP, ILLUMINANCE_INDEX),
+            ("Bq", RADIOACTIVITY_MAP, RADIOACTIVITY_INDEX),
+            (
+                "Sv",
+                RADIOACTIVITY_EXPOSURE_MAP,
+                RADIOACTIVITY_EXPOSURE_INDEX,
+            ),
+            ("cd", LUMINOUS_INTENSITY_MAP, LUMINOUS_INTENSITY_INDEX),
+            ("pc", LENGTH_MAP, LENGTH_INDEX),
+            ("Gy", ABSORBED_DOSE_MAP, ABSORBED_DOSE_INDEX),
+            ("sr", SOLID_ANGLE_MAP, SOLID_ANGLE_INDEX),
+            ("eV", ENERGY_MAP, ENERGY_INDEX),
+        ];
+
+        let non_metric_units = [
+            ("au", LENGTH_MAP, LENGTH_INDEX),
+            ("AU", LENGTH_MAP, LENGTH_INDEX),
+            ("Ci", RADIOACTIVITY_MAP, RADIOACTIVITY_INDEX),
+        ];
+
+        for u in metric_units {
+            for m in TEST_METRIC {
+                let v = Value::new(1.5, &format!("{}{}", m.1, u.0)).unwrap();
+                assert_eq!(v, 1.5);
+                assert_eq!(v.unit_map, u.1);
+                assert_eq!(v.exp[u.2], 1);
+            }
+        }
+
+        for u in non_metric_units {
+            let v = Value::new(1.5, u.0).unwrap();
+            assert_eq!(v, 1.5);
+            assert_eq!(v.unit_map, u.1);
+            assert_eq!(v.exp[u.2], 1);
+            for m in TEST_METRIC {
+                let _ = Value::new(1.5, &format!("{}{}", m.1, u.0)).is_err();
+            }
+        }
+    }
+
+    #[test]
+    fn letters_1_len() {
+        let metric_units = [
+            ("m", LENGTH_MAP, LENGTH_INDEX),
+            ("g", MASS_MAP, MASS_INDEX),
+            ("s", TIME_MAP, TIME_INDEX),
+            ("A", ELECTRIC_CURRENT_MAP, ELECTRIC_CURRENT_INDEX),
+            ("J", ENERGY_MAP, ENERGY_INDEX),
+            ("W", POWER_MAP, POWER_INDEX),
+            ("C", ELECTRIC_CHARGE_MAP, ELECTRIC_CHARGE_INDEX),
+            ("F", CAPACITANCE_MAP, CAPACITANCE_INDEX),
+            ("Ω", RESISTANCE_MAP, RESISTANCE_INDEX),
+            ("S", ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CONDUCTANCE_INDEX),
+            ("T", MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_DENSITY_INDEX),
+            ("N", FORCE_MAP, FORCE_INDEX),
+            ("K", TEMPERATURE_MAP, TEMPERATURE_INDEX),
+            ("H", INDUCTANCE_MAP, INDUCTANCE_INDEX),
+            ("V", ELECTRIC_POTENTIAL_MAP, ELECTRIC_POTENTIAL_INDEX),
+            ("B", SOUND_MAP, SOUND_INDEX),
+            ("b", INFORMATION_MAP, INFORMATION_INDEX),
+            ("l", VOLUME_MAP, VOLUME_INDEX),
+        ];
+
+        let non_metric_units = [
+            ("Å", LENGTH_MAP, LENGTH_INDEX),
+            ("R", ABSORBED_DOSE_MAP, ABSORBED_DOSE_INDEX),
+        ];
+
+        for u in metric_units {
+            for m in TEST_METRIC {
+                let v = Value::new(1.5, &format!("{}{}", m.1, u.0)).unwrap();
+                assert_eq!(v, 1.5);
+                assert_eq!(v.unit_map, u.1);
+                assert_eq!(v.exp[u.2], 1);
+            }
+        }
+
+        for u in non_metric_units {
+            let v = Value::new(1.5, u.0).unwrap();
+            assert_eq!(v, 1.5);
+            assert_eq!(v.unit_map, u.1);
+            assert_eq!(v.exp[u.2], 1);
+            for m in TEST_METRIC {
+                let _ = Value::new(1.5, &format!("{}{}", m.1, u.0)).is_err();
+            }
+        }
     }
 
     #[test]
@@ -1490,22 +1753,298 @@ mod parse_testing {
         assert_eq!(v.v_mass, Some(UnitMass::Grain));
         assert_eq!(v.exp[MASS_INDEX], 1);
 
-        let v = Value::new(1.5, "1/ounce").unwrap();
+        let v = Value::new(1.5, "1/gr").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, MASS_MAP);
-        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
         assert_eq!(v.exp[MASS_INDEX], -1);
 
-        let v = Value::new(1.5, "1/ounces").unwrap();
+        let v = Value::new(1.5, "1/grain").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, MASS_MAP);
-        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
         assert_eq!(v.exp[MASS_INDEX], -1);
 
-        let v = Value::new(1.5, "1/oz").unwrap();
+        let v = Value::new(1.5, "1/grains").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, MASS_MAP);
-        assert_eq!(v.v_mass, Some(UnitMass::Ounce));
+        assert_eq!(v.v_mass, Some(UnitMass::Grain));
         assert_eq!(v.exp[MASS_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_moa() {
+        let v = Value::new(1.5, "moa").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Moa));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "MOA").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Moa));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "1/moa").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Moa));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/MOA").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Moa));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_mils() {
+        let v = Value::new(1.5, "mil").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "MIL").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "mils").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "1/mil").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/MIL").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/mils").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Radian(Metric::Milli)));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_degrees() {
+        let v = Value::new(1.5, "degree").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "degrees").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "°").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], 1);
+
+        let v = Value::new(1.5, "1/degree").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/degrees").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/°").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ANGLE_MAP);
+        assert_eq!(v.v_angle, Some(UnitAngle::Degree));
+        assert_eq!(v.exp[ANGLE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_farad() {
+        let v = Value::new(1.5, "farad").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, CAPACITANCE_MAP);
+        assert_eq!(
+            v.v_capacitance,
+            Some(UnitElectricCapacitance::Farad(Metric::None))
+        );
+        assert_eq!(v.exp[CAPACITANCE_INDEX], 1);
+
+        let v = Value::new(1.5, "farads").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, CAPACITANCE_MAP);
+        assert_eq!(
+            v.v_capacitance,
+            Some(UnitElectricCapacitance::Farad(Metric::None))
+        );
+        assert_eq!(v.exp[CAPACITANCE_INDEX], 1);
+
+        let v = Value::new(1.5, "1/farad").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, CAPACITANCE_MAP);
+        assert_eq!(
+            v.v_capacitance,
+            Some(UnitElectricCapacitance::Farad(Metric::None))
+        );
+        assert_eq!(v.exp[CAPACITANCE_INDEX], -1);
+
+        let v = Value::new(1.5, "1/farads").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, CAPACITANCE_MAP);
+        assert_eq!(
+            v.v_capacitance,
+            Some(UnitElectricCapacitance::Farad(Metric::None))
+        );
+        assert_eq!(v.exp[CAPACITANCE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_micron() {
+        let v = Value::new(1.5, "micron").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, LENGTH_MAP);
+        assert_eq!(v.v_length, Some(UnitLength::Meter(Metric::Micro)));
+        assert_eq!(v.exp[LENGTH_INDEX], 1);
+
+        let v = Value::new(1.5, "microns").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, LENGTH_MAP);
+        assert_eq!(v.v_length, Some(UnitLength::Meter(Metric::Micro)));
+        assert_eq!(v.exp[LENGTH_INDEX], 1);
+
+        let v = Value::new(1.5, "1/micron").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, LENGTH_MAP);
+        assert_eq!(v.v_length, Some(UnitLength::Meter(Metric::Micro)));
+        assert_eq!(v.exp[LENGTH_INDEX], -1);
+
+        let v = Value::new(1.5, "1/microns").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, LENGTH_MAP);
+        assert_eq!(v.v_length, Some(UnitLength::Meter(Metric::Micro)));
+        assert_eq!(v.exp[LENGTH_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_hour() {
+        let v = Value::new(1.5, "hour").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "hours").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "h").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "hr").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "1/hour").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+
+        let v = Value::new(1.5, "1/hours").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+
+        let v = Value::new(1.5, "1/h").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+
+        let v = Value::new(1.5, "1/hr").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Hour));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_day() {
+        let v = Value::new(1.5, "d").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "day").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "days").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], 1);
+
+        let v = Value::new(1.5, "1/d").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+
+        let v = Value::new(1.5, "1/day").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+
+        let v = Value::new(1.5, "1/days").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TIME_MAP);
+        assert_eq!(v.v_time, Some(UnitTime::Day));
+        assert_eq!(v.exp[TIME_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_kilocalorie() {
+        let v = Value::new(1.5, "Cal").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ENERGY_MAP);
+        assert_eq!(v.v_energy, Some(UnitEnergy::GramCalorie(Metric::Kilo)));
+        assert_eq!(v.exp[ENERGY_INDEX], 1);
+
+        let v = Value::new(1.5, "1/Cal").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, ENERGY_MAP);
+        assert_eq!(v.v_energy, Some(UnitEnergy::GramCalorie(Metric::Kilo)));
+        assert_eq!(v.exp[ENERGY_INDEX], -1);
     }
 }

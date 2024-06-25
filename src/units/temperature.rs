@@ -187,4 +187,40 @@ mod temperature_testing {
             assert_eq!(i.0.scale(), i.1);
         }
     }
+
+    #[test]
+    fn temp_convert() {
+        assert_eq!(
+            (UnitTemperature::Celsius).convert(&UnitTemperature::Kelvin(Metric::None), 0.0),
+            273.15
+        );
+        assert_eq!(
+            (UnitTemperature::Celsius).convert(&UnitTemperature::Fahrenheit, 0.0),
+            32.0
+        );
+        assert_eq!(
+            (UnitTemperature::Celsius).convert(&UnitTemperature::Celsius, 0.0),
+            0.0
+        );
+        assert_eq!(
+            (UnitTemperature::Fahrenheit).convert(&UnitTemperature::Celsius, 32.0),
+            0.0
+        );
+        assert_eq!(
+            (UnitTemperature::Fahrenheit).convert(&UnitTemperature::Fahrenheit, 32.0),
+            32.0
+        );
+        assert_eq!(
+            (UnitTemperature::Fahrenheit).convert(&UnitTemperature::Kelvin(Metric::None), 32.0),
+            273.15
+        );
+        assert_eq!(
+            (UnitTemperature::Kelvin(Metric::None)).convert(&UnitTemperature::Celsius, 0.0),
+            -273.15
+        );
+        assert_eq!(
+            (UnitTemperature::Kelvin(Metric::None)).convert(&UnitTemperature::Fahrenheit, 273.15),
+            32.0
+        );
+    }
 }

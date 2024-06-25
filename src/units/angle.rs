@@ -115,6 +115,9 @@ mod angle_testing {
 
     #[test]
     fn unit_angle_scale() {
+        assert_eq!(UnitAngle::Degree.get_metric(), Metric::None);
+        assert_eq!(UnitAngle::Moa.get_metric(), Metric::None);
+
         for i in [
             (UnitAngle::Radian(Metric::Ronna), Metric::Ronna),
             (UnitAngle::Radian(Metric::Ronto), Metric::Ronto),

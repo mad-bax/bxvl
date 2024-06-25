@@ -26,7 +26,7 @@ where
     T: BaseUnit,
 {
     fn convert(&self, other: &T) -> f64 {
-        (self.scale() / other.scale()) * (self.base() / other.base())
+        other.scale() * other.base()
     }
 }
 
@@ -46,7 +46,10 @@ impl BaseUnit for UnitNone {
 
 #[cfg(test)]
 mod unitless_testing {
-    use crate::units::{BaseUnit, Metric, UnitNone};
+    use crate::{
+        constants::LENGTH_MILE_TO_METER,
+        units::{BaseUnit, Convert, Metric, UnitLength, UnitNone},
+    };
 
     /// Unit Time Comparison Base
     ///
@@ -78,5 +81,13 @@ mod unitless_testing {
         for i in [(UnitNone::None, 1.0), (UnitNone::None, 1.0)] {
             assert_eq!(i.0.scale(), i.1);
         }
+    }
+
+    #[test]
+    fn unitless_convert() {
+        assert_eq!(
+            (UnitNone::None).convert(&UnitLength::Mile),
+            LENGTH_MILE_TO_METER
+        );
     }
 }

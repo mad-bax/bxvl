@@ -439,8 +439,9 @@ impl Value {
     ///
     /// `length / time`
     pub fn is_velocity(&self) -> bool {
-        if (self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map) 
-         || (self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -1) {
+        if (self.unit_map & (LENGTH_MAP | TIME_MAP) != self.unit_map)
+            || (self.exp[LENGTH_INDEX] != 1 || self.exp[TIME_INDEX] != -1)
+        {
             return false;
         }
         true
@@ -1056,8 +1057,8 @@ impl Value {
     pub fn is_angular_momentum(&self) -> bool {
         if self.unit_map == FORCE_MAP | LENGTH_MAP | TIME_MAP
             && self.exp[FORCE_INDEX] == 1
-            && self.exp[TIME_INDEX] == 1
-            && self.exp[LENGTH_INDEX] == 1
+            && self.exp[TIME_INDEX] == -1
+            && self.exp[LENGTH_INDEX] == 2
         {
             return true;
         }
@@ -1070,12 +1071,9 @@ impl Value {
     ///
     /// `energy / angle`
     pub fn is_torque(&self) -> bool {
-        if (self.unit_map == FORCE_MAP | LENGTH_MAP
+        if self.unit_map == FORCE_MAP | LENGTH_MAP
             && self.exp[FORCE_INDEX] == 1
-            && self.exp[LENGTH_INDEX] == 1)
-            || (self.unit_map == ENERGY_MAP | ANGLE_MAP
-                && self.exp[ENERGY_INDEX] == 1
-                && self.exp[ANGLE_INDEX] == -1)
+            && self.exp[LENGTH_INDEX] == 1
         {
             return true;
         }
@@ -1356,7 +1354,7 @@ impl Value {
                 _ => String::from(""),
             };
             if self.exp[i] < -1 {
-                denoms.push(format!("{}^{}", u, self.exp[i]))
+                denoms.push(format!("{}^{}", u, -self.exp[i]))
             } else if self.exp[i] > 1 {
                 nums.push(format!("{}^{}", u, self.exp[i]))
             } else if self.exp[i] == 1 {
@@ -1387,8 +1385,19 @@ impl Value {
 
 #[cfg(test)]
 mod value_impl_testing {
-    use crate::{units::{Metric, UnitAngle, UnitLength, UnitMass, UnitTime, UnitVolume}, values::Value};
-
+    use crate::{
+        units::{
+            Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+            UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
+            UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy,
+            UnitForce, UnitFrequency, UnitIlluminance, UnitInformation, UnitLength,
+            UnitLuminousFlux, UnitLuminousIntensity, UnitMagneticFlux, UnitMagneticFluxDensity,
+            UnitMass, UnitNone, UnitPower, UnitPressure, UnitRadioactivity,
+            UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature,
+            UnitTime, UnitVolume,
+        },
+        values::Value,
+    };
 
     #[test]
     fn degrees_to_radians() {
@@ -1491,7 +1500,7 @@ mod value_impl_testing {
     fn test_powv() {
         let t = 2.0 * UnitLength::Inch;
         let k = t.powv(2);
-        assert_eq!(t*t, k);
+        assert_eq!(t * t, k);
     }
 
     #[test]
@@ -1629,8 +1638,13 @@ mod value_impl_testing {
     #[test]
     fn is_density() {
         let t = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitVolume::Liter(Metric::None);
-        let v = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
-        let k = 3.0 * UnitMass::Gram(Metric::Kilo) / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None);
+        let v = 3.0 * UnitMass::Gram(Metric::Kilo)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None);
+        let k = 3.0 * UnitMass::Gram(Metric::Kilo)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None);
 
         assert!(t.is_density());
         assert!(v.is_density());
@@ -1640,7 +1654,9 @@ mod value_impl_testing {
     #[test]
     fn is_velocity() {
         let t = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
-        let v = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        let v = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
         assert!(t.is_velocity());
         assert!(!v.is_velocity());
     }
@@ -1648,16 +1664,616 @@ mod value_impl_testing {
     #[test]
     fn is_acceleration() {
         let t = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
-        let v = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None);
+        let v = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
         assert!(!t.is_acceleration());
         assert!(v.is_acceleration());
     }
 
     #[test]
     fn is_momentum() {
-        let t = 4.0 * UnitMass::Gram(Metric::Kilo) * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
+        let t = 4.0 * UnitMass::Gram(Metric::Kilo) * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None);
         let k = 4.0 * UnitLength::Meter(Metric::None) / UnitTime::Second(Metric::None);
         assert!(t.is_momentum());
         assert!(!k.is_momentum());
+    }
+
+    #[test]
+    fn is_time() {
+        let t = 4.0 * UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitTime::Second(Metric::None) * UnitTime::Second(Metric::None);
+        let m = 4.0
+            * UnitLength::Meter(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None);
+        assert!(t.is_time());
+        assert!(!k.is_time());
+        assert!(!m.is_time());
+    }
+
+    #[test]
+    fn is_mass() {
+        let t = 4.0 * UnitMass::Gram(Metric::None);
+        let k = 4.0 / UnitMass::Gram(Metric::None);
+        assert!(t.is_mass());
+        assert!(!k.is_mass());
+    }
+
+    #[test]
+    fn is_frequency() {
+        let t = 4.0 * UnitTime::Second(Metric::None);
+        let k = 4.0 / UnitTime::Second(Metric::None);
+        assert!(!t.is_frequency());
+        assert!(k.is_frequency());
+    }
+
+    #[test]
+    fn is_electric_current() {
+        let t = 4.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let k = 4.0 / UnitElectricCurrent::Ampere(Metric::None);
+        assert!(t.is_electric_current());
+        assert!(!k.is_electric_current());
+    }
+
+    #[test]
+    fn is_radioactivity() {
+        let t = 4.0 * UnitRadioactivity::Becquerel(Metric::None);
+        let k = 4.0 / UnitRadioactivity::Becquerel(Metric::None);
+        assert!(t.is_radioactivity());
+        assert!(!k.is_radioactivity());
+    }
+
+    #[test]
+    fn is_absorbed_dose() {
+        let t = 4.0 * UnitAbsorbedDose::Gray(Metric::None);
+        let k = 4.0 / UnitAbsorbedDose::Gray(Metric::None);
+        assert!(t.is_absorbed_dose());
+        assert!(!k.is_absorbed_dose());
+    }
+
+    #[test]
+    fn is_equivalent_dose() {
+        let t = 4.0 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let k = 4.0 / UnitRadioactivityExposure::Sievert(Metric::None);
+        assert!(t.is_equivalent_dose());
+        assert!(!k.is_equivalent_dose());
+    }
+
+    #[test]
+    fn is_solid_angle() {
+        let t = 4.0 * UnitSolidAngle::Steradian(Metric::None);
+        let k = 4.0 / UnitSolidAngle::Steradian(Metric::None);
+        assert!(t.is_solid_angle());
+        assert!(!k.is_solid_angle());
+    }
+
+    #[test]
+    fn is_radians() {
+        let t = 4.0 * UnitAngle::Degree;
+        let m = 4.0 / UnitAngle::Radian(Metric::None);
+        let n = 4.0 * UnitAngle::Radian(Metric::None) * UnitAngle::Radian(Metric::None);
+        let k = 4.0 * UnitAngle::Radian(Metric::None);
+
+        assert!(!t.is_radians());
+        assert!(!m.is_radians());
+        assert!(!n.is_radians());
+        assert!(k.is_radians());
+    }
+
+    #[test]
+    fn is_information() {
+        let t = 4.0 * UnitInformation::Byte(Metric::None);
+        let k = 4.0 / UnitInformation::Byte(Metric::None);
+        assert!(t.is_information());
+        assert!(!k.is_information());
+    }
+
+    #[test]
+    fn is_luminous_intensity() {
+        let t = 4.0 * UnitLuminousIntensity::Candela(Metric::None);
+        let k = 4.0 / UnitLuminousIntensity::Candela(Metric::None);
+        assert!(t.is_luminous_intensity());
+        assert!(!k.is_luminous_intensity())
+    }
+
+    #[test]
+    fn is_luminous_flux() {
+        let t = 4.0 * UnitLuminousFlux::Lumen(Metric::None);
+        let k = 4.0 / UnitLuminousFlux::Lumen(Metric::None);
+        assert!(t.is_luminous_flux());
+        assert!(!k.is_luminous_flux())
+    }
+
+    #[test]
+    fn is_sound() {
+        let t = 4.0 * UnitSound::Bel(Metric::None);
+        let k = 4.0 / UnitSound::Bel(Metric::None);
+        assert!(t.is_sound());
+        assert!(!k.is_sound())
+    }
+
+    #[test]
+    fn is_substance() {
+        let t = 4.0 * UnitSubstance::Mole(Metric::None);
+        let k = 4.0 / UnitSubstance::Mole(Metric::None);
+        assert!(t.is_substance());
+        assert!(!k.is_substance())
+    }
+
+    #[test]
+    fn is_jerk() {
+        let t = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitPressure::Bar(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        assert!(t.is_jerk());
+        assert!(!k.is_jerk());
+        assert!(!m.is_jerk());
+    }
+
+    #[test]
+    fn is_snap() {
+        let t = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitPressure::Bar(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        assert!(!t.is_snap());
+        assert!(k.is_snap());
+        assert!(!m.is_snap());
+    }
+
+    #[test]
+    fn is_angular_velocity() {
+        let t = 4.0 * UnitAngle::Degree / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitAngle::Degree
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitMass::Gram(Metric::Kilo) / UnitTime::Second(Metric::None);
+
+        assert!(t.is_angular_velocity());
+        assert!(!k.is_angular_velocity());
+        assert!(!m.is_angular_velocity());
+    }
+
+    #[test]
+    fn is_angular_acceleration() {
+        let t = 4.0 * UnitAngle::Degree / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitAngle::Degree
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitMass::Gram(Metric::Kilo) / UnitTime::Second(Metric::None);
+
+        assert!(!t.is_angular_acceleration());
+        assert!(k.is_angular_acceleration());
+        assert!(!m.is_angular_acceleration());
+    }
+
+    #[test]
+    fn is_frequency_drift() {
+        let t = 4.0 * UnitFrequency::Hertz(Metric::None) / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitFrequency::Hertz(Metric::None) / UnitMass::Gram(Metric::None);
+
+        assert!(t.is_frequency_drift());
+        assert!(!k.is_frequency_drift());
+    }
+
+    #[test]
+    fn is_flow() {
+        let t = 4.0
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitFrequency::Hertz(Metric::None) / UnitMass::Gram(Metric::None);
+        let m = 4.0 * UnitVolume::Liter(Metric::None) / UnitTime::Second(Metric::None);
+
+        assert!(t.is_flow());
+        assert!(!k.is_flow());
+        assert!(m.is_flow());
+    }
+
+    #[test]
+    fn is_yank() {
+        let t = 4.0 * UnitForce::Newton(Metric::None) / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitEnergy::ElectronVolt(Metric::None) / UnitTime::Second(Metric::None);
+
+        assert!(t.is_yank());
+        assert!(!k.is_yank());
+    }
+
+    #[test]
+    fn is_angular_momentum() {
+        let t = 4.0
+            * UnitForce::Newton(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitForce::Newton(Metric::None) * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let k = 4.0 * UnitAngle::Degree
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        assert!(t.is_angular_momentum());
+        assert!(!k.is_angular_momentum());
+        assert!(!m.is_angular_momentum());
+    }
+
+    #[test]
+    fn is_torque() {
+        let t = 4.0
+            * UnitForce::Newton(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None);
+        let m = 4.0 * UnitForce::Newton(Metric::None) * UnitLength::Meter(Metric::None);
+        let k = 4.0 * UnitAngle::Degree
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        assert!(!t.is_torque());
+        assert!(!k.is_torque());
+        assert!(m.is_torque());
+    }
+
+    #[test]
+    fn is_energy_density() {
+        let t = 4.0 * UnitEnergy::Joule(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None);
+        let k = 4.0 * UnitEnergy::Joule(Metric::None) / UnitVolume::Liter(Metric::None);
+        let m = 4.0 * UnitEnergy::Joule(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None);
+
+        assert!(t.is_energy_density());
+        assert!(k.is_energy_density());
+        assert!(!m.is_energy_density());
+    }
+
+    #[test]
+    fn equivalence() {
+        let t1 = 4.0
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None);
+        let t2 = 4.0 * UnitVolume::Liter(Metric::None);
+        let t3 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+
+        let k = (t1 >> t2).unwrap();
+        assert!(k.is_volume());
+
+        let mut t4 = t2.clone();
+        t4 >>= t1;
+        assert!(t4.is_volume());
+
+        let k = t3 >> t2;
+        assert!(k.is_err());
+        let k = t2 >> t3;
+        assert!(k.is_err());
+
+        let t1 = 4.0 * UnitTime::Second(Metric::None);
+        let t2 = 4.0 * UnitLength::Meter(Metric::None);
+        let t3 = 4.0 * UnitTime::Second(Metric::None) * UnitTime::Second(Metric::None);
+
+        assert!(!t1.__equivalent(&t2));
+        assert!(!t2.__equivalent(&t1));
+        assert!(!t1.__equivalent(&t3));
+        assert!(!t3.__equivalent(&t1));
+    }
+
+    #[test]
+    fn bad_eq() {
+        let mut t1 = 4.0 * UnitNone::None;
+        t1.unit_map = 1 << 31;
+        let mut t2 = 4.0 * UnitNone::None;
+        t2.unit_map = 1 << 31;
+        assert!(t1 == t2);
+    }
+
+    #[test]
+    fn equality() {
+        let t1 = 4.0 * UnitTime::Second(Metric::None);
+        let t2 = 4.0 * UnitLength::Meter(Metric::None);
+        let t3 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let t4 = 4.0 * UnitLength::Foot;
+        let t5 = 4.0 * UnitLength::Meter(Metric::None);
+
+        assert!(t1 != t2);
+        assert!(t2 != t3);
+        assert!(t2 != t4);
+        assert!(t2 == t5);
+
+        let t6 = 4.0 * UnitTime::Hour;
+        assert!(t1 != t6);
+
+        let t1 = 4.0 * UnitMass::Grain;
+        let t2 = 4.0 * UnitMass::Gram(Metric::Kilo);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 4.0 * UnitElectricCurrent::Ampere(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricCharge::Coulomb(Metric::None);
+        let t2 = 4.0 * UnitElectricCharge::Coulomb(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 4.0 * UnitElectricPotential::Volt(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricCapacitance::Farad(Metric::None);
+        let t2 = 4.0 * UnitElectricCapacitance::Farad(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricConductance::Siemens(Metric::None);
+        let t2 = 4.0 * UnitElectricConductance::Siemens(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
+        let t2 = 4.0 * UnitElectricInductance::Henry(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitElectricResistance::Ohm(Metric::None);
+        let t2 = 4.0 * UnitElectricResistance::Ohm(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
+        let t2 = 4.0 * UnitMagneticFlux::Weber(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t2 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitTemperature::Kelvin(Metric::None);
+        let t2 = 4.0 * UnitTemperature::Kelvin(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitSubstance::Mole(Metric::None);
+        let t2 = 4.0 * UnitSubstance::Mole(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitLuminousIntensity::Candela(Metric::None);
+        let t2 = 4.0 * UnitLuminousIntensity::Candela(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitLuminousFlux::Lumen(Metric::None);
+        let t2 = 4.0 * UnitLuminousFlux::Lumen(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitIlluminance::Lux(Metric::None);
+        let t2 = 4.0 * UnitIlluminance::Lux(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitVolume::Liter(Metric::None);
+        let t2 = 4.0 * UnitVolume::Liter(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitPressure::Bar(Metric::None);
+        let t2 = 4.0 * UnitPressure::Bar(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitAngle::Radian(Metric::None);
+        let t2 = 4.0 * UnitAngle::Radian(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitFrequency::Hertz(Metric::None);
+        let t2 = 4.0 * UnitFrequency::Hertz(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitForce::Newton(Metric::None);
+        let t2 = 4.0 * UnitForce::Newton(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitEnergy::Joule(Metric::None);
+        let t2 = 4.0 * UnitEnergy::Joule(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitPower::Watt(Metric::None);
+        let t2 = 4.0 * UnitPower::Watt(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitRadioactivity::Becquerel(Metric::None);
+        let t2 = 4.0 * UnitRadioactivity::Becquerel(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitAbsorbedDose::Gray(Metric::None);
+        let t2 = 4.0 * UnitAbsorbedDose::Gray(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t2 = 4.0 * UnitRadioactivityExposure::Sievert(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitCatalyticActivity::Katal(Metric::None);
+        let t2 = 4.0 * UnitCatalyticActivity::Katal(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitSolidAngle::Steradian(Metric::None);
+        let t2 = 4.0 * UnitSolidAngle::Steradian(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitSound::Bel(Metric::None);
+        let t2 = 4.0 * UnitSound::Bel(Metric::Milli);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+
+        let t1 = 4.0 * UnitInformation::Byte(Metric::None);
+        let t2 = 4.0 * UnitInformation::Byte(Metric::Mega);
+        assert!(t1 != t2);
+        assert!(t1 == (t1.clone()));
+    }
+
+    #[test]
+    fn value_units_only() {
+        let mut t1 = 1.1 * UnitNone::None;
+        t1.unit_map |= 1 << 31;
+        assert_eq!(t1.unit_string(), "");
+        assert_eq!((1.1 * UnitLength::Meter(Metric::None)).unit_string(), "m");
+        assert_eq!((1.1 * UnitTime::Second(Metric::None)).unit_string(), "s");
+        assert_eq!((1.1 * UnitMass::Gram(Metric::None)).unit_string(), "g");
+        assert_eq!((1.1 * UnitForce::Newton(Metric::None)).unit_string(), "N");
+        assert_eq!((1.1 * UnitEnergy::Joule(Metric::None)).unit_string(), "J");
+        assert_eq!((1.1 / UnitLength::Meter(Metric::None)).unit_string(), "1/m");
+        assert_eq!(
+            (1.1 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None)).unit_string(),
+            "m^2"
+        );
+        assert_eq!(
+            (1.1 / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None)).unit_string(),
+            "1/m^2"
+        );
+        assert_eq!(
+            (1.1 / UnitLength::Meter(Metric::None) / UnitLength::Meter(Metric::None)
+                * UnitTime::Minute)
+                .unit_string(),
+            "min/m^2"
+        );
+        assert_eq!((1.1 * UnitNone::None).unit_string(), "");
+        assert_eq!(
+            (1.1 * UnitAbsorbedDose::Gray(Metric::None)).unit_string(),
+            "Gy"
+        );
+        assert_eq!((1.1 * UnitAngle::Radian(Metric::None)).unit_string(), "rad");
+        assert_eq!((1.1 * UnitAngle::Moa).unit_string(), "moa");
+        assert_eq!((1.1 * UnitAngle::Degree).unit_string(), "°");
+        assert_eq!(
+            (1.1 * UnitCatalyticActivity::Katal(Metric::None)).unit_string(),
+            "kat"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCapacitance::Farad(Metric::None)).unit_string(),
+            "F"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCharge::Coulomb(Metric::None)).unit_string(),
+            "C"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricConductance::Siemens(Metric::None)).unit_string(),
+            "S"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricCurrent::Ampere(Metric::None)).unit_string(),
+            "A"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricInductance::Henry(Metric::None)).unit_string(),
+            "H"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricPotential::Volt(Metric::None)).unit_string(),
+            "V"
+        );
+        assert_eq!(
+            (1.1 * UnitElectricResistance::Ohm(Metric::None)).unit_string(),
+            "Ω"
+        );
+        assert_eq!(
+            (1.1 * UnitFrequency::Hertz(Metric::None)).unit_string(),
+            "Hz"
+        );
+        assert_eq!(
+            (1.1 * UnitIlluminance::Lux(Metric::None)).unit_string(),
+            "lx"
+        );
+        assert_eq!(
+            (1.1 * UnitInformation::Byte(Metric::None)).unit_string(),
+            "b"
+        );
+        assert_eq!(
+            (1.1 * UnitLuminousFlux::Lumen(Metric::None)).unit_string(),
+            "lm"
+        );
+        assert_eq!(
+            (1.1 * UnitLuminousIntensity::Candela(Metric::None)).unit_string(),
+            "cd"
+        );
+        assert_eq!(
+            (1.1 * UnitMagneticFlux::Weber(Metric::None)).unit_string(),
+            "Wb"
+        );
+        assert_eq!(
+            (1.1 * UnitMagneticFluxDensity::Tesla(Metric::None)).unit_string(),
+            "T"
+        );
+        assert_eq!((1.1 * UnitPower::Watt(Metric::None)).unit_string(), "W");
+        assert_eq!((1.1 * UnitPressure::Bar(Metric::None)).unit_string(), "bar");
+        assert_eq!(
+            (1.1 * UnitRadioactivity::Becquerel(Metric::None)).unit_string(),
+            "Bq"
+        );
+        assert_eq!(
+            (1.1 * UnitRadioactivityExposure::Sievert(Metric::None)).unit_string(),
+            "Sv"
+        );
+        assert_eq!(
+            (1.1 * UnitSolidAngle::Steradian(Metric::None)).unit_string(),
+            "sr"
+        );
+        assert_eq!((1.1 * UnitSound::Bel(Metric::None)).unit_string(), "B");
+        assert_eq!(
+            (1.1 * UnitSubstance::Mole(Metric::None)).unit_string(),
+            "mol"
+        );
+        assert_eq!(
+            (1.1 * UnitTemperature::Kelvin(Metric::None)).unit_string(),
+            "K"
+        );
+        assert_eq!((1.1 * UnitVolume::Liter(Metric::None)).unit_string(), "l");
     }
 }
