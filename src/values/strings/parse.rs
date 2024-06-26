@@ -340,6 +340,12 @@ impl Value {
                 self.unit_map |= ENERGY_MAP;
                 return Ok(());
             }
+            "hp" => {
+                self.v_power = Some(UnitPower::Horsepower);
+                self.exp[POWER_INDEX] = exp;
+                self.unit_map |= POWER_MAP;
+                return Ok(());
+            }
             _ => {
                 if m != Metric::None {
                     return Err(V3Error::UnsupportedUnit(format!(
@@ -621,6 +627,12 @@ impl Value {
             }
             "mmHg" => {
                 self.v_pressure = Some(UnitPressure::Hgmm);
+                self.exp[PRESSURE_INDEX] = exp;
+                self.unit_map |= PRESSURE_MAP;
+                return Ok(());
+            }
+            "cmHg" => {
+                self.v_pressure = Some(UnitPressure::Hgcm);
                 self.exp[PRESSURE_INDEX] = exp;
                 self.unit_map |= PRESSURE_MAP;
                 return Ok(());
@@ -1009,6 +1021,7 @@ mod parse_testing {
             ("au", LENGTH_MAP, LENGTH_INDEX),
             ("AU", LENGTH_MAP, LENGTH_INDEX),
             ("Ci", RADIOACTIVITY_MAP, RADIOACTIVITY_INDEX),
+            ("hp", POWER_MAP, POWER_INDEX),
         ];
 
         for u in metric_units {
@@ -1132,6 +1145,22 @@ mod parse_testing {
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, PRESSURE_MAP);
         assert_eq!(v.v_pressure, Some(UnitPressure::Hgmm));
+        assert_eq!(v.exp[PRESSURE_INDEX], -1);
+    }
+
+    #[test]
+    fn unique_names_cmhg() {
+        // mmHg
+        let v = Value::new(1.5, "cmHg").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, PRESSURE_MAP);
+        assert_eq!(v.v_pressure, Some(UnitPressure::Hgcm));
+        assert_eq!(v.exp[PRESSURE_INDEX], 1);
+
+        let v = Value::new(1.5, "(1)/(cmHg)").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, PRESSURE_MAP);
+        assert_eq!(v.v_pressure, Some(UnitPressure::Hgcm));
         assert_eq!(v.exp[PRESSURE_INDEX], -1);
     }
 

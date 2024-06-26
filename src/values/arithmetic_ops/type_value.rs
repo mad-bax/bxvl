@@ -2425,7 +2425,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTime::Second(Metric::None);
 
-        let _ = t1+t2;
+        let _ = t1 + t2;
     }
 
     #[test]
@@ -2434,7 +2434,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTime::Second(Metric::None);
 
-        let _ = t1-t2;
+        let _ = t1 - t2;
     }
 
     #[test]
@@ -2443,7 +2443,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTime::Second(Metric::None);
 
-        t1+=t2;
+        t1 += t2;
     }
 
     #[test]
@@ -2452,7 +2452,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTime::Second(Metric::None);
 
-        t1-=t2;
+        t1 -= t2;
     }
 
     #[test]
@@ -2461,7 +2461,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitLength::Meter(Metric::None);
 
-        let _ = t1+t2;
+        let _ = t1 + t2;
     }
 
     #[test]
@@ -2470,7 +2470,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitLength::Meter(Metric::None);
 
-        let _ = t1-t2;
+        let _ = t1 - t2;
     }
 
     #[test]
@@ -2479,7 +2479,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitLength::Meter(Metric::None);
 
-        t1+=t2;
+        t1 += t2;
     }
 
     #[test]
@@ -2488,7 +2488,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitLength::Meter(Metric::None);
 
-        t1-=t2;
+        t1 -= t2;
     }
 
     #[test]
@@ -2497,7 +2497,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        let _ = t1+t2;
+        let _ = t1 + t2;
     }
 
     #[test]
@@ -2506,7 +2506,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        let _ = t1-t2;
+        let _ = t1 - t2;
     }
 
     #[test]
@@ -2515,7 +2515,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        t1+=t2;
+        t1 += t2;
     }
 
     #[test]
@@ -2524,7 +2524,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        t1-=t2;
+        t1 -= t2;
     }
 
     #[test]
@@ -2533,7 +2533,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        let _ = t1*t2;
+        let _ = t1 * t2;
     }
 
     #[test]
@@ -2542,7 +2542,7 @@ mod arithmetic_ops_testing {
         let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        let _ = t1/t2;
+        let _ = t1 / t2;
     }
 
     #[test]
@@ -2551,7 +2551,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        t1*=t2;
+        t1 *= t2;
     }
 
     #[test]
@@ -2560,7 +2560,7 @@ mod arithmetic_ops_testing {
         let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
-        t1/=t2;
+        t1 /= t2;
     }
 
     #[test]
@@ -2568,329 +2568,329 @@ mod arithmetic_ops_testing {
         let t2 = 16.0 * UnitTemperature::Kelvin(Metric::None);
 
         let mut t1 = 4.0 * UnitSound::Bel(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitSound::Bel(Metric::None);
 
         let mut t1 = 4.0 * UnitAngle::Radian(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitAngle::Radian(Metric::None);
 
         let mut t1 = 4.0 * UnitAbsorbedDose::Gray(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitAbsorbedDose::Gray(Metric::None);
 
         let mut t1 = 4.0 * UnitSolidAngle::Steradian(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitSolidAngle::Steradian(Metric::None);
 
         let mut t1 = 4.0 * UnitVolume::Liter(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitVolume::Liter(Metric::None);
 
         let mut t1 = 4.0 * UnitTime::Second(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitTime::Second(Metric::None);
 
         let mut t1 = 4.0 * UnitSubstance::Mole(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitSubstance::Mole(Metric::None);
 
         let mut t1 = 4.0 * UnitMass::Gram(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitMass::Gram(Metric::None);
 
         let mut t1 = 4.0 * UnitRadioactivity::Becquerel(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitRadioactivity::Becquerel(Metric::None);
 
         let mut t1 = 4.0 * UnitRadioactivityExposure::Sievert(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitRadioactivityExposure::Sievert(Metric::None);
 
         let mut t1 = 4.0 * UnitPower::Watt(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitPower::Watt(Metric::None);
 
         let mut t1 = 4.0 * UnitPressure::Bar(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitPressure::Bar(Metric::None);
 
         let mut t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
 
         let mut t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitMagneticFlux::Weber(Metric::None);
 
         let mut t1 = 4.0 * UnitLuminousIntensity::Candela(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitLuminousIntensity::Candela(Metric::None);
 
         let mut t1 = 4.0 * UnitLuminousFlux::Lumen(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitLuminousFlux::Lumen(Metric::None);
 
         let mut t1 = 4.0 * UnitInformation::Byte(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 2.0 * UnitInformation::Byte(Metric::None);
 
         let mut t1 = 4.0 * UnitIlluminance::Lux(Metric::None);
-        assert_eq!(t1*t2, 8.0);
-        assert_eq!(t1/t2, 2.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 8.0);
+        assert_eq!(t1 / t2, 2.0);
+        t1 *= t2;
         assert_eq!(t1, 8.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitIlluminance::Lux(Metric::None);
 
         let mut t1 = 4.0 * UnitFrequency::Hertz(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitFrequency::Hertz(Metric::None);
 
         let mut t1 = 4.0 * UnitForce::Newton(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitForce::Newton(Metric::None);
 
         let mut t1 = 4.0 * UnitEnergy::Joule(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitEnergy::Joule(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricResistance::Ohm(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricResistance::Ohm(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricPotential::Volt(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricPotential::Volt(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricInductance::Henry(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricCurrent::Ampere(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricCurrent::Ampere(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricConductance::Siemens(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricConductance::Siemens(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricCharge::Coulomb(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricCharge::Coulomb(Metric::None);
 
         let mut t1 = 4.0 * UnitElectricCapacitance::Farad(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitElectricCapacitance::Farad(Metric::None);
 
         let mut t1 = 4.0 * UnitLength::Meter(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitLength::Meter(Metric::None);
 
         let mut t1 = 4.0 * UnitAbsorbedDose::Gray(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitAbsorbedDose::Gray(Metric::None);
 
         let mut t1 = 4.0 * UnitAngle::Radian(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitAngle::Radian(Metric::None);
 
         let mut t1 = 4.0 * UnitCatalyticActivity::Katal(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
-        assert_eq!(t1/t2, 4.0);
-        t1/=t2;
+        assert_eq!(t1 / t2, 4.0);
+        t1 /= t2;
         assert_eq!(t1, 4.0);
         let t2 = 16.0 * UnitCatalyticActivity::Katal(Metric::None);
 
         let mut t1 = 4.0 * UnitTemperature::Kelvin(Metric::None);
-        assert_eq!(t1*t2, 64.0);
-        assert_eq!(t2/t1, 4.0);
-        t1*=t2;
+        assert_eq!(t1 * t2, 64.0);
+        assert_eq!(t2 / t1, 4.0);
+        t1 *= t2;
         assert_eq!(t1, 64.0);
     }
 

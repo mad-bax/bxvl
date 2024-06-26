@@ -80,11 +80,18 @@ pub(crate) const PR_IN_TO_P: f64 = 3_386.388_666_6;
 /// The conversion numeric for mmHg to pascals
 /// This is a different value to what Torr is converted from
 pub(crate) const PR_MM_TO_P: f64 = 133.322_387_415;
+/// The conversion numeric for cmHg to pascals
+pub(crate) const PR_CM_TO_P: f64 = 1333.22_387_415;
 /// The conversion numeric for pounds per square inch to pascals
 pub(crate) const PR_PSI_TO_P: f64 = 6894.757;
 /// The conversion numeric for Torr to pascals
 /// This is a different value to what mmHg is converted from
 pub(crate) const PR_TORR_TO_P: f64 = 101325.0 / 760.0;
+
+/// Power
+/// 
+/// The conversion for Horsepower to Watts
+pub(crate) const PW_HPWR_TO_W: f64 = 745.699872;
 
 /// Radioactivity
 ///

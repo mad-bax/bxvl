@@ -99,6 +99,14 @@ mod conversion_testing {
     }
 
     #[test]
+    fn convert_hp() {
+        let mut t1 = 3.0 * UnitPower::Horsepower;
+        t1 >>= UnitPower::Watt(Metric::None);
+        assert_eq!(t1.to_string(), "2237.099616 W");
+        assert!(t1.is_power());
+    }
+
+    #[test]
     fn unit_conversions_stat_exp1() {
         let t1 = 4.1 * UnitPower::Watt(Metric::None);
 

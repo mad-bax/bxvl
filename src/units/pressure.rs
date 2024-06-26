@@ -14,6 +14,7 @@ impl Display for UnitPressure {
                 Self::Bar(m) => format!("{}bar", m.as_str()),
                 Self::Torr => "torr".into(),
                 Self::Hgmm => "mmHg".into(),
+                Self::Hgcm => "cmHg".into(),
                 Self::Hgin => "inHg".into(),
                 Self::Atm => "atm".into(),
                 Self::Psi => "psi".into(),
@@ -52,6 +53,7 @@ impl BaseUnit for UnitPressure {
             Self::Bar(_) => constants::PR_BAR_TO_P,
             Self::Torr => constants::PR_TORR_TO_P,
             Self::Hgmm => constants::PR_MM_TO_P,
+            Self::Hgcm => constants::PR_CM_TO_P,
             Self::Hgin => constants::PR_IN_TO_P,
             Self::Atm => constants::PR_ATM_TO_P,
             Self::Psi => constants::PR_PSI_TO_P,
@@ -89,6 +91,9 @@ mod pressure_testing {
         // mmHg
         assert!(UnitPressure::Hgmm.base() >= 133.322387414);
         assert!(UnitPressure::Hgmm.base() < 133.322387416);
+        // cmHg
+        assert!(UnitPressure::Hgcm.base() >= 1333.22387414);
+        assert!(UnitPressure::Hgcm.base() < 1333.22387416);
         // PSI
         assert!(UnitPressure::Psi.base() == 6894.757);
         // Torr
@@ -150,6 +155,7 @@ mod pressure_testing {
             (UnitPressure::Pascal(Metric::Zepto), "zPa"),
             (UnitPressure::Pascal(Metric::Zetta), "ZPa"),
             (UnitPressure::Hgmm, "mmHg"),
+            (UnitPressure::Hgcm, "cmHg"),
             (UnitPressure::Psi, "psi"),
             (UnitPressure::Hgin, "inHg"),
             (UnitPressure::Atm, "atm"),
@@ -215,6 +221,7 @@ mod pressure_testing {
             (UnitPressure::Pascal(Metric::Zepto), Metric::Zepto),
             (UnitPressure::Pascal(Metric::Zetta), Metric::Zetta),
             (UnitPressure::Hgmm, Metric::None),
+            (UnitPressure::Hgcm, Metric::None),
             (UnitPressure::Psi, Metric::None),
             (UnitPressure::Hgin, Metric::None),
             (UnitPressure::Atm, Metric::None),
@@ -274,6 +281,7 @@ mod pressure_testing {
             (UnitPressure::Pascal(Metric::Zepto), 1.0e-21),
             (UnitPressure::Pascal(Metric::Zetta), 1.0e21),
             (UnitPressure::Hgmm, 1.0),
+            (UnitPressure::Hgcm, 1.0),
             (UnitPressure::Psi, 1.0),
             (UnitPressure::Hgin, 1.0),
             (UnitPressure::Atm, 1.0),

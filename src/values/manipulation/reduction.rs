@@ -81,6 +81,7 @@ impl Value {
                 | LUMINOUS_FLUX_MAP
                 | ILLUMINANCE_MAP
                 | CAPACITANCE_MAP
+                | CATALYTIC_ACTIVITY_MAP
         )
     }
 
@@ -134,9 +135,9 @@ impl Value {
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
                 self.v_electric_charge = Some(UnitElectricCharge::Coulomb(Metric::None));
                 self.v_energy = None;
-                self.exp[ELECTRIC_CHARGE_INDEX] = -1;
+                self.exp[ELECTRIC_CHARGE_INDEX] = 1;
                 self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
-                self.exp[ENERGY_INDEX] = 1;
+                self.exp[ENERGY_INDEX] = 0;
                 self.unit_map = ELECTRIC_CHARGE_MAP | ELECTRIC_POTENTIAL_MAP;
                 *self >>= *other;
                 return true;
@@ -146,7 +147,7 @@ impl Value {
                 self.v_time = Some(UnitTime::Second(Metric::None));
                 self.v_energy = None;
                 self.exp[POWER_INDEX] = 1;
-                self.exp[TIME_INDEX] = -1;
+                self.exp[TIME_INDEX] = 1;
                 self.exp[ENERGY_INDEX] = 0;
                 self.unit_map = POWER_MAP | TIME_MAP;
                 *self >>= *other;
@@ -159,6 +160,7 @@ impl Value {
                 self.exp[LENGTH_INDEX] = 2;
                 self.exp[MASS_INDEX] = 1;
                 self.exp[TIME_INDEX] = -2;
+                self.exp[ENERGY_INDEX] = 0;
                 self.unit_map = LENGTH_MAP | MASS_MAP | TIME_MAP;
                 *self >>= *other;
                 return true;
@@ -204,6 +206,7 @@ impl Value {
                 self.exp[MASS_INDEX] = 1;
                 self.exp[LENGTH_INDEX] = 2;
                 self.exp[TIME_INDEX] = -3;
+                self.exp[POWER_INDEX] = 0;
                 self.unit_map = MASS_MAP | LENGTH_MAP | TIME_MAP;
                 *self >>= *other;
                 return true;
@@ -220,7 +223,7 @@ impl Value {
                 self.unit_map = ELECTRIC_CURRENT_MAP | TIME_MAP;
                 *self >>= *other;
                 return true;
-            } else if other.unit_map & ELECTRIC_CONDUCTANCE_MAP > 0 {
+            } else if other.unit_map & CAPACITANCE_MAP > 0 {
                 *self >>= UnitElectricCharge::Coulomb(Metric::None);
                 self.v_capacitance = Some(UnitElectricCapacitance::Farad(Metric::None));
                 self.v_electric_potential = Some(UnitElectricPotential::Volt(Metric::None));
@@ -368,6 +371,7 @@ impl Value {
                 self.exp[ELECTRIC_POTENTIAL_INDEX] = 1;
                 self.exp[TIME_INDEX] = 1;
                 self.exp[LENGTH_INDEX] = -2;
+                self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
                 self.unit_map = ELECTRIC_POTENTIAL_MAP | TIME_MAP | LENGTH_MAP;
                 *self >>= *other;
                 return true;
@@ -390,6 +394,7 @@ impl Value {
                 self.exp[FORCE_INDEX] = 1;
                 self.exp[ELECTRIC_CURRENT_INDEX] = -1;
                 self.exp[LENGTH_INDEX] = -1;
+                self.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
                 self.unit_map = FORCE_MAP | ELECTRIC_CURRENT_MAP | LENGTH_MAP;
                 *self >>= *other;
                 return true;
@@ -466,5 +471,253 @@ impl Value {
             return true;
         }
         false
+    }
+}
+
+#[cfg(test)]
+mod reduction_testing {
+    use crate::units::{Metric, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitLength, UnitLuminousFlux, UnitMagneticFlux, UnitMagneticFluxDensity, UnitPower, UnitPressure};
+
+    #[test]
+    fn reduce_catalytic_activity() {
+        let mut t1 = 4.0 * UnitCatalyticActivity::Katal(Metric::None);
+        t1.reduce("mol/s").unwrap();
+        assert_eq!(t1.to_string(), "4 mol/s");
+        assert!(t1.is_catalytic_activity());
+    }
+
+    #[test]
+    fn reduce_illuminance() {
+        let mut t1 = 4.0 * UnitIlluminance::Lux(Metric::None);
+        t1.reduce("lm/m^2").unwrap();
+        assert_eq!(t1.to_string(), "4 lm/m^2");
+        assert!(t1.is_illuminance());
+    }
+
+    #[test]
+    fn reduce_luminous_flux() {
+        let mut t1 = 4.0 * UnitLuminousFlux::Lumen(Metric::None);
+        t1.reduce("cd/sr").unwrap();
+        assert_eq!(t1.to_string(), "4 cd/sr");
+        assert!(t1.is_luminous_flux());
+    }
+
+    #[test]
+    fn reduce_inductance() {
+        let mut t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
+        t1.reduce("V*s/A").unwrap();
+        assert_eq!(t1.to_string(), "4 s*V/A");
+        assert!(t1.is_inductance());
+
+        let mut t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
+        t1.reduce("s*O").unwrap();
+        assert_eq!(t1.to_string(), "4 s*Ω");
+        assert!(t1.is_inductance());
+
+        let mut t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
+        t1.reduce("Wb/A").unwrap();
+        assert_eq!(t1.to_string(), "4 Wb/A");
+        assert!(t1.is_inductance());
+    }
+
+    #[test]
+    fn reduce_magnetic_flux_density() {
+        let mut t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        t1.reduce("V*s/m^2").unwrap();
+        assert_eq!(t1.to_string(), "4 s*V/m^2");
+        assert!(t1.is_magnetic_flux_density());
+
+        let mut t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        t1.reduce("Wb/m^2").unwrap();
+        assert_eq!(t1.to_string(), "4 Wb/m^2");
+        assert!(t1.is_magnetic_flux_density());
+
+        let mut t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        t1.reduce("N/A*m").unwrap();
+        assert_eq!(t1.to_string(), "4 N/m*A");
+        assert!(t1.is_magnetic_flux_density());
+    }
+
+    #[test]
+    fn reduce_magnetic_flux() {
+        let mut t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
+        t1.reduce("J/A").unwrap();
+        assert_eq!(t1.to_string(), "4 J/A");
+        assert!(t1.is_magnetic_flux());
+
+        let mut t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
+        t1.reduce("T*m^2").unwrap();
+        assert_eq!(t1.to_string(), "4 m^2*T");
+        assert!(t1.is_magnetic_flux());
+
+        let mut t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
+        t1.reduce("s*V").unwrap();
+        assert_eq!(t1.to_string(), "4 s*V");
+        assert!(t1.is_magnetic_flux());
+    }
+
+    #[test]
+    fn reduce_conductance() {
+        let mut t1 = 4.0 * UnitElectricConductance::Siemens(Metric::None);
+        t1.reduce("1/Ω").unwrap();
+        assert_eq!(t1.to_string(), "4 1/Ω");
+        assert!(t1.is_conductance());
+
+        let mut t1 = 4.0 * UnitElectricConductance::Siemens(Metric::None);
+        t1.reduce("A/V").unwrap();
+        assert_eq!(t1.to_string(), "4 A/V");
+        assert!(t1.is_conductance());
+    }
+
+    #[test]
+    fn reduce_resistance() {
+        let mut t1 = 4.0 * UnitElectricResistance::Ohm(Metric::None);
+        t1.reduce("1/S").unwrap();
+        assert_eq!(t1.to_string(), "4 1/S");
+        assert!(t1.is_resistance());
+
+        let mut t1 = 4.0 * UnitElectricResistance::Ohm(Metric::None);
+        t1.reduce("V/A").unwrap();
+        assert_eq!(t1.to_string(), "4 V/A");
+        assert!(t1.is_resistance());
+    }
+
+    #[test]
+    fn reduce_capacitance() {
+        let mut t1 = 4.0 * UnitElectricCapacitance::Farad(Metric::None);
+        t1.reduce("C/V").unwrap();
+        assert_eq!(t1.to_string(), "4 C/V");
+        assert!(t1.is_capacitance());
+
+        let mut t1 = 4.0 * UnitElectricCapacitance::Farad(Metric::None);
+        t1.reduce("C^2/J").unwrap();
+        assert_eq!(t1.to_string(), "4 C^2/J");
+        assert!(t1.is_capacitance());
+    }
+
+    #[test]
+    fn reduce_electric_potential() {
+        let mut t1 = 4.0 * UnitElectricPotential::Volt(Metric::None);
+        t1.reduce("W/A").unwrap();
+        assert_eq!(t1.to_string(), "4 W/A");
+        assert!(t1.is_electric_potential());
+
+        let mut t1 = 4.0 * UnitElectricPotential::Volt(Metric::None);
+        t1.reduce("J/C").unwrap();
+        assert_eq!(t1.to_string(), "4 J/C");
+        assert!(t1.is_electric_potential());
+    }
+
+    #[test]
+    fn reduce_electric_charge() {
+        let mut t1 = 4.0 * UnitElectricCharge::Coulomb(Metric::None);
+        t1.reduce("A*s").unwrap();
+        assert_eq!(t1.to_string(), "4 s*A");
+        assert!(t1.is_electric_charge());
+
+        let mut t1 = 4.0 * UnitElectricCharge::Coulomb(Metric::None);
+        t1.reduce("F*V").unwrap();
+        assert_eq!(t1.to_string(), "4 V*F");
+        assert!(t1.is_electric_charge());
+    }
+
+    #[test]
+    fn reduce_power() {
+        let mut t1 = 4.0 * UnitPower::Watt(Metric::None);
+        t1.reduce("J/s").unwrap();
+        assert_eq!(t1.to_string(), "4 J/s");
+        assert!(t1.is_power());
+
+        let mut t1 = 4.0 * UnitPower::Watt(Metric::None);
+        t1.reduce("V*A").unwrap();
+        assert_eq!(t1.to_string(), "4 A*V");
+        assert!(t1.is_power());
+
+        let mut t1 = 4.0 * UnitPower::Watt(Metric::None);
+        t1.reduce("m^2*kg/s^3").unwrap();
+        assert_eq!(t1.to_string(), "4 m^2*kg/s^3");
+        assert!(t1.is_power());
+    }
+
+    #[test]
+    fn reduce_frequency() {
+        let mut t1 = 4.0 * UnitFrequency::Hertz(Metric::None);
+        t1.reduce("s^-1").unwrap();
+        assert_eq!(t1.to_string(), "4 1/s");
+        assert!(t1.is_frequency());
+    }
+
+    #[test]
+    fn reduce_energy() {
+        let mut t1 = 4.0 * UnitEnergy::Joule(Metric::None);
+        t1.reduce("N*m").unwrap();
+        assert_eq!(t1.to_string(), "4 m*N");
+        assert!(t1.is_energy());
+
+        let mut t1 = 4.0 * UnitEnergy::Joule(Metric::None);
+        t1.reduce("V*C").unwrap();
+        assert_eq!(t1.to_string(), "4 C*V");
+        assert!(t1.is_energy());
+
+        let mut t1 = 4.0 * UnitEnergy::Joule(Metric::None);
+        t1.reduce("W*s").unwrap();
+        assert_eq!(t1.to_string(), "4 s*W");
+        assert!(t1.is_energy());
+
+        let mut t1 = 4.0 * UnitEnergy::Joule(Metric::None);
+        t1.reduce("m^2*kg/s^2").unwrap();
+        assert_eq!(t1.to_string(), "4 m^2*kg/s^2");
+        assert!(t1.is_energy());
+    }
+
+    #[test]
+    fn reduce_force() {
+        let mut t1 = 4.0 * UnitForce::Newton(Metric::None);
+        t1.reduce("g*m/s^2").unwrap();
+        assert_eq!(t1.to_string(), "4000 m*g/s^2");
+    }
+
+    #[test]
+    fn reduce_pressure() {
+        let mut t1 = 1.0 * UnitPressure::Bar(Metric::None);
+        t1.reduce("N/m^2").unwrap();
+        assert_eq!(t1.to_string(), "100000 N/m^2");
+    }
+
+    #[test]
+    fn is_not_reducible() {
+        let t1 = 4.0 * UnitLength::Meter(Metric::None);
+        let t2 = 4.0 * UnitForce::Newton(Metric::None);
+
+        assert!(!t1.is_reducible());
+        assert!(t2.is_reducible());
+    }
+
+    #[test]
+    #[should_panic]
+    fn reduce_bad() {
+        let mut t1 = 4.0 * UnitLength::Meter(Metric::None);
+        t1.reduce("s").unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn reduce_bad_text() {
+        let mut t1 = 4.0 * UnitForce::Newton(Metric::None);
+        t1.reduce("zz").unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn reduce_bad_map() {
+        let mut t1 = 4.0 * UnitForce::Newton(Metric::None);
+        t1.reduce("N").unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn reduce_bad_no_match() {
+        let mut t1 = 4.0 * UnitForce::Newton(Metric::None);
+        t1.reduce("g*m/s").unwrap();
     }
 }

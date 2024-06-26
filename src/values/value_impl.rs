@@ -1110,6 +1110,18 @@ impl Value {
             return false;
         }
 
+        if self.unit_map == TIME_MAP && other.unit_map == FREQUENCY_MAP {
+            if self.exp[TIME_INDEX] == -1 && other.exp[FREQUENCY_INDEX] == 1 {
+                return true;
+            }
+            return false;
+        } else if self.unit_map == FREQUENCY_MAP && other.unit_map == TIME_MAP {
+            if self.exp[FREQUENCY_INDEX] == 1 && other.exp[TIME_INDEX] == -1 {
+                return true;
+            }
+            return false;
+        }
+
         if self.unit_map != other.unit_map {
             return false;
         }

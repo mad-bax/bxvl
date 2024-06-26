@@ -343,6 +343,8 @@ pub enum UnitMass {
 pub enum UnitPower {
     /// SI unit
     Watt(Metric),
+    /// Imperial
+    Horsepower
 }
 
 /// The unit types for pressure
@@ -356,6 +358,8 @@ pub enum UnitPressure {
     Torr,
     /// SI integrated
     Hgmm,
+    /// SI integrated
+    Hgcm,
     /// Imperial
     Hgin,
     /// Common Standard

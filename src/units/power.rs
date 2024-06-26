@@ -1,10 +1,15 @@
 use std::fmt::Display;
 
+use crate::constants::PW_HPWR_TO_W;
+
 use super::{BaseUnit, Convert, Metric, UnitPower};
 
 impl Display for UnitPower {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}W", self.get_metric().as_str())
+        write!(f, "{}", match self {
+            Self::Watt(m) => format!("{}W", m.as_str()),
+            Self::Horsepower => "hp".into()
+        })
     }
 }
 
@@ -17,7 +22,7 @@ impl Into<String> for UnitPower {
 impl Convert<UnitPower> for UnitPower {
     /// Returns the `f64` multiplier to convert a `Value`
     fn convert(&self, other: &UnitPower) -> f64 {
-        self.scale() / other.scale()
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 
@@ -26,6 +31,7 @@ impl BaseUnit for UnitPower {
     fn scale(&self) -> f64 {
         match self {
             Self::Watt(m) => m.scale(),
+            _ => 1.0
         }
     }
 
@@ -33,11 +39,15 @@ impl BaseUnit for UnitPower {
     fn get_metric(&self) -> Metric {
         match self {
             Self::Watt(m) => *m,
+            _ => Metric::None
         }
     }
 
     fn base(&self) -> f64 {
-        1.0
+        match self {
+            Self::Watt(_) => 1.0,
+            Self::Horsepower => PW_HPWR_TO_W
+        }
     }
 }
 
@@ -48,6 +58,7 @@ mod power_testing {
     #[test]
     fn unit_angle_base_comparison() {
         assert!(UnitPower::Watt(Metric::None).base() == 1.0);
+        assert!(UnitPower::Horsepower.base() == 745.699872);
     }
 
     #[test]
@@ -83,6 +94,8 @@ mod power_testing {
             let t: String = i.0.into();
             assert_eq!(t, i.1.to_string());
         }
+
+        assert_eq!(UnitPower::Horsepower.to_string(), "hp");
     }
 
     #[test]
@@ -117,6 +130,8 @@ mod power_testing {
             assert_eq!(i.0.get_metric(), i.1);
         }
 
+        assert_eq!(UnitPower::Horsepower.get_metric(), Metric::None);
+
         for i in [
             (UnitPower::Watt(Metric::Ronto), 1.0e-27),
             (UnitPower::Watt(Metric::Ronna), 1.0e27),
@@ -146,5 +161,7 @@ mod power_testing {
         ] {
             assert_eq!(i.0.scale(), i.1);
         }
+        
+        assert_eq!(UnitPower::Horsepower.scale(), 1.0);
     }
 }

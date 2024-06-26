@@ -27,10 +27,6 @@ impl Into<String> for UnitTemperature {
 impl UnitTemperature {
     /// Returns a `f64` to assign to a `Value`
     pub fn convert(&self, other: &UnitTemperature, val: f64) -> f64 {
-        if self == other {
-            return val;
-        }
-
         match self {
             Self::Celsius => match other {
                 Self::Celsius => val,

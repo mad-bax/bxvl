@@ -463,3 +463,362 @@ impl Value {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod conversion_testing {
+    use crate::units::{
+        Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
+        UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance,
+        UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency,
+        UnitIlluminance, UnitInformation, UnitLength, UnitLuminousFlux, UnitLuminousIntensity,
+        UnitMagneticFlux, UnitMagneticFluxDensity, UnitMass, UnitNone, UnitPower, UnitPressure,
+        UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
+        UnitTemperature, UnitTime, UnitVolume,
+    };
+
+    #[test]
+    fn explicit_convert() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1.convert("m").unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn explicit_convert_bad() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1.convert("zz").unwrap();
+    }
+
+    #[test]
+    fn str_slide() {
+        let t1 = 4.5 * UnitLength::Foot;
+        let t2 = (t1 >> "m").unwrap();
+        assert_eq!(t2.val, 1.3716000000000002);
+    }
+
+    #[test]
+    #[should_panic]
+    fn str_slide_bad() {
+        let t1 = 4.5 * UnitLength::Foot;
+        let _ = (t1 >> "zz").unwrap();
+    }
+
+    #[test]
+    fn str_slide_mut() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1 >>= "m";
+        assert_eq!(t1.val, 1.3716000000000002);
+    }
+
+    #[test]
+    #[should_panic]
+    fn str_slide_mut_bad() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1 >>= "zz";
+    }
+
+    #[test]
+    fn string_slide() {
+        let t1 = 4.5 * UnitLength::Foot;
+        let t2 = (t1 >> String::from("m")).unwrap();
+        assert_eq!(t2.val, 1.3716000000000002);
+    }
+
+    #[test]
+    fn string_slide_mut() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1 >>= String::from("m");
+        assert_eq!(t1.val, 1.3716000000000002);
+    }
+
+    #[test]
+    #[should_panic]
+    fn string_slide_mut_bad() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        t1 >>= String::from("zz");
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_slide_incompatible_types() {
+        let t1 = 4.5 * UnitLength::Foot;
+        let t2 = 1.0 * UnitTime::Second(Metric::None);
+        let _ = (t1 >> t2).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_slide_incompatible_types_mut() {
+        let mut t1 = 4.5 * UnitLength::Foot;
+        let t2 = 1.0 * UnitTime::Second(Metric::None);
+        t1 >>= t2;
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_cubic_conversion_bad() {
+        let mut t1 = 4.5 * UnitVolume::Liter(Metric::None);
+        let t2 = 1.3 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+
+        t1._convert(&t2).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn value_volume_conversion_bad() {
+        let t1 = 4.5 / UnitVolume::Liter(Metric::None);
+        let mut t2 = 1.3
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None);
+
+        t2._convert(&t1).unwrap();
+    }
+
+    #[test]
+    fn non_val_to_angle() {
+        let mut t1 = 4.5 * UnitNone::None;
+        let t2 = 6.7 * UnitAngle::Radian(Metric::None);
+
+        t1._convert(&t2).unwrap();
+        assert!(t1.is_angle());
+
+        let mut t1 = 4.5 * UnitNone::None;
+        let t2 = 6.7 * UnitAngle::Radian(Metric::Micro);
+        assert!(t1._convert(&t2).is_err());
+    }
+
+    #[test]
+    fn freq_to_time() {
+        let mut t1 = 4.5 * UnitFrequency::Hertz(Metric::None);
+        let t2 = 1.0 / UnitTime::Second(Metric::None);
+
+        t1 >>= t2;
+        assert_eq!(t1.to_string(), "4.5 1/s");
+
+        let mut t1 = 4.5 / UnitTime::Second(Metric::None);
+        let t2 = 1.0 * UnitFrequency::Hertz(Metric::None);
+
+        t1 >>= t2;
+        assert_eq!(t1.to_string(), "4.5 Hz");
+    }
+
+    #[test]
+    #[should_panic]
+    fn bad_unit_maps_conversion() {
+        let mut t1 = 4.5 * UnitTime::Second(Metric::None);
+        let t2 = 1.5 * UnitLength::Meter(Metric::None);
+
+        t1._convert(&t2).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn temperature_conversion_multiple_types_bad() {
+        let mut t1 = 4.5 * UnitLength::Meter(Metric::None) * UnitTemperature::Celsius;
+        let t2 = 1.0 * UnitLength::Meter(Metric::None) * UnitTemperature::Kelvin(Metric::None);
+
+        t1._convert(&t2).unwrap();
+    }
+
+    #[test]
+    fn temperature_conversion() {
+        let mut t1 = 4.5 * UnitTemperature::Celsius;
+        let t2 = 1.0 * UnitTemperature::Kelvin(Metric::None);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "277.65 K");
+    }
+
+    #[test]
+    #[should_panic]
+    fn unit_exp_mismatch() {
+        let mut t1 = 4.5 * UnitLength::Meter(Metric::None) * UnitLength::Meter(Metric::None);
+        let t2 = 4.5 * UnitLength::Meter(Metric::None);
+
+        t1._convert(&t2).unwrap();
+    }
+
+    #[test]
+    fn standard_value_to_value_conversions() {
+        let mut t1 = 450.0 * UnitMass::Gram(Metric::None);
+        let t2 = 1.0 * UnitMass::Gram(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kg");
+
+        let mut t1 = 450.0 * UnitElectricCurrent::Ampere(Metric::None);
+        let t2 = 1.0 * UnitElectricCurrent::Ampere(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kA");
+
+        let mut t1 = 450.0 * UnitElectricCharge::Coulomb(Metric::None);
+        let t2 = 1.0 * UnitElectricCharge::Coulomb(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kC");
+
+        let mut t1 = 450.0 * UnitAngle::Radian(Metric::None);
+        let t2 = 1.0 * UnitAngle::Radian(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 krad");
+
+        let mut t1 = 450.0 * UnitFrequency::Hertz(Metric::None);
+        let t2 = 1.0 * UnitFrequency::Hertz(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kHz");
+
+        let mut t1 = 450.0 * UnitTime::Second(Metric::None);
+        let t2 = 1.0 * UnitTime::Second(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 ks");
+
+        let mut t1 = 450.0 * UnitLength::Meter(Metric::None);
+        let t2 = 1.0 * UnitLength::Meter(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 km");
+
+        let mut t1 = 450.0 * UnitVolume::Liter(Metric::None);
+        let t2 = 1.0 * UnitVolume::Liter(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kl");
+
+        let mut t1 = 450.0 * UnitAbsorbedDose::Gray(Metric::None);
+        let t2 = 1.0 * UnitAbsorbedDose::Gray(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kGy");
+
+        let mut t1 = 450.0 * UnitCatalyticActivity::Katal(Metric::None);
+        let t2 = 1.0 * UnitCatalyticActivity::Katal(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kkat");
+
+        let mut t1 = 450.0 * UnitElectricCapacitance::Farad(Metric::None);
+        let t2 = 1.0 * UnitElectricCapacitance::Farad(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kF");
+
+        let mut t1 = 450.0 * UnitElectricConductance::Siemens(Metric::None);
+        let t2 = 1.0 * UnitElectricConductance::Siemens(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kS");
+
+        let mut t1 = 450.0 * UnitElectricInductance::Henry(Metric::None);
+        let t2 = 1.0 * UnitElectricInductance::Henry(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kH");
+
+        let mut t1 = 450.0 * UnitElectricPotential::Volt(Metric::None);
+        let t2 = 1.0 * UnitElectricPotential::Volt(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kV");
+
+        let mut t1 = 450.0 * UnitEnergy::Joule(Metric::None);
+        let t2 = 1.0 * UnitEnergy::Joule(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kJ");
+
+        let mut t1 = 450.0 * UnitElectricResistance::Ohm(Metric::None);
+        let t2 = 1.0 * UnitElectricResistance::Ohm(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kΩ");
+
+        let mut t1 = 450.0 * UnitForce::Newton(Metric::None);
+        let t2 = 1.0 * UnitForce::Newton(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kN");
+
+        let mut t1 = 450.0 * UnitIlluminance::Lux(Metric::None);
+        let t2 = 1.0 * UnitIlluminance::Lux(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 klx");
+
+        let mut t1 = 512.0 * UnitInformation::Byte(Metric::None);
+        let t2 = 1.0 * UnitInformation::Byte(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.5 kb");
+
+        let mut t1 = 450.0 * UnitLuminousFlux::Lumen(Metric::None);
+        let t2 = 1.0 * UnitLuminousFlux::Lumen(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 klm");
+
+        let mut t1 = 450.0 * UnitLuminousIntensity::Candela(Metric::None);
+        let t2 = 1.0 * UnitLuminousIntensity::Candela(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kcd");
+
+        let mut t1 = 450.0 * UnitMagneticFlux::Weber(Metric::None);
+        let t2 = 1.0 * UnitMagneticFlux::Weber(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kWb");
+
+        let mut t1 = 450.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
+        let t2 = 1.0 * UnitMagneticFluxDensity::Tesla(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kT");
+
+        let mut t1 = 450.0 * UnitPower::Watt(Metric::None);
+        let t2 = 1.0 * UnitPower::Watt(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kW");
+
+        let mut t1 = 450.0 * UnitPressure::Bar(Metric::None);
+        let t2 = 1.0 * UnitPressure::Bar(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kbar");
+
+        let mut t1 = 450.0 * UnitRadioactivity::Becquerel(Metric::None);
+        let t2 = 1.0 * UnitRadioactivity::Becquerel(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kBq");
+
+        let mut t1 = 450.0 * UnitRadioactivityExposure::Sievert(Metric::None);
+        let t2 = 1.0 * UnitRadioactivityExposure::Sievert(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kSv");
+
+        let mut t1 = 450.0 * UnitSolidAngle::Steradian(Metric::None);
+        let t2 = 1.0 * UnitSolidAngle::Steradian(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 ksr");
+
+        let mut t1 = 450.0 * UnitSound::Bel(Metric::None);
+        let t2 = 1.0 * UnitSound::Bel(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kB");
+
+        let mut t1 = 450.0 * UnitSubstance::Mole(Metric::None);
+        let t2 = 1.0 * UnitSubstance::Mole(Metric::Kilo);
+
+        t1._convert(&t2).unwrap();
+        assert_eq!(t1.to_string(), "0.45 kmol");
+    }
+}

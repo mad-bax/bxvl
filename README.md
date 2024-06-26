@@ -191,7 +191,7 @@ V3 provides functions like `.is_force()` which will return `true` for both `kg*m
 | `is_angular_acceleration()`  | [Angle](#geometric-angle)/[Time](#time)                                                                                                                                                                                                                                                |
 | `is_frequency_drift()`       | [Frequency](#frequency)/[Time](#time)                                                                                                                                                                                                                                                  |
 | `is_flow()`                  | [Volume](#spatial-volume)/[Time](#time)<br/>[Length](#lengths)^3/[Time](#time)                                                                                                                                                                                                         |
-| `is_angular_momentum()`      | [Force](#force)\*[Length](#lengths)\*[Time](#time)                                                                                                                                                                                                                                       |
+| `is_angular_momentum()`      | [Force](#force)\*[Length](#lengths)\*[Time](#time)                                                                                                                                                                                                                                     |
 | `is_torque()`                | [Force](#force)*[Length](#lengths)<br/>[Energy](#energy)/[Angle](#geometric-angle)                                                                                                                                                                                                     |
 | `is_energy_density()`        | [Energy](#energy)/[Volume](#spatial-volume)<br/>[Energy](#energy)/[Length](#lengths)^3                                                                                                                                                                                                 |
 
@@ -414,6 +414,7 @@ The project supports all base SI units as listed by the National Institute of St
 | Bar                    | &check;                  | `100_000.0 Pa`         | `bar`        |
 | Torr                   |                          | `101_325.0/760.0 Pa`   | `torr`       |
 | mmHg                   |                          | `133.322_387_415 Pa`   | `mmHg`       |
+| cmHg                   |                          | `1333.22_387_415 Pa`   | `cmHg`       |
 | inHg                   |                          | `3_386.388_666_6 Pa`   | `inHg`       |
 | Atmospheres            |                          | `101_325.0 Pa`         | `ATM`, `atm` |
 | Pounds per square inch |                          | `6894.757 Pa`          | `PSI`, `psi` |
@@ -457,9 +458,10 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Power
 
-| Unit | Metric Prefixing Support | Base Conversion Factor | Unit string |
-| ---- | ------------------------ | ---------------------- | ----------- |
-| Watt | &check;                  | `1.0 W`                | `W`         |
+| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string |
+| ---------- | ------------------------ | ---------------------- | ----------- |
+| Watt       | &check;                  | `1.0 W`                | `W`         |
+| Horsepower |                          | `745.699872 W`         | `hp`        |
 
 ### Radioactivity
 
@@ -565,6 +567,7 @@ V3 can and is intended to be improved with some of these goals in mind:
   - ✅ Support added
 - ~~'Metric' prefixing for `mmHg`?~~
   - ❌ Does not make sense given its static metric prefix
+  - ✅ Did add `cmHg` though.
 - ~~Metric support for `electronVolt`~~
   - ✅ Support added
 - ~~Metric support for `Kelvin`~~
