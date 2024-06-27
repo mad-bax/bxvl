@@ -48,10 +48,19 @@ impl Display for Value {
                     unreachable!("[fmt] Unreachable");
                 }
             };
-            if self.exp[i] < -1 {
+
+            if self.exp[i] < -1 && !self.is_rooted[i] {
                 denoms.push(format!("{}^{}", u, -self.exp[i]))
-            } else if self.exp[i] > 1 {
+            } else if self.exp[i] > 1 && !self.is_rooted[i] {
                 nums.push(format!("{}^{}", u, self.exp[i]))
+            } else if self.exp[i] < -2 && self.is_rooted[i] {
+                denoms.push(format!("{}_√({})", self.exp[i], u))
+            } else if self.exp[i] == -2 && self.is_rooted[i] {
+                denoms.push(format!("√({})", u))
+            } else if self.exp[i] > 2 && self.is_rooted[i] {
+                nums.push(format!("{}_√({})", self.exp[i], u))
+            } else if self.exp[i] == 2 && self.is_rooted[i] {
+                nums.push(format!("√({})", u))
             } else if self.exp[i] == 1 {
                 nums.push(u);
             } else if self.exp[i] == -1 {

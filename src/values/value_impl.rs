@@ -1,9 +1,13 @@
+use std::default;
+
 use crate::constants::*;
 use crate::errors::V3Error;
 use crate::units::Convert;
 use crate::units::Metric;
 use crate::units::UnitAngle;
 use crate::values::Value;
+
+use super::ValueLogBase;
 
 impl Default for Value {
     /// The default constructor for a [`Value`]
@@ -19,6 +23,9 @@ impl Default for Value {
             val: 0.0,
             unit_map: 0,
             exp: [0; 31],
+            is_rooted: [false; 31],
+            is_log: false,
+            log_base: ValueLogBase::default(),
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -64,12 +71,17 @@ impl Value {
     ///     Ok(v) => v,
     ///     Err(e) => panic!("{}", e)
     /// };
+    /// 
+    /// assert_eq!(m.to_string(), "4.5 m");
     /// ```
     pub fn new(val: f64, units: &str) -> Result<Value, V3Error> {
         let mut ret: Value = Value {
             val,
             unit_map: 0,
             exp: [0; 31],
+            is_rooted: [false; 31],
+            is_log: false,
+            log_base: ValueLogBase::default(),
             v_ab_dose: None,
             v_angle: None,
             v_capacitance: None,
@@ -113,6 +125,9 @@ impl Value {
             val,
             unit_map: ANGLE_MAP,
             exp: [0; 31],
+            is_rooted: [false; 31],
+            is_log: false,
+            log_base: ValueLogBase::default(),
             v_ab_dose: None,
             v_angle: Some(UnitAngle::Radian(Metric::None)),
             v_capacitance: None,
@@ -338,6 +353,13 @@ impl Value {
     /// Returns the arctangent of a [`Value`] in radians
     pub fn atan(&self) -> Value {
         Value::_radians(self.val.atan())
+    }
+
+    /// Returns the natural log of a [`Value`]
+    pub fn ln(&self) -> Value {
+        let mut ret = self.clone();
+        ret.val = ret.val.ln();
+        ret
     }
 
     /// Returns the full unit circle arctangent of a [`Value`] in radians

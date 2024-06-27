@@ -2077,3 +2077,22 @@ mod parse_testing {
         assert_eq!(v.exp[ENERGY_INDEX], -1);
     }
 }
+
+#[cfg(test)]
+mod regex_parse_testing {
+
+    // Regex to find an arbitrary unit
+    // test string (μm^0.5*(kg(  J))/(s^2/T))
+    const UNIT_STR:&str = r"[Åμa-zA-Z\^[0-9]\.?[0-9]?]+";
+    const EQ_STR:&str = r"(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)\s*(?<operator>[*/])\s*(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)";
+
+    const TEST_STR1:&str = "(μm^0.5*(kg(  J))/(s^2/T))";
+    const TEST_STR2:&str = "mm*kg";
+    const TEST_STR3:&str = "cm";
+
+    #[test]
+    fn t1() {
+        let mut t:f64 = 4.0;
+        let y = t.log10();
+    }
+}

@@ -16,6 +16,7 @@ path = "src/lib.rs"
 
 [dependencies]
 serde = "1.0.203"
+regex = "1.10.5"
 
 [dev-dependencies]
 criterion = "0.5.1"
