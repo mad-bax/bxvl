@@ -615,7 +615,7 @@ mod conversion_testing {
     #[test]
     #[should_panic]
     fn temperature_conversion_multiple_types_bad() {
-        let mut t1 = 4.5 * UnitLength::Meter(Metric::None) * UnitTemperature::Celsius;
+        let mut t1 = 4.5 * UnitLength::Meter(Metric::None) * UnitTemperature::Celsius(Metric::None);
         let t2 = 1.0 * UnitLength::Meter(Metric::None) * UnitTemperature::Kelvin(Metric::None);
 
         t1._convert(&t2).unwrap();
@@ -623,7 +623,7 @@ mod conversion_testing {
 
     #[test]
     fn temperature_conversion() {
-        let mut t1 = 4.5 * UnitTemperature::Celsius;
+        let mut t1 = 4.5 * UnitTemperature::Celsius(Metric::None);
         let t2 = 1.0 * UnitTemperature::Kelvin(Metric::None);
 
         t1._convert(&t2).unwrap();

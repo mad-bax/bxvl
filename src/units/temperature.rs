@@ -10,7 +10,7 @@ impl Display for UnitTemperature {
             f,
             "{}",
             match self {
-                Self::Celsius => "°c".into(),
+                Self::Celsius(m) => format!("°{}c", m.as_str()),
                 Self::Kelvin(m) => format!("{}K", m.as_str()),
                 Self::Fahrenheit => "°f".into(),
             }
@@ -28,20 +28,22 @@ impl UnitTemperature {
     /// Returns a `f64` to assign to a `Value`
     pub fn convert(&self, other: &UnitTemperature, val: f64) -> f64 {
         match self {
-            Self::Celsius => match other {
-                Self::Celsius => val,
+            Self::Celsius(old_m) => match other {
+                Self::Celsius(new_m) => val * (old_m.scale() / new_m.scale()),
                 Self::Fahrenheit => (val * 1.8) + 32.0,
-                Self::Kelvin(m) => f64::max(val + KELVIN_TO_CELSIUS, 0.0) / m.scale(),
+                Self::Kelvin(m) => {
+                    f64::max((val * old_m.scale()) + KELVIN_TO_CELSIUS, 0.0) / m.scale()
+                }
             },
             Self::Fahrenheit => match other {
-                Self::Celsius => (val - 32.0) / 1.8,
+                Self::Celsius(m) => ((val - 32.0) / 1.8) / m.scale(),
                 Self::Fahrenheit => val,
                 Self::Kelvin(m) => {
                     f64::max(((val - 32.0) / 1.8) + KELVIN_TO_CELSIUS, 0.0) / m.scale()
                 }
             },
             Self::Kelvin(old_m) => match other {
-                Self::Celsius => val - KELVIN_TO_CELSIUS,
+                Self::Celsius(m) => ((val * old_m.scale()) - KELVIN_TO_CELSIUS) / m.scale(),
                 Self::Fahrenheit => ((val - KELVIN_TO_CELSIUS) * 1.8) + 32.0,
                 Self::Kelvin(new_m) => val * (old_m.scale() / new_m.scale()),
             },
@@ -54,6 +56,7 @@ impl BaseUnit for UnitTemperature {
     fn get_metric(&self) -> Metric {
         match self {
             UnitTemperature::Kelvin(m) => *m,
+            UnitTemperature::Celsius(m) => *m,
             _ => Metric::None,
         }
     }
@@ -61,6 +64,7 @@ impl BaseUnit for UnitTemperature {
     fn scale(&self) -> f64 {
         match self {
             UnitTemperature::Kelvin(m) => m.scale(),
+            UnitTemperature::Celsius(m) => m.scale(),
             _ => 1.0,
         }
     }
@@ -78,7 +82,7 @@ mod temperature_testing {
     fn unit_radioactivity_base_comparison() {
         assert!(UnitTemperature::Kelvin(Metric::None).base() == 1.0);
         assert!(UnitTemperature::Fahrenheit.base() == 1.0);
-        assert!(UnitTemperature::Celsius.base() == 1.0);
+        assert!(UnitTemperature::Celsius(Metric::None).base() == 1.0);
     }
 
     #[test]
@@ -110,7 +114,7 @@ mod temperature_testing {
             (UnitTemperature::Kelvin(Metric::Zepto), "zK"),
             (UnitTemperature::Kelvin(Metric::Zetta), "ZK"),
             (UnitTemperature::Fahrenheit, "°f"),
-            (UnitTemperature::Celsius, "°c"),
+            (UnitTemperature::Celsius(Metric::None), "°c"),
         ] {
             assert_eq!(&i.0.to_string(), i.1);
             let t: String = i.0.into();
@@ -147,7 +151,7 @@ mod temperature_testing {
             (UnitTemperature::Kelvin(Metric::Zepto), Metric::Zepto),
             (UnitTemperature::Kelvin(Metric::Zetta), Metric::Zetta),
             (UnitTemperature::Fahrenheit, Metric::None),
-            (UnitTemperature::Celsius, Metric::None),
+            (UnitTemperature::Celsius(Metric::None), Metric::None),
         ] {
             assert_eq!(i.0.get_metric(), i.1);
         }
@@ -178,7 +182,7 @@ mod temperature_testing {
             (UnitTemperature::Kelvin(Metric::Zepto), 1.0e-21),
             (UnitTemperature::Kelvin(Metric::Zetta), 1.0e21),
             (UnitTemperature::Fahrenheit, 1.0),
-            (UnitTemperature::Celsius, 1.0),
+            (UnitTemperature::Celsius(Metric::None), 1.0),
         ] {
             assert_eq!(i.0.scale(), i.1);
         }
@@ -187,19 +191,21 @@ mod temperature_testing {
     #[test]
     fn temp_convert() {
         assert_eq!(
-            (UnitTemperature::Celsius).convert(&UnitTemperature::Kelvin(Metric::None), 0.0),
+            (UnitTemperature::Celsius(Metric::None))
+                .convert(&UnitTemperature::Kelvin(Metric::None), 0.0),
             273.15
         );
         assert_eq!(
-            (UnitTemperature::Celsius).convert(&UnitTemperature::Fahrenheit, 0.0),
+            (UnitTemperature::Celsius(Metric::None)).convert(&UnitTemperature::Fahrenheit, 0.0),
             32.0
         );
         assert_eq!(
-            (UnitTemperature::Celsius).convert(&UnitTemperature::Celsius, 0.0),
+            (UnitTemperature::Celsius(Metric::None))
+                .convert(&UnitTemperature::Celsius(Metric::None), 0.0),
             0.0
         );
         assert_eq!(
-            (UnitTemperature::Fahrenheit).convert(&UnitTemperature::Celsius, 32.0),
+            (UnitTemperature::Fahrenheit).convert(&UnitTemperature::Celsius(Metric::None), 32.0),
             0.0
         );
         assert_eq!(
@@ -211,12 +217,45 @@ mod temperature_testing {
             273.15
         );
         assert_eq!(
-            (UnitTemperature::Kelvin(Metric::None)).convert(&UnitTemperature::Celsius, 0.0),
+            (UnitTemperature::Kelvin(Metric::None))
+                .convert(&UnitTemperature::Celsius(Metric::None), 0.0),
             -273.15
         );
         assert_eq!(
             (UnitTemperature::Kelvin(Metric::None)).convert(&UnitTemperature::Fahrenheit, 273.15),
             32.0
+        );
+
+        assert_eq!(
+            (UnitTemperature::Kelvin(Metric::Kilo))
+                .convert(&UnitTemperature::Celsius(Metric::None), 2.0),
+            1726.85
+        );
+        assert_eq!(
+            (UnitTemperature::Celsius(Metric::Kilo))
+                .convert(&UnitTemperature::Celsius(Metric::None), 2.0),
+            2000.0
+        );
+        assert_eq!(
+            (UnitTemperature::Celsius(Metric::Kilo))
+                .convert(&UnitTemperature::Kelvin(Metric::None), 2.0),
+            2273.15
+        );
+        assert_eq!(
+            (UnitTemperature::Kelvin(Metric::Kilo))
+                .convert(&UnitTemperature::Kelvin(Metric::None), 2.0),
+            2000.0
+        );
+
+        assert_eq!(
+            (UnitTemperature::Kelvin(Metric::None))
+                .convert(&UnitTemperature::Kelvin(Metric::Kilo), 2000.0),
+            2.0
+        );
+        assert_eq!(
+            (UnitTemperature::Celsius(Metric::None))
+                .convert(&UnitTemperature::Celsius(Metric::Kilo), 2000.0),
+            2.0
         );
     }
 }

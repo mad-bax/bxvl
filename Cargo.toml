@@ -5,7 +5,7 @@ edition = "2021"
 repository = ""
 authors = ["Bax"]
 readme = "README.md"
-license = "GPLv3"
+license = "GPLv2.1"
 description = """
 A datatype library that allows for measurement unit association, conversion, and operations for values.
 """
@@ -16,7 +16,6 @@ path = "src/lib.rs"
 
 [dependencies]
 serde = "1.0.203"
-regex = "1.10.5"
 
 [dev-dependencies]
 criterion = "0.5.1"

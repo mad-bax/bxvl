@@ -476,7 +476,12 @@ impl Value {
 
 #[cfg(test)]
 mod reduction_testing {
-    use crate::units::{Metric, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance, UnitElectricInductance, UnitElectricPotential, UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitLength, UnitLuminousFlux, UnitMagneticFlux, UnitMagneticFluxDensity, UnitPower, UnitPressure};
+    use crate::units::{
+        Metric, UnitCatalyticActivity, UnitElectricCapacitance, UnitElectricCharge,
+        UnitElectricConductance, UnitElectricInductance, UnitElectricPotential,
+        UnitElectricResistance, UnitEnergy, UnitForce, UnitFrequency, UnitIlluminance, UnitLength,
+        UnitLuminousFlux, UnitMagneticFlux, UnitMagneticFluxDensity, UnitPower, UnitPressure,
+    };
 
     #[test]
     fn reduce_catalytic_activity() {

@@ -14,6 +14,71 @@ macro_rules! assert_apr {
 }
 
 #[cfg(test)]
+mod regex_parse_testing {
+    use std::ops::Index;
+
+    use fancy_regex::Regex;
+
+    // Regex to find an arbitrary unit
+    // test string (μm^0.5*(kg(  J))/(s^2/T))
+    const UNIT_STR:&str = r"[Åμa-zA-Z\^[0-9]\.?[0-9]?]+";
+    const EQ_STR:&str = r"(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)\s*(?<operator>[/*])\s*(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)";
+    const UNIT_PARTS:&str = r"(?<op>[1]?[*/
+])?[(]*(?(unit_name)|(?<metric>Q|R|Y|Z|E|P|T|G|M|k|h|da|d|c|m|μ|u|n|p|f|a|z|y|r|q))?(?<unit_name>m|pc|lyr|g|A|C|V|F|Ω|O|W[b]?|T|K|cal|c[d]?|l[mx]?|Pa|bar|rad|s[r]?|H[z]?|N|J|eV|B[q]?|Gy|S[v]?|kat|bits|b)(?(<unit_name>)\^(?<exp>-?[0-9]+\.?[0-9]*)|$)?[)]*";
+
+    const TEST_STR1:&str = "g";
+    const TEST_STR2:&str = "cm";
+    const TEST_STR3:&str = "mm*kg";
+    const TEST_STR4:&str = "(μm^0.5*(kg(  J))/(s^2/T)";
+    const TEST_STR5:&str = "(1/Hz^-1)*s";
+    const TEST_STR6:&str = "1/Hz^-1*s";
+
+    fn paren_count(input:&str) -> bool {
+        let mut open_p:i32 = 0;
+        for i in 0..input.len() {
+            if input.chars().nth(i).unwrap() == '(' {
+                open_p += 1;
+            } else if input.chars().nth(i).unwrap() == ')' {
+                open_p -= 1;
+            }
+
+            if open_p < 0 {
+                return false;
+            }
+        }
+
+        open_p == 0
+    }
+
+    #[test]
+    fn regex_test1() {
+
+        let test_string = TEST_STR4;
+
+        let re = Regex::new(UNIT_PARTS).unwrap();
+        for i in re.captures_iter(test_string) {
+            if i.is_ok() {
+                let ret = i.unwrap();
+                for j in ret.iter() {
+                    if j.is_some() {
+                        let m = j.unwrap();
+                        let t = test_string.get(m.start()..m.end()).unwrap();
+                        println!("{}", t);
+                    }
+                }
+                println!();
+            }
+        }
+    }
+
+    #[test]
+    fn t1() {
+        let mut t:f64 = 4.0;
+        let y = t.log10();
+    }
+}
+
+#[cfg(test)]
 mod unit_creation_tests {
     use v3::{
         units::{

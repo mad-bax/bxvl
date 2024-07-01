@@ -102,11 +102,13 @@ mod conversion_testing {
     #[test]
     #[should_panic]
     fn covert_exp_fail() {
-        let y = 1.0 / UnitTemperature::Celsius / UnitTemperature::Celsius;
+        let y =
+            1.0 / UnitTemperature::Celsius(Metric::None) / UnitTemperature::Celsius(Metric::None);
 
         assert_eq!((y >> UnitTemperature::Fahrenheit).is_err(), true);
 
-        let mut x = 1.0 / UnitTemperature::Celsius / UnitTemperature::Celsius;
+        let mut x =
+            1.0 / UnitTemperature::Celsius(Metric::None) / UnitTemperature::Celsius(Metric::None);
         x >>= UnitTemperature::Fahrenheit;
     }
 

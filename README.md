@@ -370,11 +370,11 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Thermal Temperature
 
-| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string     |
-| ---------- | ------------------------ | ---------------------- | --------------- |
-| Celsius    | **[Future Support]**     | `c-273.15 K`           | `c`, `°c`, `°C` |
-| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`, `°f`, `°F` |
-| Kelvin     | &check;                  | `1.0 K`                | `K`             |
+| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string                                         |
+| ---------- | ------------------------ | ---------------------- | --------------------------------------------------- |
+| Celsius    | &check;                  | `c-273.15 K`           | [`Metric Prefix`]`c`, `°`[`Metric Prefix`]`c`, `°C` |
+| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`, `°f`, `°F`                                     |
+| Kelvin     | &check;                  | `1.0 K`                | `K`                                                 |
 
 ### Substance
 
@@ -442,9 +442,9 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Force
 
-| Unit        | Metric Prefixing Support | Base Conversion Factor  | Unit string                               |
-| ----------- | ------------------------ | ----------------------- | ----------------------------------------- |
-| Newton      | &check;                  | `1.0 N`                 | `N`                                       |
+| Unit        | Metric Prefixing Support | Base Conversion Factor  | Unit string                                 |
+| ----------- | ------------------------ | ----------------------- | ------------------------------------------- |
+| Newton      | &check;                  | `1.0 N`                 | `N`                                         |
 | Pound Force |                          | `4.448_221_615_260_5 N` | `lbfr`, `lbsfr`, `poundforce` `poundsforce` |
 
 ### Energy
@@ -552,26 +552,12 @@ Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `El
 
 V3 can and is intended to be improved with some of these goals in mind:
 
-- ~~Support for `<f32>`, `<i32>`, `<i64>`, and `<i128>` numeric types~~
-  - ❌ Infeasible with type conversions and declared constants
-- ~~Numerator and Denominator numeric variables to ensure floating point accuracy~~
-  - ❌ Infeasible with type conversions and declared constants
-- Significant digit considerations
+- `Value`s that have `sqrt` units.
+- `Value`s that are logs.
 - Equation definitions, which can expect a specific `Value` type
 - More Imperial measurement support (US customary) 🤢
   - Lengths : `chains`, `furlongs`, `leagues`, `fathoms`, `cable`, `nautical mile`
   - Area : `acre`
   - Volume : `gallon`, `pint`, `quart`
   - Weight : `stone`, `ton`, `slug`
-- ~~Metric support for `parsec` and `lightyears`~~
-  - ✅ Support added
-- ~~'Metric' prefixing for `mmHg`?~~
-  - ❌ Does not make sense given its static metric prefix
-  - ✅ Did add `cmHg` though.
-- ~~Metric support for `electronVolt`~~
-  - ✅ Support added
-- ~~Metric support for `Kelvin`~~
-  - ✅ Support added
-- Metric support for `Celsius`
-- ~~New metric prefixing for: `Quetta`, `Quecto`, `Ronna`, and `Ronto`~~
 - speed speed speed

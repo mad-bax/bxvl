@@ -340,7 +340,7 @@ mod std_ops_testing {
     #[test]
     #[should_panic]
     fn value_ords_bad_temp() {
-        let t1 = 5.4 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t1 = 5.4 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 5.0 * UnitTemperature::Kelvin(Metric::None) * UnitLength::Meter(Metric::None);
 
         assert_eq!(t1 > t2, true);

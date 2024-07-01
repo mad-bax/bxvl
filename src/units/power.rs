@@ -6,10 +6,14 @@ use super::{BaseUnit, Convert, Metric, UnitPower};
 
 impl Display for UnitPower {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Watt(m) => format!("{}W", m.as_str()),
-            Self::Horsepower => "hp".into()
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Watt(m) => format!("{}W", m.as_str()),
+                Self::Horsepower => "hp".into(),
+            }
+        )
     }
 }
 
@@ -31,7 +35,7 @@ impl BaseUnit for UnitPower {
     fn scale(&self) -> f64 {
         match self {
             Self::Watt(m) => m.scale(),
-            _ => 1.0
+            _ => 1.0,
         }
     }
 
@@ -39,14 +43,14 @@ impl BaseUnit for UnitPower {
     fn get_metric(&self) -> Metric {
         match self {
             Self::Watt(m) => *m,
-            _ => Metric::None
+            _ => Metric::None,
         }
     }
 
     fn base(&self) -> f64 {
         match self {
             Self::Watt(_) => 1.0,
-            Self::Horsepower => PW_HPWR_TO_W
+            Self::Horsepower => PW_HPWR_TO_W,
         }
     }
 }
@@ -161,7 +165,7 @@ mod power_testing {
         ] {
             assert_eq!(i.0.scale(), i.1);
         }
-        
+
         assert_eq!(UnitPower::Horsepower.scale(), 1.0);
     }
 }

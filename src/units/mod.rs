@@ -344,7 +344,7 @@ pub enum UnitPower {
     /// SI unit
     Watt(Metric),
     /// Imperial
-    Horsepower
+    Horsepower,
 }
 
 /// The unit types for pressure
@@ -415,7 +415,7 @@ pub enum UnitSubstance {
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum UnitTemperature {
     /// SI Unit
-    Celsius,
+    Celsius(Metric),
     /// Imperial
     Fahrenheit,
     /// SI unit

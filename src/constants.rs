@@ -89,7 +89,7 @@ pub(crate) const PR_PSI_TO_P: f64 = 6894.757;
 pub(crate) const PR_TORR_TO_P: f64 = 101325.0 / 760.0;
 
 /// Power
-/// 
+///
 /// The conversion for Horsepower to Watts
 pub(crate) const PW_HPWR_TO_W: f64 = 745.699872;
 

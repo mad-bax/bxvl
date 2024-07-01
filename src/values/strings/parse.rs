@@ -98,6 +98,11 @@ impl Value {
                     left_count += 1;
                 }
                 ')' => {
+                    if left_count == 0 {
+                        return Err(V3Error::ParsingError(
+                            "[_get_tokens] Parenthesis Ordering".into(),
+                        ));
+                    }
                     left_count -= 1;
                     if left_count == 0 {
                         end_index = index;
@@ -218,6 +223,11 @@ impl Value {
             }
             'K' => {
                 self.v_temperature = Some(UnitTemperature::Kelvin(m));
+                self.exp[TEMPERATURE_INDEX] = exp;
+                self.unit_map |= TEMPERATURE_MAP;
+            }
+            'c' => {
+                self.v_temperature = Some(UnitTemperature::Celsius(m));
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
             }
@@ -376,6 +386,32 @@ impl Value {
 
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_triple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
+        if let Some(cel_deg) = unit.strip_prefix("°") {
+            if m != Metric::None {
+                return Err(V3Error::ParsingError(
+                    "[_get_pentuple_letter] Already registered metric prefix".into(),
+                ));
+            }
+
+            match self._get_metric(match &cel_deg.chars().next() {
+                Some(t) => t,
+                None => {
+                    // Unreachable all things being equal
+                    return Err(V3Error::ParsingError(
+                        "[_get_triple_letter] Cannot get next metric char".into(),
+                    ));
+                }
+            }) {
+                Ok(new_m) => {
+                    // Parsing strings is insane
+                    return self._get_single_letter(cel_deg.chars().last().unwrap(), exp, new_m);
+                }
+                Err(e) => {
+                    return Err(e);
+                }
+            }
+        }
+
         if let Some(da) = unit.strip_prefix("da") {
             if m != Metric::None {
                 return Err(V3Error::ParsingError(
@@ -455,6 +491,15 @@ impl Value {
 
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_quadruple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
+        if let Some(cel_deg) = unit.strip_prefix("°da") {
+            if m != Metric::None {
+                return Err(V3Error::ParsingError(
+                    "[_get_pentuple_letter] Already registered metric prefix".into(),
+                ));
+            }
+            return self._get_single_letter(cel_deg.chars().last().unwrap(), exp, Metric::Deca);
+        }
+
         if let Some(da) = unit.strip_prefix("da") {
             if m != Metric::None {
                 return Err(V3Error::ParsingError(
@@ -709,8 +754,8 @@ impl Value {
                 self.unit_map |= TEMPERATURE_MAP;
                 return Ok(());
             }
-            "c" | "°c" | "°C" => {
-                self.v_temperature = Some(UnitTemperature::Celsius);
+            "°c" | "°C" => {
+                self.v_temperature = Some(UnitTemperature::Celsius(Metric::None));
                 self.exp[TEMPERATURE_INDEX] = exp;
                 self.unit_map |= TEMPERATURE_MAP;
                 return Ok(());
@@ -853,8 +898,8 @@ mod parse_testing {
             TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP, VOLUME_INDEX, VOLUME_MAP,
         },
         units::{
-            Metric, UnitAngle, UnitElectricCapacitance, UnitEnergy, UnitForce, UnitInformation,
-            UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime,
+            Metric, UnitAngle, UnitElectricCapacitance, UnitEnergy, UnitForce, UnitFrequency,
+            UnitInformation, UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime,
         },
         values::Value,
     };
@@ -1554,25 +1599,37 @@ mod parse_testing {
         let v = Value::new(1.5, "°C").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
 
         let v = Value::new(1.5, "°c").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
 
         let v = Value::new(1.5, "c").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
 
         let v = Value::new(1.5, "1/°C").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
 
         let v = Value::new(
@@ -1582,14 +1639,47 @@ mod parse_testing {
         .unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
 
         let v = Value::new(1.5, "1        /c").unwrap();
         assert_eq!(v, 1.5);
         assert_eq!(v.unit_map, TEMPERATURE_MAP);
-        assert_eq!(v.v_temperature, Some(UnitTemperature::Celsius));
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::None))
+        );
         assert_eq!(v.exp[TEMPERATURE_INDEX], -1);
+
+        let v = Value::new(1.5, "kc").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TEMPERATURE_MAP);
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::Kilo))
+        );
+        assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
+
+        let v = Value::new(1.5, "°dac").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TEMPERATURE_MAP);
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::Deca))
+        );
+        assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
+
+        let v = Value::new(1.5, "°kc").unwrap();
+        assert_eq!(v, 1.5);
+        assert_eq!(v.unit_map, TEMPERATURE_MAP);
+        assert_eq!(
+            v.v_temperature,
+            Some(UnitTemperature::Celsius(Metric::Kilo))
+        );
+        assert_eq!(v.exp[TEMPERATURE_INDEX], 1);
     }
 
     #[test]
@@ -2076,23 +2166,145 @@ mod parse_testing {
         assert_eq!(v.v_energy, Some(UnitEnergy::GramCalorie(Metric::Kilo)));
         assert_eq!(v.exp[ENERGY_INDEX], -1);
     }
-}
-
-#[cfg(test)]
-mod regex_parse_testing {
-
-    // Regex to find an arbitrary unit
-    // test string (μm^0.5*(kg(  J))/(s^2/T))
-    const UNIT_STR:&str = r"[Åμa-zA-Z\^[0-9]\.?[0-9]?]+";
-    const EQ_STR:&str = r"(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)\s*(?<operator>[*/])\s*(?<u1>[Åμa-zA-Z\^[0-9]\.?[0-9]?]+)";
-
-    const TEST_STR1:&str = "(μm^0.5*(kg(  J))/(s^2/T))";
-    const TEST_STR2:&str = "mm*kg";
-    const TEST_STR3:&str = "cm";
 
     #[test]
-    fn t1() {
-        let mut t:f64 = 4.0;
-        let y = t.log10();
+    fn weird_units() {
+        let t = "1.5 (1/GHz^-1)*s".parse::<Value>().unwrap();
+
+        let mut k = Value {
+            val: 1.5,
+            unit_map: FREQUENCY_MAP | TIME_MAP,
+            exp: [0; 31],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: Some(UnitFrequency::Hertz(Metric::Giga)),
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux: None,
+            v_magnetic_flux_density: None,
+            v_solid_angle: None,
+        };
+
+        k.exp[TIME_INDEX] = 1;
+        k.exp[FREQUENCY_INDEX] = 1;
+
+        assert_eq!(t, k);
+
+        let t = "1.5 1/(GHz^-1*s)".parse::<Value>().unwrap();
+
+        let mut k = Value {
+            val: 1.5,
+            unit_map: FREQUENCY_MAP | TIME_MAP,
+            exp: [0; 31],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: Some(UnitFrequency::Hertz(Metric::Giga)),
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux: None,
+            v_magnetic_flux_density: None,
+            v_solid_angle: None,
+        };
+
+        k.exp[TIME_INDEX] = -1;
+        k.exp[FREQUENCY_INDEX] = 1;
+
+        assert_eq!(t, k);
+
+        let t = "1.5 1/GHz^-1*s".parse::<Value>().unwrap();
+
+        let mut k = Value {
+            val: 1.5,
+            unit_map: FREQUENCY_MAP | TIME_MAP,
+            exp: [0; 31],
+            v_ab_dose: None,
+            v_angle: None,
+            v_capacitance: None,
+            v_catalytic: None,
+            v_electric_charge: None,
+            v_electric_conductance: None,
+            v_electric_current: None,
+            v_electric_potential: None,
+            v_energy: None,
+            v_force: None,
+            v_frequency: Some(UnitFrequency::Hertz(Metric::Giga)),
+            v_illuminance: None,
+            v_inductance: None,
+            v_information: None,
+            v_length: None,
+            v_luminous_flux: None,
+            v_luminous_flux_intensity: None,
+            v_mass: None,
+            v_power: None,
+            v_pressure: None,
+            v_radioactivity: None,
+            v_radioactivity_exposure: None,
+            v_resistance: None,
+            v_sound: None,
+            v_substance: None,
+            v_temperature: None,
+            v_time: Some(UnitTime::Second(Metric::None)),
+            v_volume: None,
+            v_magnetic_flux: None,
+            v_magnetic_flux_density: None,
+            v_solid_angle: None,
+        };
+
+        k.exp[TIME_INDEX] = -1;
+        k.exp[FREQUENCY_INDEX] = 1;
+
+        assert_eq!(t, k);
+    }
+
+    #[test]
+    #[should_panic]
+    fn parentheses_testing() {
+        let _ = "2.0 ))((kg".parse::<Value>().unwrap();
     }
 }

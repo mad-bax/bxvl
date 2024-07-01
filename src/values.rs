@@ -30,8 +30,9 @@ use crate::units::{
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default)]
 enum ValueLogBase {
     BaseE,
-    #[default] Base10,
-    Base2
+    #[default]
+    Base10,
+    Base2,
 }
 
 /// The `Value` struct definition
@@ -43,10 +44,6 @@ pub struct Value {
     unit_map: usize,
     /// The exponent storage of all the units within a `Value`
     exp: [i32; 31],
-    /// Indication if the exponent for a given unit is a nth-root √2
-    is_rooted: [bool; 31],
-    is_log: bool,
-    log_base: ValueLogBase,
     /// the absorbed dose of ionizing radiation measure
     v_ab_dose: Option<UnitAbsorbedDose>,
     /// the angle measure

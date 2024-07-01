@@ -2494,7 +2494,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_add_temp() {
-        let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         let _ = t1 + t2;
@@ -2503,7 +2503,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_sub_temp() {
-        let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         let _ = t1 - t2;
@@ -2512,7 +2512,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_add_temp_mut() {
-        let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let mut t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         t1 += t2;
@@ -2521,7 +2521,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_sub_temp_mut() {
-        let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let mut t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         t1 -= t2;
@@ -2530,7 +2530,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_mul_temp() {
-        let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         let _ = t1 * t2;
@@ -2539,7 +2539,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_div_temp() {
-        let t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         let _ = t1 / t2;
@@ -2548,7 +2548,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_mul_temp_mut() {
-        let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let mut t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         t1 *= t2;
@@ -2557,7 +2557,7 @@ mod arithmetic_ops_testing {
     #[test]
     #[should_panic]
     fn value_bad_div_temp_mut() {
-        let mut t1 = 4.0 * UnitTemperature::Celsius * UnitLength::Meter(Metric::None);
+        let mut t1 = 4.0 * UnitTemperature::Celsius(Metric::None) * UnitLength::Meter(Metric::None);
         let t2 = 1.0 * UnitTemperature::Fahrenheit * UnitLength::Meter(Metric::None);
 
         t1 /= t2;
