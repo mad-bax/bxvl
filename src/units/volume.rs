@@ -10,9 +10,9 @@ impl Display for UnitVolume {
     }
 }
 
-impl Into<String> for UnitVolume {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitVolume> for String {
+    fn from(val: UnitVolume) -> Self {
+        val.to_string()
     }
 }
 

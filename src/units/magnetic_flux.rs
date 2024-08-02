@@ -8,9 +8,9 @@ impl Display for UnitMagneticFlux {
     }
 }
 
-impl Into<String> for UnitMagneticFlux {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitMagneticFlux> for String {
+    fn from(val: UnitMagneticFlux) -> Self {
+        val.to_string()
     }
 }
 

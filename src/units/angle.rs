@@ -19,9 +19,9 @@ impl Display for UnitAngle {
     }
 }
 
-impl Into<String> for UnitAngle {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitAngle> for String {
+    fn from(val: UnitAngle) -> Self {
+        val.to_string()
     }
 }
 

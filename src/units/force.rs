@@ -17,9 +17,9 @@ impl Display for UnitForce {
     }
 }
 
-impl Into<String> for UnitForce {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitForce> for String {
+    fn from(val: UnitForce) -> Self {
+        val.to_string()
     }
 }
 

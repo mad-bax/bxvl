@@ -8,9 +8,9 @@ impl Display for UnitElectricResistance {
     }
 }
 
-impl Into<String> for UnitElectricResistance {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitElectricResistance> for String {
+    fn from(val: UnitElectricResistance) -> Self {
+        val.to_string()
     }
 }
 

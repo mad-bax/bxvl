@@ -8,9 +8,9 @@ impl Display for UnitLuminousIntensity {
     }
 }
 
-impl Into<String> for UnitLuminousIntensity {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitLuminousIntensity> for String {
+    fn from(val: UnitLuminousIntensity) -> Self {
+        val.to_string()
     }
 }
 

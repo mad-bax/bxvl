@@ -8,9 +8,9 @@ impl Display for UnitFrequency {
     }
 }
 
-impl Into<String> for UnitFrequency {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitFrequency> for String {
+    fn from(val: UnitFrequency) -> Self {
+        val.to_string()
     }
 }
 

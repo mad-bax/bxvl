@@ -18,9 +18,9 @@ impl Display for UnitTemperature {
     }
 }
 
-impl Into<String> for UnitTemperature {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitTemperature> for String {
+    fn from(val: UnitTemperature) -> Self {
+        val.to_string()
     }
 }
 

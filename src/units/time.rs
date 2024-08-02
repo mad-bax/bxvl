@@ -17,15 +17,15 @@ impl Display for UnitTime {
     }
 }
 
-impl Into<String> for UnitTime {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitTime> for String {
+    fn from(val: UnitTime) -> Self {
+        val.to_string()
     }
 }
 
 impl Convert<UnitTime> for UnitTime {
     fn convert(&self, other: &UnitTime) -> f64 {
-        ((self.scale() / other.scale()) * (self.base() / other.base())).into()
+        (self.scale() / other.scale()) * (self.base() / other.base())
     }
 }
 

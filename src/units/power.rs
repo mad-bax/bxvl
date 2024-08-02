@@ -17,9 +17,9 @@ impl Display for UnitPower {
     }
 }
 
-impl Into<String> for UnitPower {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitPower> for String {
+    fn from(val: UnitPower) -> Self {
+        val.to_string()
     }
 }
 

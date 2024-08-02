@@ -19,9 +19,9 @@ impl Display for UnitMass {
     }
 }
 
-impl Into<String> for UnitMass {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitMass> for String {
+    fn from(val: UnitMass) -> Self {
+        val.to_string()
     }
 }
 

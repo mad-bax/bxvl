@@ -105,7 +105,7 @@ mod conversion_testing {
         let y =
             1.0 / UnitTemperature::Celsius(Metric::None) / UnitTemperature::Celsius(Metric::None);
 
-        assert_eq!((y >> UnitTemperature::Fahrenheit).is_err(), true);
+        assert!((y >> UnitTemperature::Fahrenheit).is_err());
 
         let mut x =
             1.0 / UnitTemperature::Celsius(Metric::None) / UnitTemperature::Celsius(Metric::None);

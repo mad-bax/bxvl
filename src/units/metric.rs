@@ -114,58 +114,58 @@ mod metric_testing {
 
     #[test]
     fn metric_comparison() {
-        assert_eq!(true, Metric::Quecto < Metric::Ronto);
-        assert_eq!(true, Metric::Ronto < Metric::Yocto);
-        assert_eq!(true, Metric::Yocto < Metric::Zepto);
-        assert_eq!(true, Metric::Zepto < Metric::Atto);
-        assert_eq!(true, Metric::Atto < Metric::Femto);
-        assert_eq!(true, Metric::Femto < Metric::Pico);
-        assert_eq!(true, Metric::Pico < Metric::Nano);
-        assert_eq!(true, Metric::Nano < Metric::Micro);
-        assert_eq!(true, Metric::Micro < Metric::Milli);
-        assert_eq!(true, Metric::Milli < Metric::Centi);
-        assert_eq!(true, Metric::Centi < Metric::Deci);
-        assert_eq!(true, Metric::Deci < Metric::None);
-        assert_eq!(true, Metric::None < Metric::Deca);
-        assert_eq!(true, Metric::Deca < Metric::Hecto);
-        assert_eq!(true, Metric::Hecto < Metric::Kilo);
-        assert_eq!(true, Metric::Kilo < Metric::Mega);
-        assert_eq!(true, Metric::Mega < Metric::Giga);
-        assert_eq!(true, Metric::Giga < Metric::Tera);
-        assert_eq!(true, Metric::Tera < Metric::Peta);
-        assert_eq!(true, Metric::Peta < Metric::Exa);
-        assert_eq!(true, Metric::Exa < Metric::Zetta);
-        assert_eq!(true, Metric::Zetta < Metric::Yotta);
-        assert_eq!(true, Metric::Yotta < Metric::Ronna);
-        assert_eq!(true, Metric::Ronna < Metric::Quetta);
+        assert!(Metric::Quecto < Metric::Ronto);
+        assert!(Metric::Ronto < Metric::Yocto);
+        assert!(Metric::Yocto < Metric::Zepto);
+        assert!(Metric::Zepto < Metric::Atto);
+        assert!(Metric::Atto < Metric::Femto);
+        assert!(Metric::Femto < Metric::Pico);
+        assert!(Metric::Pico < Metric::Nano);
+        assert!(Metric::Nano < Metric::Micro);
+        assert!(Metric::Micro < Metric::Milli);
+        assert!(Metric::Milli < Metric::Centi);
+        assert!(Metric::Centi < Metric::Deci);
+        assert!(Metric::Deci < Metric::None);
+        assert!(Metric::None < Metric::Deca);
+        assert!(Metric::Deca < Metric::Hecto);
+        assert!(Metric::Hecto < Metric::Kilo);
+        assert!(Metric::Kilo < Metric::Mega);
+        assert!(Metric::Mega < Metric::Giga);
+        assert!(Metric::Giga < Metric::Tera);
+        assert!(Metric::Tera < Metric::Peta);
+        assert!(Metric::Peta < Metric::Exa);
+        assert!(Metric::Exa < Metric::Zetta);
+        assert!(Metric::Zetta < Metric::Yotta);
+        assert!(Metric::Yotta < Metric::Ronna);
+        assert!(Metric::Ronna < Metric::Quetta);
     }
 
     #[test]
     fn metric_comparison_scale() {
-        assert_eq!(true, Metric::Quecto.scale() < Metric::Ronto.scale());
-        assert_eq!(true, Metric::Ronto.scale() < Metric::Yocto.scale());
-        assert_eq!(true, Metric::Yocto.scale() < Metric::Zepto.scale());
-        assert_eq!(true, Metric::Zepto.scale() < Metric::Atto.scale());
-        assert_eq!(true, Metric::Atto.scale() < Metric::Femto.scale());
-        assert_eq!(true, Metric::Femto.scale() < Metric::Pico.scale());
-        assert_eq!(true, Metric::Pico.scale() < Metric::Nano.scale());
-        assert_eq!(true, Metric::Nano.scale() < Metric::Micro.scale());
-        assert_eq!(true, Metric::Micro.scale() < Metric::Milli.scale());
-        assert_eq!(true, Metric::Milli.scale() < Metric::Centi.scale());
-        assert_eq!(true, Metric::Centi.scale() < Metric::Deci.scale());
-        assert_eq!(true, Metric::Deci.scale() < Metric::None.scale());
-        assert_eq!(true, Metric::None.scale() < Metric::Deca.scale());
-        assert_eq!(true, Metric::Deca.scale() < Metric::Hecto.scale());
-        assert_eq!(true, Metric::Hecto.scale() < Metric::Kilo.scale());
-        assert_eq!(true, Metric::Kilo.scale() < Metric::Mega.scale());
-        assert_eq!(true, Metric::Mega.scale() < Metric::Giga.scale());
-        assert_eq!(true, Metric::Giga.scale() < Metric::Tera.scale());
-        assert_eq!(true, Metric::Tera.scale() < Metric::Peta.scale());
-        assert_eq!(true, Metric::Peta.scale() < Metric::Exa.scale());
-        assert_eq!(true, Metric::Exa.scale() < Metric::Zetta.scale());
-        assert_eq!(true, Metric::Zetta.scale() < Metric::Yotta.scale());
-        assert_eq!(true, Metric::Yotta.scale() < Metric::Ronna.scale());
-        assert_eq!(true, Metric::Ronna.scale() < Metric::Quetta.scale());
+        assert!(Metric::Quecto.scale() < Metric::Ronto.scale());
+        assert!(Metric::Ronto.scale() < Metric::Yocto.scale());
+        assert!(Metric::Yocto.scale() < Metric::Zepto.scale());
+        assert!(Metric::Zepto.scale() < Metric::Atto.scale());
+        assert!(Metric::Atto.scale() < Metric::Femto.scale());
+        assert!(Metric::Femto.scale() < Metric::Pico.scale());
+        assert!(Metric::Pico.scale() < Metric::Nano.scale());
+        assert!(Metric::Nano.scale() < Metric::Micro.scale());
+        assert!(Metric::Micro.scale() < Metric::Milli.scale());
+        assert!(Metric::Milli.scale() < Metric::Centi.scale());
+        assert!(Metric::Centi.scale() < Metric::Deci.scale());
+        assert!(Metric::Deci.scale() < Metric::None.scale());
+        assert!(Metric::None.scale() < Metric::Deca.scale());
+        assert!(Metric::Deca.scale() < Metric::Hecto.scale());
+        assert!(Metric::Hecto.scale() < Metric::Kilo.scale());
+        assert!(Metric::Kilo.scale() < Metric::Mega.scale());
+        assert!(Metric::Mega.scale() < Metric::Giga.scale());
+        assert!(Metric::Giga.scale() < Metric::Tera.scale());
+        assert!(Metric::Tera.scale() < Metric::Peta.scale());
+        assert!(Metric::Peta.scale() < Metric::Exa.scale());
+        assert!(Metric::Exa.scale() < Metric::Zetta.scale());
+        assert!(Metric::Zetta.scale() < Metric::Yotta.scale());
+        assert!(Metric::Yotta.scale() < Metric::Ronna.scale());
+        assert!(Metric::Ronna.scale() < Metric::Quetta.scale());
     }
 
     #[test]
@@ -199,10 +199,10 @@ mod metric_testing {
 
     #[test]
     fn metric_string_scale_fails() {
-        assert_eq!(Metric::try_from("bb").is_err(), true);
-        assert_eq!(Metric::try_from("K").is_err(), true);
-        assert_eq!(Metric::try_from("aaa").is_err(), true);
-        assert_eq!(Metric::try_from("de").is_err(), true);
-        assert_eq!(Metric::try_from("fa").is_err(), true);
+        assert!(Metric::try_from("bb").is_err());
+        assert!(Metric::try_from("K").is_err());
+        assert!(Metric::try_from("aaa").is_err());
+        assert!(Metric::try_from("de").is_err());
+        assert!(Metric::try_from("fa").is_err());
     }
 }

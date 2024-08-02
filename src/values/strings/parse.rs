@@ -386,7 +386,7 @@ impl Value {
 
     /// Searches and assigns a unit type to a [`Value`] during string parsing and construction
     fn _get_triple_letter(&mut self, unit: &String, exp: i32, m: Metric) -> Result<(), V3Error> {
-        if let Some(cel_deg) = unit.strip_prefix("°") {
+        if let Some(cel_deg) = unit.strip_prefix('°') {
             if m != Metric::None {
                 return Err(V3Error::ParsingError(
                     "[_get_pentuple_letter] Already registered metric prefix".into(),

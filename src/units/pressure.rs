@@ -23,9 +23,9 @@ impl Display for UnitPressure {
     }
 }
 
-impl Into<String> for UnitPressure {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitPressure> for String {
+    fn from(val: UnitPressure) -> Self {
+        val.to_string()
     }
 }
 

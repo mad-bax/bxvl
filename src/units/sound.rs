@@ -8,9 +8,9 @@ impl Display for UnitSound {
     }
 }
 
-impl Into<String> for UnitSound {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitSound> for String {
+    fn from(val: UnitSound) -> Self {
+        val.to_string()
     }
 }
 

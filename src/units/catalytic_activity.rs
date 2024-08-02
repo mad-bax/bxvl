@@ -8,9 +8,9 @@ impl Display for UnitCatalyticActivity {
     }
 }
 
-impl Into<String> for UnitCatalyticActivity {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitCatalyticActivity> for String {
+    fn from(val: UnitCatalyticActivity) -> Self {
+        val.to_string()
     }
 }
 

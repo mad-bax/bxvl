@@ -141,7 +141,7 @@ mod value_unit_tests {
 
     #[test]
     fn value_1() {
-        let result: Value = Value::new(3.4, &"kg").unwrap();
+        let result: Value = Value::new(3.4, "kg").unwrap();
         assert_eq!(result.unit_map, MASS_MAP);
         assert_eq!(result.val, 3.4);
     }
@@ -151,7 +151,7 @@ mod value_unit_tests {
         let mut e1: Value = Value::new(5.0, "bytes").unwrap();
         let e2: Value = Value::new(1.0, "Gb").unwrap();
         let expected: Value = Value::new(0.000000004656613, "Gb").unwrap();
-        let _ = e1._convert(&e2).unwrap();
+        e1._convert(&e2).unwrap();
 
         assert!(f64::max(e1.val, expected.val) - f64::min(e1.val, expected.val) <= 1.0e-6);
     }

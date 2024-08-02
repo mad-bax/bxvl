@@ -8,9 +8,9 @@ impl Display for UnitSubstance {
     }
 }
 
-impl Into<String> for UnitSubstance {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitSubstance> for String {
+    fn from(val: UnitSubstance) -> Self {
+        val.to_string()
     }
 }
 

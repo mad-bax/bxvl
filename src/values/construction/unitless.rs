@@ -25,14 +25,14 @@ impl Div<UnitNone> for f64 {
 impl Mul<UnitNone> for Value {
     type Output = Value;
     fn mul(self, _: UnitNone) -> Self::Output {
-        self.clone()
+        self
     }
 }
 
 impl Div<UnitNone> for Value {
     type Output = Value;
     fn div(self, _: UnitNone) -> Value {
-        self.clone()
+        self
     }
 }
 

@@ -8,9 +8,9 @@ impl Display for UnitIlluminance {
     }
 }
 
-impl Into<String> for UnitIlluminance {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitIlluminance> for String {
+    fn from(val: UnitIlluminance) -> Self {
+        val.to_string()
     }
 }
 

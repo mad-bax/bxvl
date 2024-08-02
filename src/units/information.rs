@@ -15,9 +15,9 @@ impl Display for UnitInformation {
     }
 }
 
-impl Into<String> for UnitInformation {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitInformation> for String {
+    fn from(val: UnitInformation) -> Self {
+        val.to_string()
     }
 }
 

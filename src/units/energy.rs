@@ -20,9 +20,9 @@ impl Display for UnitEnergy {
     }
 }
 
-impl Into<String> for UnitEnergy {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitEnergy> for String {
+    fn from(val: UnitEnergy) -> Self {
+        val.to_string()
     }
 }
 

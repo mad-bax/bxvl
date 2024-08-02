@@ -8,9 +8,9 @@ impl Display for UnitElectricConductance {
     }
 }
 
-impl Into<String> for UnitElectricConductance {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitElectricConductance> for String {
+    fn from(val: UnitElectricConductance) -> Self {
+        val.to_string()
     }
 }
 

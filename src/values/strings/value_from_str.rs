@@ -64,7 +64,7 @@ mod from_str_testing {
         assert_eq!(v1.unit_map, 0);
         assert_eq!(v1.v_length, None);
         assert_eq!(v1.v_time, None);
-        assert_eq!(v1.is_empty(), true);
+        assert!(v1.is_empty());
     }
 
     #[test]

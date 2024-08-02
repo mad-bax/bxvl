@@ -24,9 +24,9 @@ impl Display for UnitLength {
     }
 }
 
-impl Into<String> for UnitLength {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitLength> for String {
+    fn from(val: UnitLength) -> Self {
+        val.to_string()
     }
 }
 

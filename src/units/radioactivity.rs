@@ -17,9 +17,9 @@ impl Display for UnitRadioactivity {
     }
 }
 
-impl Into<String> for UnitRadioactivity {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitRadioactivity> for String {
+    fn from(val: UnitRadioactivity) -> Self {
+        val.to_string()
     }
 }
 

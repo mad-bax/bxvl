@@ -8,9 +8,9 @@ impl Display for UnitSolidAngle {
     }
 }
 
-impl Into<String> for UnitSolidAngle {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitSolidAngle> for String {
+    fn from(val: UnitSolidAngle) -> Self {
+        val.to_string()
     }
 }
 

@@ -59,13 +59,19 @@ use v3::values::Value;
 use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
 
 // Slowest
-let v1:Value = "22.3 kg*m/s^2".parse::<Value>().unwrap();
+let v1:Value = match "22.3 kg*m/s^2".parse::<Value>() {
+  Ok(v) => v,
+  Err(e) => panic!("{}", e)
+};
 
 // Slow
 let v2:Value = value!(22.3, "kg*m/s^2");
 
 // Average
-let v3:Value = Value::new(22.3, "kg*m/s^2").unwrap();
+let v3:Value = match Value::new(22.3, "kg*m/s^2") {
+  Ok(v) => v,
+  Err(e) => panic!("{}", e)
+};
 
 // Fastest
 let v4:Value = 22.3
@@ -73,6 +79,10 @@ let v4:Value = 22.3
   / UnitTime::Second(Metric::None)
   * UnitMass::Gram(Metric::Kilo)
   * UnitLength::Meter(Metric::None);
+
+assert!((v1 == v2) == (v3 == v4));
+assert!((v1 == v3) == (v2 == v4));
+assert!((v1 == v4) == (v2 == v3));
 ```
 
 Creating `Value`s using other `Values`:
@@ -81,12 +91,12 @@ Creating `Value`s using other `Values`:
 use v3::values::Value;
 use v3::units::{Metric, UnitTime, UnitLength};
 
-let time:Value = 3.4 * UnitTime::Second(Metric::None);
-let dist:Value = 10.3 * UnitLength::Meter(Metric::None);
+let time:Value = 4.0 * UnitTime::Second(Metric::None);
+let dist:Value = 16.8 * UnitLength::Meter(Metric::None);
 
 let speed:Value = dist/time;
-assert!(speed >= 3.0293);
 assert!(speed.is_velocity());
+assert_eq!(speed.to_string(), "4.2 m/s");
 ```
 
 ## Method Support
@@ -105,6 +115,8 @@ if m.is_nan() {
 let a:Value = 1.4 * UnitLength::Meter(Metric::None);
 let r:Value = a.sin();
 assert!(r.is_radians());
+assert!(r.val >= 0.985449);
+assert!(r.val < 0.985450);
 ```
 
 ## Derived Units
@@ -117,29 +129,28 @@ Making a complex value means combining different types into a new type.
 use v3::values::Value;
 
 let m:Value = Value::new(2.5, "kg").unwrap();
-let acc:Value = Value::new(9.81, "m/s^2").unwrap();
+let acc:Value = Value::new(10.0, "m/s^2").unwrap();
 
 let f1:Value = m*acc;
 let f2:Value = (m*acc).complex();
 assert!(f1.is_force() && f2.is_force());
 assert!(f1.val == f2.val);
+assert_eq!(f1.to_string(), "25 m*kg/s^2");
+assert_eq!(f2.to_string(), "25 N");
 ```
-
-Variable `f1` will be `24.525 kg*m/s^2` whereas `f2` will be `24.525 N`
 
 Reducing a value means setting a value to its derived units.
 
 ```rust
 use v3::values::Value;
 
-let mut f:Value = Value::new(24.525, "N").unwrap();
+let mut f:Value = Value::new(25.0, "N").unwrap();
 
 assert!(f.is_force());
 f.reduce("kg*m/s^2").unwrap();
 assert!(f.is_force());
+assert_eq!(f.to_string(), "25 m*kg/s^2");
 ```
-
-Variable `f` will be `24.525 kg*m/s^2`
 
 This behavior is explicit and must be called by the user.
 
@@ -255,7 +266,7 @@ Units cannot be converted between disparate types, although there are some excep
 | Period     | Time period (`1/s`)  | Frequency (`Hz`)       |
 | Volume     | Cubic length (`m^3`) | Specific volume (`ml`) |
 
-These exceptions are valid conversion so long as they are the *only* units within a `Value`. This is to avoid conversion scenarios where `Value`s produce (or are created with) neutralizing units, e.g. `mm^3/ml`, which is 'unitless'. Therefore, `m/s` cannot be converted to `m*kHz` and `m^3/N` cannot be converted to `l/N`.
+These exceptions are valid conversion so long as they are the *only* units within a `Value`. This is to avoid conversion scenarios where `Value`s produce (or are created with) neutralizing units, e.g. `mm^3/ml`, which is 'unitless'. Therefore, `m/s` cannot be converted to `m*kHz` and `m^3/N` cannot be converted to `ml/N`.
 
 ## Constants
 

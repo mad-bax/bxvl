@@ -15,9 +15,9 @@ impl Display for UnitNone {
     }
 }
 
-impl Into<String> for UnitNone {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitNone> for String {
+    fn from(val: UnitNone) -> Self {
+        val.to_string()
     }
 }
 

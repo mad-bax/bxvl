@@ -18,9 +18,9 @@ impl Display for UnitAbsorbedDose {
     }
 }
 
-impl Into<String> for UnitAbsorbedDose {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitAbsorbedDose> for String {
+    fn from(val: UnitAbsorbedDose) -> Self {
+        val.to_string()
     }
 }
 

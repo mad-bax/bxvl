@@ -48,10 +48,23 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("div", |b| b.iter(|| black_box(va5 / va1)));
     c.bench_function("add", |b| b.iter(|| black_box(va4 + va2)));
     c.bench_function("sub", |b| b.iter(|| black_box(va2 - va4)));
-    c.bench_function("convert_str", |b| b.iter(|| black_box(va3_1 >>= "ft/s")));
-    c.bench_function("convert_value", |b| b.iter(|| black_box(va3_2 >>= va3_3)));
+    c.bench_function("convert_str", |b| {
+        b.iter(|| {
+            va3_1 >>= "ft/s";
+            black_box(())
+        })
+    });
+    c.bench_function("convert_value", |b| {
+        b.iter(|| {
+            va3_2 >>= va3_3;
+            black_box(())
+        })
+    });
     c.bench_function("convert_direct", |b| {
-        b.iter(|| black_box(va3_2 >>= UnitLength::Foot))
+        b.iter(|| {
+            va3_2 >>= UnitLength::Foot;
+            black_box(())
+        })
     });
     c.bench_function("unit_conversion km   - mile", |b| {
         b.iter(|| black_box(u1.convert(&u2)))

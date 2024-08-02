@@ -342,13 +342,6 @@ impl Value {
         Value::_radians(self.val.atan())
     }
 
-    /// Returns the natural log of a [`Value`]
-    pub fn ln(&self) -> Value {
-        let mut ret = self.clone();
-        ret.val = ret.val.ln();
-        ret
-    }
-
     /// Returns the full unit circle arctangent of a [`Value`] in radians
     ///
     /// atan2 will panic if the the given [`Value`] is not an angle.
@@ -1989,7 +1982,7 @@ mod value_impl_testing {
         let k = (t1 >> t2).unwrap();
         assert!(k.is_volume());
 
-        let mut t4 = t2.clone();
+        let mut t4 = t2;
         t4 >>= t1;
         assert!(t4.is_volume());
 
@@ -2036,147 +2029,147 @@ mod value_impl_testing {
         let t1 = 4.0 * UnitMass::Grain;
         let t2 = 4.0 * UnitMass::Gram(Metric::Kilo);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricCurrent::Ampere(Metric::None);
         let t2 = 4.0 * UnitElectricCurrent::Ampere(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricCharge::Coulomb(Metric::None);
         let t2 = 4.0 * UnitElectricCharge::Coulomb(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricPotential::Volt(Metric::None);
         let t2 = 4.0 * UnitElectricPotential::Volt(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricCapacitance::Farad(Metric::None);
         let t2 = 4.0 * UnitElectricCapacitance::Farad(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricConductance::Siemens(Metric::None);
         let t2 = 4.0 * UnitElectricConductance::Siemens(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricInductance::Henry(Metric::None);
         let t2 = 4.0 * UnitElectricInductance::Henry(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitElectricResistance::Ohm(Metric::None);
         let t2 = 4.0 * UnitElectricResistance::Ohm(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitMagneticFlux::Weber(Metric::None);
         let t2 = 4.0 * UnitMagneticFlux::Weber(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::None);
         let t2 = 4.0 * UnitMagneticFluxDensity::Tesla(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitTemperature::Kelvin(Metric::None);
         let t2 = 4.0 * UnitTemperature::Kelvin(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitSubstance::Mole(Metric::None);
         let t2 = 4.0 * UnitSubstance::Mole(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitLuminousIntensity::Candela(Metric::None);
         let t2 = 4.0 * UnitLuminousIntensity::Candela(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitLuminousFlux::Lumen(Metric::None);
         let t2 = 4.0 * UnitLuminousFlux::Lumen(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitIlluminance::Lux(Metric::None);
         let t2 = 4.0 * UnitIlluminance::Lux(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitVolume::Liter(Metric::None);
         let t2 = 4.0 * UnitVolume::Liter(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitPressure::Bar(Metric::None);
         let t2 = 4.0 * UnitPressure::Bar(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitAngle::Radian(Metric::None);
         let t2 = 4.0 * UnitAngle::Radian(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitFrequency::Hertz(Metric::None);
         let t2 = 4.0 * UnitFrequency::Hertz(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitForce::Newton(Metric::None);
         let t2 = 4.0 * UnitForce::Newton(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitEnergy::Joule(Metric::None);
         let t2 = 4.0 * UnitEnergy::Joule(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitPower::Watt(Metric::None);
         let t2 = 4.0 * UnitPower::Watt(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitRadioactivity::Becquerel(Metric::None);
         let t2 = 4.0 * UnitRadioactivity::Becquerel(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitAbsorbedDose::Gray(Metric::None);
         let t2 = 4.0 * UnitAbsorbedDose::Gray(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitRadioactivityExposure::Sievert(Metric::None);
         let t2 = 4.0 * UnitRadioactivityExposure::Sievert(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitCatalyticActivity::Katal(Metric::None);
         let t2 = 4.0 * UnitCatalyticActivity::Katal(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitSolidAngle::Steradian(Metric::None);
         let t2 = 4.0 * UnitSolidAngle::Steradian(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitSound::Bel(Metric::None);
         let t2 = 4.0 * UnitSound::Bel(Metric::Milli);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
 
         let t1 = 4.0 * UnitInformation::Byte(Metric::None);
         let t2 = 4.0 * UnitInformation::Byte(Metric::Mega);
         assert!(t1 != t2);
-        assert!(t1 == (t1.clone()));
+        assert!(t1 == t1);
     }
 
     #[test]

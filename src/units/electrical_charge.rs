@@ -8,9 +8,9 @@ impl Display for UnitElectricCharge {
     }
 }
 
-impl Into<String> for UnitElectricCharge {
-    fn into(self) -> String {
-        self.to_string()
+impl From<UnitElectricCharge> for String {
+    fn from(val: UnitElectricCharge) -> Self {
+        val.to_string()
     }
 }
 
