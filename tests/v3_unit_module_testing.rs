@@ -91,7 +91,7 @@ mod unit_creation_tests {
             UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature,
             UnitTime, UnitVolume,
         },
-        values::Value,
+        value::Value,
     };
 
     const TEST_METRIC: [(Metric, &str); 22] = [

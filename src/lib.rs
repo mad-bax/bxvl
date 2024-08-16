@@ -16,4 +16,4 @@ pub mod errors;
 pub mod units;
 
 /// The main module for V3 and `Value`s
-pub mod values;
+pub mod value;

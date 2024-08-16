@@ -4,7 +4,7 @@ extern crate v3;
 use v3::{
     units::{Convert, Metric, UnitAngle, UnitLength, UnitSubstance},
     value,
-    values::Value,
+    value::Value,
 };
 
 fn criterion_benchmark(c: &mut Criterion) {

@@ -8,7 +8,7 @@ mod value_constant_tests {
             Metric, UnitElectricCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency,
             UnitLength, UnitMass, UnitSubstance, UnitTemperature, UnitTime,
         },
-        values::value_consts,
+        value::Value_consts,
     };
 
     #[test]
@@ -97,7 +97,7 @@ mod value_creation_tests {
             UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
             UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature, UnitTime, UnitVolume,
         },
-        values::Value,
+        value::Value,
     };
 
     const V1: f64 = 3.5;
@@ -497,7 +497,7 @@ mod value_operation_tests {
             UnitMass, UnitPower, UnitPressure, UnitRadioactivity, UnitRadioactivityExposure,
             UnitSolidAngle, UnitSound, UnitSubstance, UnitTime, UnitVolume,
         },
-        values::Value,
+        value::Value,
     };
 
     #[test]
@@ -958,7 +958,7 @@ mod value_operation_tests {
 #[cfg(test)]
 mod value_display_tests {
     use v3::units::{Metric, UnitLength, UnitTime};
-    use v3::values::Value;
+    use v3::value::Value;
 
     #[test]
     fn value_debug() {
@@ -1006,7 +1006,7 @@ mod value_display_tests {
 #[cfg(test)]
 mod value_edge_cases {
     use v3::units::{Metric, UnitLength};
-    use v3::values::Value;
+    use v3::value::Value;
 
     #[test]
     fn double_divisor() {
