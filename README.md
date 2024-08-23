@@ -275,17 +275,17 @@ Some constants are provided for ease of use:
 | Name                                       | `f64` numeric Value     | Units              |
 | ------------------------------------------ | ----------------------- | ------------------ |
 | Absolute Zero                              | `0.`                    | $K$                |
-| Avogadro's Number                          | `6.022_140_76e23`       | $1 \over mol$      |
+| Avogadro's Number                          | `6.022_140_76e23`       | $mol^{-1}$      |
 | Faraday Constant                           | `96_485.332_123_310_01` | $C \over mol$      |
 | Atomic Mass Constant                       | `1.660_539_066_60e-27`  | $kg$               |
 | Molar Gas Constant                         | `8.314_462_1`           | $J \over K*mol$    |
-| Coulomb's Constant                         | `8.987_551`             | $1 \over mol$      |
+| Coulomb's Constant                         | `8.987_551`             | $mol^{-1}$      |
 | The Speed of Light                         | `299_792_458.0`         | $m \over s$        |
 | Boltzmann Constant                         | `1.380_649e-23`         | $J \over K$        |
 | Earth's Average Gravitational Acceleration | `9.806_65`              | $m \over s^2$      |
 | Newtonian Constant of Gravitation          | `6.673_015e-11`         | $m^3 \over kg*s^2$ |
 | Charge of an Electron                      | `1.602_176_634e-19`     | $C$                |
-| Rydberg Constant                           | `10_973_731.568_539`    | $1 \over m$        |
+| Rydberg Constant                           | `10_973_731.568_539`    | $m^{-1}$           |
 | Plank's Constant                           | `6.626_070_15e-34`      | $J \over Hz$       |
 | Vacuum Permittivity                        | `8.854_187_812_8e-12`   | $F \over m$        |
 

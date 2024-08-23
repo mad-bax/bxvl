@@ -6,6 +6,8 @@
 
 #[doc = include_str!("../README.md")]
 
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 /// Various `const` definitions that are used throughout V3
 mod constants;
 

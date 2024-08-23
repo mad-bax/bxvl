@@ -158,8 +158,8 @@ impl Value {
     /// use v3::value::Value;
     /// use v3::units::UnitLength;
     /// let mut v:Value = 4.0 * UnitLength::Inch;
-    /// v.inv()
-    /// assert_eq!(v, "0.25 1/in".parse::<Value>().unwrap())
+    /// v.inv();
+    /// assert_eq!(v, "0.25 1/in".parse::<Value>().unwrap());
     /// ```
     pub fn inv(&mut self) {
         self.val = 1.0 / self.val;
