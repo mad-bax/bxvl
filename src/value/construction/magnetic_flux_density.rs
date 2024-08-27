@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
+    consts::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
     units::UnitMagneticFluxDensity,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitMagneticFluxDensity> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitMagneticFluxDensity> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
+        consts::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
         units::{Metric, UnitMagneticFluxDensity, UnitNone},
     };
 

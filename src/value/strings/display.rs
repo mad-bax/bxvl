@@ -1,7 +1,7 @@
-use crate::constants::*;
+use crate::consts::*;
 use std::fmt::Display;
 
-use crate::value::Value;
+use crate::Value;
 
 impl Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

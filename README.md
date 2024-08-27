@@ -2,7 +2,7 @@
   <img src="./images/v3_logo.png">
 </p>
 
-V3 is a scientific unit-type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
+**bxvl** is a scientific unit-type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
 
 ## Table of Contents
 
@@ -54,9 +54,8 @@ V3 is a scientific unit-type library that allows variables to dynamically keep t
 Creating `Value`s:
 
 ```rust
-use v3::value;
-use v3::value::Value;
-use v3::units::{Metric, UnitTime, UnitMass, UnitLength};
+use bxvl::{Value, value};
+use bxvl::units::{Metric, UnitTime::Second, UnitMass::Gram, UnitLength::Meter};
 
 // Slowest
 let v1:Value = match "22.3 kg*m/s^2".parse::<Value>() {
@@ -75,10 +74,10 @@ let v3:Value = match Value::new(22.3, "kg*m/s^2") {
 
 // Fastest
 let v4:Value = 22.3
-  / UnitTime::Second(Metric::None)
-  / UnitTime::Second(Metric::None)
-  * UnitMass::Gram(Metric::Kilo)
-  * UnitLength::Meter(Metric::None);
+  / Second(Metric::None)
+  / Second(Metric::None)
+  * Gram(Metric::Kilo)
+  * Meter(Metric::None);
 
 assert!((v1 == v2) == (v3 == v4));
 assert!((v1 == v3) == (v2 == v4));
@@ -88,8 +87,8 @@ assert!((v1 == v4) == (v2 == v3));
 Creating `Value`s using other `Values`:
 
 ```rust
-use v3::value::Value;
-use v3::units::{Metric, UnitTime, UnitLength};
+use bxvl::Value;
+use bxvl::units::{Metric, UnitTime, UnitLength};
 
 let time:Value = 4.0 * UnitTime::Second(Metric::None);
 let dist:Value = 16.8 * UnitLength::Meter(Metric::None);
@@ -104,8 +103,8 @@ assert_eq!(speed.to_string(), "4.2 m/s");
 Values provide similar functionality to many functions that are available to other units such as `i32`, `f32`, `f64` etc.
 
 ```rust
-use v3::value::Value;
-use v3::units::{Metric, UnitLength};
+use bxvl::Value;
+use bxvl::units::{Metric, UnitLength};
 
 let m:Value = Value::new(f64::NAN, "feet").unwrap();
 if m.is_nan() {
@@ -126,7 +125,7 @@ Many of the SI units are derived from other base units. When using the values to
 Making a complex value means combining different types into a new type.
 
 ```rust
-use v3::value::Value;
+use bxvl::Value;
 
 let m:Value = Value::new(2.5, "kg").unwrap();
 let acc:Value = Value::new(10.0, "m/s^2").unwrap();
@@ -142,7 +141,7 @@ assert_eq!(f2.to_string(), "25 N");
 Reducing a value means setting a value to its derived units.
 
 ```rust
-use v3::value::Value;
+use bxvl::Value;
 
 let mut f:Value = Value::new(25.0, "N").unwrap();
 
@@ -156,7 +155,7 @@ This behavior is explicit and must be called by the user.
 
 ### Unit Checking
 
-V3 provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations (See below).
+**bxvl** provides functions like `.is_force()` which will return `true` for both `kg*m/s^2` and `N`. Function support includes all of the base [unit types](#unit-support) as well as extra unit combinations (See below).
 
 | Function                     | Measurement Types                                                                                                                                                                                                                                                                      |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -213,7 +212,7 @@ All `Value`s within their given measurement type will be able to be converted to
 Example converting feet into meters:
 
 ```rust
-use v3::value::Value;
+use bxvl::Value;
 
 let mut m:Value = Value::new(3.2, "feet").unwrap();
 
@@ -223,7 +222,7 @@ m.convert("m").unwrap();
 There is also direct syntax for this feature:
 
 ```rust
-use v3::value::Value;
+use bxvl::Value;
 
 let mut m:Value = Value::new(5.9, "km/hr").unwrap();
 
@@ -233,7 +232,7 @@ m >>= "m/s";
 You can use other Values for conversion:
 
 ```rust
-use v3::value::Value;
+use bxvl::Value;
 
 let m:Value = Value::new(1.2, "yards").unwrap();
 let n:Value = Value::new(1.0, "m").unwrap();
@@ -244,8 +243,8 @@ let k:Value = (m >> n).unwrap();
 The types can also be directly used: (The fastest conversion method)
 
 ```rust
-use v3::value::Value;
-use v3::units::{Metric, UnitLength, UnitTime};
+use bxvl::Value;
+use bxvl::units::{Metric, UnitLength, UnitTime};
 
 let mut m:Value = Value::new(5.9, "kph").unwrap();
 
@@ -288,6 +287,17 @@ Some constants are provided for ease of use:
 | Rydberg Constant                           | `10_973_731.568_539`    | $m^{-1}$           |
 | Plank's Constant                           | `6.626_070_15e-34`      | $J \over Hz$       |
 | Vacuum Permittivity                        | `8.854_187_812_8e-12`   | $F \over m$        |
+
+```rust
+use bxvl::{Value, consts, units::{UnitMass, Metric}};
+
+let acc:Value = consts::EARTH_GRAVITY;
+let m:Value = 100.0 * UnitMass::Gram(Metric::Kilo);
+
+let f = (m * acc).complex();
+
+assert_eq!(f.to_string(), "980.665 N");
+```
 
 ## Unit Support
 
@@ -561,15 +571,15 @@ Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `El
 
 ## Future Work
 
-V3 can and is intended to be improved with some of these goals in mind:
+**bxvl** can and is intended to be improved with some of these goals in mind:
 
 - `Value`s that have `sqrt` units.
-- `Value`s that are logs.
-- `const Value`
+- Logarithmic units.
+- User defined `const Value`s
 - Equation definitions, which can expect a specific `Value` type
 - More Imperial measurement support (US customary) 🤢
   - Lengths : `chains`, `furlongs`, `leagues`, `fathoms`, `cable`, `nautical mile`
-  - Area : `acre`
+  - Area(?) : `acre`
   - Volume : `gallon`, `pint`, `quart`
   - Weight : `stone`, `ton`, `slug`
 - speed speed speed

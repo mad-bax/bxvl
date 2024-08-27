@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
+    consts::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
     units::UnitElectricPotential,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitElectricPotential> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitElectricPotential> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
+        consts::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
         units::{Metric, UnitElectricPotential, UnitNone},
     };
 

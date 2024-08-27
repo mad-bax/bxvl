@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
+    consts::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
     errors::V3Error,
     units::{Convert, UnitCatalyticActivity},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitCatalyticActivity> for Value {

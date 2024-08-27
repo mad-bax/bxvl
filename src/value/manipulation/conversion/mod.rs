@@ -33,7 +33,7 @@ pub mod volume;
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{
+    consts::{
         ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_MAP, CATALYTIC_ACTIVITY_MAP,
         ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_MAP,
         ELECTRIC_POTENTIAL_MAP, ENERGY_MAP, FORCE_MAP, FREQUENCY_INDEX, FREQUENCY_MAP,
@@ -45,7 +45,7 @@ use crate::{
     },
     errors::V3Error,
     units::{Convert, Metric, UnitAngle, UnitLength},
-    value::Value,
+    Value,
 };
 
 impl Shr<Value> for Value {
@@ -123,7 +123,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use v3::value::Value;
+    /// use bxvl::Value;
     /// let mut speed:Value = match Value::new(20.0, "mph") {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)

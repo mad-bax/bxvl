@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
+    consts::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
     units::UnitElectricCapacitance,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitElectricCapacitance> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitElectricCapacitance> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
+        consts::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
         units::{Metric, UnitElectricCapacitance, UnitNone},
     };
 

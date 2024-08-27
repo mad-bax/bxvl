@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
+    consts::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
     units::UnitLuminousIntensity,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitLuminousIntensity> for f64 {
@@ -86,7 +86,7 @@ impl Div<UnitLuminousIntensity> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
+        consts::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
         units::{Metric, UnitLuminousIntensity, UnitNone},
     };
 

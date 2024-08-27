@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitAbsorbedDose};
 
@@ -44,8 +44,8 @@ impl BaseUnit for UnitAbsorbedDose {
     fn base(&self) -> f64 {
         match self {
             Self::Gray(_) => 1.0,
-            Self::Roentgen => constants::AB_ROE_TO_GY,
-            Self::Rad => constants::AB_RAD_TO_GY,
+            Self::Roentgen => consts::AB_ROE_TO_GY,
+            Self::Rad => consts::AB_RAD_TO_GY,
         }
     }
 

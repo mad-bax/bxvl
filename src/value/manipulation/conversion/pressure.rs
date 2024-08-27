@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{PRESSURE_INDEX, PRESSURE_MAP},
+    consts::{PRESSURE_INDEX, PRESSURE_MAP},
     errors::V3Error,
     units::{Convert, UnitPressure},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitPressure> for Value {

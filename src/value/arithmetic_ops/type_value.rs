@@ -1,8 +1,8 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
-use crate::constants::*;
+use crate::consts::*;
 use crate::units::Convert;
-use crate::value::Value;
+use crate::Value;
 
 impl Add<Value> for Value {
     type Output = Value;

@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
+    consts::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
     units::UnitCatalyticActivity,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitCatalyticActivity> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitCatalyticActivity> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
+        consts::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
         units::{Metric, UnitCatalyticActivity, UnitNone},
     };
 

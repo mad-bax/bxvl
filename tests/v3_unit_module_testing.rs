@@ -1,4 +1,5 @@
-extern crate v3;
+extern crate bxvl;
+
 /*
 macro_rules! assert_apr {
     ($x:expr, $y:expr, $d:expr) => {
@@ -80,7 +81,7 @@ mod regex_parse_testing {
 
 #[cfg(test)]
 mod unit_creation_tests {
-    use v3::{
+    use bxvl::{
         units::{
             BaseUnit, Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity,
             UnitElectricCapacitance, UnitElectricCharge, UnitElectricConductance,

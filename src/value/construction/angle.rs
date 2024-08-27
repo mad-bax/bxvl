@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{ANGLE_INDEX, ANGLE_MAP},
+    consts::{ANGLE_INDEX, ANGLE_MAP},
     units::UnitAngle,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitAngle> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitAngle> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{ANGLE_INDEX, ANGLE_MAP},
+        consts::{ANGLE_INDEX, ANGLE_MAP},
         units::{Metric, UnitAngle, UnitNone},
     };
 

@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{LENGTH_INDEX, LENGTH_MAP, VOLUME_INDEX, VOLUME_MAP},
+    consts::{LENGTH_INDEX, LENGTH_MAP, VOLUME_INDEX, VOLUME_MAP},
     errors::V3Error,
     units::{Convert, UnitVolume},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitVolume> for Value {

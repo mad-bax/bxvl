@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
+    consts::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricPotential},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitElectricPotential> for Value {

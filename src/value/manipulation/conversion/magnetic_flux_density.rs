@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
+    consts::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
     errors::V3Error,
     units::{Convert, UnitMagneticFluxDensity},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitMagneticFluxDensity> for Value {

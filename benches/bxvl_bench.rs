@@ -1,10 +1,9 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-extern crate v3;
+extern crate bxvl;
 
-use v3::{
+use bxvl::{
     units::{Convert, Metric, UnitAngle, UnitLength, UnitSubstance},
-    value,
-    value::Value,
+    value, Value,
 };
 
 fn criterion_benchmark(c: &mut Criterion) {

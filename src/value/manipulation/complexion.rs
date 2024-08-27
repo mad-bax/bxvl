@@ -1,5 +1,5 @@
 use crate::{
-    constants::{
+    consts::{
         CAPACITANCE_INDEX, CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP,
         ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX,
         ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_INDEX, ELECTRIC_POTENTIAL_INDEX,
@@ -18,7 +18,7 @@ use crate::{
         UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitSolidAngle, UnitSubstance,
         UnitTime,
     },
-    value::Value,
+    Value,
 };
 
 impl Value {
@@ -35,8 +35,8 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use v3::value::Value;
-    /// use v3::units::{UnitLength, UnitMass, UnitTime, UnitForce, Metric};
+    /// use bxvl::Value;
+    /// use bxvl::units::{UnitLength, UnitMass, UnitTime, UnitForce, Metric};
     /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
     /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);
     /// let mut f:Value = (mass*acc).complex();

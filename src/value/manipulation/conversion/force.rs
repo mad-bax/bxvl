@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{FORCE_INDEX, FORCE_MAP},
+    consts::{FORCE_INDEX, FORCE_MAP},
     errors::V3Error,
     units::{Convert, UnitForce},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitForce> for Value {
@@ -57,7 +57,7 @@ mod conversion_testing {
     }
 
     use crate::{
-        constants::FC_LBF_TO_N,
+        consts::FC_LBF_TO_N,
         units::{Metric, UnitForce, UnitLength},
     };
 

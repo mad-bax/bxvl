@@ -1,9 +1,9 @@
 [package]
-name = "v3"
+name = "bxvl"
 version = "0.1.0"
 edition = "2021"
 repository = ""
-authors = ["Bax"]
+authors = ["Bax <mad_bax@proton.me>"]
 readme = "README.md"
 license = "GPLv2.1"
 description = """
@@ -11,15 +11,16 @@ A datatype library that allows for measurement unit association, conversion, and
 """
 
 [lib]
-name = "v3"
+name = "bxvl"
 path = "src/lib.rs"
 
 [dependencies]
-serde = { version="1.0.203", features=["derive"] }
+serde = { version="1.0.209", features=["derive"] }
 
 [dev-dependencies]
 criterion = "0.5.1"
+toml = "0.8.19"
 
 [[bench]]
-name = "v3bench"
+name = "bxvl_bench"
 harness = false

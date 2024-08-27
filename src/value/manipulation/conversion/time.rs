@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{FREQUENCY_INDEX, FREQUENCY_MAP, TIME_INDEX, TIME_MAP},
+    consts::{FREQUENCY_INDEX, FREQUENCY_MAP, TIME_INDEX, TIME_MAP},
     errors::V3Error,
     units::{Convert, UnitTime},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitTime> for Value {

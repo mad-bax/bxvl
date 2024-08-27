@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitLength, UnitVolume};
 
@@ -40,7 +40,7 @@ impl Convert<UnitVolume> for UnitLength {
     fn convert(&self, other: &UnitVolume) -> f64 {
         self.scale() / // get current metric scale if present
             (f64::powf(UnitLength::Meter(Metric::None).convert(self), 3.0) / // Convert ourselves to meters
-            constants::METER3_TO_LITER) *   // meters to liters
+            consts::METER3_TO_LITER) *   // meters to liters
             UnitVolume::Liter(Metric::None).convert(other) // convert to correct volume
     }
 }
@@ -58,14 +58,14 @@ impl BaseUnit for UnitLength {
     fn base(&self) -> f64 {
         match self {
             Self::Meter(_) => 1.0,
-            Self::Inch => constants::LENGTH_IN_TO_METER,
-            Self::Foot => constants::LENGTH_FT_TO_METER,
-            Self::Yard => constants::LENGTH_YD_TO_METER,
-            Self::Mile => constants::LENGTH_MILE_TO_METER,
-            Self::AstronomicalUnit => constants::LENGTH_AU_TO_METER,
-            Self::Parsec(_) => constants::LENGTH_PC_TO_METER,
-            Self::LightYear(_) => constants::LENGTH_LYR_TO_METER,
-            Self::Angstrom => constants::LENGTH_A_TO_METER,
+            Self::Inch => consts::LENGTH_IN_TO_METER,
+            Self::Foot => consts::LENGTH_FT_TO_METER,
+            Self::Yard => consts::LENGTH_YD_TO_METER,
+            Self::Mile => consts::LENGTH_MILE_TO_METER,
+            Self::AstronomicalUnit => consts::LENGTH_AU_TO_METER,
+            Self::Parsec(_) => consts::LENGTH_PC_TO_METER,
+            Self::LightYear(_) => consts::LENGTH_LYR_TO_METER,
+            Self::Angstrom => consts::LENGTH_A_TO_METER,
         }
     }
 

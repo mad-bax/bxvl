@@ -1,4 +1,4 @@
-use crate::{constants::*, units::Convert, value::Value};
+use crate::{consts::*, units::Convert, Value};
 
 impl PartialEq<Value> for Value {
     fn eq(&self, other: &Value) -> bool {

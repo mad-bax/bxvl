@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{ANGLE_INDEX, ANGLE_MAP},
+    consts::{ANGLE_INDEX, ANGLE_MAP},
     errors::V3Error,
     units::{Convert, UnitAngle},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitAngle> for Value {
@@ -57,7 +57,7 @@ mod angle_conversion_testing {
     }
 
     use crate::{
-        constants::ANGLE_DEG_TO_RAD,
+        consts::ANGLE_DEG_TO_RAD,
         units::{BaseUnit, Metric, UnitAngle, UnitLength},
     };
 

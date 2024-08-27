@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
+    consts::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
     errors::V3Error,
     units::UnitTemperature,
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitTemperature> for Value {

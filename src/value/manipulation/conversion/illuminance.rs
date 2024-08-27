@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{ILLUMINANCE_INDEX, ILLUMINANCE_MAP},
+    consts::{ILLUMINANCE_INDEX, ILLUMINANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitIlluminance},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitIlluminance> for Value {

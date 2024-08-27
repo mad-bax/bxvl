@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::{errors::V3Error, value::Value};
+use crate::{errors::V3Error, Value};
 
 impl FromStr for Value {
     type Err = V3Error;
@@ -30,9 +30,9 @@ mod from_str_testing {
     use std::str::FromStr;
 
     use crate::{
-        constants::{LENGTH_INDEX, LENGTH_MAP, TIME_INDEX, TIME_MAP},
+        consts::{LENGTH_INDEX, LENGTH_MAP, TIME_INDEX, TIME_MAP},
         units::{Metric, UnitLength, UnitTime},
-        value::Value,
+        Value,
     };
 
     #[test]

@@ -1,9 +1,9 @@
-extern crate v3;
+extern crate bxvl;
 
 /*
 #[cfg(test)]
 mod value_constant_tests {
-    use v3::{
+    use bxvl::{
         units::{
             Metric, UnitElectricCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency,
             UnitLength, UnitMass, UnitSubstance, UnitTemperature, UnitTime,
@@ -87,7 +87,7 @@ mod value_constant_tests {
 #[cfg(test)]
 mod value_creation_tests {
 
-    use v3::{
+    use bxvl::{
         units::{
             Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
             UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
@@ -487,7 +487,7 @@ mod value_creation_tests {
 #[cfg(test)]
 mod value_operation_tests {
     use crate::value_creation_tests::TEST_METRIC_UNITS;
-    use v3::{
+    use bxvl::{
         units::{
             Metric, UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
             UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent,
@@ -957,8 +957,8 @@ mod value_operation_tests {
 
 #[cfg(test)]
 mod value_display_tests {
-    use v3::units::{Metric, UnitLength, UnitTime};
-    use v3::value::Value;
+    use bxvl::units::{Metric, UnitLength, UnitTime};
+    use Value;
 
     #[test]
     fn value_debug() {
@@ -1005,8 +1005,8 @@ mod value_display_tests {
 
 #[cfg(test)]
 mod value_edge_cases {
-    use v3::units::{Metric, UnitLength};
-    use v3::value::Value;
+    use bxvl::units::{Metric, UnitLength};
+    use Value;
 
     #[test]
     fn double_divisor() {

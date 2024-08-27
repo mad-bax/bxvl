@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{FREQUENCY_INDEX, FREQUENCY_MAP},
+    consts::{FREQUENCY_INDEX, FREQUENCY_MAP},
     units::UnitFrequency,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitFrequency> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitFrequency> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{FREQUENCY_INDEX, FREQUENCY_MAP},
+        consts::{FREQUENCY_INDEX, FREQUENCY_MAP},
         units::{Metric, UnitFrequency, UnitNone},
     };
 

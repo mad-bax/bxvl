@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP},
+    consts::{ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP},
     units::UnitElectricConductance,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitElectricConductance> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitElectricConductance> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP},
+        consts::{ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP},
         units::{Metric, UnitElectricConductance, UnitNone},
     };
 

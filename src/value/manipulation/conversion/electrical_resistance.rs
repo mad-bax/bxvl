@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{RESISTANCE_INDEX, RESISTANCE_MAP},
+    consts::{RESISTANCE_INDEX, RESISTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricResistance},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitElectricResistance> for Value {

@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
+    consts::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricCapacitance},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitElectricCapacitance> for Value {

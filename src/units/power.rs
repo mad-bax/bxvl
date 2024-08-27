@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants::PW_HPWR_TO_W;
+use crate::consts::PW_HPWR_TO_W;
 
 use super::{BaseUnit, Convert, Metric, UnitPower};
 

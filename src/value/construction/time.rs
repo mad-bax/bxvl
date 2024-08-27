@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{TIME_INDEX, TIME_MAP},
+    consts::{TIME_INDEX, TIME_MAP},
     units::UnitTime,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitTime> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitTime> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{TIME_INDEX, TIME_MAP},
+        consts::{TIME_INDEX, TIME_MAP},
         units::{Metric, UnitNone, UnitTime},
     };
 

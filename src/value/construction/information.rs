@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{INFORMATION_INDEX, INFORMATION_MAP},
+    consts::{INFORMATION_INDEX, INFORMATION_MAP},
     units::{Metric, UnitInformation},
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitInformation> for f64 {
@@ -153,7 +153,7 @@ impl Div<UnitInformation> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{INFORMATION_INDEX, INFORMATION_MAP},
+        consts::{INFORMATION_INDEX, INFORMATION_MAP},
         units::{Metric, UnitInformation, UnitNone},
     };
 

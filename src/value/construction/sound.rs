@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{SOUND_INDEX, SOUND_MAP},
+    consts::{SOUND_INDEX, SOUND_MAP},
     units::UnitSound,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitSound> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitSound> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{SOUND_INDEX, SOUND_MAP},
+        consts::{SOUND_INDEX, SOUND_MAP},
         units::{Metric, UnitNone, UnitSound},
     };
 

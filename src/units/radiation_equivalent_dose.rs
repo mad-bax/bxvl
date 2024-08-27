@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitRadioactivityExposure};
 
@@ -43,7 +43,7 @@ impl BaseUnit for UnitRadioactivityExposure {
     fn base(&self) -> f64 {
         match self {
             Self::Sievert(_) => 1.0,
-            Self::Rem => constants::RADEX_REM_TO_SV,
+            Self::Rem => consts::RADEX_REM_TO_SV,
         }
     }
 

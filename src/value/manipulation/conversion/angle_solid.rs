@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{SOLID_ANGLE_INDEX, SOLID_ANGLE_MAP},
+    consts::{SOLID_ANGLE_INDEX, SOLID_ANGLE_MAP},
     errors::V3Error,
     units::{Convert, UnitSolidAngle},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitSolidAngle> for Value {

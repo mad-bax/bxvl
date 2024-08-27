@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants::KELVIN_TO_CELSIUS;
+use crate::consts::KELVIN_TO_CELSIUS;
 
 use super::{BaseUnit, Metric, UnitTemperature};
 

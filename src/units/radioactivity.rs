@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitRadioactivity};
 
@@ -43,7 +43,7 @@ impl BaseUnit for UnitRadioactivity {
     fn base(&self) -> f64 {
         match self {
             Self::Becquerel(_) => 1.0,
-            Self::Curie => constants::RADIO_C_TO_BQ,
+            Self::Curie => consts::RADIO_C_TO_BQ,
         }
     }
 

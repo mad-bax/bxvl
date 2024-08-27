@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
+    consts::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
     units::UnitRadioactivity,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitRadioactivity> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitRadioactivity> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
+        consts::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
         units::{Metric, UnitNone, UnitRadioactivity},
     };
 

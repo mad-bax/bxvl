@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitMass};
 
@@ -45,9 +45,9 @@ impl BaseUnit for UnitMass {
     fn base(&self) -> f64 {
         match self {
             Self::Gram(_) => 1.0,
-            Self::Grain => constants::MASS_GR_TO_G,
-            Self::Ounce => constants::MASS_OZ_TO_G,
-            Self::Pound => constants::MASS_LB_TO_G,
+            Self::Grain => consts::MASS_GR_TO_G,
+            Self::Ounce => consts::MASS_OZ_TO_G,
+            Self::Pound => consts::MASS_LB_TO_G,
         }
     }
 

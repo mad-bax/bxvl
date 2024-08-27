@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitLength, UnitVolume};
 
@@ -28,7 +28,7 @@ impl Convert<UnitLength> for UnitVolume {
     fn convert(&self, other: &UnitLength) -> f64 {
         self.scale()
             * (f64::powf(UnitLength::Meter(Metric::None).convert(other), 3.0)
-                / constants::METER3_TO_LITER)
+                / consts::METER3_TO_LITER)
     }
 }
 

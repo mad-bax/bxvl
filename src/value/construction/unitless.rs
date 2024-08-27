@@ -1,6 +1,6 @@
 use std::ops::{Div, Mul};
 
-use crate::{units::UnitNone, value::Value};
+use crate::{units::UnitNone, Value};
 
 impl Mul<UnitNone> for f64 {
     type Output = Value;
@@ -39,7 +39,7 @@ impl Div<UnitNone> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
+        consts::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
         units::{Metric, UnitLuminousIntensity, UnitNone},
     };
 

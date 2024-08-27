@@ -1,5 +1,5 @@
 use crate::{
-    constants::{
+    consts::{
         ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_INDEX,
         CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP, ELECTRIC_CHARGE_INDEX,
         ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP,
@@ -25,7 +25,7 @@ use crate::{
         UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
         UnitTemperature, UnitTime, UnitVolume,
     },
-    value::Value,
+    Value,
 };
 
 impl Value {
@@ -880,7 +880,7 @@ impl Value {
 #[cfg(test)]
 mod parse_testing {
     use crate::{
-        constants::{
+        consts::{
             ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_INDEX,
             CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP,
             ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX,
@@ -901,7 +901,7 @@ mod parse_testing {
             Metric, UnitAngle, UnitElectricCapacitance, UnitEnergy, UnitForce, UnitFrequency,
             UnitInformation, UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime,
         },
-        value::Value,
+        Value,
     };
 
     const TEST_METRIC: [(Metric, &str); 26] = [

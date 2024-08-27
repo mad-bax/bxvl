@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{INDUCTANCE_INDEX, INDUCTANCE_MAP},
+    consts::{INDUCTANCE_INDEX, INDUCTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricInductance},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitElectricInductance> for Value {

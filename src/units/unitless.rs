@@ -47,7 +47,7 @@ impl BaseUnit for UnitNone {
 #[cfg(test)]
 mod unitless_testing {
     use crate::{
-        constants::LENGTH_MILE_TO_METER,
+        consts::LENGTH_MILE_TO_METER,
         units::{BaseUnit, Convert, Metric, UnitLength, UnitNone},
     };
 

@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
+    consts::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
     units::UnitAbsorbedDose,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitAbsorbedDose> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitAbsorbedDose> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
+        consts::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
         units::{Metric, UnitAbsorbedDose, UnitNone},
     };
 

@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitEnergy};
 
@@ -48,9 +48,9 @@ impl BaseUnit for UnitEnergy {
     fn base(&self) -> f64 {
         match self {
             Self::Joule(_) => 1.0,
-            Self::GramCalorie(_) => constants::EN_CAL_TO_J,
-            Self::FootPound => constants::EN_FTLB_TO_J,
-            Self::ElectronVolt(_) => constants::EN_EV_TO_J,
+            Self::GramCalorie(_) => consts::EN_CAL_TO_J,
+            Self::FootPound => consts::EN_FTLB_TO_J,
+            Self::ElectronVolt(_) => consts::EN_EV_TO_J,
         }
     }
 

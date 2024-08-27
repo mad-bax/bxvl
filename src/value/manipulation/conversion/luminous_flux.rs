@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP},
+    consts::{LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP},
     errors::V3Error,
     units::{Convert, UnitLuminousFlux},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitLuminousFlux> for Value {

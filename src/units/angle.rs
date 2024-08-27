@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitAngle};
 
@@ -45,8 +45,8 @@ impl BaseUnit for UnitAngle {
     fn base(&self) -> f64 {
         match self {
             Self::Radian(_) => 1.0,
-            Self::Degree => constants::ANGLE_DEG_TO_RAD,
-            Self::Moa => constants::ANGLE_MOA_TO_RAD,
+            Self::Degree => consts::ANGLE_DEG_TO_RAD,
+            Self::Moa => consts::ANGLE_MOA_TO_RAD,
         }
     }
 

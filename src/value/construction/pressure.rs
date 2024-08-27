@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{PRESSURE_INDEX, PRESSURE_MAP},
+    consts::{PRESSURE_INDEX, PRESSURE_MAP},
     units::UnitPressure,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitPressure> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitPressure> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{PRESSURE_INDEX, PRESSURE_MAP},
+        consts::{PRESSURE_INDEX, PRESSURE_MAP},
         units::{Metric, UnitNone, UnitPressure},
     };
 

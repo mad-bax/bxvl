@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitForce};
 
@@ -43,7 +43,7 @@ impl BaseUnit for UnitForce {
     fn base(&self) -> f64 {
         match self {
             Self::Newton(_) => 1.0,
-            Self::PoundForce => constants::FC_LBF_TO_N,
+            Self::PoundForce => consts::FC_LBF_TO_N,
         }
     }
 

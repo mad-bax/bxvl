@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{MASS_INDEX, MASS_MAP},
+    consts::{MASS_INDEX, MASS_MAP},
     errors::V3Error,
     units::{Convert, UnitMass},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitMass> for Value {

@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::constants;
+use crate::consts;
 
 use super::{BaseUnit, Convert, Metric, UnitPressure};
 
@@ -50,13 +50,13 @@ impl BaseUnit for UnitPressure {
     fn base(&self) -> f64 {
         match self {
             Self::Pascal(_) => 1.0,
-            Self::Bar(_) => constants::PR_BAR_TO_P,
-            Self::Torr => constants::PR_TORR_TO_P,
-            Self::Hgmm => constants::PR_MM_TO_P,
-            Self::Hgcm => constants::PR_CM_TO_P,
-            Self::Hgin => constants::PR_IN_TO_P,
-            Self::Atm => constants::PR_ATM_TO_P,
-            Self::Psi => constants::PR_PSI_TO_P,
+            Self::Bar(_) => consts::PR_BAR_TO_P,
+            Self::Torr => consts::PR_TORR_TO_P,
+            Self::Hgmm => consts::PR_MM_TO_P,
+            Self::Hgcm => consts::PR_CM_TO_P,
+            Self::Hgin => consts::PR_IN_TO_P,
+            Self::Atm => consts::PR_ATM_TO_P,
+            Self::Psi => consts::PR_PSI_TO_P,
         }
     }
 

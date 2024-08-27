@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{POWER_INDEX, POWER_MAP},
+    consts::{POWER_INDEX, POWER_MAP},
     errors::V3Error,
     units::{Convert, UnitPower},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitPower> for Value {

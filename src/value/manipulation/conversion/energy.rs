@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{ENERGY_INDEX, ENERGY_MAP},
+    consts::{ENERGY_INDEX, ENERGY_MAP},
     errors::V3Error,
     units::{Convert, UnitEnergy},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitEnergy> for Value {
@@ -57,7 +57,7 @@ mod conversion_testing {
     }
 
     use crate::{
-        constants::{EN_CAL_TO_J, EN_EV_TO_J},
+        consts::{EN_CAL_TO_J, EN_EV_TO_J},
         units::{Metric, UnitEnergy, UnitLength},
     };
 

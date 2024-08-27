@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
+    consts::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
     units::UnitTemperature,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitTemperature> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitTemperature> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
+        consts::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
         units::{Metric, UnitNone, UnitTemperature},
     };
 

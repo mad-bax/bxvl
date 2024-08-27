@@ -1,5 +1,5 @@
 use crate::{
-    constants::{
+    consts::{
         CAPACITANCE_INDEX, CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP,
         ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX,
         ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_INDEX, ELECTRIC_CURRENT_MAP,
@@ -21,7 +21,7 @@ use crate::{
         UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitSolidAngle, UnitSubstance,
         UnitTime,
     },
-    value::Value,
+    Value,
 };
 
 impl Value {
@@ -32,7 +32,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use v3::{value::Value, units::{Metric, UnitForce}};
+    /// use bxvl::{Value, units::{Metric, UnitForce}};
     ///
     /// let mut f:Value = 3.0 * UnitForce::Newton(Metric::None);
     ///

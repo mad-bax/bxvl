@@ -1,10 +1,10 @@
 use std::ops::{Shr, ShrAssign};
 
 use crate::{
-    constants::{SUBSTANCE_INDEX, SUBSTANCE_MAP},
+    consts::{SUBSTANCE_INDEX, SUBSTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitSubstance},
-    value::Value,
+    Value,
 };
 
 impl Shr<UnitSubstance> for Value {

@@ -1,9 +1,9 @@
 use std::ops::{Div, Mul};
 
 use crate::{
-    constants::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
+    consts::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
     units::UnitElectricCharge,
-    value::Value,
+    Value,
 };
 
 impl Mul<UnitElectricCharge> for f64 {
@@ -85,7 +85,7 @@ impl Div<UnitElectricCharge> for Value {
 #[cfg(test)]
 mod construction_testing {
     use crate::{
-        constants::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
+        consts::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
         units::{Metric, UnitElectricCharge, UnitNone},
     };
 
