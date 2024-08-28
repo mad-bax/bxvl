@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="./images/v3_logo.png">
+  <img src="./images/bxvl_long_logo.png">
 </p>
 
-**bxvl** is a scientific unit-type library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
+**bxvl** is a rust library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
 
 ## Table of Contents
 

@@ -1,16 +1,3 @@
-/**
- * File    :> constants.rs
- * Author  :> Bax
- * Version :> 0.0.1
- * Details :>
- */
-/* These constants are for converting between likewise units.
- * They all convert to the official SI unit in question.
- * All unit relations are based off of SI standard units.
- *
- * Some units like temperature and time are left out as they
- * have special conversion methods that are done programmatically.
- */
 use crate::{
     units::{
         Metric, UnitElectricCapacitance, UnitElectricCharge, UnitEnergy, UnitFrequency, UnitLength,
