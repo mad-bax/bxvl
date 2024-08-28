@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/bxvl_long_logo.png">
+  <img src="./images/bxvl_logo.ico">
 </p>
 
 **bxvl** is a rust library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
