@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{FREQUENCY_INDEX, FREQUENCY_MAP},
     units::UnitFrequency,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitFrequency> for f64 {

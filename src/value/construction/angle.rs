@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ANGLE_INDEX, ANGLE_MAP},
     units::UnitAngle,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitAngle> for f64 {

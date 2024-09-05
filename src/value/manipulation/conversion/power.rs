@@ -4,7 +4,7 @@ use crate::{
     consts::{POWER_INDEX, POWER_MAP},
     errors::V3Error,
     units::{Convert, UnitPower},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitPower> for Value {

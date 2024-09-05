@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
-use crate::Value;
+use crate::value::Value;
 
 impl Add<f64> for Value {
     type Output = Value;

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
     units::UnitElectricCapacitance,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricCapacitance> for f64 {

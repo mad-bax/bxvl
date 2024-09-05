@@ -4,7 +4,7 @@ use crate::{
     consts::{FREQUENCY_INDEX, FREQUENCY_MAP, TIME_INDEX, TIME_MAP},
     errors::V3Error,
     units::{Convert, UnitFrequency},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitFrequency> for Value {

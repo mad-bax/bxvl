@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{FORCE_INDEX, FORCE_MAP},
     units::UnitForce,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitForce> for f64 {

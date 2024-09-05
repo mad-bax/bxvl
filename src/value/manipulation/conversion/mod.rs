@@ -45,7 +45,7 @@ use crate::{
     },
     errors::V3Error,
     units::{Convert, Metric, UnitAngle, UnitLength},
-    Value,
+    value::Value,
 };
 
 impl Shr<Value> for Value {
@@ -123,7 +123,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// let mut speed:Value = match Value::new(20.0, "mph") {
     ///     Ok(t) => t,
     ///     Err(e) => panic!("{}", e)

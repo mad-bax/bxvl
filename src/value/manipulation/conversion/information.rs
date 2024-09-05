@@ -4,7 +4,7 @@ use crate::{
     consts::{INFORMATION_INDEX, INFORMATION_MAP},
     errors::V3Error,
     units::{BaseUnit, Convert, Metric, UnitInformation},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitInformation> for Value {

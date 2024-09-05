@@ -4,7 +4,7 @@ use crate::{
     consts::{LUMINOUS_FLUX_INDEX, LUMINOUS_FLUX_MAP},
     errors::V3Error,
     units::{Convert, UnitLuminousFlux},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitLuminousFlux> for Value {

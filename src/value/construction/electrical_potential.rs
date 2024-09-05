@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
     units::UnitElectricPotential,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricPotential> for f64 {

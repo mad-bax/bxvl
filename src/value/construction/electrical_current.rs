@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ELECTRIC_CURRENT_INDEX, ELECTRIC_CURRENT_MAP},
     units::UnitElectricCurrent,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricCurrent> for f64 {

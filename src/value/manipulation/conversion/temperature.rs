@@ -4,7 +4,7 @@ use crate::{
     consts::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
     errors::V3Error,
     units::UnitTemperature,
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitTemperature> for Value {

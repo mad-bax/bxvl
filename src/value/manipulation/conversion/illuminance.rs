@@ -4,7 +4,7 @@ use crate::{
     consts::{ILLUMINANCE_INDEX, ILLUMINANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitIlluminance},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitIlluminance> for Value {

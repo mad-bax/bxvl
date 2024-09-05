@@ -4,7 +4,7 @@ use crate::{
     consts::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
     errors::V3Error,
     units::{Convert, UnitCatalyticActivity},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitCatalyticActivity> for Value {

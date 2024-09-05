@@ -4,7 +4,7 @@ use crate::{
     consts::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricCharge},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricCharge> for Value {

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
     units::UnitLuminousIntensity,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitLuminousIntensity> for f64 {

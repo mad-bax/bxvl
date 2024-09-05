@@ -4,7 +4,7 @@ use crate::{
     consts::{LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP},
     errors::V3Error,
     units::{Convert, UnitLuminousIntensity},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitLuminousIntensity> for Value {

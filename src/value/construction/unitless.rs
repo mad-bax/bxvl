@@ -1,6 +1,6 @@
 use std::ops::{Div, Mul};
 
-use crate::{units::UnitNone, Value};
+use crate::{units::UnitNone, value::Value};
 
 impl Mul<UnitNone> for f64 {
     type Output = Value;

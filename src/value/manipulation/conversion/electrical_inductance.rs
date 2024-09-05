@@ -4,7 +4,7 @@ use crate::{
     consts::{INDUCTANCE_INDEX, INDUCTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricInductance},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricInductance> for Value {

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{TIME_INDEX, TIME_MAP},
     units::UnitTime,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitTime> for f64 {

@@ -4,7 +4,7 @@ use crate::{
     consts::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
     errors::V3Error,
     units::{Convert, UnitAbsorbedDose},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitAbsorbedDose> for Value {

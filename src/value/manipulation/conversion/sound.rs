@@ -4,7 +4,7 @@ use crate::{
     consts::{SOUND_INDEX, SOUND_MAP},
     errors::V3Error,
     units::{Convert, UnitSound},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitSound> for Value {

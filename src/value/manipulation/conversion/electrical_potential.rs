@@ -4,7 +4,7 @@ use crate::{
     consts::{ELECTRIC_POTENTIAL_INDEX, ELECTRIC_POTENTIAL_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricPotential},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricPotential> for Value {

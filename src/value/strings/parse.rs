@@ -25,7 +25,7 @@ use crate::{
         UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
         UnitTemperature, UnitTime, UnitVolume,
     },
-    Value,
+    value::Value,
 };
 
 impl Value {
@@ -901,7 +901,7 @@ mod parse_testing {
             Metric, UnitAngle, UnitElectricCapacitance, UnitEnergy, UnitForce, UnitFrequency,
             UnitInformation, UnitLength, UnitMass, UnitPressure, UnitTemperature, UnitTime,
         },
-        Value,
+        value::Value,
     };
 
     const TEST_METRIC: [(Metric, &str); 26] = [

@@ -4,7 +4,7 @@ use crate::{
     consts::{SUBSTANCE_INDEX, SUBSTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitSubstance},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitSubstance> for Value {

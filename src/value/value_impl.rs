@@ -3,14 +3,14 @@ use crate::errors::V3Error;
 use crate::units::Convert;
 use crate::units::Metric;
 use crate::units::UnitAngle;
-use crate::Value;
+use crate::value::Value;
 
 impl Default for Value {
     /// The default constructor for a [`Value`]
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// let mut m:Value = Value::default();
     /// m.val = 1.3;
     /// ```
@@ -59,7 +59,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// let m:Value = match Value::new(4.5, "m") {
     ///     Ok(v) => v,
     ///     Err(e) => panic!("{}", e)
@@ -155,7 +155,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::UnitLength;
     /// let mut v:Value = 4.0 * UnitLength::Inch;
     /// v.inv();
@@ -172,7 +172,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::UnitAngle;
     /// let mut a:Value = 45.0 * UnitAngle::Degree;
     /// a.to_radians();
@@ -191,7 +191,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::{UnitAngle, Metric};
     /// let mut a:Value = (2.0/std::f64::consts::PI) * UnitAngle::Radian(Metric::None);
     /// a.to_degrees();
@@ -244,7 +244,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::UnitLength;
     /// let mut v:Value = 16.0 * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.sqrt();
@@ -268,7 +268,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::UnitLength;
     /// let v:Value = 4.0 * UnitLength::Foot;
     /// let x:Value = v.powv(2);
@@ -289,7 +289,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::UnitLength;
     /// let mut v:Value = 9.0 * UnitLength::Foot * UnitLength::Foot * UnitLength::Foot;
     /// let x:Value = v.cbrt();
@@ -348,7 +348,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::{UnitTime, UnitAngle, Metric};
     /// let a:Value = 10.0 * UnitTime::Second(Metric::None);
     /// let b:Value = 0.3 * UnitAngle::Radian(Metric::None);
@@ -1410,7 +1410,7 @@ mod value_impl_testing {
             UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature,
             UnitTime, UnitVolume,
         },
-        Value,
+        value::Value,
     };
 
     #[test]

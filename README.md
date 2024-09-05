@@ -54,7 +54,8 @@
 Creating `Value`s:
 
 ```rust
-use bxvl::{Value, value};
+use bxvl::value::Value; // Unit type
+use bxvl::value;        // Macro definition
 use bxvl::units::{Metric, UnitTime::Second, UnitMass::Gram, UnitLength::Meter};
 
 // Slowest
@@ -87,7 +88,7 @@ assert!((v1 == v4) == (v2 == v3));
 Creating `Value`s using other `Values`:
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 use bxvl::units::{Metric, UnitTime, UnitLength};
 
 let time:Value = 4.0 * UnitTime::Second(Metric::None);
@@ -103,7 +104,7 @@ assert_eq!(speed.to_string(), "4.2 m/s");
 Values provide similar functionality to many functions that are available to other units such as `i32`, `f32`, `f64` etc.
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 use bxvl::units::{Metric, UnitLength};
 
 let m:Value = Value::new(f64::NAN, "feet").unwrap();
@@ -125,7 +126,7 @@ Many of the SI units are derived from other base units. When using the values to
 Making a complex value means combining different types into a new type.
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 
 let m:Value = Value::new(2.5, "kg").unwrap();
 let acc:Value = Value::new(10.0, "m/s^2").unwrap();
@@ -141,7 +142,7 @@ assert_eq!(f2.to_string(), "25 N");
 Reducing a value means setting a value to its derived units.
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 
 let mut f:Value = Value::new(25.0, "N").unwrap();
 
@@ -212,7 +213,7 @@ All `Value`s within their given measurement type will be able to be converted to
 Example converting feet into meters:
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 
 let mut m:Value = Value::new(3.2, "feet").unwrap();
 
@@ -222,7 +223,7 @@ m.convert("m").unwrap();
 There is also direct syntax for this feature:
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 
 let mut m:Value = Value::new(5.9, "km/hr").unwrap();
 
@@ -232,7 +233,7 @@ m >>= "m/s";
 You can use other Values for conversion:
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 
 let m:Value = Value::new(1.2, "yards").unwrap();
 let n:Value = Value::new(1.0, "m").unwrap();
@@ -243,7 +244,7 @@ let k:Value = (m >> n).unwrap();
 The types can also be directly used: (The fastest conversion method)
 
 ```rust
-use bxvl::Value;
+use bxvl::value::Value;
 use bxvl::units::{Metric, UnitLength, UnitTime};
 
 let mut m:Value = Value::new(5.9, "kph").unwrap();
@@ -289,7 +290,7 @@ Some constants are provided for ease of use:
 | Vacuum Permittivity                        | `8.854_187_812_8e-12`   | $F \over m$        |
 
 ```rust
-use bxvl::{Value, consts, units::{UnitMass, Metric}};
+use bxvl::{value::{Value, consts}, units::{UnitMass, Metric}};
 
 let acc:Value = consts::EARTH_GRAVITY;
 let m:Value = 100.0 * UnitMass::Gram(Metric::Kilo);
@@ -391,11 +392,11 @@ The project supports all base SI units as listed by the National Institute of St
 
 ### Thermal Temperature
 
-| Unit       | Metric Prefixing Support | Base Conversion Factor | Unit string                        |
-| ---------- | ------------------------ | ---------------------- | ---------------------------------- |
-| Celsius    | &check;                  | `c-273.15 K`           | `c`, `°`[`Metric Prefix`]`c`, `°C` |
-| Fahrenheit |                          | `(f-32.0)/1.8 c`       | `f`, `°f`, `°F`                    |
-| Kelvin     | &check;                  | `1.0 K`                | `K`                                |
+| Unit       | Metric Prefixing Support | Base Conversion Factor    | Unit string                        |
+| ---------- | ------------------------ | ------------------------- | ---------------------------------- |
+| Celsius    | &check;                  | `c-273.15 K`              | `c`, `°`[`Metric Prefix`]`c`, `°C` |
+| Fahrenheit |                          | `((f-32.0)/1.8)-273.15 K` | `f`, `°f`, `°F`                    |
+| Kelvin     | &check;                  | `1.0 K`                   | `K`                                |
 
 ### Substance
 
@@ -578,7 +579,7 @@ Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `El
 - User defined `const Value`s
 - Equation definitions, which can expect a specific `Value` type
 - More Imperial measurement support (US customary) 🤢
-  - Lengths : `chains`, `furlongs`, `leagues`, `fathoms`, `cable`, `nautical mile`
+  - Lengths : `chains`, `furlongs`, `fathoms`, `nautical mile`
   - Area(?) : `acre`
   - Volume : `gallon`, `pint`, `quart`
   - Weight : `stone`, `ton`, `slug`

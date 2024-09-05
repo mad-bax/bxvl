@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ENERGY_INDEX, ENERGY_MAP},
     units::UnitEnergy,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitEnergy> for f64 {

@@ -4,7 +4,7 @@ use crate::{
     consts::{PRESSURE_INDEX, PRESSURE_MAP},
     errors::V3Error,
     units::{Convert, UnitPressure},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitPressure> for Value {

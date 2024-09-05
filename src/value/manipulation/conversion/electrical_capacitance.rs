@@ -4,7 +4,7 @@ use crate::{
     consts::{CAPACITANCE_INDEX, CAPACITANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricCapacitance},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricCapacitance> for Value {

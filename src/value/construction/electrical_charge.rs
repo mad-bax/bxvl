@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ELECTRIC_CHARGE_INDEX, ELECTRIC_CHARGE_MAP},
     units::UnitElectricCharge,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricCharge> for f64 {

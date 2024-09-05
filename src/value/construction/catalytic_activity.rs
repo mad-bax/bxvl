@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP},
     units::UnitCatalyticActivity,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitCatalyticActivity> for f64 {

@@ -4,7 +4,7 @@ use crate::{
     consts::{MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP},
     errors::V3Error,
     units::{Convert, UnitMagneticFluxDensity},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitMagneticFluxDensity> for Value {

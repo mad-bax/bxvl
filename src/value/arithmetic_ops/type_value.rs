@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use crate::consts::*;
 use crate::units::Convert;
-use crate::Value;
+use crate::value::Value;
 
 impl Add<Value> for Value {
     type Output = Value;

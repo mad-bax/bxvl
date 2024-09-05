@@ -18,7 +18,7 @@ use crate::{
         UnitMagneticFluxDensity, UnitMass, UnitPower, UnitPressure, UnitSolidAngle, UnitSubstance,
         UnitTime,
     },
-    Value,
+    value::Value,
 };
 
 impl Value {
@@ -35,7 +35,7 @@ impl Value {
     ///
     /// # Example
     /// ```rust
-    /// use bxvl::Value;
+    /// use bxvl::value::Value;
     /// use bxvl::units::{UnitLength, UnitMass, UnitTime, UnitForce, Metric};
     /// let mass:Value = 4.5 * UnitMass::Gram(Metric::Kilo);
     /// let acc:Value = 9.81 / UnitTime::Second(Metric::None) / UnitTime::Second(Metric::None) * UnitLength::Meter(Metric::None);

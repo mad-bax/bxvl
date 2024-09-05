@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{PRESSURE_INDEX, PRESSURE_MAP},
     units::UnitPressure,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitPressure> for f64 {

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP},
     units::UnitAbsorbedDose,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitAbsorbedDose> for f64 {

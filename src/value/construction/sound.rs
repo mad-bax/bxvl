@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{SOUND_INDEX, SOUND_MAP},
     units::UnitSound,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitSound> for f64 {

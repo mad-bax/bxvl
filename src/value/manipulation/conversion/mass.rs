@@ -4,7 +4,7 @@ use crate::{
     consts::{MASS_INDEX, MASS_MAP},
     errors::V3Error,
     units::{Convert, UnitMass},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitMass> for Value {

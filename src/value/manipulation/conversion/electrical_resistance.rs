@@ -4,7 +4,7 @@ use crate::{
     consts::{RESISTANCE_INDEX, RESISTANCE_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricResistance},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricResistance> for Value {

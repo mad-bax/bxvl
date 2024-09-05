@@ -4,7 +4,7 @@ use crate::{
     consts::{RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP},
     errors::V3Error,
     units::{Convert, UnitRadioactivityExposure},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitRadioactivityExposure> for Value {

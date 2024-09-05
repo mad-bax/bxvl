@@ -19,6 +19,10 @@ impl Display for UnitLength {
                 UnitLength::Parsec(m) => format!("{}{}", m.as_str(), "pc"),
                 UnitLength::LightYear(m) => format!("{}{}", m.as_str(), "lyr"),
                 UnitLength::Angstrom => "Å".into(),
+                //UnitLength::Fathom => "fathoms".into(),
+                //UnitLength::Furlong => "furlongs".into(),
+                //UnitLength::NauticalMile => "NM".into(),
+                //UnitLength::Chain => "chains".into(),
             }
         )
     }

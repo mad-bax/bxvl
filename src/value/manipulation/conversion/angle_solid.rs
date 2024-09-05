@@ -4,7 +4,7 @@ use crate::{
     consts::{SOLID_ANGLE_INDEX, SOLID_ANGLE_MAP},
     errors::V3Error,
     units::{Convert, UnitSolidAngle},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitSolidAngle> for Value {

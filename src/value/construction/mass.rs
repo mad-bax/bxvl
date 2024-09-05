@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{MASS_INDEX, MASS_MAP},
     units::UnitMass,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitMass> for f64 {

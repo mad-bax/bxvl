@@ -3,7 +3,8 @@ extern crate bxvl;
 
 use bxvl::{
     units::{Convert, Metric, UnitAngle, UnitLength, UnitSubstance},
-    value, Value,
+    value::Value,
+    value
 };
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -65,7 +66,7 @@ fn criterion_benchmark(c: &mut Criterion) {
             black_box(())
         })
     });
-    c.bench_function("unit_conversion km   - mile", |b| {
+    c.bench_function("unit_conversion km - mile", |b| {
         b.iter(|| black_box(u1.convert(&u2)))
     });
     c.bench_function("unit_conversion mile - km", |b| {

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{TEMPERATURE_INDEX, TEMPERATURE_MAP},
     units::UnitTemperature,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitTemperature> for f64 {

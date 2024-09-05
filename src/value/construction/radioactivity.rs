@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP},
     units::UnitRadioactivity,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitRadioactivity> for f64 {

@@ -4,7 +4,7 @@ use crate::{
     consts::{ELECTRIC_CURRENT_INDEX, ELECTRIC_CURRENT_MAP},
     errors::V3Error,
     units::{Convert, UnitElectricCurrent},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitElectricCurrent> for Value {

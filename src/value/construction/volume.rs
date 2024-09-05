@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{VOLUME_INDEX, VOLUME_MAP},
     units::UnitVolume,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitVolume> for f64 {

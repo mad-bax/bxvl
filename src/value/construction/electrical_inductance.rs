@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{INDUCTANCE_INDEX, INDUCTANCE_MAP},
     units::UnitElectricInductance,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricInductance> for f64 {

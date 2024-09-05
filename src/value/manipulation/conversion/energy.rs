@@ -4,7 +4,7 @@ use crate::{
     consts::{ENERGY_INDEX, ENERGY_MAP},
     errors::V3Error,
     units::{Convert, UnitEnergy},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitEnergy> for Value {

@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{MAGNETIC_FLUX_INDEX, MAGNETIC_FLUX_MAP},
     units::UnitMagneticFlux,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitMagneticFlux> for f64 {

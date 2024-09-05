@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{RESISTANCE_INDEX, RESISTANCE_MAP},
     units::UnitElectricResistance,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitElectricResistance> for f64 {

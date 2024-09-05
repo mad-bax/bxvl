@@ -3,7 +3,7 @@ use std::ops::{Div, Mul};
 use crate::{
     consts::{LENGTH_INDEX, LENGTH_MAP},
     units::UnitLength,
-    Value,
+    value::Value,
 };
 
 impl Mul<UnitLength> for f64 {

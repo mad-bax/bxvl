@@ -4,7 +4,7 @@ use crate::{
     consts::{LENGTH_INDEX, LENGTH_MAP, VOLUME_INDEX, VOLUME_MAP},
     errors::V3Error,
     units::{Convert, UnitLength},
-    Value,
+    value::Value,
 };
 
 impl Shr<UnitLength> for Value {
@@ -75,7 +75,7 @@ mod length_conversion_testing {
     use crate::{
         consts::{LENGTH_LYR_TO_METER, LENGTH_PC_TO_METER},
         units::{Metric, UnitAngle, UnitLength, UnitVolume},
-        Value,
+        value::Value,
     };
 
     const TEST_METRIC: [(Metric, &str); 25] = [
