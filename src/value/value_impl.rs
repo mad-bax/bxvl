@@ -307,6 +307,14 @@ impl Value {
         n
     }
 
+    /// Returns the absolute value of a [`Value`]
+    pub fn abs(&self) -> Value {
+        if self.val < 0.0 {
+            return -self.clone();
+        }
+        self.clone()
+    }
+
     /// Returns the sine of a [`Value`] in radians
     pub fn sin(&self) -> Value {
         Value::_radians(self.val.sin())
@@ -1098,7 +1106,7 @@ impl Value {
         false
     }
 
-    /// Returns `true` if two `Values` have comparable, not equal, unit types
+    /// Returns `true` if two [`Value`]s have comparable, not equal, unit types
     pub(in crate::value) fn __equivalent(&self, other: &Value) -> bool {
         if self.unit_map == VOLUME_MAP && other.unit_map == LENGTH_MAP {
             if self.exp[VOLUME_INDEX] == 1 && other.exp[LENGTH_INDEX] == 3 {

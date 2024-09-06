@@ -40,7 +40,7 @@ impl Value {
     ///     Ok(_) => {}
     ///     Err(e) => panic!("{}", e)
     /// };
-    /// 
+    ///
     /// assert_eq!(f.to_string(), "3 m*kg/s^2");
     /// ```
     pub fn reduce(&mut self, other: &str) -> Result<(), V3Error> {
@@ -78,7 +78,7 @@ impl Value {
     ///     Ok(v) => v,
     ///     Err(e) => panic!("{}", e)
     /// };
-    /// 
+    ///
     /// assert_eq!(f_new.to_string(), "3 m*kg/s^2");
     /// ```
     pub fn reduction(&self, other: &str) -> Result<Value, V3Error> {

@@ -34,14 +34,20 @@ use std::ops::{Shr, ShrAssign};
 
 use crate::{
     consts::{
-        ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_MAP, CATALYTIC_ACTIVITY_MAP,
-        ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_MAP, ELECTRIC_CURRENT_MAP,
-        ELECTRIC_POTENTIAL_MAP, ENERGY_MAP, FORCE_MAP, FREQUENCY_INDEX, FREQUENCY_MAP,
-        ILLUMINANCE_MAP, INDUCTANCE_MAP, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP,
-        LUMINOUS_FLUX_MAP, LUMINOUS_INTENSITY_MAP, MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_MAP,
-        MASS_MAP, POWER_MAP, PRESSURE_MAP, RADIOACTIVITY_EXPOSURE_MAP, RADIOACTIVITY_MAP,
-        RESISTANCE_MAP, SOLID_ANGLE_MAP, SOUND_MAP, SUBSTANCE_MAP, TEMPERATURE_MAP, TIME_INDEX,
-        TIME_MAP, VOLUME_INDEX, VOLUME_MAP,
+        ABSORBED_DOSE_INDEX, ABSORBED_DOSE_MAP, ANGLE_INDEX, ANGLE_MAP, CAPACITANCE_INDEX,
+        CAPACITANCE_MAP, CATALYTIC_ACTIVITY_INDEX, CATALYTIC_ACTIVITY_MAP, ELECTRIC_CHARGE_INDEX,
+        ELECTRIC_CHARGE_MAP, ELECTRIC_CONDUCTANCE_INDEX, ELECTRIC_CONDUCTANCE_MAP,
+        ELECTRIC_CURRENT_INDEX, ELECTRIC_CURRENT_MAP, ELECTRIC_POTENTIAL_INDEX,
+        ELECTRIC_POTENTIAL_MAP, ENERGY_INDEX, ENERGY_MAP, FORCE_INDEX, FORCE_MAP, FREQUENCY_INDEX,
+        FREQUENCY_MAP, ILLUMINANCE_INDEX, ILLUMINANCE_MAP, INDUCTANCE_INDEX, INDUCTANCE_MAP,
+        INFORMATION_INDEX, INFORMATION_MAP, LENGTH_INDEX, LENGTH_MAP, LUMINOUS_FLUX_INDEX,
+        LUMINOUS_FLUX_MAP, LUMINOUS_INTENSITY_INDEX, LUMINOUS_INTENSITY_MAP,
+        MAGNETIC_FLUX_DENSITY_INDEX, MAGNETIC_FLUX_DENSITY_MAP, MAGNETIC_FLUX_INDEX,
+        MAGNETIC_FLUX_MAP, MASS_INDEX, MASS_MAP, POWER_INDEX, POWER_MAP, PRESSURE_INDEX,
+        PRESSURE_MAP, RADIOACTIVITY_EXPOSURE_INDEX, RADIOACTIVITY_EXPOSURE_MAP,
+        RADIOACTIVITY_INDEX, RADIOACTIVITY_MAP, RESISTANCE_INDEX, RESISTANCE_MAP,
+        SOLID_ANGLE_INDEX, SOLID_ANGLE_MAP, SOUND_INDEX, SOUND_MAP, SUBSTANCE_INDEX, SUBSTANCE_MAP,
+        TEMPERATURE_INDEX, TEMPERATURE_MAP, TIME_INDEX, TIME_MAP, VOLUME_INDEX, VOLUME_MAP,
     },
     errors::V3Error,
     units::{Convert, Metric, UnitAngle, UnitLength},
@@ -228,7 +234,8 @@ impl Value {
             self.val = self
                 .v_temperature
                 .unwrap()
-                .convert(&other.v_temperature.unwrap(), self.val);
+                .convert(&other.v_temperature.unwrap(), self.val)
+                .powi(self.exp[TEMPERATURE_INDEX]);
             self.v_temperature = other.v_temperature;
             return Ok(());
         }
@@ -242,222 +249,282 @@ impl Value {
             let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 let tmp: f64;
-                self.val *= f64::powi(
-                    match region {
-                        LENGTH_MAP => {
-                            tmp = self.v_length.unwrap().convert(&other.v_length.unwrap());
-                            self.v_length = other.v_length;
-                            tmp
-                        }
-                        TIME_MAP => {
-                            tmp = self.v_time.unwrap().convert(&other.v_time.unwrap());
-                            self.v_time = other.v_time;
-                            tmp
-                        }
-                        MASS_MAP => {
-                            tmp = self.v_mass.unwrap().convert(&other.v_mass.unwrap());
-                            self.v_mass = other.v_mass;
-                            tmp
-                        }
-                        ELECTRIC_CURRENT_MAP => {
-                            tmp = self
-                                .v_electric_current
-                                .unwrap()
-                                .convert(&other.v_electric_current.unwrap());
-                            self.v_electric_current = other.v_electric_current;
-                            tmp
-                        }
-                        ELECTRIC_CHARGE_MAP => {
-                            tmp = self
-                                .v_electric_charge
-                                .unwrap()
-                                .convert(&other.v_electric_charge.unwrap());
-                            self.v_electric_charge = other.v_electric_charge;
-                            tmp
-                        }
-                        ELECTRIC_POTENTIAL_MAP => {
-                            tmp = self
-                                .v_electric_potential
-                                .unwrap()
-                                .convert(&other.v_electric_potential.unwrap());
-                            self.v_electric_potential = other.v_electric_potential;
-                            tmp
-                        }
-                        ELECTRIC_CONDUCTANCE_MAP => {
-                            tmp = self
-                                .v_electric_conductance
-                                .unwrap()
-                                .convert(&other.v_electric_conductance.unwrap());
-                            self.v_electric_conductance = other.v_electric_conductance;
-                            tmp
-                        }
-                        CAPACITANCE_MAP => {
-                            tmp = self
-                                .v_capacitance
-                                .unwrap()
-                                .convert(&other.v_capacitance.unwrap());
-                            self.v_capacitance = other.v_capacitance;
-                            tmp
-                        }
-                        RESISTANCE_MAP => {
-                            tmp = self
-                                .v_resistance
-                                .unwrap()
-                                .convert(&other.v_resistance.unwrap());
-                            self.v_resistance = other.v_resistance;
-                            tmp
-                        }
-                        INDUCTANCE_MAP => {
-                            tmp = self
-                                .v_inductance
-                                .unwrap()
-                                .convert(&other.v_inductance.unwrap());
-                            self.v_inductance = other.v_inductance;
-                            tmp
-                        }
-                        MAGNETIC_FLUX_MAP => {
-                            tmp = self
-                                .v_magnetic_flux
-                                .unwrap()
-                                .convert(&other.v_magnetic_flux.unwrap());
-                            self.v_magnetic_flux = other.v_magnetic_flux;
-                            tmp
-                        }
-                        MAGNETIC_FLUX_DENSITY_MAP => {
-                            tmp = self
-                                .v_magnetic_flux_density
-                                .unwrap()
-                                .convert(&other.v_magnetic_flux_density.unwrap());
-                            self.v_magnetic_flux_density = other.v_magnetic_flux_density;
-                            tmp
-                        }
-                        TEMPERATURE_MAP => unreachable!("This cannot be reached!"),
-                        SUBSTANCE_MAP => {
-                            tmp = self
-                                .v_substance
-                                .unwrap()
-                                .convert(&other.v_substance.unwrap());
-                            self.v_substance = other.v_substance;
-                            tmp
-                        }
-                        LUMINOUS_INTENSITY_MAP => {
-                            tmp = self
-                                .v_luminous_flux_intensity
-                                .unwrap()
-                                .convert(&other.v_luminous_flux_intensity.unwrap());
-                            self.v_luminous_flux_intensity = other.v_luminous_flux_intensity;
-                            tmp
-                        }
-                        LUMINOUS_FLUX_MAP => {
-                            tmp = self
-                                .v_luminous_flux
-                                .unwrap()
-                                .convert(&other.v_luminous_flux.unwrap());
-                            self.v_luminous_flux = other.v_luminous_flux;
-                            tmp
-                        }
-                        ILLUMINANCE_MAP => {
-                            tmp = self
-                                .v_illuminance
-                                .unwrap()
-                                .convert(&other.v_illuminance.unwrap());
-                            self.v_illuminance = other.v_illuminance;
-                            tmp
-                        }
-                        VOLUME_MAP => {
-                            tmp = self.v_volume.unwrap().convert(&other.v_volume.unwrap());
-                            self.v_volume = other.v_volume;
-                            tmp
-                        }
-                        PRESSURE_MAP => {
-                            tmp = self.v_pressure.unwrap().convert(&other.v_pressure.unwrap());
-                            self.v_pressure = other.v_pressure;
-                            tmp
-                        }
-                        ANGLE_MAP => {
-                            tmp = self.v_angle.unwrap().convert(&other.v_angle.unwrap());
-                            self.v_angle = other.v_angle;
-                            tmp
-                        }
-                        FREQUENCY_MAP => {
-                            tmp = self
-                                .v_frequency
-                                .unwrap()
-                                .convert(&other.v_frequency.unwrap());
-                            self.v_frequency = other.v_frequency;
-                            tmp
-                        }
-                        FORCE_MAP => {
-                            tmp = self.v_force.unwrap().convert(&other.v_force.unwrap());
-                            self.v_force = other.v_force;
-                            tmp
-                        }
-                        ENERGY_MAP => {
-                            tmp = self.v_energy.unwrap().convert(&other.v_energy.unwrap());
-                            self.v_energy = other.v_energy;
-                            tmp
-                        }
-                        POWER_MAP => {
-                            tmp = self.v_power.unwrap().convert(&other.v_power.unwrap());
-                            self.v_power = other.v_power;
-                            tmp
-                        }
-                        RADIOACTIVITY_MAP => {
-                            tmp = self
-                                .v_radioactivity
-                                .unwrap()
-                                .convert(&other.v_radioactivity.unwrap());
-                            self.v_radioactivity = other.v_radioactivity;
-                            tmp
-                        }
-                        ABSORBED_DOSE_MAP => {
-                            tmp = self.v_ab_dose.unwrap().convert(&other.v_ab_dose.unwrap());
-                            self.v_ab_dose = other.v_ab_dose;
-                            tmp
-                        }
-                        RADIOACTIVITY_EXPOSURE_MAP => {
-                            tmp = self
-                                .v_radioactivity_exposure
-                                .unwrap()
-                                .convert(&other.v_radioactivity_exposure.unwrap());
-                            self.v_radioactivity_exposure = other.v_radioactivity_exposure;
-                            tmp
-                        }
-                        CATALYTIC_ACTIVITY_MAP => {
-                            tmp = self
-                                .v_catalytic
-                                .unwrap()
-                                .convert(&other.v_catalytic.unwrap());
-                            self.v_catalytic = other.v_catalytic;
-                            tmp
-                        }
-                        SOUND_MAP => {
-                            tmp = self.v_sound.unwrap().convert(&other.v_sound.unwrap());
-                            self.v_sound = other.v_sound;
-                            tmp
-                        }
-                        INFORMATION_MAP => {
-                            tmp = self
-                                .v_information
-                                .unwrap()
-                                .convert(&other.v_information.unwrap());
-                            self.v_information = other.v_information;
-                            tmp
-                        }
-                        SOLID_ANGLE_MAP => {
-                            tmp = self
-                                .v_solid_angle
-                                .unwrap()
-                                .convert(&other.v_solid_angle.unwrap());
-                            self.v_solid_angle = other.v_solid_angle;
-                            tmp
-                        }
-                        _ => {
-                            return Err(V3Error::UnknownError("[_convert] Value conversion"));
-                        }
-                    },
-                    self.exp[i],
-                );
+                self.val *= match region {
+                    LENGTH_MAP => {
+                        tmp = self
+                            .v_length
+                            .unwrap()
+                            .convert(&other.v_length.unwrap())
+                            .powi(self.exp[LENGTH_INDEX]);
+                        self.v_length = other.v_length;
+                        tmp
+                    }
+                    TIME_MAP => {
+                        tmp = self
+                            .v_time
+                            .unwrap()
+                            .convert(&other.v_time.unwrap())
+                            .powi(self.exp[TIME_INDEX]);
+                        self.v_time = other.v_time;
+                        tmp
+                    }
+                    MASS_MAP => {
+                        tmp = self
+                            .v_mass
+                            .unwrap()
+                            .convert(&other.v_mass.unwrap())
+                            .powi(self.exp[MASS_INDEX]);
+                        self.v_mass = other.v_mass;
+                        tmp
+                    }
+                    ELECTRIC_CURRENT_MAP => {
+                        tmp = self
+                            .v_electric_current
+                            .unwrap()
+                            .convert(&other.v_electric_current.unwrap())
+                            .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
+                        self.v_electric_current = other.v_electric_current;
+                        tmp
+                    }
+                    ELECTRIC_CHARGE_MAP => {
+                        tmp = self
+                            .v_electric_charge
+                            .unwrap()
+                            .convert(&other.v_electric_charge.unwrap())
+                            .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
+                        self.v_electric_charge = other.v_electric_charge;
+                        tmp
+                    }
+                    ELECTRIC_POTENTIAL_MAP => {
+                        tmp = self
+                            .v_electric_potential
+                            .unwrap()
+                            .convert(&other.v_electric_potential.unwrap())
+                            .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
+                        self.v_electric_potential = other.v_electric_potential;
+                        tmp
+                    }
+                    ELECTRIC_CONDUCTANCE_MAP => {
+                        tmp = self
+                            .v_electric_conductance
+                            .unwrap()
+                            .convert(&other.v_electric_conductance.unwrap())
+                            .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
+                        self.v_electric_conductance = other.v_electric_conductance;
+                        tmp
+                    }
+                    CAPACITANCE_MAP => {
+                        tmp = self
+                            .v_capacitance
+                            .unwrap()
+                            .convert(&other.v_capacitance.unwrap())
+                            .powi(self.exp[CAPACITANCE_INDEX]);
+                        self.v_capacitance = other.v_capacitance;
+                        tmp
+                    }
+                    RESISTANCE_MAP => {
+                        tmp = self
+                            .v_resistance
+                            .unwrap()
+                            .convert(&other.v_resistance.unwrap())
+                            .powi(self.exp[RESISTANCE_INDEX]);
+                        self.v_resistance = other.v_resistance;
+                        tmp
+                    }
+                    INDUCTANCE_MAP => {
+                        tmp = self
+                            .v_inductance
+                            .unwrap()
+                            .convert(&other.v_inductance.unwrap())
+                            .powi(self.exp[INDUCTANCE_INDEX]);
+                        self.v_inductance = other.v_inductance;
+                        tmp
+                    }
+                    MAGNETIC_FLUX_MAP => {
+                        tmp = self
+                            .v_magnetic_flux
+                            .unwrap()
+                            .convert(&other.v_magnetic_flux.unwrap())
+                            .powi(self.exp[MAGNETIC_FLUX_INDEX]);
+                        self.v_magnetic_flux = other.v_magnetic_flux;
+                        tmp
+                    }
+                    MAGNETIC_FLUX_DENSITY_MAP => {
+                        tmp = self
+                            .v_magnetic_flux_density
+                            .unwrap()
+                            .convert(&other.v_magnetic_flux_density.unwrap())
+                            .powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
+                        self.v_magnetic_flux_density = other.v_magnetic_flux_density;
+                        tmp
+                    }
+                    TEMPERATURE_MAP => unreachable!("This cannot be reached!"),
+                    SUBSTANCE_MAP => {
+                        tmp = self
+                            .v_substance
+                            .unwrap()
+                            .convert(&other.v_substance.unwrap())
+                            .powi(self.exp[SUBSTANCE_INDEX]);
+                        self.v_substance = other.v_substance;
+                        tmp
+                    }
+                    LUMINOUS_INTENSITY_MAP => {
+                        tmp = self
+                            .v_luminous_flux_intensity
+                            .unwrap()
+                            .convert(&other.v_luminous_flux_intensity.unwrap())
+                            .powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
+                        self.v_luminous_flux_intensity = other.v_luminous_flux_intensity;
+                        tmp
+                    }
+                    LUMINOUS_FLUX_MAP => {
+                        tmp = self
+                            .v_luminous_flux
+                            .unwrap()
+                            .convert(&other.v_luminous_flux.unwrap())
+                            .powi(self.exp[LUMINOUS_FLUX_INDEX]);
+                        self.v_luminous_flux = other.v_luminous_flux;
+                        tmp
+                    }
+                    ILLUMINANCE_MAP => {
+                        tmp = self
+                            .v_illuminance
+                            .unwrap()
+                            .convert(&other.v_illuminance.unwrap())
+                            .powi(self.exp[ILLUMINANCE_INDEX]);
+                        self.v_illuminance = other.v_illuminance;
+                        tmp
+                    }
+                    VOLUME_MAP => {
+                        tmp = self
+                            .v_volume
+                            .unwrap()
+                            .convert(&other.v_volume.unwrap())
+                            .powi(self.exp[VOLUME_INDEX]);
+                        self.v_volume = other.v_volume;
+                        tmp
+                    }
+                    PRESSURE_MAP => {
+                        tmp = self
+                            .v_pressure
+                            .unwrap()
+                            .convert(&other.v_pressure.unwrap())
+                            .powi(self.exp[PRESSURE_INDEX]);
+                        self.v_pressure = other.v_pressure;
+                        tmp
+                    }
+                    ANGLE_MAP => {
+                        tmp = self
+                            .v_angle
+                            .unwrap()
+                            .convert(&other.v_angle.unwrap())
+                            .powi(self.exp[ANGLE_INDEX]);
+                        self.v_angle = other.v_angle;
+                        tmp
+                    }
+                    FREQUENCY_MAP => {
+                        tmp = self
+                            .v_frequency
+                            .unwrap()
+                            .convert(&other.v_frequency.unwrap())
+                            .powi(self.exp[FREQUENCY_INDEX]);
+                        self.v_frequency = other.v_frequency;
+                        tmp
+                    }
+                    FORCE_MAP => {
+                        tmp = self
+                            .v_force
+                            .unwrap()
+                            .convert(&other.v_force.unwrap())
+                            .powi(self.exp[FORCE_INDEX]);
+                        self.v_force = other.v_force;
+                        tmp
+                    }
+                    ENERGY_MAP => {
+                        tmp = self
+                            .v_energy
+                            .unwrap()
+                            .convert(&other.v_energy.unwrap())
+                            .powi(self.exp[ENERGY_INDEX]);
+                        self.v_energy = other.v_energy;
+                        tmp
+                    }
+                    POWER_MAP => {
+                        tmp = self
+                            .v_power
+                            .unwrap()
+                            .convert(&other.v_power.unwrap())
+                            .powi(self.exp[POWER_INDEX]);
+                        self.v_power = other.v_power;
+                        tmp
+                    }
+                    RADIOACTIVITY_MAP => {
+                        tmp = self
+                            .v_radioactivity
+                            .unwrap()
+                            .convert(&other.v_radioactivity.unwrap())
+                            .powi(self.exp[RADIOACTIVITY_INDEX]);
+                        self.v_radioactivity = other.v_radioactivity;
+                        tmp
+                    }
+                    ABSORBED_DOSE_MAP => {
+                        tmp = self
+                            .v_ab_dose
+                            .unwrap()
+                            .convert(&other.v_ab_dose.unwrap())
+                            .powi(self.exp[ABSORBED_DOSE_INDEX]);
+                        self.v_ab_dose = other.v_ab_dose;
+                        tmp
+                    }
+                    RADIOACTIVITY_EXPOSURE_MAP => {
+                        tmp = self
+                            .v_radioactivity_exposure
+                            .unwrap()
+                            .convert(&other.v_radioactivity_exposure.unwrap())
+                            .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
+                        self.v_radioactivity_exposure = other.v_radioactivity_exposure;
+                        tmp
+                    }
+                    CATALYTIC_ACTIVITY_MAP => {
+                        tmp = self
+                            .v_catalytic
+                            .unwrap()
+                            .convert(&other.v_catalytic.unwrap())
+                            .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
+                        self.v_catalytic = other.v_catalytic;
+                        tmp
+                    }
+                    SOUND_MAP => {
+                        tmp = self
+                            .v_sound
+                            .unwrap()
+                            .convert(&other.v_sound.unwrap())
+                            .powi(self.exp[SOUND_INDEX]);
+                        self.v_sound = other.v_sound;
+                        tmp
+                    }
+                    INFORMATION_MAP => {
+                        tmp = self
+                            .v_information
+                            .unwrap()
+                            .convert(&other.v_information.unwrap())
+                            .powi(self.exp[INFORMATION_INDEX]);
+                        self.v_information = other.v_information;
+                        tmp
+                    }
+                    SOLID_ANGLE_MAP => {
+                        tmp = self
+                            .v_solid_angle
+                            .unwrap()
+                            .convert(&other.v_solid_angle.unwrap())
+                            .powi(self.exp[SOLID_ANGLE_INDEX]);
+                        self.v_solid_angle = other.v_solid_angle;
+                        tmp
+                    }
+                    _ => {
+                        return Err(V3Error::UnknownError("[_convert] Value conversion"));
+                    }
+                };
             }
         }
         Ok(())

@@ -1,4 +1,3 @@
-
 /// Length
 ///
 /// The conversion numeric for a foot to a meter

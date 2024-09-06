@@ -7,11 +7,6 @@ use crate::value::Value;
 impl Add<Value> for Value {
     type Output = Value;
     fn add(self, other: Value) -> Value {
-        if self.unit_map != other.unit_map {
-            // Error
-            panic!("Cannot Add values {} and {}", self, other);
-        }
-
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0
             && self.unit_map != TEMPERATURE_MAP
@@ -21,30 +16,41 @@ impl Add<Value> for Value {
             panic!("Cannot Add values {} and {}", self, other);
         }
 
+        if !self.__equivalent(&other) {
+            panic!("Cannot Add values {} and {}", self, other);
+        }
+
         let mut cmp_val: f64 = other.val;
 
         for i in 0..31_usize {
-            if self.exp[i] != other.exp[i] {
-                // Error
-                panic!("Cannot Add values {} and {}", self, other);
-            }
-
             let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 match region {
                     LENGTH_MAP => {
                         if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(self.exp[LENGTH_INDEX]);
                         }
                     }
                     TIME_MAP => {
                         if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(self.exp[TIME_INDEX]);
                         }
                     }
                     MASS_MAP => {
                         if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(self.exp[MASS_INDEX]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -52,7 +58,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -60,7 +67,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -68,7 +76,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -76,7 +85,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -84,7 +94,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(self.exp[CAPACITANCE_INDEX]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -92,7 +103,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(self.exp[RESISTANCE_INDEX]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -100,7 +112,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(self.exp[INDUCTANCE_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -108,7 +121,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -116,7 +130,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -124,7 +139,8 @@ impl Add<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(self.exp[TEMPERATURE_INDEX]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -132,7 +148,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(self.exp[SUBSTANCE_INDEX]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -140,7 +157,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -148,7 +166,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(self.exp[LUMINOUS_FLUX_INDEX]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -156,22 +175,35 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(self.exp[ILLUMINANCE_INDEX]);
                         }
                     }
                     VOLUME_MAP => {
                         if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(self.exp[VOLUME_INDEX]);
                         }
                     }
                     PRESSURE_MAP => {
                         if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(self.exp[PRESSURE_INDEX]);
                         }
                     }
                     ANGLE_MAP => {
                         if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(self.exp[ANGLE_INDEX]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -179,22 +211,35 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(self.exp[FREQUENCY_INDEX]);
                         }
                     }
                     FORCE_MAP => {
                         if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(self.exp[FORCE_INDEX]);
                         }
                     }
                     ENERGY_MAP => {
                         if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(self.exp[ENERGY_INDEX]);
                         }
                     }
                     POWER_MAP => {
                         if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(self.exp[POWER_INDEX]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -202,12 +247,17 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_INDEX]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(self.exp[ABSORBED_DOSE_INDEX]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -215,7 +265,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -223,12 +274,17 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
                         }
                     }
                     SOUND_MAP => {
                         if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(self.exp[SOUND_INDEX]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -236,7 +292,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(self.exp[INFORMATION_INDEX]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -244,7 +301,8 @@ impl Add<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(self.exp[SOLID_ANGLE_INDEX]);
                         }
                     }
                     _ => {
@@ -263,11 +321,6 @@ impl Add<Value> for Value {
 
 impl AddAssign<Value> for Value {
     fn add_assign(&mut self, other: Value) {
-        if self.unit_map != other.unit_map {
-            // Error
-            panic!("Cannot AddAssign values {} and {}", self, other);
-        }
-
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0
             && self.unit_map > TEMPERATURE_MAP
@@ -277,30 +330,41 @@ impl AddAssign<Value> for Value {
             panic!("Cannot AddAssign values {} and {}", self, other);
         }
 
+        if !self.__equivalent(&other) {
+            panic!("Cannot Add values {} and {}", self, other);
+        }
+
         let mut cmp_val: f64 = other.val;
 
         for i in 0..31_usize {
-            if self.exp[i] != other.exp[i] {
-                // Error
-                panic!("Cannot AddAssign values {} and {}", self, other);
-            }
-
             let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 match region {
                     LENGTH_MAP => {
                         if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(self.exp[LENGTH_INDEX]);
                         }
                     }
                     TIME_MAP => {
                         if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(self.exp[TIME_INDEX]);
                         }
                     }
                     MASS_MAP => {
                         if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(self.exp[MASS_INDEX]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -308,7 +372,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -316,7 +381,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -324,7 +390,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -332,7 +399,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -340,7 +408,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(self.exp[CAPACITANCE_INDEX]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -348,7 +417,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(self.exp[RESISTANCE_INDEX]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -356,7 +426,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(self.exp[INDUCTANCE_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -364,7 +435,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -372,7 +444,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -380,7 +453,8 @@ impl AddAssign<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(self.exp[TEMPERATURE_INDEX]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -388,7 +462,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(self.exp[SUBSTANCE_INDEX]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -396,7 +471,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -404,7 +480,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(self.exp[LUMINOUS_FLUX_INDEX]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -412,22 +489,35 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(self.exp[ILLUMINANCE_INDEX]);
                         }
                     }
                     VOLUME_MAP => {
                         if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(self.exp[VOLUME_INDEX]);
                         }
                     }
                     PRESSURE_MAP => {
                         if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(self.exp[PRESSURE_INDEX]);
                         }
                     }
                     ANGLE_MAP => {
                         if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(self.exp[ANGLE_INDEX]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -435,22 +525,35 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(self.exp[FREQUENCY_INDEX]);
                         }
                     }
                     FORCE_MAP => {
                         if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(self.exp[FORCE_INDEX]);
                         }
                     }
                     ENERGY_MAP => {
                         if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(self.exp[ENERGY_INDEX]);
                         }
                     }
                     POWER_MAP => {
                         if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(self.exp[POWER_INDEX]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -458,12 +561,17 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_INDEX]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(self.exp[ABSORBED_DOSE_INDEX]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -471,7 +579,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -479,12 +588,17 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
                         }
                     }
                     SOUND_MAP => {
                         if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(self.exp[SOUND_INDEX]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -492,7 +606,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(self.exp[INFORMATION_INDEX]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -500,7 +615,8 @@ impl AddAssign<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(self.exp[SOLID_ANGLE_INDEX]);
                         }
                     }
                     _ => {
@@ -518,11 +634,6 @@ impl AddAssign<Value> for Value {
 impl Sub<Value> for Value {
     type Output = Value;
     fn sub(self, other: Value) -> Value {
-        if self.unit_map != other.unit_map {
-            // Error
-            panic!("Cannot Sub values {} and {}", self, other);
-        }
-
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0
             && self.unit_map > TEMPERATURE_MAP
@@ -532,30 +643,41 @@ impl Sub<Value> for Value {
             panic!("Cannot Sub values {} and {}", self, other);
         }
 
+        if !self.__equivalent(&other) {
+            panic!("Cannot Sub values {} and {}", self, other);
+        }
+
         let mut cmp_val: f64 = other.val;
 
         for i in 0..31_usize {
-            if self.exp[i] != other.exp[i] {
-                // Error
-                panic!("Cannot Sub values {} and {}", self, other);
-            }
-
             let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 match region {
                     LENGTH_MAP => {
                         if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(self.exp[LENGTH_INDEX]);
                         }
                     }
                     TIME_MAP => {
                         if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(self.exp[TIME_INDEX]);
                         }
                     }
                     MASS_MAP => {
                         if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(self.exp[MASS_INDEX]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -563,7 +685,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -571,7 +694,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -579,7 +703,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -587,7 +712,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -595,7 +721,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(self.exp[CAPACITANCE_INDEX]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -603,7 +730,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(self.exp[RESISTANCE_INDEX]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -611,7 +739,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(self.exp[INDUCTANCE_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -619,7 +748,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -627,7 +757,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -635,7 +766,8 @@ impl Sub<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(self.exp[TEMPERATURE_INDEX]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -643,7 +775,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(self.exp[SUBSTANCE_INDEX]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -651,7 +784,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -659,7 +793,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(self.exp[LUMINOUS_FLUX_INDEX]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -667,22 +802,35 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(self.exp[ILLUMINANCE_INDEX]);
                         }
                     }
                     VOLUME_MAP => {
                         if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(self.exp[VOLUME_INDEX]);
                         }
                     }
                     PRESSURE_MAP => {
                         if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(self.exp[PRESSURE_INDEX]);
                         }
                     }
                     ANGLE_MAP => {
                         if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(self.exp[ANGLE_INDEX]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -690,22 +838,35 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(self.exp[FREQUENCY_INDEX]);
                         }
                     }
                     FORCE_MAP => {
                         if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(self.exp[FORCE_INDEX]);
                         }
                     }
                     ENERGY_MAP => {
                         if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(self.exp[ENERGY_INDEX]);
                         }
                     }
                     POWER_MAP => {
                         if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(self.exp[POWER_INDEX]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -713,12 +874,17 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_INDEX]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(self.exp[ABSORBED_DOSE_INDEX]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -726,7 +892,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -734,12 +901,17 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
                         }
                     }
                     SOUND_MAP => {
                         if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(self.exp[SOUND_INDEX]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -747,7 +919,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(self.exp[INFORMATION_INDEX]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -755,7 +928,8 @@ impl Sub<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(self.exp[SOLID_ANGLE_INDEX]);
                         }
                     }
                     _ => {
@@ -774,11 +948,6 @@ impl Sub<Value> for Value {
 
 impl SubAssign<Value> for Value {
     fn sub_assign(&mut self, other: Value) {
-        if self.unit_map != other.unit_map {
-            // Error
-            panic!("Cannot SubAssign values {} and {}", self, other);
-        }
-
         // special case to check if temperature is already the correct unit
         if self.unit_map & TEMPERATURE_MAP != 0
             && self.unit_map > TEMPERATURE_MAP
@@ -788,30 +957,41 @@ impl SubAssign<Value> for Value {
             panic!("Cannot SubAssign values {} and {}", self, other);
         }
 
+        if !self.__equivalent(&other) {
+            panic!("Cannot SubAssign values {} and {}", self, other);
+        }
+
         let mut cmp_val: f64 = other.val;
 
         for i in 0..31_usize {
-            if self.exp[i] != other.exp[i] {
-                // Error
-                panic!("Cannot SubAssign values {} and {}", self, other);
-            }
-
             let region: usize = 1 << i;
             if region & self.unit_map != 0 {
                 match region {
                     LENGTH_MAP => {
                         if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(self.exp[LENGTH_INDEX]);
                         }
                     }
                     TIME_MAP => {
                         if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(self.exp[TIME_INDEX]);
                         }
                     }
                     MASS_MAP => {
                         if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(self.exp[MASS_INDEX]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -819,7 +999,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(self.exp[ELECTRIC_CURRENT_INDEX]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -827,7 +1008,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(self.exp[ELECTRIC_CHARGE_INDEX]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -835,7 +1017,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(self.exp[ELECTRIC_POTENTIAL_INDEX]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -843,7 +1026,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(self.exp[ELECTRIC_CONDUCTANCE_INDEX]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -851,7 +1035,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(self.exp[CAPACITANCE_INDEX]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -859,7 +1044,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(self.exp[RESISTANCE_INDEX]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -867,7 +1053,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(self.exp[INDUCTANCE_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -875,7 +1062,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_INDEX]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -883,7 +1071,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(self.exp[MAGNETIC_FLUX_DENSITY_INDEX]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -891,7 +1080,8 @@ impl SubAssign<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(self.exp[TEMPERATURE_INDEX]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -899,7 +1089,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(self.exp[SUBSTANCE_INDEX]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -907,7 +1098,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(self.exp[LUMINOUS_INTENSITY_INDEX]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -915,7 +1107,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(self.exp[LUMINOUS_FLUX_INDEX]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -923,22 +1116,35 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(self.exp[ILLUMINANCE_INDEX]);
                         }
                     }
                     VOLUME_MAP => {
                         if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(self.exp[VOLUME_INDEX]);
                         }
                     }
                     PRESSURE_MAP => {
                         if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(self.exp[PRESSURE_INDEX]);
                         }
                     }
                     ANGLE_MAP => {
                         if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(self.exp[ANGLE_INDEX]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -946,22 +1152,35 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(self.exp[FREQUENCY_INDEX]);
                         }
                     }
                     FORCE_MAP => {
                         if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(self.exp[FORCE_INDEX]);
                         }
                     }
                     ENERGY_MAP => {
                         if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(self.exp[ENERGY_INDEX]);
                         }
                     }
                     POWER_MAP => {
                         if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(self.exp[POWER_INDEX]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -969,12 +1188,17 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_INDEX]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(self.exp[ABSORBED_DOSE_INDEX]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -982,7 +1206,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(self.exp[RADIOACTIVITY_EXPOSURE_INDEX]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -990,12 +1215,17 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(self.exp[CATALYTIC_ACTIVITY_INDEX]);
                         }
                     }
                     SOUND_MAP => {
                         if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(self.exp[SOUND_INDEX]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -1003,7 +1233,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(self.exp[INFORMATION_INDEX]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -1011,7 +1242,8 @@ impl SubAssign<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(self.exp[SOLID_ANGLE_INDEX]);
                         }
                     }
                     _ => {
@@ -1071,21 +1303,33 @@ impl Mul<Value> for Value {
                         if must_assign {
                             n.v_length = other.v_length;
                         } else if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TIME_MAP => {
                         if must_assign {
                             n.v_time = other.v_time;
                         } else if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MASS_MAP => {
                         if must_assign {
                             n.v_mass = other.v_mass;
                         } else if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -1095,7 +1339,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -1105,7 +1350,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -1115,7 +1361,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -1125,7 +1372,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -1135,7 +1383,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -1145,7 +1394,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -1155,7 +1405,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -1165,7 +1416,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -1175,7 +1427,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -1185,7 +1438,8 @@ impl Mul<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(other.exp[i]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -1195,7 +1449,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -1206,7 +1461,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -1216,7 +1472,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -1226,28 +1483,41 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     VOLUME_MAP => {
                         if must_assign {
                             n.v_volume = other.v_volume;
                         } else if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     PRESSURE_MAP => {
                         if must_assign {
                             n.v_pressure = other.v_pressure;
                         } else if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ANGLE_MAP => {
                         if must_assign {
                             n.v_angle = other.v_angle;
                         } else if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -1257,28 +1527,41 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FORCE_MAP => {
                         if must_assign {
                             n.v_force = other.v_force;
                         } else if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ENERGY_MAP => {
                         if must_assign {
                             n.v_energy = other.v_energy;
                         } else if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     POWER_MAP => {
                         if must_assign {
                             n.v_power = other.v_power;
                         } else if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -1288,14 +1571,19 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if must_assign {
                             n.v_ab_dose = other.v_ab_dose;
                         } else if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -1305,7 +1593,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -1315,14 +1604,19 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOUND_MAP => {
                         if must_assign {
                             n.v_sound = other.v_sound;
                         } else if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -1332,7 +1626,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -1342,7 +1637,8 @@ impl Mul<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     _ => {
@@ -1399,21 +1695,33 @@ impl MulAssign<Value> for Value {
                         if must_assign {
                             self.v_length = other.v_length;
                         } else if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TIME_MAP => {
                         if must_assign {
                             self.v_time = other.v_time;
                         } else if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MASS_MAP => {
                         if must_assign {
                             self.v_mass = other.v_mass;
                         } else if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -1423,7 +1731,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -1433,7 +1742,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -1443,7 +1753,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -1453,7 +1764,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -1463,7 +1775,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -1473,7 +1786,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -1483,7 +1797,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -1493,7 +1808,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -1503,7 +1819,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -1513,7 +1830,8 @@ impl MulAssign<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(other.exp[i]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -1523,7 +1841,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -1534,7 +1853,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -1544,7 +1864,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -1554,28 +1875,41 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     VOLUME_MAP => {
                         if must_assign {
                             self.v_volume = other.v_volume;
                         } else if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     PRESSURE_MAP => {
                         if must_assign {
                             self.v_pressure = other.v_pressure;
                         } else if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ANGLE_MAP => {
                         if must_assign {
                             self.v_angle = other.v_angle;
                         } else if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -1585,28 +1919,41 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FORCE_MAP => {
                         if must_assign {
                             self.v_force = other.v_force;
                         } else if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ENERGY_MAP => {
                         if must_assign {
                             self.v_energy = other.v_energy;
                         } else if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     POWER_MAP => {
                         if must_assign {
                             self.v_power = other.v_power;
                         } else if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -1616,14 +1963,19 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if must_assign {
                             self.v_ab_dose = other.v_ab_dose;
                         } else if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -1633,7 +1985,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -1643,14 +1996,19 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOUND_MAP => {
                         if must_assign {
                             self.v_sound = other.v_sound;
                         } else if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -1660,7 +2018,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -1670,7 +2029,8 @@ impl MulAssign<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     _ => {
@@ -1729,21 +2089,33 @@ impl Div<Value> for Value {
                         if must_assign {
                             n.v_length = other.v_length;
                         } else if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TIME_MAP => {
                         if must_assign {
                             n.v_time = other.v_time;
                         } else if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MASS_MAP => {
                         if must_assign {
                             n.v_mass = other.v_mass;
                         } else if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -1753,7 +2125,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -1763,7 +2136,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -1773,7 +2147,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -1783,7 +2158,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -1793,7 +2169,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -1803,7 +2180,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -1813,7 +2191,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -1823,7 +2202,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -1833,7 +2213,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -1843,7 +2224,8 @@ impl Div<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(other.exp[i]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -1853,7 +2235,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -1864,7 +2247,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -1874,7 +2258,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -1884,28 +2269,41 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     VOLUME_MAP => {
                         if must_assign {
                             n.v_volume = other.v_volume;
                         } else if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     PRESSURE_MAP => {
                         if must_assign {
                             n.v_pressure = other.v_pressure;
                         } else if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ANGLE_MAP => {
                         if must_assign {
                             n.v_angle = other.v_angle;
                         } else if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -1915,28 +2313,41 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FORCE_MAP => {
                         if must_assign {
                             n.v_force = other.v_force;
                         } else if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ENERGY_MAP => {
                         if must_assign {
                             n.v_energy = other.v_energy;
                         } else if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     POWER_MAP => {
                         if must_assign {
                             n.v_power = other.v_power;
                         } else if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -1946,14 +2357,19 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if must_assign {
                             n.v_ab_dose = other.v_ab_dose;
                         } else if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -1963,7 +2379,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -1973,14 +2390,19 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOUND_MAP => {
                         if must_assign {
                             n.v_sound = other.v_sound;
                         } else if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -1990,7 +2412,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -2000,7 +2423,8 @@ impl Div<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     _ => {
@@ -2058,21 +2482,33 @@ impl DivAssign<Value> for Value {
                         if must_assign {
                             self.v_length = other.v_length;
                         } else if self.v_length != other.v_length {
-                            cmp_val *= other.v_length.unwrap().convert(&self.v_length.unwrap());
+                            cmp_val *= other
+                                .v_length
+                                .unwrap()
+                                .convert(&self.v_length.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TIME_MAP => {
                         if must_assign {
                             self.v_time = other.v_time;
                         } else if self.v_time != other.v_time {
-                            cmp_val *= other.v_time.unwrap().convert(&self.v_time.unwrap());
+                            cmp_val *= other
+                                .v_time
+                                .unwrap()
+                                .convert(&self.v_time.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MASS_MAP => {
                         if must_assign {
                             self.v_mass = other.v_mass;
                         } else if self.v_mass != other.v_mass {
-                            cmp_val *= other.v_mass.unwrap().convert(&self.v_mass.unwrap());
+                            cmp_val *= other
+                                .v_mass
+                                .unwrap()
+                                .convert(&self.v_mass.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CURRENT_MAP => {
@@ -2082,7 +2518,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_current
                                 .unwrap()
-                                .convert(&self.v_electric_current.unwrap());
+                                .convert(&self.v_electric_current.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CHARGE_MAP => {
@@ -2092,7 +2529,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_charge
                                 .unwrap()
-                                .convert(&self.v_electric_charge.unwrap());
+                                .convert(&self.v_electric_charge.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_POTENTIAL_MAP => {
@@ -2102,7 +2540,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_potential
                                 .unwrap()
-                                .convert(&self.v_electric_potential.unwrap());
+                                .convert(&self.v_electric_potential.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ELECTRIC_CONDUCTANCE_MAP => {
@@ -2112,7 +2551,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_electric_conductance
                                 .unwrap()
-                                .convert(&self.v_electric_conductance.unwrap());
+                                .convert(&self.v_electric_conductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CAPACITANCE_MAP => {
@@ -2122,7 +2562,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_capacitance
                                 .unwrap()
-                                .convert(&self.v_capacitance.unwrap());
+                                .convert(&self.v_capacitance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RESISTANCE_MAP => {
@@ -2132,7 +2573,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_resistance
                                 .unwrap()
-                                .convert(&self.v_resistance.unwrap());
+                                .convert(&self.v_resistance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INDUCTANCE_MAP => {
@@ -2142,7 +2584,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_inductance
                                 .unwrap()
-                                .convert(&self.v_inductance.unwrap());
+                                .convert(&self.v_inductance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_MAP => {
@@ -2152,7 +2595,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux.unwrap());
+                                .convert(&self.v_magnetic_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     MAGNETIC_FLUX_DENSITY_MAP => {
@@ -2162,7 +2606,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_magnetic_flux_density
                                 .unwrap()
-                                .convert(&self.v_magnetic_flux_density.unwrap());
+                                .convert(&self.v_magnetic_flux_density.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     TEMPERATURE_MAP => {
@@ -2172,7 +2617,8 @@ impl DivAssign<Value> for Value {
                             cmp_val = other
                                 .v_temperature
                                 .unwrap()
-                                .convert(&self.v_temperature.unwrap(), cmp_val);
+                                .convert(&self.v_temperature.unwrap(), cmp_val)
+                                .powi(other.exp[i]);
                         }
                     }
                     SUBSTANCE_MAP => {
@@ -2182,7 +2628,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_substance
                                 .unwrap()
-                                .convert(&self.v_substance.unwrap());
+                                .convert(&self.v_substance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_INTENSITY_MAP => {
@@ -2193,7 +2640,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux_intensity
                                 .unwrap()
-                                .convert(&self.v_luminous_flux_intensity.unwrap());
+                                .convert(&self.v_luminous_flux_intensity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     LUMINOUS_FLUX_MAP => {
@@ -2203,7 +2651,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_luminous_flux
                                 .unwrap()
-                                .convert(&self.v_luminous_flux.unwrap());
+                                .convert(&self.v_luminous_flux.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ILLUMINANCE_MAP => {
@@ -2213,28 +2662,41 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_illuminance
                                 .unwrap()
-                                .convert(&self.v_illuminance.unwrap());
+                                .convert(&self.v_illuminance.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     VOLUME_MAP => {
                         if must_assign {
                             self.v_volume = other.v_volume;
                         } else if self.v_volume != other.v_volume {
-                            cmp_val *= other.v_volume.unwrap().convert(&self.v_volume.unwrap());
+                            cmp_val *= other
+                                .v_volume
+                                .unwrap()
+                                .convert(&self.v_volume.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     PRESSURE_MAP => {
                         if must_assign {
                             self.v_pressure = other.v_pressure;
                         } else if self.v_pressure != other.v_pressure {
-                            cmp_val *= other.v_pressure.unwrap().convert(&self.v_pressure.unwrap());
+                            cmp_val *= other
+                                .v_pressure
+                                .unwrap()
+                                .convert(&self.v_pressure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ANGLE_MAP => {
                         if must_assign {
                             self.v_angle = other.v_angle;
                         } else if self.v_angle != other.v_angle {
-                            cmp_val *= other.v_angle.unwrap().convert(&self.v_angle.unwrap());
+                            cmp_val *= other
+                                .v_angle
+                                .unwrap()
+                                .convert(&self.v_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FREQUENCY_MAP => {
@@ -2244,28 +2706,41 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_frequency
                                 .unwrap()
-                                .convert(&self.v_frequency.unwrap());
+                                .convert(&self.v_frequency.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     FORCE_MAP => {
                         if must_assign {
                             self.v_force = other.v_force;
                         } else if self.v_force != other.v_force {
-                            cmp_val *= other.v_force.unwrap().convert(&self.v_force.unwrap());
+                            cmp_val *= other
+                                .v_force
+                                .unwrap()
+                                .convert(&self.v_force.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ENERGY_MAP => {
                         if must_assign {
                             self.v_energy = other.v_energy;
                         } else if self.v_energy != other.v_energy {
-                            cmp_val *= other.v_energy.unwrap().convert(&self.v_energy.unwrap());
+                            cmp_val *= other
+                                .v_energy
+                                .unwrap()
+                                .convert(&self.v_energy.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     POWER_MAP => {
                         if must_assign {
                             self.v_power = other.v_power;
                         } else if self.v_power != other.v_power {
-                            cmp_val *= other.v_power.unwrap().convert(&self.v_power.unwrap());
+                            cmp_val *= other
+                                .v_power
+                                .unwrap()
+                                .convert(&self.v_power.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_MAP => {
@@ -2275,14 +2750,19 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity
                                 .unwrap()
-                                .convert(&self.v_radioactivity.unwrap());
+                                .convert(&self.v_radioactivity.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     ABSORBED_DOSE_MAP => {
                         if must_assign {
                             self.v_ab_dose = other.v_ab_dose;
                         } else if self.v_ab_dose != other.v_ab_dose {
-                            cmp_val *= other.v_ab_dose.unwrap().convert(&self.v_ab_dose.unwrap());
+                            cmp_val *= other
+                                .v_ab_dose
+                                .unwrap()
+                                .convert(&self.v_ab_dose.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     RADIOACTIVITY_EXPOSURE_MAP => {
@@ -2292,7 +2772,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_radioactivity_exposure
                                 .unwrap()
-                                .convert(&self.v_radioactivity_exposure.unwrap());
+                                .convert(&self.v_radioactivity_exposure.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     CATALYTIC_ACTIVITY_MAP => {
@@ -2302,14 +2783,19 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_catalytic
                                 .unwrap()
-                                .convert(&self.v_catalytic.unwrap());
+                                .convert(&self.v_catalytic.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOUND_MAP => {
                         if must_assign {
                             self.v_sound = other.v_sound;
                         } else if self.v_sound != other.v_sound {
-                            cmp_val *= other.v_sound.unwrap().convert(&self.v_sound.unwrap());
+                            cmp_val *= other
+                                .v_sound
+                                .unwrap()
+                                .convert(&self.v_sound.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     INFORMATION_MAP => {
@@ -2319,7 +2805,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_information
                                 .unwrap()
-                                .convert(&self.v_information.unwrap());
+                                .convert(&self.v_information.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     SOLID_ANGLE_MAP => {
@@ -2329,7 +2816,8 @@ impl DivAssign<Value> for Value {
                             cmp_val *= other
                                 .v_solid_angle
                                 .unwrap()
-                                .convert(&self.v_solid_angle.unwrap());
+                                .convert(&self.v_solid_angle.unwrap())
+                                .powi(other.exp[i]);
                         }
                     }
                     _ => {

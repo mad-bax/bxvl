@@ -15,7 +15,6 @@ mod value_std_ops;
 /// Module used to define various [`Value`] constants
 pub mod consts;
 
-use serde::{Deserialize, Serialize};
 use crate::units::{
     UnitAbsorbedDose, UnitAngle, UnitCatalyticActivity, UnitElectricCapacitance,
     UnitElectricCharge, UnitElectricConductance, UnitElectricCurrent, UnitElectricInductance,
@@ -25,6 +24,7 @@ use crate::units::{
     UnitRadioactivity, UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance,
     UnitTemperature, UnitTime, UnitVolume,
 };
+use serde::{Deserialize, Serialize};
 
 /// The [`Value`] struct definition
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -153,7 +153,7 @@ mod value_serialization_testing {
             UnitRadioactivityExposure, UnitSolidAngle, UnitSound, UnitSubstance, UnitTemperature,
             UnitTime, UnitVolume,
         },
-        value::{Value, consts},
+        value::{consts, Value},
     };
     use toml;
 

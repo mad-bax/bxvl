@@ -3,8 +3,8 @@ extern crate bxvl;
 
 use bxvl::{
     units::{Convert, Metric, UnitAngle, UnitLength, UnitSubstance},
+    value,
     value::Value,
-    value
 };
 
 fn criterion_benchmark(c: &mut Criterion) {
