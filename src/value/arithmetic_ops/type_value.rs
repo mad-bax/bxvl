@@ -1269,8 +1269,16 @@ impl Mul<Value> for Value {
             && self.unit_map > TEMPERATURE_MAP
             && self.v_temperature != other.v_temperature
         {
+            if other.unit_map == TEMPERATURE_MAP {
+                return self * (other >> self.v_temperature.unwrap()).unwrap();
+            }
+
             // Error cannot convert as part of larger unit
             panic!("Cannot Mul values {} and {}", self, other);
+        } else if self.unit_map == TEMPERATURE_MAP {
+            if self.v_temperature != other.v_temperature && other.v_temperature.is_some() {
+                return (self >> other.v_temperature.unwrap()).unwrap() * other;
+            }
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -1660,8 +1668,19 @@ impl MulAssign<Value> for Value {
             && self.unit_map > TEMPERATURE_MAP
             && self.v_temperature != other.v_temperature
         {
+            if other.unit_map == TEMPERATURE_MAP {
+                *self *= (other >> self.v_temperature.unwrap()).unwrap();
+                return;
+            }
+
             // Error cannot convert as part of larger unit
-            panic!("Cannot MulAssign values {} and {}", self, other);
+            panic!("Cannot Mul values {} and {}", self, other);
+        } else if self.unit_map == TEMPERATURE_MAP {
+            if self.v_temperature != other.v_temperature && other.v_temperature.is_some() {
+                *self >>= other.v_temperature.unwrap();
+                *self *= other;
+                return;
+            }
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -2055,8 +2074,16 @@ impl Div<Value> for Value {
             && self.unit_map > TEMPERATURE_MAP
             && self.v_temperature != other.v_temperature
         {
+            if other.unit_map == TEMPERATURE_MAP {
+                return self / (other >> self.v_temperature.unwrap()).unwrap();
+            }
+
             // Error cannot convert as part of larger unit
             panic!("Cannot Div values {} and {}", self, other);
+        } else if self.unit_map == TEMPERATURE_MAP {
+            if self.v_temperature != other.v_temperature && self.v_temperature.is_some() && other.v_temperature.is_some() {
+                return (self >> other.v_temperature.unwrap()).unwrap() / other;
+            }
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -2446,8 +2473,18 @@ impl DivAssign<Value> for Value {
             && self.unit_map > TEMPERATURE_MAP
             && self.v_temperature != other.v_temperature
         {
+            if other.unit_map == TEMPERATURE_MAP {
+                *self /= (other >> self.v_temperature.unwrap()).unwrap();
+                return;
+            }
+
             // Error cannot convert as part of larger unit
-            panic!("Cannot DivAssign values {} and {}", self, other);
+            panic!("Cannot Mul values {} and {}", self, other);
+        } else if self.unit_map == TEMPERATURE_MAP {
+            if self.v_temperature != other.v_temperature {
+                *self >>= other.v_temperature.unwrap();
+                *self /= other;
+            }
         }
 
         if other.is_radians() && !self.is_angle() {
@@ -3396,12 +3433,12 @@ mod arithmetic_ops_testing {
         assert_eq!(t1, 8004.0);
         t1 -= t3;
         assert_eq!(t1, 4.0);
-        assert_eq!(t1 * t3, 32000.0);
+        assert_eq!((t1 * t3).to_string(), "0.032 kK^2");
         t1 *= t3;
-        assert_eq!(t1, 32000.0);
-        assert_eq!(t1 / t3, 4.0);
+        assert_eq!(t1.to_string(), "0.032 kK^2");
+        assert_eq!((t1 / t3).to_string(), "0.004 kK");
         t1 /= t3;
-        assert_eq!(t1, 4.0);
+        assert_eq!(t1.to_string(), "0.004 kK");
 
         let mut t1 = 4.0 * UnitSound::Bel(Metric::None);
         let t2 = 16.0 * UnitSound::Bel(Metric::None);

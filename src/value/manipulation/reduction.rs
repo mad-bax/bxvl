@@ -127,6 +127,401 @@ impl Value {
         )
     }
 
+    /// Reduces the [`UnitPressure`] in a given [`Value`]
+    pub fn reduce_pressure(&self) -> Option<Value> {
+        if self.unit_map & PRESSURE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0 * UnitMass::Gram(Metric::Kilo)
+            / UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[PRESSURE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[PRESSURE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[PRESSURE_INDEX];
+
+        let mut ret = (*self >> UnitPressure::Pascal(Metric::None)).unwrap();
+
+        ret.v_pressure = None;
+        ret.exp[PRESSURE_INDEX] = 0;
+        ret.unit_map &= !PRESSURE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitEnergy`] in a given [`Value`]
+    pub fn reduce_energy(&self) -> Option<Value> {
+        if self.unit_map & ENERGY_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[ENERGY_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[ENERGY_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[ENERGY_INDEX];
+
+        let mut ret = (*self >> UnitEnergy::Joule(Metric::None)).unwrap();
+
+        ret.v_energy = None;
+        ret.exp[ENERGY_INDEX] = 0;
+        ret.unit_map &= !ENERGY_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitForce`] in a given [`Value`]
+    pub fn reduce_force(&self) -> Option<Value> {
+        if self.unit_map & FORCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[FORCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[FORCE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[FORCE_INDEX];
+
+        let mut ret = (*self >> UnitForce::Newton(Metric::None)).unwrap();
+
+        ret.v_force = None;
+        ret.exp[FORCE_INDEX] = 0;
+        ret.unit_map &= !FORCE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitPower`] in a given [`Value`]
+    pub fn reduce_power(&self) -> Option<Value> {
+        if self.unit_map & POWER_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[POWER_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[POWER_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[POWER_INDEX];
+
+        let mut ret = (*self >> UnitPower::Watt(Metric::None)).unwrap();
+
+        ret.v_power = None;
+        ret.exp[POWER_INDEX] = 0;
+        ret.unit_map &= !POWER_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricCharge`] in a given [`Value`]
+    pub fn reduce_electric_charge(&self) -> Option<Value> {
+        if self.unit_map & ELECTRIC_CHARGE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitTime::Second(Metric::None)
+            * UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[ELECTRIC_CHARGE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[ELECTRIC_CHARGE_INDEX];
+
+        let mut ret = (*self >> UnitElectricCharge::Coulomb(Metric::None)).unwrap();
+
+        ret.v_electric_charge = None;
+        ret.exp[ELECTRIC_CHARGE_INDEX] = 0;
+        ret.unit_map &= !ELECTRIC_CHARGE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricPotential`] in a given [`Value`]
+    pub fn reduce_electric_potential(&self) -> Option<Value> {
+        if self.unit_map & ELECTRIC_POTENTIAL_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[ELECTRIC_POTENTIAL_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[ELECTRIC_POTENTIAL_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[ELECTRIC_POTENTIAL_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[ELECTRIC_POTENTIAL_INDEX];
+
+        let mut ret = (*self >> UnitElectricPotential::Volt(Metric::None)).unwrap();
+
+        ret.v_electric_potential = None;
+        ret.exp[ELECTRIC_POTENTIAL_INDEX] = 0;
+        ret.unit_map &= !ELECTRIC_POTENTIAL_INDEX;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricCapacitance`] in a given [`Value`]
+    pub fn reduce_electric_capacitance(&self) -> Option<Value> {
+        if self.unit_map & CAPACITANCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            / UnitMass::Gram(Metric::Kilo)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitElectricCurrent::Ampere(Metric::None)
+            * UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[CAPACITANCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[CAPACITANCE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[CAPACITANCE_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[CAPACITANCE_INDEX];
+
+        let mut ret = (*self >> UnitElectricCapacitance::Farad(Metric::None)).unwrap();
+
+        ret.v_capacitance = None;
+        ret.exp[CAPACITANCE_INDEX] = 0;
+        ret.unit_map &= !CAPACITANCE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricResistance`] in a given [`Value`]
+    pub fn reduce_electric_resistance(&self) -> Option<Value> {
+        if self.unit_map & RESISTANCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[RESISTANCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[RESISTANCE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[RESISTANCE_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[RESISTANCE_INDEX];
+
+        let mut ret = (*self >> UnitElectricResistance::Ohm(Metric::None)).unwrap();
+
+        ret.v_resistance = None;
+        ret.exp[RESISTANCE_INDEX] = 0;
+        ret.unit_map &= !RESISTANCE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricConductance`] in a given [`Value`]
+    pub fn reduce_electric_conductance(&self) -> Option<Value> {
+        if self.unit_map & ELECTRIC_CONDUCTANCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            / UnitMass::Gram(Metric::Kilo)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitTime::Second(Metric::None)
+            * UnitElectricCurrent::Ampere(Metric::None)
+            * UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[ELECTRIC_CONDUCTANCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[ELECTRIC_CONDUCTANCE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[ELECTRIC_CONDUCTANCE_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[ELECTRIC_CONDUCTANCE_INDEX];
+
+        let mut ret = (*self >> UnitElectricConductance::Siemens(Metric::None)).unwrap();
+
+        ret.v_electric_conductance = None;
+        ret.exp[ELECTRIC_CONDUCTANCE_INDEX] = 0;
+        ret.unit_map &= !ELECTRIC_CONDUCTANCE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitMagneticFlux`] in a given [`Value`]
+    pub fn reduce_magnetic_flux(&self) -> Option<Value> {
+        if self.unit_map & MAGNETIC_FLUX_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[MAGNETIC_FLUX_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[MAGNETIC_FLUX_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[MAGNETIC_FLUX_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[MAGNETIC_FLUX_INDEX];
+
+        let mut ret = (*self >> UnitMagneticFlux::Weber(Metric::None)).unwrap();
+
+        ret.v_magnetic_flux = None;
+        ret.exp[MAGNETIC_FLUX_INDEX] = 0;
+        ret.unit_map &= !MAGNETIC_FLUX_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitMagneticFluxDensity`] in a given [`Value`]
+    pub fn reduce_magnetic_flux_density(&self) -> Option<Value> {
+        if self.unit_map & MAGNETIC_FLUX_DENSITY_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[MAGNETIC_FLUX_DENSITY_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[MAGNETIC_FLUX_DENSITY_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[MAGNETIC_FLUX_DENSITY_INDEX];
+
+        let mut ret = (*self >> UnitMagneticFluxDensity::Tesla(Metric::None)).unwrap();
+
+        ret.v_magnetic_flux_density = None;
+        ret.exp[MAGNETIC_FLUX_DENSITY_INDEX] = 0;
+        ret.unit_map &= !MAGNETIC_FLUX_DENSITY_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitElectricInductance`] in a given [`Value`]
+    pub fn reduce_electric_inductance(&self) -> Option<Value> {
+        if self.unit_map & INDUCTANCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitMass::Gram(Metric::Kilo)
+            * UnitLength::Meter(Metric::None)
+            * UnitLength::Meter(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitTime::Second(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None)
+            / UnitElectricCurrent::Ampere(Metric::None);
+
+        temp.exp[MASS_INDEX] *= self.exp[INDUCTANCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[INDUCTANCE_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[INDUCTANCE_INDEX];
+        temp.exp[ELECTRIC_CURRENT_INDEX] *= self.exp[INDUCTANCE_INDEX];
+
+        let mut ret = (*self >> UnitElectricInductance::Henry(Metric::None)).unwrap();
+
+        ret.v_inductance = None;
+        ret.exp[INDUCTANCE_INDEX] = 0;
+        ret.unit_map &= !INDUCTANCE_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitCatalyticActivity`] in a given [`Value`]
+    pub fn reduce_catalytic_activity(&self) -> Option<Value> {
+        if self.unit_map & CATALYTIC_ACTIVITY_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitSubstance::Mole(Metric::None)
+            / UnitTime::Second(Metric::None);
+
+        temp.exp[SUBSTANCE_INDEX] *= self.exp[CATALYTIC_ACTIVITY_INDEX];
+        temp.exp[TIME_INDEX] *= self.exp[CATALYTIC_ACTIVITY_INDEX];
+
+        let mut ret = (*self >> UnitCatalyticActivity::Katal(Metric::None)).unwrap();
+
+        ret.v_catalytic = None;
+        ret.exp[CATALYTIC_ACTIVITY_INDEX] = 0;
+        ret.unit_map &= !CATALYTIC_ACTIVITY_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitLuminousFlux`] in a given [`Value`]
+    pub fn reduce_luminous_flux(&self) -> Option<Value> {
+        if self.unit_map & LUMINOUS_INTENSITY_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitLuminousIntensity::Candela(Metric::None)
+            * UnitSolidAngle::Steradian(Metric::None);
+
+        temp.exp[LUMINOUS_INTENSITY_INDEX] *= self.exp[LUMINOUS_FLUX_INDEX];
+        temp.exp[SOLID_ANGLE_INDEX] *= self.exp[LUMINOUS_FLUX_INDEX];
+
+        let mut ret = (*self >> UnitLuminousFlux::Lumen(Metric::None)).unwrap();
+
+        ret.v_luminous_flux = None;
+        ret.exp[LUMINOUS_FLUX_INDEX] = 0;
+        ret.unit_map &= !LUMINOUS_FLUX_MAP;
+
+        Some(ret * temp)
+    }
+
+    /// Reduces the [`UnitIlluminance`] in a given [`Value`]
+    pub fn reduce_illuminance(&self) -> Option<Value> {
+        if self.unit_map & ILLUMINANCE_MAP == 0 {
+            return None;
+        }
+
+        let mut temp = 1.0
+            * UnitLuminousIntensity::Candela(Metric::None)
+            * UnitSolidAngle::Steradian(Metric::None)
+            / UnitLength::Meter(Metric::None)
+            / UnitLength::Meter(Metric::None);
+
+        temp.exp[LUMINOUS_INTENSITY_INDEX] *= self.exp[ILLUMINANCE_INDEX];
+        temp.exp[LENGTH_INDEX] *= self.exp[ILLUMINANCE_INDEX];
+        temp.exp[SOLID_ANGLE_INDEX] *= self.exp[ILLUMINANCE_INDEX];
+
+        let mut ret = (*self >> UnitIlluminance::Lux(Metric::None)).unwrap();
+
+        ret.v_illuminance = None;
+        ret.exp[ILLUMINANCE_INDEX] = 0;
+        ret.unit_map &= !ILLUMINANCE_MAP;
+
+        Some(ret * temp)
+    }
+
     /// Actual reduce function that operates on a [`Value`] type
     fn _reduce(&mut self, other: &Value) -> bool {
         if self.unit_map == other.unit_map {
