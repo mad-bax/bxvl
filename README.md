@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/bxvl_logo.ico">
+  <img src="./images/bxvl_long_logo.png">
 </p>
 
 **bxvl** is a rust library that allows variables to dynamically keep track of different unit measurements. As these variables are defined and used, they may be converted to other units, metrically scaled, arithmetically combined with others, build new units, and divided into their base units.
@@ -47,7 +47,6 @@
   - [Information](#information)
   - [Special Unit Keywords](#special-unit-keywords)
   - [Metric Prefix Identifiers](#metric-prefix-identifiers)
-- [Future Work](#future-work)
 
 ## Examples
 
@@ -569,18 +568,3 @@ The project supports all base SI units as listed by the National Institute of St
 | Quecto      | `q`           | $1e-30$        |
 
 Note that some unit strings like `eV` could be indented to be `Exa-Volts` or `Electron Volts`. The library is case sensitive and will default to the 'least complex' unit that matches. So `Electron Volts` will be the parsed result. To get `Exa-Volts`, the user must properly specify `EV` or simply `V` for volts and then convert to the `Exa` metric scaler.
-
-## Future Work
-
-**bxvl** can and is intended to be improved with some of these goals in mind:
-
-- `Value`s that have `sqrt` units.
-- Logarithmic units.
-- User defined `const Value`s
-- Equation definitions, which can expect a specific `Value` type
-- More Imperial measurement support (US customary) 🤢
-  - Lengths : `chains`, `furlongs`, `fathoms`, `nautical mile`
-  - Area(?) : `acre`
-  - Volume : `gallon`, `pint`, `quart`
-  - Weight : `stone`, `ton`, `slug`
-- speed speed speed

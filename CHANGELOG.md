@@ -1,13 +1,26 @@
-# V3 Changelog
+# BXVL Changelog
 
-## 0.1.0 : Initial Release
+## v0.1.0-alpha : Alpha release
 
 ### ✨ Highlights
 
-- Initial release!
+- Alpha release!
+- `bxvl` is ready for trial use in other projects.
+- Overall line code coverage rests at `97.56%`
+  - Additional tests for `Value` reduction still need to be added.
 
-### ⚠️ Known Issues
+### 📅 Future Work
+
+- Generic numeric type support for `Value`
+- `Value`s that have `sqrt` units.
+- Logarithmic units.
+- User defined `const Value`s
+- Equation definitions, which can expect a specific `Value` type
+- More Imperial measurement support (US customary) 🤢
+  - Lengths : `chains`, `furlongs`, `fathoms`, `nautical mile`
+  - Volume : `gallon`, `pint`, `quart`
+  - Weight : `stone`, `ton`, `slug`
 
 ### 👋 Contributors
 
-- [Bax Bradley](baxbradley415@gmail.com)
+- [Bax](maxbax@proton.me)

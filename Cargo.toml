@@ -2,8 +2,8 @@
 name = "bxvl"
 version = "0.1.0"
 edition = "2021"
-repository = ""
-authors = ["Bax <mad_bax@proton.me>"]
+repository = "https://gitlab.com/mad_bax/bxvl"
+authors = ["Bax <madbax@proton.me>"]
 readme = "README.md"
 license = "GPLv2.1"
 description = """
