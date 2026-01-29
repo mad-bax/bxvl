@@ -5,7 +5,7 @@ edition = "2024"
 repository = "https://gitlab.com/mad_bax/bxvl"
 authors = ["Bax <madbax@proton.me>"]
 readme = "README.md"
-license = "GPLv2.1"
+license = "LGPL-3.0"
 description = """
 A datatype library that allows for measurement unit association, conversion, and operations for values.
 """
