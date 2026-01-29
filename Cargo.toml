@@ -1,0 +1,36 @@
+[package]
+name = "bxvl"
+version = "0.1.0"
+edition = "2024"
+repository = "https://gitlab.com/mad_bax/bxvl"
+authors = ["Bax <madbax@proton.me>"]
+readme = "README.md"
+license = "GPLv2.1"
+description = """
+A datatype library that allows for measurement unit association, conversion, and operations for values.
+"""
+
+[profile.release]
+    opt-level = 3       # Compiler optimization level
+    debug = false       # Specify the amount of debug information included.
+    lto = true          # LLVM 'Link-Time-Optimizations', increases link time.
+    codegen-units = 1   # Limit how many 'code-generation' units a crate will be broken into.
+                        # Lower values produce faster code at the expense of longer compile times.
+    panic = 'abort'     # Abort on `panic!`, causes memory leaks on exit.
+    strip = true        # Strip out *all* symbols.
+
+[lib]
+name = "bxvl"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version="1.0.228", features=["derive"] }
+
+[dev-dependencies]
+criterion = "0.8.1"
+toml = "0.9.11"
+
+[[bench]]
+name = "bxvl_bench"
+harness = false
+
